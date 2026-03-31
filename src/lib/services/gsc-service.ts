@@ -1,29 +1,102 @@
+import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { websites } from "@/lib/db/schema";
-import { listSearchConsoleSites } from "@/lib/api/google";
+import { listSearchConsoleSites, listSearchConsoleSitemaps } from "@/lib/api/google";
+
+function normalizeWebsiteOrigin(rawUrl: string) {
+  if (rawUrl.startsWith("sc-domain:")) {
+    return null;
+  }
+
+  const normalized = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+  try {
+    return new URL(normalized).origin;
+  } catch {
+    return null;
+  }
+}
+
+function inferDefaultSitemap(rawUrl: string) {
+  if (rawUrl.startsWith("sc-domain:")) {
+    return null;
+  }
+
+  const normalized = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+  try {
+    const url = new URL(normalized);
+    return `${url.origin}/sitemap.xml`;
+  } catch {
+    return null;
+  }
+}
 
 export async function importGscSites(userId: string, accessToken: string) {
   const gscSites = await listSearchConsoleSites(accessToken);
   if (!gscSites || gscSites.length === 0) {
-    return { message: "No sites found in Google Search Console" };
+    return {
+      message: "No sites found in Google Search Console",
+      importedCount: 0,
+      skippedCount: 0,
+      imported: [],
+      skipped: [],
+    };
   }
 
-  // Map GSC sites to our website schema
-  const sitesToImport = gscSites.map((site) => ({
-    userId,
-    url: site.siteUrl!,
-    sitemapUrl: `${site.siteUrl!.endsWith("/") ? site.siteUrl : site.siteUrl + "/"}sitemap.xml`, // Default assumption
-    gscConnected: true,
-    createdAt: new Date(),
-  }));
+  const imported: Array<{ id: string; url: string; sitemapUrl: string | null }> = [];
+  const skipped: Array<{ url: string; reason: string }> = [];
 
-  // Batch insert new sites (avoiding duplicates by skipping if already exists for user?)
-  // For MVP, we'll just insert and the user can delete.
-  const result = await db.insert(websites).values(sitesToImport).returning();
+  for (const site of gscSites) {
+    const websiteUrl = normalizeWebsiteOrigin(site.siteUrl);
+
+    if (!websiteUrl) {
+      skipped.push({
+        url: site.siteUrl,
+        reason: "Only URL-prefix properties are supported right now. Domain properties are skipped.",
+      });
+      continue;
+    }
+
+    const [existing] = await db
+      .select({ id: websites.id })
+      .from(websites)
+      .where(and(eq(websites.userId, userId), eq(websites.url, websiteUrl)))
+      .limit(1);
+
+    if (existing) {
+      skipped.push({ url: websiteUrl, reason: "Already imported" });
+      continue;
+    }
+
+    const discoveredSitemaps = await listSearchConsoleSitemaps(accessToken, site.siteUrl);
+    const sitemapUrl = discoveredSitemaps[0] ?? inferDefaultSitemap(site.siteUrl);
+
+    const [created] = await db
+      .insert(websites)
+      .values({
+        userId,
+        url: websiteUrl,
+        sitemapUrl,
+        gscConnected: true,
+        siteHealth: {
+          gsc: {
+            importedAt: new Date().toISOString(),
+            permissionLevel: site.permissionLevel,
+            sourceProperty: site.siteUrl,
+            discoveredSitemaps,
+          },
+        },
+        createdAt: new Date(),
+      })
+      .returning({ id: websites.id, url: websites.url, sitemapUrl: websites.sitemapUrl });
+
+    imported.push(created);
+  }
 
   return {
-    message: "GSC sites imported successfully",
-    count: result.length,
-    sites: result,
+    message: imported.length > 0 ? `Imported ${imported.length} site(s) from Google Search Console.` : "No new sites were imported.",
+    importedCount: imported.length,
+    skippedCount: skipped.length,
+    imported,
+    skipped,
   };
 }

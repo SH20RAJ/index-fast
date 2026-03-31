@@ -23,6 +23,7 @@ import PageHeader from "@/components/dashboard/PageHeader";
 import {
   addWebsiteAction,
   deleteWebsiteAction,
+  importGscSitesAction,
   runWebsiteSyncAction,
 } from "@/app/(dashboard)/actions";
 import { defaultActionState, type ActionState } from "@/app/(dashboard)/action-state";
@@ -54,6 +55,10 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   );
   const [deleteState, deleteAction, deletePending] = useActionState<ActionState, FormData>(
     deleteWebsiteAction,
+    defaultActionState
+  );
+  const [importState, importAction, importPending] = useActionState<ActionState, void>(
+    importGscSitesAction,
     defaultActionState
   );
 

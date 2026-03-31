@@ -11,28 +11,60 @@ export const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_REDIRECT_URI
 );
 
-/**
- * Lists all Search Console properties the user has access to.
- * Accepting accessToken for direct use from Stack Auth.
- */
-export async function listSearchConsoleSites(accessToken: string) {
+export const GSC_READONLY_SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
+
+export type GscSiteEntry = {
+  siteUrl: string;
+  permissionLevel: string;
+};
+
+function createSearchConsoleClient(accessToken: string) {
   if (!accessToken) {
     throw new Error("No access token provided for Google API");
   }
 
   oauth2Client.setCredentials({ access_token: accessToken });
 
-  const searchconsole = google.searchconsole({
+  return google.searchconsole({
     version: "v1",
     auth: oauth2Client,
   });
+}
+
+/**
+ * Lists all Search Console properties the user has access to.
+ */
+export async function listSearchConsoleSites(accessToken: string): Promise<GscSiteEntry[]> {
+  const searchconsole = createSearchConsoleClient(accessToken);
 
   try {
     const response = await searchconsole.sites.list({});
-    return response.data.siteEntry || [];
+    return (response.data.siteEntry ?? [])
+      .filter((site): site is { siteUrl: string; permissionLevel?: string | null } => Boolean(site.siteUrl))
+      .map((site) => ({
+        siteUrl: site.siteUrl,
+        permissionLevel: site.permissionLevel ?? "siteUnverifiedUser",
+      }));
   } catch (error: unknown) {
     console.error("Error listing GSC sites:", error);
     throw error;
+  }
+}
+
+/**
+ * List sitemap endpoints discovered in Search Console for a specific property.
+ */
+export async function listSearchConsoleSitemaps(accessToken: string, siteUrl: string): Promise<string[]> {
+  const searchconsole = createSearchConsoleClient(accessToken);
+
+  try {
+    const response = await searchconsole.sitemaps.list({ siteUrl });
+    return (response.data.sitemap ?? [])
+      .map((entry) => entry.path ?? "")
+      .filter((path) => path.length > 0);
+  } catch {
+    // Some properties can fail here (permissions/property type). We treat this as no discovered sitemaps.
+    return [];
   }
 }
 

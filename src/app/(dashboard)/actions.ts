@@ -9,6 +9,8 @@ import { ensureUserRecord } from "@/lib/db/user-sync";
 import { PLAN_DEFINITIONS, PlanDefinition, PlanId, getPlanDefinition, resolvePlanId } from "@/lib/billing/plans";
 import { stackServerApp } from "@/stack";
 import { processWebsiteIndexing } from "@/lib/services/indexing-service";
+import { GSC_READONLY_SCOPE } from "@/lib/api/google";
+import { importGscSites } from "@/lib/services/gsc-service";
 import {
   getMonthlySubmissionUsageCount,
   getSubscriptionSnapshot,
@@ -233,6 +235,48 @@ export async function addWebsiteAction(_: ActionState, formData: FormData): Prom
     return {
       status: "error",
       message: error instanceof Error ? error.message : "Failed to add website.",
+    };
+  }
+}
+
+export async function importGscSitesAction(_: ActionState): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+
+    const connectedAccounts = await stackServerApp.listServerConnectedAccounts(user.id);
+    const googleAccount = connectedAccounts.find((account) => account.provider === "google");
+
+    if (!googleAccount) {
+      return {
+        status: "error",
+        message: "No Google account is connected to this login. Sign in with Google first, then retry import.",
+      };
+    }
+
+    const tokenResponse = await stackServerApp.createServerProviderAccessTokenByAccount(
+      user.id,
+      "google",
+      googleAccount.provider_account_id,
+      GSC_READONLY_SCOPE
+    );
+
+    if (!tokenResponse.access_token) {
+      return { status: "error", message: "Could not access Google Search Console token." };
+    }
+
+    const result = await importGscSites(user.id, tokenResponse.access_token);
+
+    revalidatePath("/sites");
+    revalidatePath("/dashboard");
+
+    return {
+      status: "success",
+      message: `${result.message} ${result.skippedCount > 0 ? `Skipped ${result.skippedCount} existing/unsupported site(s).` : ""}`.trim(),
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message: error instanceof Error ? error.message : "Failed to import Search Console sites.",
     };
   }
 }
