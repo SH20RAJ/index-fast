@@ -28,6 +28,7 @@ interface DashboardSidebarProps {
 
 export default function DashboardSidebar({ mobileOpen, onMobileClose }: DashboardSidebarProps) {
   const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
   const pathname = usePathname();
   const user = useUser();
   const stack = useStackApp();
@@ -35,7 +36,18 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   const sidebarContent = (
-    <Stack spacing={4} sx={{ p: 3, height: "100%", bgcolor: "#FBFCFE" }}>
+    <Stack
+      spacing={4}
+      sx={{
+        p: 3,
+        height: "100%",
+        color: "text.primary",
+        bgcolor: theme.palette.background.paper,
+        background: isDark
+          ? "linear-gradient(180deg, rgba(14,165,233,0.06) 0%, rgba(14,165,233,0) 28%), linear-gradient(180deg, #151B2C 0%, #0F1627 100%)"
+          : "linear-gradient(180deg, rgba(14,165,233,0.04) 0%, rgba(14,165,233,0) 28%), #F8FBFF",
+      }}
+    >
       <Stack
         direction="row"
         alignItems="center"
@@ -57,7 +69,7 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
         >
           <BoltIcon sx={{ color: "white", fontSize: 18 }} />
         </Box>
-        <Typography variant="h6" fontWeight={900}>
+        <Typography variant="h6" fontWeight={900} color="text.primary">
           IndexFast
         </Typography>
       </Stack>
@@ -81,11 +93,11 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
                 py: 1.4,
                 px: 2,
                 borderRadius: "12px",
-                color: active ? "#0F172A" : "text.secondary",
-                bgcolor: active ? alpha("#0F766E", 0.12) : "transparent",
+                color: active ? "text.primary" : "text.secondary",
+                bgcolor: active ? alpha(theme.palette.primary.main, isDark ? 0.25 : 0.14) : "transparent",
                 "&:hover": {
-                  bgcolor: alpha("#0F766E", 0.16),
-                  color: "#0F172A",
+                  bgcolor: alpha(theme.palette.primary.main, isDark ? 0.35 : 0.18),
+                  color: "text.primary",
                 },
                 fontWeight: active ? 700 : 500,
               }}
@@ -101,7 +113,7 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
         sx={{
           pt: 2,
           borderTop: "1px solid",
-          borderColor: alpha(theme.palette.divider, 0.08),
+          borderColor: alpha(theme.palette.divider, isDark ? 0.35 : 0.45),
         }}
       >
         {user && (
@@ -139,7 +151,7 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
           sx={{
             justifyContent: "flex-start",
             color: "error.main",
-            "&:hover": { bgcolor: alpha(theme.palette.error.main, 0.05) },
+            "&:hover": { bgcolor: alpha(theme.palette.error.main, isDark ? 0.2 : 0.08) },
           }}
         >
           Sign Out
@@ -162,7 +174,8 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
             maxWidth: SIDEBAR_WIDTH,
             boxSizing: "border-box",
             borderRight: "1px solid",
-            borderColor: alpha(theme.palette.divider, 0.08),
+            borderColor: alpha(theme.palette.divider, isDark ? 0.35 : 0.45),
+            bgcolor: theme.palette.background.paper,
           },
         }}
       >
@@ -178,8 +191,8 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
             width: SIDEBAR_WIDTH,
             boxSizing: "border-box",
             borderRight: "1px solid",
-            borderColor: alpha(theme.palette.divider, 0.08),
-            bgcolor: "#FBFCFE",
+            borderColor: alpha(theme.palette.divider, isDark ? 0.35 : 0.45),
+            bgcolor: theme.palette.background.paper,
           },
         }}
       >
