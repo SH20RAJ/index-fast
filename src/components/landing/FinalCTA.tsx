@@ -14,18 +14,19 @@ export default function FinalCTA() {
   const stack = useStackApp();
 
   return (
-    <Box id="cta" sx={{ py: 15, bgcolor: "white" }}>
+    <Box id="cta" sx={{ py: { xs: 10, md: 14 }, bgcolor: "background.default" }}>
       <Container maxWidth="lg">
         <Box
           sx={{
-            bgcolor: "primary.main",
-            borderRadius: { xs: "40px", md: "64px" },
+            bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.mode === "dark" ? 0.9 : 0.95),
+            borderRadius: { xs: "34px", md: "52px" },
             p: { xs: 6, md: 12 },
             textAlign: "center",
             color: "white",
             position: "relative",
             overflow: "hidden",
-            boxShadow: "0 20px 60px rgba(124, 58, 237, 0.25)"
+            boxShadow: "0 20px 60px rgba(124, 58, 237, 0.3)",
+            border: (theme) => `1px solid ${alpha(theme.palette.primary.light, 0.5)}`,
           }}
         >
           {/* Abstract background shapes */}
@@ -34,13 +35,13 @@ export default function FinalCTA() {
 
           <Stack spacing={4} alignItems="center" sx={{ position: "relative" }}>
             <Typography variant="h2" sx={{ fontWeight: 900, mb: 1, color: "white" }}>
-              Ready to get your site
+              Ready to make every publish
               <br />
-              <Box component="span" sx={{ color: "secondary.main", fontFamily: '"Patrick Hand", cursive', rotate: "2deg", display: "inline-block", mx: 1 }}>indexed?</Box>
+              <Box component="span" sx={{ color: "secondary.main", display: "inline-block", mx: 1 }}>discoverable?</Box>
             </Typography>
 
             <Typography variant="body1" sx={{ maxWidth: 500, opacity: 0.9, fontSize: "1.1rem" }}>
-              Join thousands of experts already using IndexFast to automate their SEO growth. Start your trial today.
+              Join teams replacing manual indexing checklists with a predictable growth workflow. Start free, then scale when results are visible.
             </Typography>
 
             <Button
@@ -61,11 +62,11 @@ export default function FinalCTA() {
                 }
               }}
             >
-              Start Indexing Now
+              Start your free indexing workflow
             </Button>
 
             <Typography variant="caption" sx={{ opacity: 0.7 }}>
-              No credit card required. Cancel any time.
+              No credit card required. Setup usually takes under 5 minutes.
             </Typography>
           </Stack>
         </Box>

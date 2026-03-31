@@ -6,8 +6,11 @@ import Footer from "@/components/landing/Footer";
 import PrivacyView from "./PrivacyView";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | IndexFast",
+  title: "Privacy Policy",
   description: "Learn how IndexFast protects your data and privacy.",
+  alternates: {
+    canonical: "/privacy",
+  },
 };
 
 export default function PrivacyPage() {

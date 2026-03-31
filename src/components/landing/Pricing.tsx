@@ -8,6 +8,9 @@ import {
   CardContent,
   Button,
   Stack,
+  Chip,
+  alpha,
+  useTheme,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useStackApp } from "@stackframe/stack";
@@ -16,70 +19,79 @@ const plans = [
   {
     name: "Starter",
     price: "$0",
-    desc: "Perfect for personal blogs and landing pages",
-    features: ["up to 50 URLs / month", "Google Search Console Sync", "Basic Support"],
+    desc: "For solo builders validating indexing workflows",
+    features: ["Up to 50 URLs / month", "Google Search Console sync", "Basic submission analytics"],
     button: "Get Started",
     popular: false
   },
   {
     name: "Pro",
     price: "$49",
-    desc: "Best for growing businesses and AI visibility",
-    features: ["Unlimited URLs", "Auto Sync Sitemaps (6h)", "AI View & Insights", "Universal Pings"],
+    desc: "For growth teams scaling traffic and AI reach",
+    features: ["Unlimited URLs", "Auto sitemap sync (6h)", "AI visibility insights", "Universal ping network"],
     button: "Start Free Trial",
     popular: true
   },
   {
     name: "Agency",
     price: "$149",
-    desc: "For large enterprise teams and SEO fleets",
-    features: ["White-labeled Reports", "API Access", "Priority Support", "Account Manager"],
-    button: "Contact Us",
+    desc: "For agencies running multi-site indexing operations",
+    features: ["White-label reporting", "API access", "Priority support", "Multi-workspace controls"],
+    button: "Book Demo",
     popular: false
   }
 ];
 
 export default function Pricing() {
   const stack = useStackApp();
+  const theme = useTheme();
 
   return (
-    <Box id="pricing" sx={{ py: 15, bgcolor: "white" }}>
+    <Box id="pricing" sx={{ py: { xs: 10, md: 14 }, bgcolor: "background.default" }}>
       <Container maxWidth="lg">
-        <Stack spacing={2} mb={10} textAlign="center">
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "#1F2937", mb: 2 }}>
-            Flexible
-            <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", ml: 1 }}>pricing</Box>
+        <Stack spacing={2} mb={8} textAlign="center">
+          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", mb: 1 }}>
+            Plans that pay back in saved hours and faster rankings
           </Typography>
-          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "600px", mx: "auto" }}>
-            Choose the plan that fits your growth and start getting indexed today. No hidden fees.
+          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "700px", mx: "auto", lineHeight: 1.75 }}>
+            Choose based on execution volume, not feature gates. Upgrade when your team is ready, not before.
           </Typography>
+          <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" useFlexGap>
+            <Chip label="No setup fee" variant="outlined" />
+            <Chip label="Cancel anytime" variant="outlined" />
+            <Chip label="Priority onboarding" variant="outlined" />
+          </Stack>
         </Stack>
 
         <Grid container spacing={4} alignItems="center">
-          {plans.map((p, idx) => (
-            <Grid size={{ xs: 12, md: 4 }} key={idx}>
+          {plans.map((p) => (
+            <Grid size={{ xs: 12, md: 4 }} key={p.name}>
               <Card
                 sx={{
                   p: 2,
-                  bgcolor: p.popular ? "primary.main" : "white",
-                  color: p.popular ? "white" : "text.primary",
-                  borderRadius: "40px",
-                  border: p.popular ? "none" : "1px solid rgba(124, 58, 237, 0.1)",
+                  bgcolor: p.popular ? alpha(theme.palette.primary.main, 0.9) : alpha(theme.palette.background.paper, 0.88),
+                  color: p.popular ? "common.white" : "text.primary",
+                  borderRadius: "30px",
+                  border: p.popular
+                    ? `1px solid ${alpha(theme.palette.primary.light, 0.5)}`
+                    : `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
                   boxShadow: p.popular
-                    ? "0 20px 50px rgba(124, 58, 237, 0.25)"
-                    : "0 10px 40px rgba(124, 58, 237, 0.05)",
+                    ? "0 20px 50px rgba(124, 58, 237, 0.28)"
+                    : theme.palette.mode === "dark"
+                      ? "0 14px 30px rgba(0, 0, 0, 0.35)"
+                      : "0 14px 30px rgba(17, 24, 39, 0.08)",
                   transform: p.popular ? "scale(1.05)" : "scale(1)",
                   position: "relative",
                   "&:hover": {
                     transform: p.popular ? "scale(1.08)" : "translateY(-10px)",
-                    boxShadow: "0 25px 60px rgba(124, 58, 237, 0.15)"
+                    boxShadow: "0 25px 60px rgba(124, 58, 237, 0.2)"
                   }
                 }}
               >
                 <CardContent sx={{ p: 4 }}>
                   <Stack spacing={3}>
                     <Box>
-                      <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, fontFamily: '"Patrick Hand", cursive' }}>{p.name}</Typography>
+                      <Typography variant="h5" sx={{ fontWeight: 900, mb: 1 }}>{p.name}</Typography>
                       <Typography variant="h2" sx={{ fontWeight: 900 }}>{p.price}</Typography>
                       <Typography variant="caption" sx={{ opacity: 0.8 }}>per month</Typography>
                     </Box>
@@ -99,7 +111,7 @@ export default function Pricing() {
                       variant={p.popular ? "contained" : "outlined"}
                       fullWidth
                       size="large"
-                      onClick={() => stack.redirectToSignIn()}
+                      onClick={() => (p.name === "Agency" ? stack.redirectToSignIn() : stack.redirectToSignUp())}
                       sx={{
                         bgcolor: p.popular ? "secondary.main" : "transparent",
                         borderColor: "primary.main",

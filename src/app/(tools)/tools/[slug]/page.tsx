@@ -24,13 +24,13 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
 
   if (!tool) {
     return {
-      title: "Tool Not Found | IndexFast",
+      title: "Tool Not Found",
       description: "The requested SEO tool page could not be found.",
     };
   }
 
   return {
-    title: `${tool.title} | IndexFast`,
+    title: tool.title,
     description: tool.description,
     keywords: tool.intentKeywords,
     alternates: {

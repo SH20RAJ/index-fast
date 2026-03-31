@@ -15,7 +15,7 @@ import ToolCta from "./_components/ToolCta";
 import { SEO_TOOLS, TOOL_CATEGORIES, getToolsByCategory } from "@/lib/tools-catalog";
 
 export const metadata: Metadata = {
-  title: "Free SEO Tools Directory | IndexFast",
+  title: "Free SEO Tools Directory",
   description:
     "Browse a complete free SEO tools directory organized by category: indexing, crawl diagnostics, keyword research, backlinks, domain authority, and metadata optimization.",
   keywords: [

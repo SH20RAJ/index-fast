@@ -5,8 +5,11 @@ import ContactForm from "@/components/landing/ContactForm";
 import Footer from "@/components/landing/Footer";
 
 export const metadata: Metadata = {
-  title: "Contact Us | IndexFast",
+  title: "Contact Us",
   description: "Get in touch with the IndexFast team. We'd love to hear from you and answer any questions about our SEO indexing service.",
+  alternates: {
+    canonical: "/contact",
+  },
 };
 
 export default function ContactPage() {

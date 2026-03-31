@@ -1,19 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Alert,
   Box,
   Card,
   CardContent,
   Chip,
-  CircularProgress,
-  Grid,
   MenuItem,
   Stack,
   TextField,
   Typography,
   alpha,
+  Grid,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -37,39 +36,14 @@ const statusColor = {
   pending: "#D97706",
 };
 
-export default function SubmissionsView() {
-  const [rows, setRows] = useState<SubmissionRow[]>([]);
+interface SubmissionsViewProps {
+  initialRows: SubmissionRow[];
+}
+
+export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
+  const [rows] = useState<SubmissionRow[]>(initialRows);
   const [statusFilter, setStatusFilter] = useState<"all" | SubmissionRow["status"]>("all");
   const [engineFilter, setEngineFilter] = useState<"all" | SubmissionRow["engine"]>("all");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/submissions")
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error("Failed to load submissions");
-        }
-        return res.json();
-      })
-      .then((data: SubmissionRow[]) => {
-        if (!cancelled) {
-          setRows(data);
-          setLoading(false);
-        }
-      })
-      .catch((err: unknown) => {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load submissions");
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const filtered = useMemo(() => {
     return rows.filter((row) => {
@@ -103,7 +77,7 @@ export default function SubmissionsView() {
             { label: "Failed", value: totals.failed },
             { label: "Pending", value: totals.pending },
           ].map((item) => (
-            <Grid key={item.label} item xs={6} md={3}>
+            <Grid key={item.label} size={{ xs: 6, md: 3 }}>
               <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
                 <CardContent sx={{ p: 2.25 }}>
                   <Typography variant="h5" fontWeight={900}>
@@ -151,13 +125,7 @@ export default function SubmissionsView() {
           </CardContent>
         </Card>
 
-        {loading ? (
-          <Stack alignItems="center" sx={{ py: 8 }}>
-            <CircularProgress />
-          </Stack>
-        ) : error ? (
-          <Alert severity="error">{error}</Alert>
-        ) : filtered.length === 0 ? (
+        {rows.length === 0 || filtered.length === 0 ? (
           <Card sx={{ borderRadius: "18px", border: "1px dashed", borderColor: "divider", boxShadow: "none" }}>
             <CardContent sx={{ p: 4, textAlign: "center" }}>
               <HistoryIcon sx={{ fontSize: 42, opacity: 0.25, mb: 1 }} />

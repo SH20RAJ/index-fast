@@ -6,6 +6,7 @@ import {
   Stack,
   IconButton,
   Divider,
+  alpha,
 } from "@mui/material";
 import Link from "next/link";
 import BoltIcon from "@mui/icons-material/Bolt";
@@ -15,7 +16,7 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 export default function Footer() {
   return (
-    <Box sx={{ bgcolor: "white", pt: 10, pb: 6, borderTop: "1px solid rgba(124, 58, 237, 0.05)" }}>
+    <Box sx={{ bgcolor: "background.paper", pt: 10, pb: 6, borderTop: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.12)}` }}>
       <Container maxWidth="lg">
         <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }} spacing={4}>
           <Stack spacing={3}>
@@ -33,12 +34,12 @@ export default function Footer() {
               >
                 <BoltIcon sx={{ color: "white", fontSize: 20 }} />
               </Box>
-              <Typography variant="h6" fontWeight="900" color="#1F2937">
+              <Typography variant="h6" fontWeight="900" color="text.primary">
                 IndexFast
               </Typography>
             </Stack>
             <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 300 }}>
-              The world&apos;s fastest indexing solution for modern SEO. helping your content get discovered instantly.
+              Built for teams that treat indexing as revenue infrastructure, not a side task.
             </Typography>
           </Stack>
 
@@ -62,19 +63,19 @@ export default function Footer() {
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignSelf: { xs: "flex-start", md: "center" } }}>
-            <IconButton size="small" sx={{ bgcolor: "rgba(124, 58, 237, 0.05)", "&:hover": { bgcolor: "rgba(124, 58, 237, 0.1)" } }}>
+            <IconButton size="small" sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12), "&:hover": { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2) } }}>
               <TwitterIcon fontSize="small" sx={{ color: "primary.main" }} />
             </IconButton>
-            <IconButton size="small" sx={{ bgcolor: "rgba(124, 58, 237, 0.05)", "&:hover": { bgcolor: "rgba(124, 58, 237, 0.1)" } }}>
+            <IconButton size="small" sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12), "&:hover": { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2) } }}>
               <GitHubIcon fontSize="small" sx={{ color: "primary.main" }} />
             </IconButton>
-            <IconButton size="small" sx={{ bgcolor: "rgba(124, 58, 237, 0.05)", "&:hover": { bgcolor: "rgba(124, 58, 237, 0.1)" } }}>
+            <IconButton size="small" sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12), "&:hover": { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2) } }}>
               <LinkedInIcon fontSize="small" sx={{ color: "primary.main" }} />
             </IconButton>
           </Stack>
         </Stack>
 
-        <Divider sx={{ my: 6, borderColor: "rgba(124, 58, 237, 0.05)" }} />
+        <Divider sx={{ my: 6, borderColor: (theme) => alpha(theme.palette.primary.main, 0.12) }} />
 
         <Box textAlign="center">
           <Typography variant="caption" color="text.secondary">

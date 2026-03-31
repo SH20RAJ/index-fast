@@ -11,7 +11,14 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#F9FAFB" }}>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        background:
+          "radial-gradient(circle at 100% 0%, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0) 34%), radial-gradient(circle at 0% 100%, rgba(14,165,233,0.07) 0%, rgba(14,165,233,0) 36%), #F6F8FB",
+      }}
+    >
       <DashboardSidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
 
       <Box
@@ -28,6 +35,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           elevation={0}
           sx={{
             display: { xs: "block", md: "none" },
+            zIndex: (theme) => theme.zIndex.drawer + 1,
             bgcolor: alpha("#ffffff", 0.9),
             backdropFilter: "blur(8px)",
             borderBottom: "1px solid",
@@ -41,7 +49,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   <MenuIcon />
                 </IconButton>
                 <Typography variant="subtitle1" fontWeight={800} color="#111827">
-                  IndexFast Dashboard
+                  IndexFast Command Center
                 </Typography>
               </Stack>
             </Stack>
@@ -53,6 +61,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           sx={{
             px: { xs: 2, sm: 3, md: 4 },
             py: { xs: 3, md: 4 },
+            pt: { xs: 3, md: 4 },
           }}
         >
           {children}

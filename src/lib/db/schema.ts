@@ -20,6 +20,25 @@ export const submissionStatusEnum = pgEnum("submission_status", [
   "pending",
 ]);
 
+export const subscriptionPlanEnum = pgEnum("subscription_plan", [
+  "free",
+  "pro",
+  "agency",
+]);
+
+export const subscriptionIntervalEnum = pgEnum("subscription_interval", [
+  "monthly",
+  "yearly",
+]);
+
+export const subscriptionLifecycleStatusEnum = pgEnum("subscription_lifecycle_status", [
+  "inactive",
+  "trialing",
+  "active",
+  "past_due",
+  "canceled",
+]);
+
 /**
  * Users table: Storing global settings and subscription info (Dodo Payments)
  */
@@ -30,6 +49,39 @@ export const users = pgTable("users", {
   dodoSubscriptionId: text("dodo_subscription_id"),
   dodoCustomerId: text("dodo_customer_id"),
   subscriptionStatus: text("subscription_status"), // active, trialing, canceled, etc.
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const subscriptionPlans = pgTable("subscription_plans", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  code: subscriptionPlanEnum("code").notNull().unique(),
+  name: text("name").notNull(),
+  description: text("description"),
+  monthlyPriceUsd: integer("monthly_price_usd").notNull().default(0),
+  yearlyPriceUsd: integer("yearly_price_usd").notNull().default(0),
+  websiteLimit: integer("website_limit").notNull().default(1),
+  monthlySubmissionLimit: integer("monthly_submission_limit").notNull().default(1000),
+  pingNetworkEnabled: boolean("ping_network_enabled").notNull().default(false),
+  prioritySupportEnabled: boolean("priority_support_enabled").notNull().default(false),
+  features: jsonb("features"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const userSubscriptions = pgTable("user_subscriptions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }).notNull().unique(),
+  planCode: subscriptionPlanEnum("plan_code").notNull().default("free"),
+  status: subscriptionLifecycleStatusEnum("status").notNull().default("inactive"),
+  interval: subscriptionIntervalEnum("interval").notNull().default("monthly"),
+  currentPeriodStart: timestamp("current_period_start"),
+  currentPeriodEnd: timestamp("current_period_end"),
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
+  provider: text("provider"),
+  providerCustomerId: text("provider_customer_id"),
+  providerSubscriptionId: text("provider_subscription_id"),
+  metadata: jsonb("metadata"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -78,14 +130,30 @@ export const submissions = pgTable("submissions", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const usageEvents = pgTable("usage_events", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  websiteId: uuid("website_id").references(() => websites.id, { onDelete: "set null" }),
+  metric: text("metric").notNull(),
+  quantity: integer("quantity").notNull().default(1),
+  metadata: jsonb("metadata"),
+  occurredAt: timestamp("occurred_at").defaultNow(),
+});
+
 /**
  * Exporting Types for Drizzle
  */
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+export type SubscriptionPlan = typeof subscriptionPlans.$inferSelect;
+export type NewSubscriptionPlan = typeof subscriptionPlans.$inferInsert;
+export type UserSubscription = typeof userSubscriptions.$inferSelect;
+export type NewUserSubscription = typeof userSubscriptions.$inferInsert;
 export type Website = typeof websites.$inferSelect;
 export type NewWebsite = typeof websites.$inferInsert;
 export type UrlInventory = typeof urlInventory.$inferSelect;
 export type NewUrlInventory = typeof urlInventory.$inferInsert;
 export type Submission = typeof submissions.$inferSelect;
 export type NewSubmission = typeof submissions.$inferInsert;
+export type UsageEvent = typeof usageEvents.$inferSelect;
+export type NewUsageEvent = typeof usageEvents.$inferInsert;

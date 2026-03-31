@@ -32,13 +32,13 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) {
     return {
-      title: "Blog Not Found | IndexFast",
+      title: "Blog Not Found",
       description: "The requested blog guide could not be found.",
     };
   }
 
   return {
-    title: `${post.title} | IndexFast`,
+    title: post.title,
     description: post.description,
     keywords: post.keywords,
     alternates: {

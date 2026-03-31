@@ -18,7 +18,7 @@ import { BLOG_POSTS } from "@/lib/blog-catalog";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.net";
 
 export const metadata: Metadata = {
-  title: "SEO & GEO Blog | IndexFast",
+  title: "SEO & GEO Blog",
   description:
     "Long-form SEO and GEO playbooks for faster indexing, Bing visibility, AI assistant citations, and product-led growth with free tools.",
   keywords: [

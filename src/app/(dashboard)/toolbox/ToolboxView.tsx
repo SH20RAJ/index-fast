@@ -274,7 +274,7 @@ export default function ToolboxView() {
         />
 
         <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
               <CardContent sx={{ p: 2.5 }}>
                 <Stack direction="row" spacing={1.5} alignItems="center">
@@ -291,7 +291,7 @@ export default function ToolboxView() {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
               <CardContent sx={{ p: 2.5 }}>
                 <Stack direction="row" spacing={1.5} alignItems="center">
@@ -308,7 +308,7 @@ export default function ToolboxView() {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
               <CardContent sx={{ p: 2.5 }}>
                 <Stack direction="row" spacing={1.5} alignItems="center">
@@ -409,7 +409,7 @@ export default function ToolboxView() {
 
                   <Grid container spacing={2}>
                     {grouped[group].map((item) => (
-                      <Grid item xs={12} sm={6} md={4} key={item.name}>
+                      <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item.name}>
                         <Card
                           sx={{
                             height: "100%",

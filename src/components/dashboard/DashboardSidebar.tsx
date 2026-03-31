@@ -14,11 +14,11 @@ import LogoutIcon from "@mui/icons-material/Logout";
 const SIDEBAR_WIDTH = 280;
 
 const navItems = [
-  { label: "Overview", icon: <DashboardIcon />, href: "/dashboard" },
+  { label: "Command Center", icon: <DashboardIcon />, href: "/dashboard" },
   { label: "Websites", icon: <LanguageIcon />, href: "/sites" },
-  { label: "Submissions", icon: <HistoryIcon />, href: "/submissions" },
+  { label: "Submission Stream", icon: <HistoryIcon />, href: "/submissions" },
   { label: "SEO Toolbox", icon: <BuildIcon />, href: "/toolbox" },
-  { label: "Settings", icon: <SettingsIcon />, href: "/settings" },
+  { label: "Billing & Settings", icon: <SettingsIcon />, href: "/settings" },
 ];
 
 interface DashboardSidebarProps {
@@ -35,7 +35,7 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   const sidebarContent = (
-    <Stack spacing={4} sx={{ p: 3, height: "100%" }}>
+    <Stack spacing={4} sx={{ p: 3, height: "100%", bgcolor: "#FBFCFE" }}>
       <Stack
         direction="row"
         alignItems="center"
@@ -49,7 +49,7 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
             width: 32,
             height: 32,
             borderRadius: "8px",
-            bgcolor: "primary.main",
+            background: "linear-gradient(135deg, #0F766E 0%, #0EA5E9 100%)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -63,6 +63,9 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
       </Stack>
 
       <Stack spacing={1} sx={{ flexGrow: 1 }}>
+        <Typography variant="overline" sx={{ px: 1.5, color: "text.secondary", letterSpacing: "0.08em" }}>
+          Workspace
+        </Typography>
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (
@@ -78,11 +81,11 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
                 py: 1.4,
                 px: 2,
                 borderRadius: "12px",
-                color: active ? "primary.main" : "text.secondary",
-                bgcolor: active ? alpha(theme.palette.primary.main, 0.05) : "transparent",
+                color: active ? "#0F172A" : "text.secondary",
+                bgcolor: active ? alpha("#0F766E", 0.12) : "transparent",
                 "&:hover": {
-                  bgcolor: alpha(theme.palette.primary.main, 0.08),
-                  color: "primary.main",
+                  bgcolor: alpha("#0F766E", 0.16),
+                  color: "#0F172A",
                 },
                 fontWeight: active ? 700 : 500,
               }}
@@ -155,7 +158,8 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
         sx={{
           display: { xs: "block", md: "none" },
           "& .MuiDrawer-paper": {
-            width: SIDEBAR_WIDTH,
+            width: "84vw",
+            maxWidth: SIDEBAR_WIDTH,
             boxSizing: "border-box",
             borderRight: "1px solid",
             borderColor: alpha(theme.palette.divider, 0.08),
@@ -175,7 +179,7 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
             boxSizing: "border-box",
             borderRight: "1px solid",
             borderColor: alpha(theme.palette.divider, 0.08),
-            bgcolor: "white",
+            bgcolor: "#FBFCFE",
           },
         }}
       >

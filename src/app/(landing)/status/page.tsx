@@ -6,8 +6,11 @@ import Footer from "@/components/landing/Footer";
 import StatusView from "./StatusView";
 
 export const metadata: Metadata = {
-  title: "System Status | IndexFast",
+  title: "System Status",
   description: "Check the real-time status of IndexFast services and APIs.",
+  alternates: {
+    canonical: "/status",
+  },
 };
 
 export default function StatusPage() {

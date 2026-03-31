@@ -36,12 +36,14 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <Box id="faq" sx={{ py: 15, bgcolor: "#FAF9FF" }}>
+    <Box id="faq" sx={{ py: { xs: 10, md: 14 }, bgcolor: "background.paper" }}>
       <Container maxWidth="md">
-        <Stack spacing={2} mb={10} textAlign="center">
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "#1F2937", mb: 2 }}>
-            Frequently Asked
-            <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", ml: 1 }}>Questions</Box>
+        <Stack spacing={2} mb={7} textAlign="center">
+          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", mb: 1 }}>
+            Questions teams ask before switching to IndexFast
+          </Typography>
+          <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.75 }}>
+            Straight answers on safety, setup time, and expected indexing outcomes.
           </Typography>
         </Stack>
 
@@ -52,8 +54,12 @@ export default function FAQ() {
               sx={{
                 borderRadius: "24px !important",
                 "&:before": { display: "none" },
-                boxShadow: "0 4px 20px rgba(124, 58, 237, 0.03)",
-                border: "1px solid rgba(124, 58, 237, 0.05)",
+                bgcolor: "background.default",
+                boxShadow: (theme) =>
+                  theme.palette.mode === "dark"
+                    ? "0 10px 26px rgba(0,0,0,0.28)"
+                    : "0 10px 26px rgba(17,24,39,0.06)",
+                border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.16)}`,
                 mb: 2,
                 overflow: "hidden"
               }}
@@ -62,7 +68,7 @@ export default function FAQ() {
                 expandIcon={<ExpandMoreIcon sx={{ color: "primary.main" }} />}
                 sx={{ px: 4, py: 1 }}
               >
-                <Typography sx={{ fontWeight: 700, color: "#1F2937" }}>{faq.q}</Typography>
+                <Typography sx={{ fontWeight: 700, color: "text.primary" }}>{faq.q}</Typography>
               </AccordionSummary>
               <AccordionDetails sx={{ px: 4, pb: 4 }}>
                 <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>{faq.a}</Typography>
