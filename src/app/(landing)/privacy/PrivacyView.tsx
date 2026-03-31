@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+
 import { Box, Container, Typography, Stack, alpha } from "@mui/material";
 
 export default function PrivacyView() {

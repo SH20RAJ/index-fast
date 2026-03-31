@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+
 import { Box, Container, Typography, Card, Stack, alpha } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 

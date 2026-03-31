@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+
 import { Box, CircularProgress, Typography, Stack, alpha } from "@mui/material";
 import BoltIcon from "@mui/icons-material/Bolt";
 

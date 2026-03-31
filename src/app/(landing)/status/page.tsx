@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Metadata } from "next";
 import { Box } from "@mui/material";
 import Navbar from "@/components/landing/Navbar";
