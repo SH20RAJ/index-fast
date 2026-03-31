@@ -16,6 +16,8 @@ import PublicIcon from "@mui/icons-material/Public";
 import BoltIcon from "@mui/icons-material/Bolt";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SearchIcon from "@mui/icons-material/Search";
+import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+import Link from "next/link";
 import { Website } from "@/components/dashboard/types";
 
 interface SiteCardProps {
@@ -105,6 +107,19 @@ export default function SiteCard({ site, onSync }: SiteCardProps) {
                   }}
                 >
                   <RefreshIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="AI SEO Audit">
+                <IconButton
+                  component={Link}
+                  href={`/sites/${site.id}/audit`}
+                  sx={{
+                    bgcolor: alpha("#10B981", 0.05),
+                    color: "#10B981",
+                    "&:hover": { bgcolor: "#10B981", color: "white" },
+                  }}
+                >
+                  <AssessmentOutlinedIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="GSC Insights">
