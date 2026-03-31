@@ -11,9 +11,9 @@ import {
   useTheme,
   Stack,
 } from "@mui/material";
-import QuizIcon from "@mui/icons-material/Quiz";
-import ColorLensIcon from "@mui/icons-material/ColorLens";
-import VideoGameAssetIcon from "@mui/icons-material/VideoGameAsset";
+import SearchIcon from "@mui/icons-material/Search";
+import SpeedIcon from "@mui/icons-material/Speed";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 
 export default function Features() {
   const theme = useTheme();
@@ -21,11 +21,11 @@ export default function Features() {
   return (
     <Box id="features" sx={{ py: 15 }}>
       <Container maxWidth="lg">
-        <Stack spacing={2} mb={10}>
+        <Stack spacing={2} mb={10} textAlign="center">
            <Typography variant="h2" sx={{ fontWeight: 900, color: "#1F2937" }}>
-             Our 
-             <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", ml: 1 }}>interactive</Box>
-             <br /> features
+             Powerful 
+             <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", ml: 1 }}>indexing</Box>
+             <br /> for every site
            </Typography>
         </Stack>
 
@@ -34,11 +34,11 @@ export default function Features() {
             <Card sx={{ height: "100%", bgcolor: "#F3E8FF", borderRadius: "32px", border: "none", boxShadow: "none" }}>
               <CardContent sx={{ p: 5 }}>
                 <Box sx={{ width: 48, height: 48, borderRadius: "12px", bgcolor: alpha(theme.palette.primary.main, 0.1), display: "flex", alignItems: "center", justifyContent: "center", mb: 4 }}>
-                   <QuizIcon sx={{ color: "primary.main" }} />
+                   <SpeedIcon sx={{ color: "primary.main" }} />
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, fontFamily: '"Patrick Hand", cursive' }}>Fun<br/>Quiz</Typography>
+                <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, fontFamily: '"Patrick Hand", cursive' }}>Instant<br/>Submission</Typography>
                 <Typography variant="body2" sx={{ color: "text.secondary", mt: 6 }}>
-                  Test your understanding with a short but fun quizzes!
+                  Direct search engine pinging to ensure your content is discovered in seconds.
                 </Typography>
               </CardContent>
             </Card>
@@ -48,11 +48,11 @@ export default function Features() {
             <Card sx={{ height: "100%", bgcolor: "primary.main", borderRadius: "32px", border: "none", color: "white", boxShadow: "none" }}>
               <CardContent sx={{ p: 5 }}>
                 <Box sx={{ width: 48, height: 48, borderRadius: "12px", bgcolor: alpha("#ffffff", 0.2), display: "flex", alignItems: "center", justifyContent: "center", mb: 4 }}>
-                   <ColorLensIcon sx={{ color: "white" }} />
+                   <AutoFixHighIcon sx={{ color: "white" }} />
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, fontFamily: '"Patrick Hand", cursive' }}>Creative<br/>Activities</Typography>
+                <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, fontFamily: '"Patrick Hand", cursive' }}>Auto<br/>Sync</Typography>
                 <Typography variant="body2" sx={{ color: alpha("#ffffff", 0.7), mt: 6 }}>
-                  Discover enjoyable activities such as coloring, crafting, and science.
+                  Connect your sitemaps and let us handle the tedious work of content updates.
                 </Typography>
               </CardContent>
             </Card>
@@ -62,11 +62,11 @@ export default function Features() {
             <Card sx={{ height: "100%", bgcolor: "#FEF9C3", borderRadius: "32px", border: "none", boxShadow: "none" }}>
               <CardContent sx={{ p: 5 }}>
                 <Box sx={{ width: 48, height: 48, borderRadius: "12px", bgcolor: alpha(theme.palette.secondary.main, 0.1), display: "flex", alignItems: "center", justifyContent: "center", mb: 4 }}>
-                   <VideoGameAssetIcon sx={{ color: "secondary.main" }} />
+                   <SearchIcon sx={{ color: "secondary.main" }} />
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, fontFamily: '"Patrick Hand", cursive' }}>Learn with<br/>Games</Typography>
+                <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, fontFamily: '"Patrick Hand", cursive' }}>Smart<br/>Retries</Typography>
                 <Typography variant="body2" sx={{ color: "text.secondary", mt: 6 }}>
-                  Learn something new while your kids playing games!
+                  Advanced retry logic that guarantees your URLs are processed despite any failure.
                 </Typography>
               </CardContent>
             </Card>

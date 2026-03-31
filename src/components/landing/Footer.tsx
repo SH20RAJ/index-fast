@@ -9,6 +9,7 @@ import {
   Divider,
 } from "@mui/material";
 import Link from "next/link";
+import BoltIcon from "@mui/icons-material/Bolt";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -31,27 +32,27 @@ export default function Footer() {
                   justifyContent: "center",
                 }}
               >
-                <Typography variant="body2" sx={{ color: "white", fontWeight: 900 }}>W</Typography>
+                <BoltIcon sx={{ color: "white", fontSize: 20 }} />
               </Box>
               <Typography variant="h6" fontWeight="900" color="#1F2937">
-                WonderKids
+                IndexFast
               </Typography>
             </Stack>
             <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 300 }}>
-              The best place to learn and play for kids. Helping children grow into well-rounded individuals.
+              The world's fastest indexing solution for modern SEO. helping your content get discovered instantly.
             </Typography>
           </Stack>
           
           <Stack direction="row" spacing={4}>
             <Stack spacing={2}>
               <Typography variant="subtitle2" fontWeight="bold">Product</Typography>
-              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>Shop</Typography>
               <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>Features</Typography>
+              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>Pricing</Typography>
             </Stack>
             <Stack spacing={2}>
               <Typography variant="subtitle2" fontWeight="bold">Company</Typography>
-              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>About Us</Typography>
-              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>Contact</Typography>
+              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>Status</Typography>
+              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>Privacy</Typography>
             </Stack>
           </Stack>
 
@@ -72,7 +73,7 @@ export default function Footer() {
         
         <Box textAlign="center">
           <Typography variant="caption" color="text.secondary">
-            © {new Date().getFullYear()} WonderKids. Created for learning and fun.
+            © {new Date().getFullYear()} IndexFast. Built for speed and visibility.
           </Typography>
         </Box>
       </Container>

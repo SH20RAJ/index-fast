@@ -1,5 +1,5 @@
 "use client";
-
+import * as React from "react";
 import {
   AppBar,
   Box,
@@ -12,24 +12,25 @@ import {
 } from "@mui/material";
 import { useStackApp, useUser } from "@stackframe/stack";
 import Link from "next/link";
+import BoltIcon from "@mui/icons-material/Bolt";
 
 export default function Navbar() {
   const stack = useStackApp();
   const user = useUser();
 
   return (
-    <AppBar
-      position="static"
-      sx={{
-        bgcolor: "transparent",
+    <AppBar 
+      position="static" 
+      sx={{ 
+        bgcolor: "transparent", 
         boxShadow: "none",
         pt: 2
       }}
     >
       <Container maxWidth="lg">
-        <Toolbar
-          disableGutters
-          sx={{
+        <Toolbar 
+          disableGutters 
+          sx={{ 
             justifyContent: "space-between",
             bgcolor: "white",
             borderRadius: "9999px",
@@ -52,7 +53,7 @@ export default function Navbar() {
                 justifyContent: "center",
               }}
             >
-              <Typography variant="h6" sx={{ color: "white", fontWeight: 900 }}>W</Typography>
+              <BoltIcon sx={{ color: "white", fontSize: 20 }} />
             </Box>
             <Typography
               variant="h6"
@@ -62,17 +63,17 @@ export default function Navbar() {
                 display: { xs: "none", sm: "block" }
               }}
             >
-              WonderKids
+              IndexFast
             </Typography>
           </Stack>
 
           {/* Links */}
           <Stack direction="row" sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
-            {["Home", "Shop", "About Us", "Contact"].map((item) => (
-              <Button
+            {["Home", "Features", "Pricing", "API"].map((item) => (
+              <Button 
                 key={item}
                 variant="text"
-                sx={{
+                sx={{ 
                   borderRadius: "9999px",
                   color: "text.secondary",
                   border: "1px solid transparent",
@@ -110,14 +111,14 @@ export default function Navbar() {
                 <Button
                   variant="contained"
                   onClick={() => stack.signUp()}
-                  sx={{
+                  sx={{ 
                     bgcolor: "primary.main",
                     display: "flex",
                     alignItems: "center",
                     gap: 1
                   }}
                 >
-                  Contact Us
+                  Get Started 
                   <Box sx={{ width: 18, height: 18, borderRadius: "50%", bgcolor: alpha("#ffffff", 0.2), display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px" }}>↗</Box>
                 </Button>
               </>
