@@ -17,13 +17,23 @@ export default function Navbar() {
   const stack = useStackApp();
   const user = useUser();
 
+  const primaryLinks = [
+    { label: "Tools", href: "/tools" },
+    { label: "Blog", href: "/blog" },
+    { label: "Pricing", href: "/#pricing" },
+  ];
+
   return (
     <AppBar
-      position="static"
+      position="sticky"
       sx={{
-        bgcolor: "transparent",
+        top: 0,
+        bgcolor: alpha("#ffffff", 0.85),
+        backdropFilter: "blur(10px)",
         boxShadow: "none",
-        pt: 2
+        borderBottom: "1px solid rgba(124, 58, 237, 0.08)",
+        zIndex: (theme) => theme.zIndex.appBar,
+        py: 1,
       }}
     >
       <Container maxWidth="lg">
@@ -68,14 +78,7 @@ export default function Navbar() {
 
           {/* Links */}
           <Stack direction="row" sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
-            {[
-              { label: "Home", href: "/" },
-              { label: "Blog", href: "/blog" },
-              { label: "Tools", href: "/tools" },
-              { label: "Features", href: "/#features" },
-              { label: "Pricing", href: "/#pricing" },
-              { label: "Contact", href: "/contact" },
-            ].map((item) => (
+            {primaryLinks.map((item) => (
               <Button
                 key={item.label}
                 variant="text"
