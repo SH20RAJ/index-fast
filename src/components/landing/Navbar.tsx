@@ -69,11 +69,12 @@ export default function Navbar() {
           {/* Links */}
           <Stack direction="row" sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
             {[
-              { label: "Home", href: "#home" },
+              { label: "Home", href: "/" },
               { label: "Features", href: "#features" },
               { label: "Pricing", href: "#pricing" },
               { label: "How it works", href: "#how-it-works" },
               { label: "FAQ", href: "#faq" },
+              { label: "Contact", href: "/contact" },
             ].map((item) => (
               <Button
                 key={item.label}
