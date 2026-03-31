@@ -12,59 +12,27 @@ import {
   Typography,
 } from "@mui/material";
 import ToolCta from "./_components/ToolCta";
-
-const toolCards = [
-  {
-    title: "URL Indexability Checker",
-    href: "/tools/indexability-checker",
-    keyword: "free url indexability checker",
-    description: "Check if a page can be crawled and indexed. Find noindex, canonical, and robots issues quickly.",
-  },
-  {
-    title: "Sitemap Health Checker",
-    href: "/tools/sitemap-health-checker",
-    keyword: "free sitemap health checker",
-    description: "Validate sitemap URLs, detect status code issues, and spot thin sitemap quality before submission.",
-  },
-  {
-    title: "Robots.txt Tester",
-    href: "/tools/robots-txt-tester",
-    keyword: "free robots txt tester for seo",
-    description: "Test if important URLs are blocked by robots rules. Prevent crawl blocks on money pages.",
-  },
-  {
-    title: "IndexNow Key Validator",
-    href: "/tools/indexnow-key-validator",
-    keyword: "indexnow key validator free",
-    description: "Verify key file placement and protocol readiness before pushing batches to IndexNow endpoints.",
-  },
-  {
-    title: "Bing Batch Request Builder",
-    href: "/tools/bing-batch-request-builder",
-    keyword: "bing submiturlbatch request builder",
-    description: "Generate ready-to-use request payloads for Bing SubmitUrlBatch API in seconds.",
-  },
-];
+import { SEO_TOOLS, TOOL_CATEGORIES, getToolsByCategory } from "@/lib/tools-catalog";
 
 export const metadata: Metadata = {
-  title: "Free SEO Tools For Indexing | IndexFast",
+  title: "Free SEO Tools Directory | IndexFast",
   description:
-    "Use free SEO tools for indexing: indexability checker, sitemap health checker, robots.txt tester, IndexNow key validator, and Bing batch payload builder.",
+    "Browse a complete free SEO tools directory organized by category: indexing, crawl diagnostics, keyword research, backlinks, domain authority, and metadata optimization.",
   keywords: [
-    "free seo indexing tools",
-    "free indexability checker",
-    "free sitemap checker",
-    "free robots txt tester",
-    "indexnow tools free",
-    "bing url batch submission tool",
+    "free seo tools directory",
+    "seo tools for indexing",
+    "keyword research tools free",
+    "backlink checker tools",
+    "domain authority tools",
+    "meta tags tools",
   ],
   alternates: {
     canonical: "/tools",
   },
   openGraph: {
-    title: "Free SEO Tools For Indexing | IndexFast",
+    title: "Free SEO Tools Directory | IndexFast",
     description:
-      "Find indexing issues fast and convert checks into automation with IndexFast tools.",
+      "Find practical SEO tools by category and convert free checks into recurring automation.",
     url: "/tools",
     type: "website",
   },
@@ -87,37 +55,59 @@ export default function ToolsHomePage() {
           />
 
           <Typography variant="h2" sx={{ maxWidth: 900 }}>
-            Free SEO tools built for vibe coders, bloggers, and small teams
+            Free SEO tools organized for fast wins and scalable indexing workflows
           </Typography>
 
           <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 860, fontWeight: 500 }}>
-            Start with simple free checks that solve indexing bottlenecks fast, then unlock automation when you are ready to scale URL submission.
+            Start with no-login checks for crawl, keywords, links, domains, and metadata. Move to account-based automation when you are ready to scale.
           </Typography>
 
-          <Grid container spacing={2}>
-            {toolCards.map((tool) => (
-              <Grid size={{ xs: 12, md: 6 }} key={tool.href}>
-                <Card sx={{ border: "1px solid rgba(124,58,237,0.1)", height: "100%" }}>
-                  <CardContent sx={{ p: 3 }}>
-                    <Stack spacing={1.5}>
-                      <Chip label={tool.keyword} size="small" sx={{ alignSelf: "flex-start" }} />
-                      <Typography variant="h5" fontWeight={800}>
-                        {tool.title}
-                      </Typography>
-                      <Typography variant="body1" color="text.secondary">
-                        {tool.description}
-                      </Typography>
-                      <Box>
-                        <Link href={tool.href} style={{ textDecoration: "none" }}>
-                          <Button variant="contained">Open Tool Page</Button>
-                        </Link>
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+          <Chip
+            label={`${SEO_TOOLS.length} tools across ${TOOL_CATEGORIES.length} categories`}
+            sx={{ alignSelf: "flex-start" }}
+          />
+
+          {TOOL_CATEGORIES.map((category) => {
+            const categoryTools = getToolsByCategory(category.id);
+
+            return (
+              <Stack key={category.id} spacing={2} sx={{ pt: 2 }}>
+                <Stack spacing={1}>
+                  <Typography variant="h4" fontWeight={900}>
+                    {category.title}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 900 }}>
+                    {category.description}
+                  </Typography>
+                </Stack>
+
+                <Grid container spacing={2}>
+                  {categoryTools.map((tool) => (
+                    <Grid size={{ xs: 12, md: 6 }} key={tool.slug}>
+                      <Card sx={{ border: "1px solid rgba(124,58,237,0.1)", height: "100%" }}>
+                        <CardContent sx={{ p: 3 }}>
+                          <Stack spacing={1.5}>
+                            <Chip label={tool.primaryKeyword} size="small" sx={{ alignSelf: "flex-start" }} />
+                            <Typography variant="h5" fontWeight={800}>
+                              {tool.title}
+                            </Typography>
+                            <Typography variant="body1" color="text.secondary">
+                              {tool.description}
+                            </Typography>
+                            <Box>
+                              <Link href={`/tools/${tool.slug}`} style={{ textDecoration: "none" }}>
+                                <Button variant="contained">Open Tool Page</Button>
+                              </Link>
+                            </Box>
+                          </Stack>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
+            );
+          })}
 
           <ToolCta
             primaryText="Turn free checks into recurring growth"

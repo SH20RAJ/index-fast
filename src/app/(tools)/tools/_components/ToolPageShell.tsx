@@ -18,6 +18,8 @@ interface ToolPageShellProps {
   intentKeywords: string[];
   steps: string[];
   faqs: Array<{ question: string; answer: string }>;
+  categoryTitle?: string;
+  relatedTools?: Array<{ slug: string; title: string }>;
 }
 
 export default function ToolPageShell({
@@ -27,6 +29,8 @@ export default function ToolPageShell({
   intentKeywords,
   steps,
   faqs,
+  categoryTitle,
+  relatedTools,
 }: ToolPageShellProps) {
   return (
     <Box sx={{ py: { xs: 8, md: 12 } }}>
@@ -50,6 +54,12 @@ export default function ToolPageShell({
           <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 860, fontWeight: 500 }}>
             {description}
           </Typography>
+
+          {categoryTitle ? (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: -1 }}>
+              Category: {categoryTitle}
+            </Typography>
+          ) : null}
 
           <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
             {intentKeywords.map((keyword) => (
@@ -94,6 +104,21 @@ export default function ToolPageShell({
               ))}
             </Stack>
           </Paper>
+
+          {relatedTools && relatedTools.length > 0 ? (
+            <Paper sx={{ p: { xs: 3, md: 4 }, border: "1px solid rgba(124,58,237,0.1)" }}>
+              <Typography variant="h5" fontWeight={800}>
+                Related Tools
+              </Typography>
+              <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mt: 2 }}>
+                {relatedTools.map((tool) => (
+                  <Link key={tool.slug} href={`/tools/${tool.slug}`} style={{ textDecoration: "none" }}>
+                    <Chip clickable label={tool.title} />
+                  </Link>
+                ))}
+              </Stack>
+            </Paper>
+          ) : null}
 
           <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
             <Link href="/tools" style={{ textDecoration: "none" }}>

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { SEO_TOOLS } from "@/lib/tools-catalog";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.net";
 
@@ -8,11 +9,7 @@ const paths = [
   "/privacy",
   "/status",
   "/tools",
-  "/tools/indexability-checker",
-  "/tools/sitemap-health-checker",
-  "/tools/robots-txt-tester",
-  "/tools/indexnow-key-validator",
-  "/tools/bing-batch-request-builder",
+  ...SEO_TOOLS.map((tool) => `/tools/${tool.slug}`),
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
