@@ -22,8 +22,8 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         display: "flex",
         minHeight: "100vh",
         background: isDark
-          ? "radial-gradient(circle at 100% 0%, rgba(16,185,129,0.14) 0%, rgba(16,185,129,0) 40%), radial-gradient(circle at 0% 100%, rgba(14,165,233,0.11) 0%, rgba(14,165,233,0) 40%), #0D1220"
-          : "radial-gradient(circle at 100% 0%, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0) 34%), radial-gradient(circle at 0% 100%, rgba(14,165,233,0.07) 0%, rgba(14,165,233,0) 36%), #F3F7FC",
+          ? "radial-gradient(circle at 100% 0%, rgba(14,165,233,0.08) 0%, rgba(14,165,233,0) 38%), #0B1220"
+          : "radial-gradient(circle at 100% 0%, rgba(14,165,233,0.06) 0%, rgba(14,165,233,0) 34%), #F4F7FB",
       }}
     >
       <DashboardSidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />

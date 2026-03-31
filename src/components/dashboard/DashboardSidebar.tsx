@@ -34,7 +34,6 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
   const { mode, toggleColorMode } = useColorMode();
   const pathname = usePathname();
   const user = useUser();
-  const stack = useStackApp();
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
@@ -133,53 +132,35 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
       </Stack>
 
       <Stack
-        spacing={2}
+        spacing={1.25}
         sx={{
           pt: 2,
           borderTop: "1px solid",
           borderColor: alpha(theme.palette.divider, isDark ? 0.35 : 0.45),
         }}
       >
-        {user && (
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ px: 1 }}>
-            <Box
-              sx={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                bgcolor: "primary.main",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                fontWeight: 700,
-                fontSize: "0.875rem",
-              }}
-            >
-              {user.displayName?.[0] || user.primaryEmail?.[0] || "U"}
-            </Box>
-            <Box sx={{ minWidth: 0 }}>
-              <Typography variant="body2" fontWeight={700} noWrap>
-                {user.displayName || "User"}
-              </Typography>
-              <Typography variant="caption" color="text.secondary" noWrap sx={{ display: "block" }}>
-                {user.primaryEmail}
-              </Typography>
-            </Box>
-          </Stack>
-        )}
-        <Button
-          onClick={() => stack.signOut()}
-          startIcon={<LogoutIcon />}
-          fullWidth
+        <Box
           sx={{
-            justifyContent: "flex-start",
-            color: "error.main",
-            "&:hover": { bgcolor: alpha(theme.palette.error.main, isDark ? 0.2 : 0.08) },
+            px: 1,
+            py: 1,
+            borderRadius: "12px",
+            border: "1px solid",
+            borderColor: alpha(theme.palette.divider, isDark ? 0.55 : 0.9),
+            bgcolor: alpha(theme.palette.background.paper, isDark ? 0.55 : 0.8),
           }}
         >
-          Sign Out
-        </Button>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1.25}>
+            <Box sx={{ minWidth: 0 }}>
+              <Typography variant="body2" fontWeight={700} noWrap>
+                {user?.displayName || "User"}
+              </Typography>
+              <Typography variant="caption" color="text.secondary" noWrap sx={{ display: "block" }}>
+                {user?.primaryEmail || "No email"}
+              </Typography>
+            </Box>
+            <UserButton showUserInfo />
+          </Stack>
+        </Box>
       </Stack>
     </Stack>
   );

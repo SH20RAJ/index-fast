@@ -459,17 +459,12 @@ export default function ToolboxView() {
                         <Card
                           sx={{
                             height: "100%",
-                            borderRadius: "18px",
+                            borderRadius: "16px",
                             border: "1px solid",
                             borderColor: "divider",
                             boxShadow: "none",
-                            transition: "all 0.2s ease",
                             "&:hover": {
-                              transform: "translateY(-3px)",
-                              borderColor: alpha(theme.palette.primary.main, isDark ? 0.55 : 0.36),
-                              boxShadow: isDark
-                                ? "0 10px 24px rgba(2,6,23,0.45)"
-                                : "0 10px 24px rgba(15,23,42,0.08)",
+                              borderColor: alpha(theme.palette.primary.main, isDark ? 0.4 : 0.3),
                             },
                           }}
                         >

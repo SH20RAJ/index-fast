@@ -40,13 +40,15 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
     <Stack spacing={3.5}>
       <Card
         sx={{
-          borderRadius: "24px",
+          borderRadius: "20px",
           border: "1px solid",
-          borderColor: alpha("#0F172A", 0.08),
-          background:
-            "linear-gradient(130deg, rgba(15,23,42,0.96) 0%, rgba(6,95,70,0.95) 55%, rgba(249,115,22,0.9) 100%)",
+          borderColor: "divider",
+          background: (theme) =>
+            theme.palette.mode === "dark"
+              ? "linear-gradient(120deg, rgba(15,23,42,0.92) 0%, rgba(30,41,59,0.9) 100%)"
+              : "linear-gradient(120deg, rgba(15,23,42,0.94) 0%, rgba(30,41,59,0.92) 100%)",
           color: "#F8FAFC",
-          boxShadow: "0 22px 60px rgba(15, 23, 42, 0.3)",
+          boxShadow: "none",
         }}
       >
         <CardContent sx={{ p: { xs: 2.5, md: 3.5 } }}>
@@ -117,16 +119,16 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
 
       <Grid container spacing={2}>
         {[
-          { label: "Sites in Workspace", value: data.websitesCount, icon: <HubIcon />, color: "#0F766E" },
-          { label: "Submissions This Month", value: data.submissionsThisMonth, icon: <AutoGraphIcon />, color: "#B45309" },
-          { label: "Successful This Month", value: data.successfulThisMonth, icon: <DoneAllIcon />, color: "#15803D" },
+          { label: "Sites in Workspace", value: data.websitesCount, icon: <HubIcon />, color: "#0EA5E9" },
+          { label: "Submissions This Month", value: data.submissionsThisMonth, icon: <AutoGraphIcon />, color: "#475569" },
+          { label: "Successful This Month", value: data.successfulThisMonth, icon: <DoneAllIcon />, color: "#0F766E" },
           { label: "Plan Capacity", value: `${data.usage.websitesLimit} sites`, icon: <BoltIcon />, color: "#334155" },
         ].map((metric) => (
           <Grid key={metric.label} size={{ xs: 12, sm: 6, lg: 3 }}>
-            <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: alpha(metric.color, 0.2), boxShadow: "none" }}>
+            <Card sx={{ borderRadius: "14px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
               <CardContent sx={{ p: 2.25 }}>
                 <Stack spacing={1.25}>
-                  <Avatar sx={{ width: 36, height: 36, bgcolor: alpha(metric.color, 0.12), color: metric.color }}>
+                  <Avatar sx={{ width: 36, height: 36, bgcolor: alpha(metric.color, 0.16), color: metric.color }}>
                     {metric.icon}
                   </Avatar>
                   <Typography variant="h5" sx={{ fontWeight: 900 }}>
@@ -270,7 +272,13 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
             ) : (
               <Stack spacing={1}>
                 {data.topSites.map((site) => (
-                  <Stack key={site.id} direction="row" justifyContent="space-between" alignItems="center" sx={{ p: 1.25, borderRadius: "12px", bgcolor: alpha("#0F172A", 0.03) }}>
+                  <Stack
+                    key={site.id}
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{ p: 1.25, borderRadius: "12px", border: "1px solid", borderColor: "divider" }}
+                  >
                     <Box sx={{ minWidth: 0 }}>
                       <Typography variant="body2" sx={{ fontWeight: 800 }} noWrap>{site.url}</Typography>
                       <Typography variant="caption" color="text.secondary">

@@ -11,7 +11,6 @@ import {
   Stack,
   TextField,
   Typography,
-  alpha,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import PublicIcon from "@mui/icons-material/Public";
@@ -173,7 +172,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                       Last sync: {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString() : "Never"}
                     </Typography>
 
-                    <Divider sx={{ borderColor: alpha("#111827", 0.08) }} />
+                    <Divider sx={{ borderColor: "divider" }} />
 
                     <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25}>
                       <Box component="form" action={syncAction} sx={{ width: { xs: "100%", sm: "auto" } }}>

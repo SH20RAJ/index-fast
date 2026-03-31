@@ -42,7 +42,7 @@ export const metadata: Metadata = {
       "Automated indexing workflows for modern teams. Submit URLs faster to Bing and IndexNow, monitor sitemap changes, and improve organic discovery.",
     images: [
       {
-        url: "/opengraph-image",
+        url: "/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "IndexFast automated SEO indexing platform preview",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     title: "IndexFast | Automated SEO Indexing",
     description:
       "Automated indexing workflows for modern teams. Submit URLs faster to Bing and IndexNow, monitor sitemap changes, and improve organic discovery.",
-    images: ["/twitter-image"],
+    images: ["/twitter-image.png"],
   },
   robots: {
     index: true,
@@ -92,7 +92,7 @@ const websiteJsonLd = {
       "@id": `${siteUrl}/#organization`,
       name: siteName,
       url: siteUrl,
-      logo: `${siteUrl}/icon`,
+      logo: `${siteUrl}/icon.png`,
     },
     {
       "@type": "WebSite",

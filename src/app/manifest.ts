@@ -17,21 +17,33 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["business", "productivity", "developer"],
     icons: [
       {
-        src: "/icon",
+        src: "/icon.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icon",
+        src: "/icon.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",
       },
       {
-        src: "/apple-icon",
+        src: "/apple-icon.png",
         sizes: "180x180",
         type: "image/png",
+      },
+      {
+        src: "/android-chrome-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
       },
       {
         src: "/favicon.ico",
@@ -55,14 +67,14 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     screenshots: [
       {
-        src: "/opengraph-image",
+        src: "/opengraph-image.png",
         sizes: "1200x630",
         type: "image/png",
         form_factor: "wide",
         label: "IndexFast platform preview",
       },
       {
-        src: "/twitter-image",
+        src: "/twitter-image.png",
         sizes: "1200x630",
         type: "image/png",
         label: "IndexFast social preview image",
