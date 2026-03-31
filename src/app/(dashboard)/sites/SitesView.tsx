@@ -82,6 +82,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
         {createState.status !== "idle" ? <Alert severity={createState.status}>{createState.message}</Alert> : null}
         {syncState.status !== "idle" ? <Alert severity={syncState.status}>{syncState.message}</Alert> : null}
         {deleteState.status !== "idle" ? <Alert severity={deleteState.status}>{deleteState.message}</Alert> : null}
+        {importState.status !== "idle" ? <Alert severity={importState.status}>{importState.message}</Alert> : null}
 
         <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
           <CardContent sx={{ p: { xs: 2.25, md: 3 } }}>
@@ -90,9 +91,21 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                 <Typography variant="h6" fontWeight={900}>
                   Add Website
                 </Typography>
-                <Typography variant="body2" color={slotsLeft === 0 ? "error.main" : "text.secondary"}>
-                  {slotsLeft} slot(s) left on {planName}
-                </Typography>
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25} alignItems={{ xs: "flex-start", sm: "center" }}>
+                  <Box component="form" action={importAction}>
+                    <Button
+                      type="submit"
+                      variant="outlined"
+                      disabled={importPending}
+                      sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}
+                    >
+                      {importPending ? "Importing..." : "Import from Google Search Console"}
+                    </Button>
+                  </Box>
+                  <Typography variant="body2" color={slotsLeft === 0 ? "error.main" : "text.secondary"}>
+                    {slotsLeft} slot(s) left on {planName}
+                  </Typography>
+                </Stack>
               </Stack>
 
               <TextField label="Website URL" name="url" placeholder="https://example.com" fullWidth required />

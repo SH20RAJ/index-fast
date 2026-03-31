@@ -1,6 +1,6 @@
 "use client";
 import { Box, Stack, useTheme, alpha, Typography, Button, Drawer, IconButton } from "@mui/material";
-import { useUser, useStackApp } from "@stackframe/stack";
+import { useUser, UserButton } from "@stackframe/stack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BoltIcon from "@mui/icons-material/Bolt";
@@ -11,7 +11,6 @@ import LanguageIcon from "@mui/icons-material/Language";
 import HistoryIcon from "@mui/icons-material/History";
 import BuildIcon from "@mui/icons-material/Build";
 import SettingsIcon from "@mui/icons-material/Settings";
-import LogoutIcon from "@mui/icons-material/Logout";
 import { useColorMode } from "@/components/ThemeRegistry";
 
 const SIDEBAR_WIDTH = 280;
