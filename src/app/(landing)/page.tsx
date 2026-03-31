@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { Box } from "@mui/material";
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
@@ -7,6 +8,11 @@ import Pricing from "@/components/landing/Pricing";
 import FAQ from "@/components/landing/FAQ";
 import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
+
+export const metadata: Metadata = {
+  title: "IndexFast | Automated SEO Indexing & URL Submission",
+  description: "Stop waiting for Google to crawl your site. IndexFast submits your URLs to Google, Bing, and IndexNow instantly for faster ranking and better SEO.",
+};
 
 export default function LandingPage() {
   return (
