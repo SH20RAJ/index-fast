@@ -1,48 +1,70 @@
 "use client";
-import * as React from "react";
+
 import { ThemeProvider, createTheme, responsiveFontSizes } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 
-// Clean Minimal Dark Theme
+// WonderKids Playful Theme
 let theme = createTheme({
   palette: {
-    mode: "dark",
+    mode: "light",
     primary: {
-      main: "#6366F1", // Indigo
+      main: "#7C3AED", // Violet 600
+      light: "#A78BFA",
+      dark: "#5B21B6",
+    },
+    secondary: {
+      main: "#FACC15", // Amber 400
+      light: "#FDE68A",
+      dark: "#D97706",
     },
     background: {
-      default: "#0a0a0a",
-      paper: "#121212",
+      default: "#ffffff",
+      paper: "#F5F3FF", // Very light purple
     },
     text: {
-      primary: "#ffffff",
-      secondary: "#a1a1aa",
+      primary: "#1F2937",
+      secondary: "#6B7280",
     },
   },
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: { fontWeight: 800 },
-    h2: { fontWeight: 700 },
-    h3: { fontWeight: 600 },
-    button: { textTransform: "none", fontWeight: 600 },
+    fontFamily: '"Outfit", "Inter", sans-serif',
+    h1: { fontWeight: 800, letterSpacing: "-0.02em" },
+    h2: { fontWeight: 800, letterSpacing: "-0.02em" },
+    h3: { fontWeight: 700 },
+    button: { textTransform: "none", fontWeight: 700 },
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 24, // Very rounded for the kids' feel
   },
+  shadows: [
+    "none",
+    "0px 2px 4px rgba(124, 58, 237, 0.05)",
+    "0px 4px 8px rgba(124, 58, 237, 0.08)",
+    "0px 8px 16px rgba(124, 58, 237, 0.1)",
+    "0px 12px 24px rgba(124, 58, 237, 0.12)",
+    "0px 16px 32px rgba(124, 58, 237, 0.14)",
+    ...Array(19).fill("none"),
+  ] as any,
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          padding: "8px 20px",
+          borderRadius: 9999, // Pill shaped buttons
+          padding: "12px 28px",
+          boxShadow: "none",
+          "&:hover": {
+            boxShadow: "0 8px 20px rgba(124, 58, 237, 0.2)",
+            transform: "scale(1.02)",
+          },
         },
       },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundImage: "none",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
+          boxShadow: "0 10px 30px rgba(124, 58, 237, 0.08)",
+          border: "none",
         },
       },
     },

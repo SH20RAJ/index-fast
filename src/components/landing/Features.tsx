@@ -7,100 +7,70 @@ import {
   Typography,
   Card,
   CardContent,
-  Avatar,
   alpha,
+  useTheme,
+  Stack,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import SpeedIcon from "@mui/icons-material/Speed";
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
-import BackupTableIcon from "@mui/icons-material/BackupTable";
-import SecurityIcon from "@mui/icons-material/Security";
-import TimelineIcon from "@mui/icons-material/Timeline";
-
-const FEATURES = [
-  {
-    title: "Instant Submission",
-    description: "Submit your URLs directly to search engines. No more waiting.",
-    icon: <SpeedIcon />,
-  },
-  {
-    title: "Batch Indexing",
-    description: "Bulk upload up to 10,000 URLs at once for large sites.",
-    icon: <BackupTableIcon />,
-  },
-  {
-    title: "Auto-Discovery",
-    description: "Link your sitemap and let us handle new content automatically.",
-    icon: <AutoFixHighIcon />,
-  },
-  {
-    title: "Highly Secure",
-    description: "End-to-end encryption for all your site data and API keys.",
-    icon: <SecurityIcon />,
-  },
-  {
-    title: "Real-time Analytics",
-    description: "Detailed insights into your search engine performance.",
-    icon: <TimelineIcon />,
-  },
-  {
-    title: "Smart Retries",
-    description: "Optimized retry logic to guarantee 100% indexing success.",
-    icon: <SearchIcon />,
-  },
-];
+import QuizIcon from "@mui/icons-material/Quiz";
+import ColorLensIcon from "@mui/icons-material/ColorLens";
+import VideoGameAssetIcon from "@mui/icons-material/VideoGameAsset";
 
 export default function Features() {
+  const theme = useTheme();
+
   return (
-    <Box id="features" sx={{ py: 16 }}>
+    <Box id="features" sx={{ py: 15 }}>
       <Container maxWidth="lg">
-        <Typography
-          variant="h3"
-          textAlign="center"
-          mb={10}
-          fontWeight={800}
-        >
-          Everything you need <br /> to reach for the top.
-        </Typography>
+        <Stack spacing={2} mb={10}>
+           <Typography variant="h2" sx={{ fontWeight: 900, color: "#1F2937" }}>
+             Our 
+             <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", ml: 1 }}>interactive</Box>
+             <br /> features
+           </Typography>
+        </Stack>
 
         <Grid container spacing={4}>
-          {FEATURES.map((feature, idx) => (
-            <Grid item xs={12} sm={6} md={4} key={idx}>
-              <Card
-                sx={{
-                  height: "100%",
-                  bgcolor: "transparent",
-                  boxShadow: "none",
-                  border: "1px solid rgba(255, 255, 255, 0.05)",
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    bgcolor: alpha("#ffffff", 0.02),
-                  },
-                }}
-              >
-                <CardContent sx={{ p: 4 }}>
-                  <Avatar
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      mb: 3,
-                      bgcolor: "primary.main",
-                      color: "white",
-                      boxShadow: "0 8px 16px -4px rgba(99, 102, 241, 0.3)",
-                    }}
-                  >
-                    {feature.icon}
-                  </Avatar>
-                  <Typography variant="h6" gutterBottom fontWeight="bold">
-                    {feature.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" lineHeight={1.6}>
-                    {feature.description}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+          <Grid item xs={12} md={4}>
+            <Card sx={{ height: "100%", bgcolor: "#F3E8FF", borderRadius: "32px", border: "none", boxShadow: "none" }}>
+              <CardContent sx={{ p: 5 }}>
+                <Box sx={{ width: 48, height: 48, borderRadius: "12px", bgcolor: alpha(theme.palette.primary.main, 0.1), display: "flex", alignItems: "center", justifyContent: "center", mb: 4 }}>
+                   <QuizIcon sx={{ color: "primary.main" }} />
+                </Box>
+                <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, fontFamily: '"Patrick Hand", cursive' }}>Fun<br/>Quiz</Typography>
+                <Typography variant="body2" sx={{ color: "text.secondary", mt: 6 }}>
+                  Test your understanding with a short but fun quizzes!
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card sx={{ height: "100%", bgcolor: "primary.main", borderRadius: "32px", border: "none", color: "white", boxShadow: "none" }}>
+              <CardContent sx={{ p: 5 }}>
+                <Box sx={{ width: 48, height: 48, borderRadius: "12px", bgcolor: alpha("#ffffff", 0.2), display: "flex", alignItems: "center", justifyContent: "center", mb: 4 }}>
+                   <ColorLensIcon sx={{ color: "white" }} />
+                </Box>
+                <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, fontFamily: '"Patrick Hand", cursive' }}>Creative<br/>Activities</Typography>
+                <Typography variant="body2" sx={{ color: alpha("#ffffff", 0.7), mt: 6 }}>
+                  Discover enjoyable activities such as coloring, crafting, and science.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card sx={{ height: "100%", bgcolor: "#FEF9C3", borderRadius: "32px", border: "none", boxShadow: "none" }}>
+              <CardContent sx={{ p: 5 }}>
+                <Box sx={{ width: 48, height: 48, borderRadius: "12px", bgcolor: alpha(theme.palette.secondary.main, 0.1), display: "flex", alignItems: "center", justifyContent: "center", mb: 4 }}>
+                   <VideoGameAssetIcon sx={{ color: "secondary.main" }} />
+                </Box>
+                <Typography variant="h4" sx={{ fontWeight: 900, mb: 2, fontFamily: '"Patrick Hand", cursive' }}>Learn with<br/>Games</Typography>
+                <Typography variant="body2" sx={{ color: "text.secondary", mt: 6 }}>
+                  Learn something new while your kids playing games!
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       </Container>
     </Box>

@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+
 import {
   AppBar,
   Box,
@@ -7,69 +7,95 @@ import {
   Typography,
   Button,
   Container,
-  Stack as MuiStack,
+  Stack,
   alpha,
 } from "@mui/material";
 import { useStackApp, useUser } from "@stackframe/stack";
 import Link from "next/link";
-import BoltIcon from "@mui/icons-material/Bolt";
 
 export default function Navbar() {
   const stack = useStackApp();
   const user = useUser();
 
   return (
-    <AppBar 
-      position="sticky" 
-      sx={{ 
-        bgcolor: alpha("#000000", 0.7), 
-        backdropFilter: "blur(10px)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-        boxShadow: "none"
+    <AppBar
+      position="static"
+      sx={{
+        bgcolor: "transparent",
+        boxShadow: "none",
+        pt: 2
       }}
     >
       <Container maxWidth="lg">
-        <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
-          <MuiStack direction="row" alignItems="center" spacing={1.5} component={Link} href="/" sx={{ textDecoration: "none", color: "inherit" }}>
+        <Toolbar
+          disableGutters
+          sx={{
+            justifyContent: "space-between",
+            bgcolor: "white",
+            borderRadius: "9999px",
+            px: { xs: 2, sm: 4 },
+            py: 1,
+            border: "1px solid rgba(124, 58, 237, 0.1)",
+            boxShadow: "0 8px 30px rgba(124, 58, 237, 0.05)"
+          }}
+        >
+          {/* Logo */}
+          <Stack direction="row" alignItems="center" spacing={1.5} component={Link} href="/" sx={{ textDecoration: "none", color: "inherit" }}>
             <Box
               sx={{
+                width: 38,
+                height: 38,
+                borderRadius: "10px",
+                bgcolor: "primary.main",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width: 32,
-                height: 32,
-                borderRadius: "6px",
-                bgcolor: "primary.main",
               }}
             >
-              <BoltIcon sx={{ color: "white", fontSize: 20 }} />
+              <Typography variant="h6" sx={{ color: "white", fontWeight: 900 }}>W</Typography>
             </Box>
             <Typography
               variant="h6"
-              noWrap
               sx={{
-                fontWeight: 700,
-                letterSpacing: "-0.01em",
+                fontWeight: 900,
                 color: "text.primary",
+                display: { xs: "none", sm: "block" }
               }}
             >
-              IndexFast
+              WonderKids
             </Typography>
-          </MuiStack>
+          </Stack>
 
-          <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 3 }}>
-            <Button component={Link} href="#features" sx={{ color: "text.secondary", fontSize: "0.875rem" }}>Features</Button>
-            <Button component={Link} href="#pricing" sx={{ color: "text.secondary", fontSize: "0.875rem" }}>Pricing</Button>
-          </Box>
+          {/* Links */}
+          <Stack direction="row" sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
+            {["Home", "Shop", "About Us", "Contact"].map((item) => (
+              <Button
+                key={item}
+                variant="text"
+                sx={{
+                  borderRadius: "9999px",
+                  color: "text.secondary",
+                  border: "1px solid transparent",
+                  "&:hover": {
+                    border: "1px solid rgba(124, 58, 237, 0.2)",
+                    bgcolor: "rgba(124, 58, 237, 0.05)",
+                    color: "primary.main"
+                  }
+                }}
+              >
+                {item}
+              </Button>
+            ))}
+          </Stack>
 
-          <MuiStack direction="row" spacing={2} alignItems="center">
+          {/* Auth */}
+          <Stack direction="row" spacing={2} alignItems="center">
             {user ? (
               <Button
                 variant="contained"
                 component={Link}
                 href="/dashboard"
                 size="small"
-                sx={{ borderRadius: "20px" }}
               >
                 Dashboard
               </Button>
@@ -77,21 +103,26 @@ export default function Navbar() {
               <>
                 <Button
                   onClick={() => stack.signIn()}
-                  sx={{ color: "text.secondary", display: { xs: "none", sm: "block" }, fontSize: "0.875rem" }}
+                  sx={{ color: "text.primary", fontWeight: 700, fontSize: "0.875rem" }}
                 >
-                  Log In
+                  Sign In
                 </Button>
                 <Button
                   variant="contained"
                   onClick={() => stack.signUp()}
-                  size="small"
-                  sx={{ borderRadius: "20px" }}
+                  sx={{
+                    bgcolor: "primary.main",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1
+                  }}
                 >
-                  Join
+                  Contact Us
+                  <Box sx={{ width: 18, height: 18, borderRadius: "50%", bgcolor: alpha("#ffffff", 0.2), display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px" }}>↗</Box>
                 </Button>
               </>
             )}
-          </MuiStack>
+          </Stack>
         </Toolbar>
       </Container>
     </AppBar>
