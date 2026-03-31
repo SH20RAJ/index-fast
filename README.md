@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IndexFast
 
-## Getting Started
+IndexFast is a lean SaaS for faster indexing.
+No AI-heavy workflows. No complex setup. Just submit, sync, and track URLs through IndexNow, Bing, and Google Search Console related flows.
 
-First, run the development server:
+## Why This Product
+
+Most creators and indie teams publish content faster than search engines discover it.
+IndexFast helps close that gap with simple automation.
+
+## Target Audience
+
+- Vibe coders shipping projects fast and needing pages indexed quickly
+- Bloggers and content teams publishing daily content
+- SEO freelancers and small agencies managing multiple client sites
+- pSEO builders handling large URL volumes
+- Indie hackers validating ideas with organic traffic
+- Local business sites that need service pages indexed fast
+
+## Core MVP Features
+
+### 1) Sitemap Auto Sync
+
+- Add sitemap once
+- Cron checks for new URLs
+- New URLs are auto-submitted
+
+### 2) IndexNow + Bing Submission
+
+- IndexNow push for participating engines
+- Bing batch submission support via:
+  `https://ssl.bing.com/webmaster/api.svc/json/SubmitUrlbatch?apikey=`
+- Fast retries and simple status logging
+
+### 3) Google Search Console Import
+
+- Connect Google account
+- List verified sites
+- Import sites into dashboard in one click
+
+### 4) Lightweight SEO Tools
+
+- Submission directory list
+- Header/status checker (`200/3xx/4xx`)
+- Dead-link checks from sitemap URLs
+
+## Monetization-First Approach
+
+- Free: limited sites + manual sync
+- Pro: auto sitemap sync + more quotas + history
+- Agency: multi-site workflows + team access + reporting
+
+Build simple, solve a painful workflow, and charge for automation.
+
+## Current Repo Status
+
+Implemented now:
+
+- Marketing landing pages
+- Auth route scaffold
+- Integration utilities in `src/lib/` for Bing, Google, IndexNow, and sitemap parsing
+- UI component system and app layout
+
+Scaffolded (next build stage):
+
+- Dashboard pages in `src/app/(dashboard)/dashboard/` and `src/app/(dashboard)/sites/`
+- Data models, usage history UI, and paid plan limits
+
+## Stack
+
+- Next.js App Router
+- React + TypeScript
+- Tailwind + MUI
+- Postgres-ready dependencies (Drizzle + postgres)
+- Google APIs + HTTP utility layer
+- Cron-friendly architecture for sitemap sync
+
+Planned deployment style:
+
+- Next.js app for dashboard + API routes
+- Cloudflare Workers for high-throughput submission tasks
+- Cron jobs for periodic sitemap processing
+
+## Local Development
+
+Install and run:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables (minimum)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+GOOGLE_REDIRECT_URI=...
+```
 
-## Learn More
+Add auth/provider keys as needed for your Stack setup.
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `pnpm dev` start development server
+- `pnpm build` production build
+- `pnpm start` run production build
+- `pnpm lint` run ESLint
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Roadmap
 
-## Deploy on Vercel
+1. Finish dashboard (sites, submissions, status stream)
+2. Add Postgres schema and persistence
+3. Implement cron-driven sitemap diff pipeline
+4. Add quotas and billing gates for paid plans
+5. Launch directory and SEO utility tools inside dashboard
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Principles
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Keep it simple
+- Avoid compute-heavy features
+- Focus on fast shipping and revenue
+- Build practical SEO workflows, not hype features
