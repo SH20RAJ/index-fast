@@ -1,10 +1,14 @@
 import "server-only";
 
 import { eq } from "drizzle-orm";
-import type { WebhookPayload } from "@dodopayments/core";
 import type { PlanId } from "@/lib/billing/plans";
 import { db } from "@/lib/db";
 import { userSubscriptions, users } from "@/lib/db/schema";
+
+type WebhookPayload = {
+  type: string;
+  data: unknown;
+};
 
 interface DodoSubscriptionSnapshot {
   customerId: string | null;
