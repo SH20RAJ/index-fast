@@ -38,15 +38,16 @@ export default function Footer() {
               </Typography>
             </Stack>
             <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 300 }}>
-              The world's fastest indexing solution for modern SEO. helping your content get discovered instantly.
+              The world&apos;s fastest indexing solution for modern SEO. helping your content get discovered instantly.
             </Typography>
           </Stack>
 
           <Stack direction="row" spacing={4}>
             <Stack spacing={2}>
               <Typography variant="subtitle2" fontWeight="bold">Product</Typography>
-              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>Features</Typography>
-              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>Pricing</Typography>
+              <Typography variant="body2" color="text.secondary" component={Link} href="#features" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Features</Typography>
+              <Typography variant="body2" color="text.secondary" component={Link} href="#pricing" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Pricing</Typography>
+              <Typography variant="body2" color="text.secondary" component={Link} href="#how-it-works" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>How it works</Typography>
             </Stack>
             <Stack spacing={2}>
               <Typography variant="subtitle2" fontWeight="bold">Company</Typography>

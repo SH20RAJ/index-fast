@@ -16,7 +16,7 @@ export default function Hero() {
   const stack = useStackApp();
 
   return (
-    <Box sx={{ pt: { xs: 8, md: 12 }, pb: { xs: 10, md: 15 }, textAlign: "center", position: "relative", overflow: "hidden" }}>
+    <Box id="home" sx={{ pt: { xs: 8, md: 12 }, pb: { xs: 10, md: 15 }, textAlign: "center", position: "relative", overflow: "hidden" }}>
       {/* Decorative blobs/icons */}
       <Box sx={{ position: "absolute", top: "10%", left: "5%", width: 80, height: 80, borderRadius: "50%", bgcolor: alpha(theme.palette.secondary.main, 0.2), zIndex: -1 }} />
       <Box sx={{ position: "absolute", top: "15%", right: "10%", width: 60, height: 60, borderRadius: "30% 70% 70% 30% / 30% 30% 70% 70%", bgcolor: alpha(theme.palette.primary.main, 0.1), zIndex: -1 }} />

@@ -68,14 +68,22 @@ export default function Navbar() {
 
           {/* Links */}
           <Stack direction="row" sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
-            {["Home", "Features", "Pricing", "API"].map((item) => (
+            {[
+              { label: "Home", href: "#home" },
+              { label: "Features", href: "#features" },
+              { label: "Pricing", href: "#pricing" },
+              { label: "How it works", href: "#how-it-works" },
+            ].map((item) => (
               <Button
-                key={item}
+                key={item.label}
                 variant="text"
+                component={Link}
+                href={item.href}
                 sx={{
                   borderRadius: "9999px",
                   color: "text.secondary",
                   border: "1px solid transparent",
+                  px: 2,
                   "&:hover": {
                     border: "1px solid rgba(124, 58, 237, 0.2)",
                     bgcolor: "rgba(124, 58, 237, 0.05)",
@@ -83,7 +91,7 @@ export default function Navbar() {
                   }
                 }}
               >
-                {item}
+                {item.label}
               </Button>
             ))}
           </Stack>
