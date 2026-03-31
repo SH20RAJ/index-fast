@@ -13,6 +13,7 @@ import {
   InputAdornment,
   alpha,
   Link as MuiLink,
+  useTheme,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import LaunchIcon from "@mui/icons-material/Launch";
@@ -234,6 +235,8 @@ const directories: DirectoryItem[] = [
 ];
 
 export default function ToolboxView() {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<"All" | DirectoryItem["category"]>("All");
 
@@ -260,9 +263,9 @@ export default function ToolboxView() {
   const easyWins = directories.filter((d) => d.difficulty === "Easy").length;
 
   const categoryTone: Record<DirectoryItem["category"], string> = {
-    Launch: "#1D4ED8",
-    Community: "#047857",
-    Directory: "#B45309",
+    Launch: theme.palette.primary.main,
+    Community: theme.palette.secondary.main,
+    Directory: "#F59E0B",
   };
 
   return (
@@ -275,10 +278,17 @@ export default function ToolboxView() {
 
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, md: 4 }}>
-            <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
+            <Card
+              sx={{
+                borderRadius: "18px",
+                border: "1px solid",
+                borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
+                boxShadow: "none",
+              }}
+            >
               <CardContent sx={{ p: 2.5 }}>
                 <Stack direction="row" spacing={1.5} alignItems="center">
-                  <PublicIcon sx={{ color: "#1D4ED8" }} />
+                  <PublicIcon sx={{ color: "primary.main" }} />
                   <Box>
                     <Typography variant="h5" fontWeight={900}>
                       {directories.length}
@@ -292,10 +302,17 @@ export default function ToolboxView() {
             </Card>
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
-            <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
+            <Card
+              sx={{
+                borderRadius: "18px",
+                border: "1px solid",
+                borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
+                boxShadow: "none",
+              }}
+            >
               <CardContent sx={{ p: 2.5 }}>
                 <Stack direction="row" spacing={1.5} alignItems="center">
-                  <TrendingUpIcon sx={{ color: "#047857" }} />
+                  <TrendingUpIcon sx={{ color: "secondary.main" }} />
                   <Box>
                     <Typography variant="h5" fontWeight={900}>
                       {highImpact}
@@ -309,10 +326,17 @@ export default function ToolboxView() {
             </Card>
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
-            <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
+            <Card
+              sx={{
+                borderRadius: "18px",
+                border: "1px solid",
+                borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
+                boxShadow: "none",
+              }}
+            >
               <CardContent sx={{ p: 2.5 }}>
                 <Stack direction="row" spacing={1.5} alignItems="center">
-                  <BoltIcon sx={{ color: "#B45309" }} />
+                  <BoltIcon sx={{ color: "warning.main" }} />
                   <Box>
                     <Typography variant="h5" fontWeight={900}>
                       {easyWins}
@@ -327,7 +351,14 @@ export default function ToolboxView() {
           </Grid>
         </Grid>
 
-        <Card sx={{ borderRadius: "22px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
+        <Card
+          sx={{
+            borderRadius: "22px",
+            border: "1px solid",
+            borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
+            boxShadow: "none",
+          }}
+        >
           <CardContent sx={{ p: 2.5 }}>
             <Stack spacing={2}>
               <TextField
@@ -345,7 +376,16 @@ export default function ToolboxView() {
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "14px",
-                    bgcolor: "#fff",
+                    bgcolor: alpha(theme.palette.background.paper, isDark ? 0.7 : 0.95),
+                    "& fieldset": {
+                      borderColor: alpha(theme.palette.divider, isDark ? 0.8 : 1),
+                    },
+                    "&:hover fieldset": {
+                      borderColor: alpha(theme.palette.primary.main, 0.45),
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: theme.palette.primary.main,
+                    },
                   },
                 }}
               />
@@ -361,10 +401,16 @@ export default function ToolboxView() {
                       borderRadius: "10px",
                       fontWeight: 700,
                       px: 0.5,
-                      bgcolor: category === item ? "#111827" : "#F3F4F6",
-                      color: category === item ? "#fff" : "#374151",
+                      bgcolor:
+                        category === item
+                          ? alpha(theme.palette.primary.main, isDark ? 0.32 : 0.16)
+                          : alpha(theme.palette.text.primary, isDark ? 0.14 : 0.06),
+                      color: category === item ? "text.primary" : "text.secondary",
                       "&:hover": {
-                        bgcolor: category === item ? "#111827" : "#E5E7EB",
+                        bgcolor:
+                          category === item
+                            ? alpha(theme.palette.primary.main, isDark ? 0.4 : 0.22)
+                            : alpha(theme.palette.text.primary, isDark ? 0.2 : 0.1),
                       },
                     }}
                   />
@@ -420,8 +466,10 @@ export default function ToolboxView() {
                             transition: "all 0.2s ease",
                             "&:hover": {
                               transform: "translateY(-3px)",
-                              borderColor: alpha("#111827", 0.22),
-                              boxShadow: "0 10px 24px rgba(17,24,39,0.08)",
+                              borderColor: alpha(theme.palette.primary.main, isDark ? 0.55 : 0.36),
+                              boxShadow: isDark
+                                ? "0 10px 24px rgba(2,6,23,0.45)"
+                                : "0 10px 24px rgba(15,23,42,0.08)",
                             },
                           }}
                         >
@@ -443,12 +491,22 @@ export default function ToolboxView() {
                               <Chip
                                 label={`Impact: ${item.impact}`}
                                 size="small"
-                                sx={{ borderRadius: "8px", fontWeight: 700, bgcolor: "#F9FAFB" }}
+                                sx={{
+                                  borderRadius: "8px",
+                                  fontWeight: 700,
+                                  bgcolor: alpha(theme.palette.text.primary, isDark ? 0.14 : 0.06),
+                                  color: "text.secondary",
+                                }}
                               />
                               <Chip
                                 label={`Difficulty: ${item.difficulty}`}
                                 size="small"
-                                sx={{ borderRadius: "8px", fontWeight: 700, bgcolor: "#F9FAFB" }}
+                                sx={{
+                                  borderRadius: "8px",
+                                  fontWeight: 700,
+                                  bgcolor: alpha(theme.palette.text.primary, isDark ? 0.14 : 0.06),
+                                  color: "text.secondary",
+                                }}
                               />
                             </Stack>
 
@@ -477,9 +535,10 @@ export default function ToolboxView() {
           sx={{
             borderRadius: "22px",
             border: "1px solid",
-            borderColor: alpha("#111827", 0.08),
-            background: "linear-gradient(120deg, #0F172A 0%, #1F2937 55%, #374151 100%)",
-            color: "#fff",
+            borderColor: alpha(theme.palette.divider, isDark ? 0.75 : 1),
+            background: alpha(theme.palette.background.paper, isDark ? 0.9 : 1),
+            color: "text.primary",
+            boxShadow: "none",
           }}
         >
           <CardContent sx={{ p: { xs: 2.5, md: 3.5 } }}>
@@ -488,15 +547,29 @@ export default function ToolboxView() {
                 <Typography variant="h5" fontWeight={900} sx={{ mb: 0.75 }}>
                   Want this as a weekly action plan?
                 </Typography>
-                <Typography variant="body2" sx={{ color: alpha("#fff", 0.82), maxWidth: 680 }}>
+                <Typography variant="body2" sx={{ color: "text.secondary", maxWidth: 680 }}>
                   Upgrade to auto-track launches, monitor backlink gains, and get a prioritized outreach checklist each week.
                 </Typography>
               </Box>
               <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25} sx={{ width: { xs: "100%", md: "auto" } }}>
-                <Button href="/dashboard" variant="contained" sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none", bgcolor: "#fff", color: "#111827", "&:hover": { bgcolor: "#F3F4F6" } }}>
+                <Button href="/dashboard" variant="contained" sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}>
                   Open Dashboard
                 </Button>
-                <Button href="/#pricing" variant="outlined" sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none", color: "#fff", borderColor: alpha("#fff", 0.45), "&:hover": { borderColor: "#fff", bgcolor: alpha("#fff", 0.08) } }}>
+                <Button
+                  href="/#pricing"
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "10px",
+                    fontWeight: 800,
+                    textTransform: "none",
+                    color: "text.primary",
+                    borderColor: alpha(theme.palette.divider, isDark ? 0.9 : 1),
+                    "&:hover": {
+                      borderColor: alpha(theme.palette.primary.main, 0.55),
+                      bgcolor: alpha(theme.palette.primary.main, isDark ? 0.14 : 0.08),
+                    },
+                  }}
+                >
                   View Plans
                 </Button>
               </Stack>

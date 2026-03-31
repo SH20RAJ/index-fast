@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { AppBar, Box, Container, IconButton, Stack, Toolbar, Typography, alpha, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
+import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import { useColorMode } from "@/components/ThemeRegistry";
 
 const SIDEBAR_WIDTH = 280;
 
@@ -11,6 +14,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
+  const { mode, toggleColorMode } = useColorMode();
 
   return (
     <Box
@@ -54,6 +58,20 @@ export default function DashboardShell({ children }: { children: React.ReactNode
                   IndexFast Command Center
                 </Typography>
               </Stack>
+              <IconButton
+                onClick={toggleColorMode}
+                aria-label="Toggle color mode"
+                size="small"
+                sx={{
+                  width: 34,
+                  height: 34,
+                  border: "1px solid",
+                  borderColor: alpha(theme.palette.divider, isDark ? 0.8 : 1),
+                  color: mode === "dark" ? "secondary.main" : "primary.main",
+                }}
+              >
+                {mode === "dark" ? <LightModeRoundedIcon sx={{ fontSize: 18 }} /> : <DarkModeRoundedIcon sx={{ fontSize: 18 }} />}
+              </IconButton>
             </Stack>
           </Toolbar>
         </AppBar>

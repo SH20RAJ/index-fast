@@ -1,15 +1,18 @@
 "use client";
-import { Box, Stack, useTheme, alpha, Typography, Button, Drawer } from "@mui/material";
+import { Box, Stack, useTheme, alpha, Typography, Button, Drawer, IconButton } from "@mui/material";
 import { useUser, useStackApp } from "@stackframe/stack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BoltIcon from "@mui/icons-material/Bolt";
+import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
+import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LanguageIcon from "@mui/icons-material/Language";
 import HistoryIcon from "@mui/icons-material/History";
 import BuildIcon from "@mui/icons-material/Build";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useColorMode } from "@/components/ThemeRegistry";
 
 const SIDEBAR_WIDTH = 280;
 
@@ -29,6 +32,7 @@ interface DashboardSidebarProps {
 export default function DashboardSidebar({ mobileOpen, onMobileClose }: DashboardSidebarProps) {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
+  const { mode, toggleColorMode } = useColorMode();
   const pathname = usePathname();
   const user = useUser();
   const stack = useStackApp();
@@ -51,27 +55,48 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
       <Stack
         direction="row"
         alignItems="center"
-        spacing={1.5}
-        component={Link}
-        href="/"
-        sx={{ textDecoration: "none", color: "inherit" }}
+        justifyContent="space-between"
       >
-        <Box
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={1.5}
+          component={Link}
+          href="/"
+          sx={{ textDecoration: "none", color: "inherit" }}
+        >
+          <Box
+            sx={{
+              width: 32,
+              height: 32,
+              borderRadius: "8px",
+              background: "linear-gradient(135deg, #0F766E 0%, #0EA5E9 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <BoltIcon sx={{ color: "white", fontSize: 18 }} />
+          </Box>
+          <Typography variant="h6" fontWeight={900} color="text.primary">
+            IndexFast
+          </Typography>
+        </Stack>
+        <IconButton
+          onClick={toggleColorMode}
+          aria-label="Toggle color mode"
+          size="small"
           sx={{
-            width: 32,
-            height: 32,
-            borderRadius: "8px",
-            background: "linear-gradient(135deg, #0F766E 0%, #0EA5E9 100%)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            width: 34,
+            height: 34,
+            border: "1px solid",
+            borderColor: alpha(theme.palette.divider, isDark ? 0.8 : 1),
+            bgcolor: alpha(theme.palette.background.paper, isDark ? 0.8 : 0.7),
+            color: mode === "dark" ? "secondary.main" : "primary.main",
           }}
         >
-          <BoltIcon sx={{ color: "white", fontSize: 18 }} />
-        </Box>
-        <Typography variant="h6" fontWeight={900} color="text.primary">
-          IndexFast
-        </Typography>
+          {mode === "dark" ? <LightModeRoundedIcon sx={{ fontSize: 18 }} /> : <DarkModeRoundedIcon sx={{ fontSize: 18 }} />}
+        </IconButton>
       </Stack>
 
       <Stack spacing={1} sx={{ flexGrow: 1 }}>

@@ -23,24 +23,24 @@ function createAppTheme(mode: PaletteMode) {
       palette: {
         mode,
         primary: {
-          main: "#7C3AED",
-          light: "#A78BFA",
-          dark: "#5B21B6",
+          main: "#0EA5E9",
+          light: "#38BDF8",
+          dark: "#0284C7",
         },
         secondary: {
-          main: "#FACC15",
-          light: "#FDE68A",
-          dark: "#D97706",
+          main: "#14B8A6",
+          light: "#2DD4BF",
+          dark: "#0F766E",
         },
         background: {
-          default: isDark ? "#0F0B1A" : "#ffffff",
-          paper: isDark ? "#181026" : "#F5F3FF",
+          default: isDark ? "#0B1220" : "#F8FAFC",
+          paper: isDark ? "#101A2F" : "#FFFFFF",
         },
         text: {
-          primary: isDark ? "#F3F0FF" : "#1F2937",
-          secondary: isDark ? "#B2A9CC" : "#6B7280",
+          primary: isDark ? "#E6EEF8" : "#0F172A",
+          secondary: isDark ? "#A8B5C7" : "#475569",
         },
-        divider: isDark ? "rgba(167, 139, 250, 0.22)" : "rgba(124, 58, 237, 0.14)",
+        divider: isDark ? "rgba(148, 163, 184, 0.22)" : "rgba(15, 23, 42, 0.12)",
       },
       typography: {
         fontFamily: '"Outfit", "Inter", sans-serif',
@@ -50,15 +50,15 @@ function createAppTheme(mode: PaletteMode) {
         button: { textTransform: "none", fontWeight: 700 },
       },
       shape: {
-        borderRadius: 24,
+        borderRadius: 18,
       },
       shadows: [
         "none",
-        isDark ? "0px 2px 4px rgba(0, 0, 0, 0.35)" : "0px 2px 4px rgba(124, 58, 237, 0.05)",
-        isDark ? "0px 4px 8px rgba(0, 0, 0, 0.4)" : "0px 4px 8px rgba(124, 58, 237, 0.08)",
-        isDark ? "0px 8px 16px rgba(0, 0, 0, 0.45)" : "0px 8px 16px rgba(124, 58, 237, 0.1)",
-        isDark ? "0px 12px 24px rgba(0, 0, 0, 0.5)" : "0px 12px 24px rgba(124, 58, 237, 0.12)",
-        isDark ? "0px 16px 32px rgba(0, 0, 0, 0.55)" : "0px 16px 32px rgba(124, 58, 237, 0.14)",
+        isDark ? "0px 2px 4px rgba(2, 6, 23, 0.35)" : "0px 2px 4px rgba(15, 23, 42, 0.05)",
+        isDark ? "0px 4px 8px rgba(2, 6, 23, 0.4)" : "0px 4px 8px rgba(15, 23, 42, 0.08)",
+        isDark ? "0px 8px 16px rgba(2, 6, 23, 0.45)" : "0px 8px 16px rgba(15, 23, 42, 0.1)",
+        isDark ? "0px 12px 24px rgba(2, 6, 23, 0.5)" : "0px 12px 24px rgba(15, 23, 42, 0.12)",
+        isDark ? "0px 16px 32px rgba(2, 6, 23, 0.55)" : "0px 16px 32px rgba(15, 23, 42, 0.14)",
         ...Array(19).fill("none"),
       ] as any,
       components: {
@@ -70,8 +70,8 @@ function createAppTheme(mode: PaletteMode) {
               boxShadow: "none",
               "&:hover": {
                 boxShadow: isDark
-                  ? "0 8px 20px rgba(124, 58, 237, 0.35)"
-                  : "0 8px 20px rgba(124, 58, 237, 0.2)",
+                  ? "0 8px 20px rgba(14, 165, 233, 0.28)"
+                  : "0 8px 20px rgba(14, 165, 233, 0.18)",
               },
             },
           },
@@ -79,7 +79,7 @@ function createAppTheme(mode: PaletteMode) {
         MuiPaper: {
           styleOverrides: {
             root: {
-              boxShadow: isDark ? "0 10px 30px rgba(0, 0, 0, 0.45)" : "0 10px 30px rgba(124, 58, 237, 0.08)",
+              boxShadow: isDark ? "0 10px 30px rgba(2, 6, 23, 0.42)" : "0 10px 30px rgba(15, 23, 42, 0.08)",
               border: "none",
             },
           },
