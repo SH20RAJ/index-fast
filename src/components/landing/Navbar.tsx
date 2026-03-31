@@ -70,6 +70,7 @@ export default function Navbar() {
           <Stack direction="row" sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
             {[
               { label: "Home", href: "/" },
+              { label: "Blog", href: "/blog" },
               { label: "Tools", href: "/tools" },
               { label: "Features", href: "/#features" },
               { label: "Pricing", href: "/#pricing" },

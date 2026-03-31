@@ -45,6 +45,7 @@ export default function Footer() {
           <Stack direction="row" spacing={4}>
             <Stack spacing={2}>
               <Typography variant="subtitle2" fontWeight="bold">Product</Typography>
+              <Typography variant="body2" color="text.secondary" component={Link} href="/blog" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Blog</Typography>
               <Typography variant="body2" color="text.secondary" component={Link} href="/tools" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Tools</Typography>
               <Typography variant="body2" color="text.secondary" component={Link} href="/#features" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Features</Typography>
               <Typography variant="body2" color="text.secondary" component={Link} href="/#pricing" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Pricing</Typography>
