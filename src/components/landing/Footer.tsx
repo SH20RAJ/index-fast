@@ -48,11 +48,12 @@ export default function Footer() {
               <Typography variant="body2" color="text.secondary" component={Link} href="#features" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Features</Typography>
               <Typography variant="body2" color="text.secondary" component={Link} href="#pricing" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Pricing</Typography>
               <Typography variant="body2" color="text.secondary" component={Link} href="#how-it-works" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>How it works</Typography>
+              <Typography variant="body2" color="text.secondary" component={Link} href="#faq" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>FAQ</Typography>
             </Stack>
             <Stack spacing={2}>
               <Typography variant="subtitle2" fontWeight="bold">Company</Typography>
-              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>Status</Typography>
-              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none" }}>Privacy</Typography>
+              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Status</Typography>
+              <Typography variant="body2" color="text.secondary" component={Link} href="#" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Privacy</Typography>
             </Stack>
           </Stack>
 
