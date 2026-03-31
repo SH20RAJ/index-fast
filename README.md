@@ -56,7 +56,7 @@ Automated search engine indexing for bloggers, vibe coders, and SEO enthusiasts.
 - [x] Scaffolding for Sitemap Parser & API Utilities
 - [ ] Launch "Submission Stream" Dashboard with AI Insights (v0.1)
 - [ ] Implement Automated Sitemap Cron + Ping Services (v0.2)
-- [ ] Dodo Payments Integration (v0.3)
+- [x] Dodo Payments Integration (checkout, portal, webhook sync)
 - [ ] Automated Slack/Discord Notifications (v0.4)
 
 ## 🚀 Local Development
@@ -69,6 +69,30 @@ pnpm dev
 ```
 
 Open `http://localhost:3000`.
+
+### Required Payment Environment Variables
+
+```bash
+# Common
+DODO_PAYMENTS_ENVIRONMENT=test_mode # or live_mode
+DODO_PAYMENTS_RETURN_URL=/dashboard
+
+# API keys (either set DODO_PAYMENTS_API_KEY directly, or use env-specific keys)
+DODO_PAYMENTS_API_KEY_TEST=...
+DODO_PAYMENTS_API_KEY_LIVE=...
+
+# Webhook secrets (either set DODO_WEBHOOK_SECRET directly, or use env-specific keys)
+DODO_WEBHOOK_SECRET_TEST=...
+DODO_WEBHOOK_SECRET_LIVE=...
+
+# Product IDs used for checkout session creation
+DODO_PRODUCT_ID_PRO=...
+DODO_PRODUCT_ID_AGENCY=...
+```
+
+Webhook endpoint:
+
+`POST /api/webhook/dodo-payments`
 
 ## 📜 Principles
 - Keep it simple & fast

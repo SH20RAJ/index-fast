@@ -1,5 +1,7 @@
 "use client";
+import { useState } from "react";
 import {
+  Alert,
   Box,
   Container,
   Grid,
@@ -13,7 +15,7 @@ import {
   useTheme,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useStackApp } from "@stackframe/stack";
+import { useStackApp, useUser } from "@stackframe/stack";
 
 const plans = [
   {
@@ -44,7 +46,49 @@ const plans = [
 
 export default function Pricing() {
   const stack = useStackApp();
+  const user = useUser();
   const theme = useTheme();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  async function startCheckout(planName: string) {
+    if (planName === "Starter") {
+      if (user) {
+        window.location.href = "/dashboard";
+      } else {
+        stack.redirectToSignUp();
+      }
+      return;
+    }
+
+    if (!user) {
+      stack.redirectToSignUp();
+      return;
+    }
+
+    const plan = planName === "Agency" ? "agency" : "pro";
+    setLoadingPlan(planName);
+    setCheckoutError(null);
+
+    try {
+      const res = await fetch("/api/billing/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      });
+
+      const data = (await res.json()) as { checkoutUrl?: string; error?: string };
+      if (!res.ok || !data.checkoutUrl) {
+        throw new Error(data.error || "Unable to start checkout.");
+      }
+
+      window.location.href = data.checkoutUrl;
+    } catch (error) {
+      setCheckoutError(error instanceof Error ? error.message : "Unable to start checkout.");
+    } finally {
+      setLoadingPlan(null);
+    }
+  }
 
   return (
     <Box id="pricing" sx={{ py: { xs: 10, md: 14 }, bgcolor: "background.default" }}>
@@ -111,7 +155,8 @@ export default function Pricing() {
                       variant={p.popular ? "contained" : "outlined"}
                       fullWidth
                       size="large"
-                      onClick={() => (p.name === "Agency" ? stack.redirectToSignIn() : stack.redirectToSignUp())}
+                      onClick={() => void startCheckout(p.name)}
+                      disabled={loadingPlan === p.name}
                       sx={{
                         bgcolor: p.popular ? "secondary.main" : "transparent",
                         borderColor: "primary.main",
@@ -122,7 +167,7 @@ export default function Pricing() {
                         }
                       }}
                     >
-                      {p.button}
+                      {loadingPlan === p.name ? "Redirecting..." : p.button}
                     </Button>
                   </Stack>
                 </CardContent>
@@ -130,6 +175,12 @@ export default function Pricing() {
             </Grid>
           ))}
         </Grid>
+
+        {checkoutError ? (
+          <Alert severity="error" sx={{ mt: 3 }}>
+            {checkoutError}
+          </Alert>
+        ) : null}
       </Container>
     </Box>
   );
