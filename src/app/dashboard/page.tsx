@@ -8,14 +8,14 @@ import {
   Stack, 
   Avatar
 } from "@mui/material";
-import Grid from "@mui/material/Grid"; // Fallback to Grid if Grid2 has issues
+import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import SpeedIcon from "@mui/icons-material/Speed";
 import PublicIcon from "@mui/icons-material/Public";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { db } from "@/db";
-import { sites as sitesTable } from "@/db/schema/sites";
+import { sites as sitesTable, type Site } from "@/db/schema/sites";
 import { eq, desc } from "drizzle-orm";
 import SiteList from "@/components/SiteList";
 
@@ -25,7 +25,7 @@ export default async function DashboardPage() {
   const userSites = await db.query.sites.findMany({
     where: eq(sitesTable.ownerId, user.id),
     orderBy: [desc(sitesTable.createdAt)],
-  });
+  }) as Site[];
 
   const totalSites = userSites.length;
 
@@ -61,7 +61,7 @@ export default async function DashboardPage() {
       </Stack>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ borderRadius: 3, border: "1px solid rgba(255,255,255,0.1)" }}>
             <CardContent>
               <Stack direction="row" spacing={2} alignItems="center">
@@ -74,7 +74,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ borderRadius: 3, border: "1px solid rgba(255,255,255,0.1)" }}>
             <CardContent>
               <Stack direction="row" spacing={2} alignItems="center">
@@ -87,7 +87,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ borderRadius: 3, border: "1px solid rgba(255,255,255,0.1)" }}>
             <CardContent>
               <Stack direction="row" spacing={2} alignItems="center">
@@ -106,7 +106,7 @@ export default async function DashboardPage() {
         {totalSites > 0 ? (
           <>
             <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>Monitored Websites</Typography>
-            <SiteList sites={userSites as any[]} />
+            <SiteList sites={userSites} />
           </>
         ) : (
           <Box sx={{ p: 4, borderRadius: 4, bgcolor: "background.paper", textAlign: "center", border: "1px dashed rgba(255,255,255,0.2)" }}>

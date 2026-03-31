@@ -26,6 +26,8 @@ export const sites = pgTable("site", {
   updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow(),
 });
 
+export type Site = typeof sites.$inferSelect;
+
 export const siteUrls = pgTable("site_url", {
   id: text("id").primaryKey(),
   siteId: text("siteId")
