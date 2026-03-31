@@ -13,13 +13,14 @@ export const oauth2Client = new google.auth.OAuth2(
 
 /**
  * Lists all Search Console properties the user has access to.
+ * Accepting accessToken for direct use from Stack Auth.
  */
-export async function listGscSites(refreshToken: string) {
-  if (!refreshToken) {
-    throw new Error("No refresh token provided for Google API");
+export async function listSearchConsoleSites(accessToken: string) {
+  if (!accessToken) {
+    throw new Error("No access token provided for Google API");
   }
 
-  oauth2Client.setCredentials({ refresh_token: refreshToken });
+  oauth2Client.setCredentials({ access_token: accessToken });
 
   const searchconsole = google.searchconsole({
     version: "v1",
@@ -37,7 +38,7 @@ export async function listGscSites(refreshToken: string) {
 
 /**
  * Pings Google Search Console to notify of sitemap changes.
- * Note: This is a legacy sitemap ping. The standard way is via the Search Console sitemap interface.
+ * Note: This is legacy but still functional.
  * https://www.google.com/ping?sitemap=URL
  */
 export async function pingGoogleSitemap(sitemapUrl: string) {

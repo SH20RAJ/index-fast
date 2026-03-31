@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { StackProvider } from "@stackframe/stack";
+import { stackServerApp } from "@/stack";
 import ThemeRegistry from "@/components/ThemeRegistry";
 import "./globals.css";
 
@@ -33,10 +35,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
-        <ThemeRegistry>{children}</ThemeRegistry>
-      </body>
-    </html>
+    <StackProvider app={stackServerApp}>
+      <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+        <body className="min-h-full flex flex-col">
+          <ThemeRegistry>{children}</ThemeRegistry>
+        </body>
+      </html>
+    </StackProvider>
   );
 }
