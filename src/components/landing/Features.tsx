@@ -16,46 +16,47 @@ import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import StorageIcon from "@mui/icons-material/Storage";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import BoltIcon from "@mui/icons-material/Bolt";
 
 const features = [
   {
     title: "Instant Submission",
-    desc: "Direct integration with Indexing APIs for immediate content discovery.",
+    desc: "Direct integration with IndexNow and Bing Batch APIs for immediate content discovery.",
     icon: <SpeedIcon />,
     bg: "#F3E8FF",
     color: "#7C3AED" // Violet 600
   },
   {
-    title: "Auto Sitemaps",
-    desc: "Sync your sitemaps once, and we'll monitor for changes automatically.",
-    icon: <AutoFixHighIcon />,
-    bg: "#E0E7FF",
-    color: "#4338CA"
-  },
-  {
-    title: "Smart Retries",
-    desc: "Built-in error handling to ensure 100% success rate on every URL.",
+    title: "AI Visibility",
+    desc: "Optimize your content for ChatGPT, Copilot, and Perplexity by ensuring Bing indexing.",
     icon: <PsychologyIcon />,
     bg: "#FEF9C3",
     color: "#FACC15" // Amber 400
   },
   {
-    title: "Batch Processing",
-    desc: "Upload thousands of URLs at once without breaking your quota.",
-    icon: <StorageIcon />,
+    title: "Auto Sitemaps",
+    desc: "Sync your sitemaps once, and we'll monitor for changes automatically every 6 hours.",
+    icon: <AutoFixHighIcon />,
+    bg: "#E0E7FF",
+    color: "#4338CA"
+  },
+  {
+    title: "Universal Pings",
+    desc: "Automatically notify Ping-o-Matic and Pingler network for wider search discovery.",
+    icon: <BoltIcon />,
     bg: "#ECFDF5",
     color: "#059669"
   },
   {
-    title: "API Access",
-    desc: "Integrate indexing capabilities directly into your own CMS or apps.",
-    icon: <VpnKeyIcon />,
+    title: "Batch Processing",
+    desc: "Upload thousands of URLs at once without breaking your search console quota.",
+    icon: <StorageIcon />,
     bg: "#FFF1F2",
     color: "#E11D48"
   },
   {
-    title: "Insightful Analytics",
-    desc: "Track indexing status and GSC performance in a unified dashboard.",
+    title: "GSC Integration",
+    desc: "Connect your Google Search Console properties with a single click for unified tracking.",
     icon: <SearchIcon />,
     bg: "#F0F9FF",
     color: "#0284C7"

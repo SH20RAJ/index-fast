@@ -33,12 +33,12 @@ export default function Hero() {
               <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", mx: 1 }}>indexed</Box>
               and
               <Box component="span" sx={{ color: "secondary.main", fontFamily: '"Patrick Hand", cursive', rotate: "2deg", display: "inline-block", mx: 1 }}>ranking</Box>
-              <br /> in minutes
+              <br /> for AI assistants
             </Typography>
           </Box>
 
-          <Typography variant="body1" sx={{ color: "text.secondary", fontSize: "1.125rem", maxWidth: "560px", mx: "auto", lineHeight: 1.6 }}>
-            Stop waiting weeks for search engines to find your content. IndexFast automates the heavy lifting and boosts your visibility instantly.
+          <Typography variant="body1" sx={{ color: "text.secondary", fontSize: "1.125rem", maxWidth: "600px", mx: "auto", lineHeight: 1.6 }}>
+            Stop waiting weeks for search engines to find your content. IndexFast automates the heavy lifting, boosts your visibility in Bing, and ensures your content is cited by ChatGPT, Copilot, and Perplexity.
           </Typography>
 
           <Button

@@ -108,9 +108,9 @@ export default function ToolsHomePage() {
                         {tool.description}
                       </Typography>
                       <Box>
-                        <Button variant="contained" component={Link} href={tool.href}>
-                          Open Tool Page
-                        </Button>
+                        <Link href={tool.href} style={{ textDecoration: "none" }}>
+                          <Button variant="contained">Open Tool Page</Button>
+                        </Link>
                       </Box>
                     </Stack>
                   </CardContent>

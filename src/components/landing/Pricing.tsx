@@ -24,8 +24,8 @@ const plans = [
   {
     name: "Pro",
     price: "$49",
-    desc: "Best for growing businesses and SEO agencies",
-    features: ["Unlimited URLs", "Batch Processing", "Auto Sync Sitemaps", "Priority Support"],
+    desc: "Best for growing businesses and AI visibility",
+    features: ["Unlimited URLs", "Auto Sync Sitemaps (6h)", "AI View & Insights", "Universal Pings"],
     button: "Start Free Trial",
     popular: true
   },
@@ -33,7 +33,7 @@ const plans = [
     name: "Agency",
     price: "$149",
     desc: "For large enterprise teams and SEO fleets",
-    features: ["White-labeled Reports", "API Access", "Custom Quota Limits", "Account Manager"],
+    features: ["White-labeled Reports", "API Access", "Priority Support", "Account Manager"],
     button: "Contact Us",
     popular: false
   }

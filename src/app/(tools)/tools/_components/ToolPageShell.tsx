@@ -96,12 +96,12 @@ export default function ToolPageShell({
           </Paper>
 
           <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
-            <Button variant="contained" component={Link} href="/tools">
-              Explore More Free SEO Tools
-            </Button>
-            <Button variant="outlined" component={Link} href="/contact">
-              Request A New Tool
-            </Button>
+            <Link href="/tools" style={{ textDecoration: "none" }}>
+              <Button variant="contained">Explore More Free SEO Tools</Button>
+            </Link>
+            <Link href="/contact" style={{ textDecoration: "none" }}>
+              <Button variant="outlined">Request A New Tool</Button>
+            </Link>
           </Stack>
         </Stack>
       </Container>

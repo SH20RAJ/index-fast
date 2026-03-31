@@ -1,6 +1,6 @@
-# IndexFast Dashboard: Detailed Implementation Plan
+# IndexFast Dashboard: Detailed Implementation Plan (V2)
 
-This document outlines the end-to-end architecture, flow, and technical implementation for the IndexFast dashboard. It follows high-end design principles and backend best practices to ensure a scalable, "earnings-first" SaaS product.
+This document outlines the end-to-end architecture, flow, and technical implementation for the IndexFast dashboard, including specific integration examples and advanced features for AI visibility.
 
 ---
 
@@ -12,9 +12,9 @@ We follow a **Feature-Based Module** structure within the `src/` directory to ke
 src/
 ├── app/
 │   ├── (dashboard)/         # Protected dashboard routes
-│   │   ├── dashboard/       # Main overview
-│   │   ├── sites/           # Site management
-│   │   ├── submissions/     # Indexing history & logs
+│   │   ├── dashboard/       # Main overview & AI Insights
+│   │   ├── sites/           # Site management & Key verification
+│   │   ├── submissions/     # Indexing history & Ping logs
 │   │   └── settings/        # User & API settings
 │   ├── api/                 # Backend API endpoints & Webhooks
 │   └── (landing)/           # Marketing pages
@@ -23,9 +23,9 @@ src/
 │   ├── ui/                  # Shared primitive components (MUI/Tailwind)
 │   └── shared/              # Reusable layout elements
 ├── lib/
-│   ├── api/                 # API wrappers (GSC, Bing, IndexNow)
+│   ├── api/                 # API wrappers (GSC, Bing, IndexNow, Pings)
 │   ├── db/                  # Drizzle schema & Postgres clients
-│   ├── services/            # Core business logic (Sitemap diffing, etc.)
+│   ├── services/            # Core business logic (Sitemap diffing, AI parsing)
 │   └── utils/               # Helper functions
 ├── hooks/                   # Custom React hooks
 └── types/                   # Shared TypeScript definitions
@@ -42,7 +42,7 @@ src/
 
 ### **B. Sitemap & URL Diffing Logic**
 To avoid redundant API calls and respect quotas, we use a **Hash-Based Diffing Strategy**:
-1. **Fetch**: The backend fetches the `sitemap.xml`.
+1. **Fetch**: The backend fetches the `sitemap.xml` (Example: `https://30tools.com/sitemap.xml`).
 2. **Parse**: Extract all URLs and their `lastmod` (if available).
 3. **Diff**: Compare the current list of URLs against the `SubmissionHistory` table in Postgres.
    - **New URLs**: URLs present in the sitemap but not in the database.
@@ -52,67 +52,71 @@ To avoid redundant API calls and respect quotas, we use a **Hash-Based Diffing S
 
 ---
 
-## 🔌 3. API Integrations
+## 🔌 3. API Integrations & Specific Configs
 
-### **A. Google Search Console (GSC)**
-- **OAuth Flow**: Use **Stack Auth** combined with Google OAuth scopes (`indexing`, `searchconsole.readonly`).
-- **One-Click Import**: Fetch the list of verified sites using the `searchconsole.sites.list` API and allow the user to add them to IndexFast with one click.
-- **Metadata Sync**: Import site health data (errors, warnings) to display in the dashboard.
+### **A. IndexNow Protocol**
+- **Key**: `634a2c77198a45429967eb9dc1252278`
+- **Key Location**: `https://30tools.com/634a2c77198a45429967eb9dc1252278.txt`
+- **Submission**: POST to `https://www.bing.com/indexnow` with host, key, and urlList.
 
-### **B. Bing API & IndexNow**
-- **Bing Batch Submission**: Use the `SubmitUrlbatch` endpoint for high-volume URL pushes.
-- **IndexNow Protocol**: Send a POST request to `https://www.bing.com/indexnow` with the host, key, and URL list.
-- **Verification**: Automate the placement of `indexnow.txt` and verify its accessibility before submission.
+### **B. Bing URL Submission API**
+- **Endpoint**: `https://ssl.bing.com/webmaster/api.svc/json/SubmitUrlbatch?apikey=0a390ed0bfa84afcb23aabc4508bc49e`
+- **Action**: Batch submit URLs discovered during the sitemap sync.
+
+### **C. Universal Ping Services**
+- **Ping-o-Matic**: `https://pingomatic.com/`
+- **Pingler**: `pingler.com`
+- **Function**: Automatically ping these services whenever a new URL is detected to notify a wider network of search engines and aggregators.
+
+### **D. Google Search Console (GSC)**
+- **OAuth Flow**: Use **Stack Auth** combined with Google OAuth scopes.
+- **One-Click Import**: Fetch verified sites and allow users to sync them instantly.
 
 ---
 
-## 💰 4. Pro Features & Payment Integration
+## ✨ 4. Advanced Features (AI & SEO)
+
+### **A. AI Visibility Tracking**
+- **AI View**: A "text-only" mode that shows exactly how LLMs (ChatGPT, Copilot, Perplexity) see your page by stripping away CSS/JS bloat.
+- **Discoverability Score**: Measures how likely your content is to be cited by AI agents based on Bing's indexing status.
+
+### **B. Technical SEO Audit**
+- **Blocker Detection**: Automatically flags `noindex` tags, canonical mismatches, and `robots.txt` blocks.
+- **Dead Link Guard**: Identifies 404 errors in sitemaps before they are submitted.
+
+---
+
+## 💰 5. Pro Features & Payment Integration
 
 ### **A. Dodo Payments Integration**
-- **Checkout**: Use **Dodo Payments** for a seamless, global checkout experience.
-- **Webhooks**: Listen for `subscription.created` and `subscription.updated` events to toggle "Pro" features in the database.
-- **Customer Portal**: Provide a direct link to the Dodo Payments portal for subscription management.
+- **Checkout**: Seamless global checkout.
+- **Webhooks**: Sync subscription status to Postgres.
 
 ### **B. Feature Differentiation**
 | Feature | Free Tier | Pro Tier |
 | :--- | :--- | :--- |
 | **Sites** | 1 Site | Unlimited |
 | **Sync Frequency** | Manual | Every 6 Hours (Cron) |
-| **URL Quota** | 50 / month | Unlimited |
+| **AI Visibility Tools** | Basic | Advanced (Full AI View) |
+| **Ping Services** | Basic | Advanced (Pingler, Ping-o-Matic) |
 | **Batch Processing** | ❌ | ✅ |
-| **GSC Metadata** | Basic | Advanced |
-| **Email Alerts** | ❌ | ✅ |
 
 ---
 
-## 🛠️ 5. Best Development Practices (Skill-Aligned)
+## 🛠️ 6. Best Development Practices (Skill-Aligned)
 
 ### **A. Database (Supabase/Postgres Skills)**
-- **Optimised Queries**: Use indexes on `url`, `property_id`, and `user_id` for sub-millisecond lookups.
-- **Connection Management**: Use **PgBouncer** or **Supabase Pooling** to handle concurrent requests from serverless functions.
-- **RLS**: Implement Row-Level Security to ensure users can only access their own data.
+- **Optimised Queries**: Use indexes on `url`, `property_id`, and `user_id`.
+- **RLS**: Implement Row-Level Security for data isolation.
 
 ### **B. Frontend (Frontend Design Skill)**
-- **Distinctive Aesthetics**: Move away from generic purple gradients. Use a "Dark Editorial" or "Brutalist Minimal" look with high-contrast typography (e.g., *Clash Display* or *Patrick Hand* for accents).
-- **Motion**: Use `framer-motion` for staggered reveals and micro-interactions on the dashboard charts and tables.
-- **Spatial Composition**: Use asymmetrical layouts and generous whitespace to make the data feel less overwhelming.
-
-### **C. Audit & SEO (Audit Website Skill)**
-- **Performance**: Ensure a **100 Lighthouse score** for the dashboard to practice what we preach.
-- **Accessibility**: Full keyboard navigation and ARIA support for all dashboard components.
-- **Secret Detection**: Ensure no API keys or sensitive GSC credentials are ever exposed in client-side code.
-
----
-
-## 🔐 6. Stack Auth Implementation
-- **Seamless Integration**: Use Stack Auth's `useUser` and `useStackApp` hooks for session management.
-- **Protected Routes**: Wrap dashboard routes in a middleware or high-level layout that redirects unauthenticated users to `/sign-in`.
-- **User Metadata**: Store Pro status and API keys in the user's `metadata` or a linked Postgres profile table.
+- **Minimalist UI**: High-contrast typography (Clash Display), asymmetrical layouts, and `framer-motion` for a premium feel.
+- **No AI Slop**: Clean, characterful design that focuses on speed and utility.
 
 ---
 
 ## 📈 7. Roadmap to Launch
-1. **V0.1**: Basic GSC site import and manual "Push to IndexNow" button.
-2. **V0.2**: Automated Sitemap Cron (running every 6 hours).
-3. **V0.3**: Dodo Payments integration and Pro tier feature flags.
-4. **V0.4**: Advanced analytics and GSC health metadata dashboard.
+1. **V0.1**: GSC Site Import + Manual IndexNow Push (using `30tools.com` as test case).
+2. **V0.2**: Automated Sitemap Cron + Universal Ping Service Integration.
+3. **V0.3**: AI View & Discoverability Score implementation.
+4. **V0.4**: Dodo Payments & Pro tier launch.
