@@ -47,6 +47,7 @@ To ensure zero Flash of Unstyled Content (FOUC) and optimal performance:
 2. **Colocation:** Keep components used by only one page inside a `_components` folder next to that `page.tsx`.
 3. **Streaming:** Use `loading.tsx` and `<Suspense>` for data-heavy dashboard views.
 4. **Environment Variables:** All secrets (Google API, DB URLs) strictly in `.env.local`. NEVER export them to the client unless prefixed with `NEXT_PUBLIC_`.
+5. **Server Component Pages:** NEVER use `"use client";` inside a `page.tsx`. If you need client-side logic (hooks, state, MUI effects), move that logic into a separate Client Component and import it into the `page.tsx`. This is required to export SEO `metadata`.
 
 ## 📈 SEO & Metadata Rules
 1. **Metadata API:** Use `export const metadata` in static pages and `generateMetadata()` for dynamic site details.
