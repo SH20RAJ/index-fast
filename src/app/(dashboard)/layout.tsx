@@ -7,6 +7,7 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LanguageIcon from "@mui/icons-material/Language";
 import HistoryIcon from "@mui/icons-material/History";
+import BuildIcon from "@mui/icons-material/Build";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -16,6 +17,7 @@ const navItems = [
   { label: "Overview", icon: <DashboardIcon />, href: "/dashboard" },
   { label: "Websites", icon: <LanguageIcon />, href: "/sites" },
   { label: "Submissions", icon: <HistoryIcon />, href: "/submissions" },
+  { label: "SEO Toolbox", icon: <BuildIcon />, href: "/toolbox" },
   { label: "Settings", icon: <SettingsIcon />, href: "/settings" },
 ];
 

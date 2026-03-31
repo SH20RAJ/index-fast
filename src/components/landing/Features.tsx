@@ -22,43 +22,43 @@ import BoltIcon from "@mui/icons-material/Bolt";
 
 const features = [
   {
-    title: "Instant Submission",
-    desc: "Direct integration with IndexNow and Bing Batch APIs for immediate content discovery.",
-    icon: <SpeedIcon />,
-    bg: "#F3E8FF",
-    color: "#7C3AED" // Violet 600
-  },
-  {
-    title: "AI Visibility",
-    desc: "Optimize your content for ChatGPT, Copilot, and Perplexity by ensuring Bing indexing.",
-    icon: <PsychologyIcon />,
-    bg: "#FEF9C3",
-    color: "#FACC15" // Amber 400
-  },
-  {
-    title: "Auto Sitemaps",
-    desc: "Sync your sitemaps once, and we'll monitor for changes automatically every 6 hours.",
+    title: "AI SEO Auditor",
+    desc: "Get instant technical SEO audits with ready-to-use Cursor prompts powered by Llama 3 70B.",
     icon: <AutoFixHighIcon />,
     bg: "#E0E7FF",
     color: "#4338CA"
   },
   {
     title: "Universal Pings",
-    desc: "Automatically notify Ping-o-Matic and Pingler network for wider search discovery.",
+    desc: "Automatically notify Ping-o-Matic and Pingler networks for maximum search engine discovery.",
     icon: <BoltIcon />,
     bg: "#ECFDF5",
     color: "#059669"
   },
   {
-    title: "Batch Processing",
-    desc: "Upload thousands of URLs at once without breaking your search console quota.",
+    title: "AI Visibility",
+    desc: "Ensure your content is indexed in Bing to appear in ChatGPT, Copilot, and Perplexity answers.",
+    icon: <PsychologyIcon />,
+    bg: "#FEF9C3",
+    color: "#FACC15"
+  },
+  {
+    title: "Instant Submission",
+    desc: "Direct integration with IndexNow and Bing Batch APIs for sub-24 hour content discovery.",
+    icon: <SpeedIcon />,
+    bg: "#F3E8FF",
+    color: "#7C3AED"
+  },
+  {
+    title: "Sitemap Auto-Sync",
+    desc: "We monitor your sitemaps every 6 hours and automatically push new URLs to search engines.",
     icon: <StorageIcon />,
     bg: "#FFF1F2",
     color: "#E11D48"
   },
   {
     title: "GSC Integration",
-    desc: "Connect your Google Search Console properties with a single click for unified tracking.",
+    desc: "One-click import from Google Search Console to track and manage all your properties in one place.",
     icon: <SearchIcon />,
     bg: "#F0F9FF",
     color: "#0284C7"
