@@ -1,5 +1,5 @@
 "use client";
-import { Box, Container, Grid, Typography, Stack, alpha } from "@mui/material";
+import { Box, Container, Grid, Typography, Stack, alpha, useTheme } from "@mui/material";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import SearchIcon from "@mui/icons-material/Search";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -26,14 +26,16 @@ const tools = [
 ];
 
 export default function FreeTools() {
+  const theme = useTheme();
+
   return (
-    <Box id="free-tools" sx={{ py: 15, bgcolor: "#F9FAFB" }}>
+    <Box id="free-tools" sx={{ py: 15, bgcolor: "background.paper" }}>
       <Container maxWidth="lg">
         <Stack spacing={2} mb={8} textAlign="center">
           <Typography variant="overline" color="primary.main" fontWeight={800} sx={{ letterSpacing: "0.1em" }}>
             Lead Magnets
           </Typography>
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "#1F2937" }}>
+          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary" }}>
             Free SEO <Box component="span" sx={{ color: "primary.main" }}>Tools</Box>
           </Typography>
           <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "600px", mx: "auto" }}>
@@ -48,13 +50,16 @@ export default function FreeTools() {
                 sx={{
                   p: 4,
                   height: "100%",
-                  bgcolor: "white",
+                  bgcolor: "background.default",
                   borderRadius: "32px",
-                  border: "1px solid rgba(0,0,0,0.05)",
+                  border: `1px solid ${theme.palette.divider}`,
                   transition: "all 0.2s ease-in-out",
                   "&:hover": {
                     transform: "translateY(-8px)",
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.05)",
+                    boxShadow:
+                      theme.palette.mode === "dark"
+                        ? "0 20px 40px rgba(0,0,0,0.35)"
+                        : "0 20px 40px rgba(0,0,0,0.05)",
                     borderColor: alpha(tool.color, 0.2)
                   }
                 }}

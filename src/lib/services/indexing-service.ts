@@ -6,8 +6,16 @@ import { getUrlHash } from "@/lib/utils/hash";
 import { submitToBingBatch } from "@/lib/api/bing";
 import { submitToIndexNow } from "@/lib/api/indexnow";
 import { pingAllUniversal } from "@/lib/api/ping-services";
+import { ensureUserRecord } from "@/lib/db/user-sync";
 
 export async function processWebsiteIndexing(websiteId: string) {
+  const [websiteOnly] = await db.select().from(websites).where(eq(websites.id, websiteId));
+  if (!websiteOnly) {
+    throw new Error("Website not found");
+  }
+
+  await ensureUserRecord({ id: websiteOnly.userId });
+
   const [data] = await db
     .select({
       website: websites,

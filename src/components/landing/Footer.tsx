@@ -42,7 +42,7 @@ export default function Footer() {
             </Typography>
           </Stack>
 
-          <Stack direction="row" spacing={4}>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={4} sx={{ width: { xs: "100%", md: "auto" } }}>
             <Stack spacing={2}>
               <Typography variant="subtitle2" fontWeight="bold">Product</Typography>
               <Typography variant="body2" color="text.secondary" component={Link} href="/" sx={{ textDecoration: "none", "&:hover": { color: "primary.main" } }}>Home</Typography>
@@ -61,7 +61,7 @@ export default function Footer() {
             </Stack>
           </Stack>
 
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{ alignSelf: { xs: "flex-start", md: "center" } }}>
             <IconButton size="small" sx={{ bgcolor: "rgba(124, 58, 237, 0.05)", "&:hover": { bgcolor: "rgba(124, 58, 237, 0.1)" } }}>
               <TwitterIcon fontSize="small" sx={{ color: "primary.main" }} />
             </IconButton>

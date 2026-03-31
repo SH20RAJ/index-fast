@@ -3,6 +3,7 @@ import { websites } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { stackServerApp } from "@/stack";
+import { ensureUserRecord } from "@/lib/db/user-sync";
 
 /**
  * List or Add Websites
@@ -12,6 +13,8 @@ export async function GET(request: Request) {
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  await ensureUserRecord({ id: user.id, primaryEmail: user.primaryEmail });
 
   const userWebsites = await db
     .select()
@@ -26,6 +29,8 @@ export async function POST(request: Request) {
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  await ensureUserRecord({ id: user.id, primaryEmail: user.primaryEmail });
 
   try {
     const { url, sitemapUrl, indexNowKey, bingApiKey } = await request.json();
