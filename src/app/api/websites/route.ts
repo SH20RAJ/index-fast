@@ -42,7 +42,6 @@ export async function POST(request: Request) {
         sitemapUrl,
         indexNowKey,
         bingApiKey,
-        isPro: false, // Default to false
       })
       .returning();
 

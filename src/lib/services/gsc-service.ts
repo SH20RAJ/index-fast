@@ -13,7 +13,7 @@ export async function importGscSites(userId: string, accessToken: string) {
     userId,
     url: site.siteUrl!,
     sitemapUrl: `${site.siteUrl!.endsWith("/") ? site.siteUrl : site.siteUrl + "/"}sitemap.xml`, // Default assumption
-    isPro: false,
+    gscConnected: true,
     createdAt: new Date(),
   }));
 
