@@ -2,6 +2,7 @@
 
 import { and, count, desc, eq, gte, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { submissions, users, websites } from "@/lib/db/schema";
 import { ensureUserRecord } from "@/lib/db/user-sync";
@@ -13,16 +14,8 @@ import {
   getSubscriptionSnapshot,
   getWebsiteUsageCount,
 } from "@/lib/services/subscription-service";
-
-export interface ActionState {
-  status: "idle" | "success" | "error";
-  message: string;
-}
-
-export const defaultActionState: ActionState = {
-  status: "idle",
-  message: "",
-};
+import { getDodoClient, getDodoProductId, getDodoReturnUrl, toAbsoluteUrl } from "@/lib/payments/dodo";
+import type { ActionState } from "@/app/(dashboard)/action-state";
 
 export interface DashboardSubmission {
   id: string;
@@ -134,8 +127,41 @@ export async function updateSubscriptionPlanAction(_: ActionState, formData: For
       return { status: "error", message: "Invalid plan selected." };
     }
 
-    const status = plan === "agency" ? "agency" : plan === "pro" ? "active" : "inactive";
-    const isPro = plan !== "free";
+    if (plan === "pro" || plan === "agency") {
+      const productId = getDodoProductId(plan);
+      if (!productId) {
+        return {
+          status: "error",
+          message: `Missing Dodo product id for ${plan}. Configure DODO_PRODUCT_ID_${plan.toUpperCase()}.`,
+        };
+      }
+
+      const [userRow] = await db.select().from(users).where(eq(users.id, user.id)).limit(1);
+      const email = userRow?.email ?? user.primaryEmail ?? `${user.id}@indexfast.local`;
+      const client = getDodoClient();
+
+      const checkout = await client.checkoutSessions.create({
+        product_cart: [{ product_id: productId, quantity: 1 }],
+        return_url: toAbsoluteUrl(getDodoReturnUrl()),
+        customer: {
+          email,
+          name: email.split("@")[0] || "IndexFast User",
+        },
+        metadata: {
+          stackUserId: user.id,
+          planId: plan,
+        },
+      });
+
+      if (!checkout.checkout_url) {
+        return { status: "error", message: "Could not create Dodo checkout URL." };
+      }
+
+      redirect(checkout.checkout_url);
+    }
+
+    const status = "inactive";
+    const isPro = false;
 
     await db
       .update(users)
@@ -156,6 +182,22 @@ export async function updateSubscriptionPlanAction(_: ActionState, formData: For
       message: error instanceof Error ? error.message : "Failed to update subscription.",
     };
   }
+}
+
+export async function openBillingPortalAction() {
+  const user = await getAuthedUser();
+  const [userRow] = await db.select().from(users).where(eq(users.id, user.id)).limit(1);
+
+  if (!userRow?.dodoCustomerId) {
+    throw new Error("No Dodo customer linked yet. Upgrade once to activate billing portal.");
+  }
+
+  const client = getDodoClient();
+  const portal = await client.customers.customerPortal.create(userRow.dodoCustomerId, {
+    return_url: toAbsoluteUrl(getDodoReturnUrl()),
+  });
+
+  redirect(portal.link);
 }
 
 export async function addWebsiteAction(_: ActionState, formData: FormData): Promise<ActionState> {

@@ -1,9 +1,10 @@
-import { Box, Card, CardContent, Chip, Grid, Stack, Typography, alpha } from "@mui/material";
+import { Box, Button, Card, CardContent, Chip, Grid, Stack, Typography, alpha } from "@mui/material";
 import type { User } from "@/lib/db/schema";
 import type { PlanId } from "@/lib/billing/plans";
 import PageHeader from "@/components/dashboard/PageHeader";
 import AccountEmailForm from "@/components/dashboard/settings/AccountEmailForm";
 import PlanSelectorForm from "@/components/dashboard/settings/PlanSelectorForm";
+import { openBillingPortalAction } from "@/app/(dashboard)/actions";
 
 interface SettingsViewProps {
   initialSettings: User;
@@ -64,6 +65,18 @@ export default function SettingsView({ initialSettings, planId }: SettingsViewPr
                   <Typography variant="body2" color="text.secondary" sx={{ wordBreak: "break-word" }}>
                     Subscription ID: {initialSettings.dodoSubscriptionId || "Not linked"}
                   </Typography>
+
+                  {initialSettings.dodoCustomerId ? (
+                    <Box component="form" action={openBillingPortalAction}>
+                      <Button variant="outlined" sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }} type="submit">
+                        Open Billing Portal
+                      </Button>
+                    </Box>
+                  ) : (
+                    <Typography variant="caption" color="text.secondary">
+                      Billing portal unlocks after your first paid checkout.
+                    </Typography>
+                  )}
                 </Stack>
               </CardContent>
             </Card>
@@ -77,7 +90,7 @@ export default function SettingsView({ initialSettings, planId }: SettingsViewPr
                 Subscription Plans
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Plan switches run through secure server actions and revalidate your dashboard usage model automatically.
+                Free plan changes are instant. Paid plans redirect to secure Dodo checkout and sync back via webhooks.
               </Typography>
               <PlanSelectorForm currentPlanId={planId} />
             </Stack>
