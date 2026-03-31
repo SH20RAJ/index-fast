@@ -12,7 +12,7 @@ import FinalCTA from "@/components/landing/FinalCTA";
 import Footer from "@/components/landing/Footer";
 
 export const metadata: Metadata = {
-  title: "Automated SEO Indexing & URL Submission",
+  title: "IndexFast - Automated SEO Indexing & URL Submission",
   description: "Stop waiting for Google to crawl your site. IndexFast submits your URLs to Google, Bing, and IndexNow instantly for faster ranking and better SEO.",
   alternates: {
     canonical: "/",

@@ -4,6 +4,7 @@ import React from "react";
 
 import {
   Box,
+  Chip,
   Container,
   Grid,
   Typography,
@@ -22,38 +23,44 @@ import BoltIcon from "@mui/icons-material/Bolt";
 
 const features = [
   {
-    title: "AI SEO Auditor",
-    desc: "Run instant technical audits and generate prioritized fixes your team can ship the same day.",
+    title: "Technical SEO Auditor",
+    desc: "Surface crawl and index blockers instantly, then ship prioritized fixes before rankings are impacted.",
+    micro: "Find blockers fast",
     icon: <AutoFixHighIcon />,
     color: "#4338CA"
   },
   {
-    title: "Universal Pings",
-    desc: "Broadcast URL updates across IndexNow and discovery networks with retry logic and delivery logs.",
+    title: "Universal URL Pings",
+    desc: "Push URL updates to IndexNow and submission endpoints with retries, logs, and clean operational control.",
+    micro: "Reliable delivery",
     icon: <BoltIcon />,
     color: "#059669"
   },
   {
     title: "AI Visibility Signals",
-    desc: "Track which content is discoverable by AI assistants and close gaps before traffic is lost.",
+    desc: "Measure discoverability across AI assistants and close visibility gaps before demand shifts to competitors.",
+    micro: "Stay discoverable",
     icon: <PsychologyIcon />,
     color: "#FACC15"
   },
   {
-    title: "Instant Submission",
-    desc: "Trigger high-priority URL batches in one click using direct Bing and IndexNow API integrations.",
+    title: "Instant Batch Submission",
+    desc: "Launch high-priority URL batches in one action with direct Bing and IndexNow integrations.",
+    micro: "Ship now",
     icon: <SpeedIcon />,
     color: "#7C3AED"
   },
   {
     title: "Sitemap Auto-Sync",
-    desc: "Monitor sitemaps continuously and auto-submit new pages before competitors are even discovered.",
+    desc: "Watch sitemap changes continuously and auto-submit fresh pages before competitor refresh cycles catch up.",
+    micro: "Always current",
     icon: <StorageIcon />,
     color: "#E11D48"
   },
   {
-    title: "GSC Sync",
-    desc: "Import sites from Google Search Console and manage indexing ops from one focused workspace.",
+    title: "GSC Property Sync",
+    desc: "Import verified sites from Google Search Console and run indexing operations from one focused dashboard.",
+    micro: "Unified operations",
     icon: <SearchIcon />,
     color: "#0284C7"
   }
@@ -66,11 +73,14 @@ export default function Features() {
     <Box id="features" sx={{ py: { xs: 10, md: 14 }, bgcolor: "background.default" }}>
       <Container maxWidth="lg">
         <Stack spacing={2} mb={8} textAlign="center">
+          <Stack direction="row" justifyContent="center" mb={1.5}>
+            <Chip label="Built for operators, not dashboards-only demos" sx={{ fontWeight: 700 }} />
+          </Stack>
           <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", mb: 2 }}>
-            Built to remove indexing bottlenecks at scale
+            Feature set built to win the indexing race
           </Typography>
           <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "700px", mx: "auto", lineHeight: 1.75 }}>
-            Every feature is focused on a single outcome: more discoverable pages with less manual work. Ship content, let IndexFast handle the operational burden.
+            Publish velocity alone does not win. You need submission speed, indexing feedback loops, and reliable execution. IndexFast is the system teams use when discoverability matters every day.
           </Typography>
         </Stack>
 
@@ -102,6 +112,9 @@ export default function Features() {
                     {React.cloneElement(f.icon, { sx: { color: f.color } })}
                   </Box>
                   <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, color: "text.primary" }}>{f.title}</Typography>
+                  <Typography variant="caption" sx={{ color: f.color, fontWeight: 800, letterSpacing: "0.04em", display: "block", mb: 1 }}>
+                    {f.micro}
+                  </Typography>
                   <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.6 }}>
                     {f.desc}
                   </Typography>

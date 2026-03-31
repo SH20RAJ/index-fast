@@ -14,6 +14,26 @@ export interface ToolDefinition {
   intentKeywords: string[];
 }
 
+const RESEARCHED_QUERY_MODIFIERS = [
+  "free",
+  "online",
+  "tool",
+  "checker",
+  "analyzer",
+  "generator",
+  "validator",
+  "audit",
+  "for seo",
+] as const;
+
+const CATEGORY_QUERY_SUFFIX: Record<string, string> = {
+  "indexing-crawl": "indexing and crawl",
+  "keyword-research": "keyword research",
+  "backlink-analysis": "backlink analysis",
+  "domain-authority": "domain authority",
+  "metadata-snippets": "metadata optimization",
+};
+
 export const TOOL_CATEGORIES: ToolCategory[] = [
   {
     id: "indexing-crawl",
@@ -432,4 +452,60 @@ export function getToolSteps(categoryId: string): string[] {
 
 export function getToolFaqs(categoryId: string): Array<{ question: string; answer: string }> {
   return CATEGORY_FAQS[categoryId] ?? CATEGORY_FAQS["indexing-crawl"];
+}
+
+function toKeywordStem(tool: ToolDefinition): string {
+  return tool.title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function uniqueKeywords(keywords: string[], limit: number): string[] {
+  const seen = new Set<string>();
+  const normalized: string[] = [];
+
+  for (const keyword of keywords) {
+    const value = keyword.trim().toLowerCase().replace(/\s+/g, " ");
+
+    if (!value || seen.has(value)) {
+      continue;
+    }
+
+    seen.add(value);
+    normalized.push(value);
+
+    if (normalized.length >= limit) {
+      break;
+    }
+  }
+
+  return normalized;
+}
+
+export function getToolKeywordTargets(tool: ToolDefinition, limit = 12): string[] {
+  const stem = toKeywordStem(tool);
+  const categorySuffix = CATEGORY_QUERY_SUFFIX[tool.categoryId] ?? "seo";
+
+  const derivedKeywords = [
+    `${stem} free`,
+    `${stem} online`,
+    `${stem} tool`,
+    `best ${stem}`,
+    `${stem} for ${categorySuffix}`,
+    `${stem} for website`,
+    ...RESEARCHED_QUERY_MODIFIERS.map((modifier) => `${stem} ${modifier}`),
+  ];
+
+  return uniqueKeywords(
+    [tool.primaryKeyword, ...tool.intentKeywords, ...derivedKeywords],
+    limit,
+  );
+}
+
+export function getCategoryKeywordTargets(categoryId: string): string[] {
+  const tools = getToolsByCategory(categoryId);
+  const allKeywords = tools.flatMap((tool) => getToolKeywordTargets(tool, 8));
+  return uniqueKeywords(allKeywords, 24);
 }

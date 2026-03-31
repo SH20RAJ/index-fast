@@ -16,7 +16,7 @@ import {
   alpha,
   useTheme,
 } from "@mui/material";
-import { useStackApp, useUser } from "@stackframe/stack";
+import { useUser } from "@stackframe/stack";
 import Link from "next/link";
 import BoltIcon from "@mui/icons-material/Bolt";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
@@ -27,7 +27,6 @@ import { useColorMode } from "@/components/ThemeRegistry";
 import { useState } from "react";
 
 export default function Navbar() {
-  const stack = useStackApp();
   const user = useUser();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -167,14 +166,16 @@ export default function Navbar() {
             ) : (
               <>
                 <Button
-                  onClick={() => stack.redirectToSignIn()}
+                  component={Link}
+                  href="/sign-in"
                   sx={{ color: "text.primary", fontWeight: 700, fontSize: "0.875rem", display: { xs: "none", sm: "inline-flex" } }}
                 >
                   Sign In
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={() => stack.redirectToSignUp()}
+                  component={Link}
+                  href="/sign-up"
                   sx={{
                     bgcolor: "primary.main",
                     display: "flex",
@@ -235,10 +236,10 @@ export default function Navbar() {
             </Button>
           ) : (
             <>
-              <Button onClick={() => stack.redirectToSignIn()} variant="outlined">
+              <Button component={Link} href="/sign-in" variant="outlined">
                 Sign In
               </Button>
-              <Button variant="contained" onClick={() => stack.redirectToSignUp()}>
+              <Button component={Link} href="/sign-up" variant="contained">
                 Get Started
               </Button>
             </>

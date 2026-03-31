@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getToolBySlug } from "@/lib/tools-catalog";
+import { getToolBySlug, getToolKeywordTargets } from "@/lib/tools-catalog";
 
 export function getToolMetadata(slug: string): Metadata {
   const tool = getToolBySlug(slug);
@@ -12,9 +12,9 @@ export function getToolMetadata(slug: string): Metadata {
   }
 
   return {
-    title: `${tool.title} | IndexFast`,
+    title: `${tool.title} - Free Online SEO Tool | IndexFast`,
     description: tool.description,
-    keywords: tool.intentKeywords,
+    keywords: getToolKeywordTargets(tool),
     alternates: {
       canonical: `/tools/${tool.slug}`,
     },

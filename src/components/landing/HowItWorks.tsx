@@ -1,6 +1,7 @@
 "use client";
 import {
   Box,
+  Chip,
   Container,
   Grid,
   Typography,
@@ -12,18 +13,21 @@ import {
 const steps = [
   {
     num: "01",
-    title: "Connect Properties",
-    desc: "Sign in with Google and import verified properties in seconds. No manual setup, no developer help.",
+    title: "Connect Once",
+    desc: "Import verified properties and sitemap endpoints in minutes. Your indexing stack is ready without custom setup.",
+    punch: "No engineering bottleneck",
   },
   {
     num: "02",
-    title: "Launch Submission Flows",
-    desc: "Add your sitemap once. IndexFast continuously detects fresh URLs and submits them to priority endpoints.",
+    title: "Submit at Speed",
+    desc: "Detect fresh URLs from sitemap updates and submit immediately to IndexNow and Bing from one workflow.",
+    punch: "From publish to ping fast",
   },
   {
     num: "03",
-    title: "Track Outcomes",
-    desc: "Monitor acceptance rates, failures, and trend lines so your team knows exactly what improved visibility.",
+    title: "Scale with Proof",
+    desc: "Track accepted requests, failures, and trend lines so teams can double down on what actually improves discovery.",
+    punch: "Execution with visibility",
   }
 ];
 
@@ -34,11 +38,14 @@ export default function HowItWorks() {
     <Box id="how-it-works" sx={{ py: { xs: 10, md: 14 }, bgcolor: "background.paper" }}>
       <Container maxWidth="lg">
         <Stack spacing={2} mb={8} textAlign="center">
+          <Stack direction="row" justifyContent="center" mb={1.5}>
+            <Chip label="Execution-first workflow" sx={{ fontWeight: 700 }} />
+          </Stack>
           <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", mb: 2 }}>
-            A three-step system your team can run every day
+            Stop publishing blind. Start indexing with intent.
           </Typography>
           <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "720px", mx: "auto", lineHeight: 1.75 }}>
-            Move from manual indexing work to an automated routine: connect, submit, and optimize. The flow is built for execution, not theory.
+            Most teams lose momentum after clicking publish. IndexFast gives you a daily operating system to push fresh pages, monitor outcomes, and compound discoverability.
           </Typography>
         </Stack>
 
@@ -82,6 +89,9 @@ export default function HowItWorks() {
                 <Stack spacing={1.8} sx={{ position: "relative", pr: 6 }}>
                   <Typography variant="h4" sx={{ fontWeight: 900, color: "text.primary" }}>
                     {step.title}
+                  </Typography>
+                  <Typography variant="caption" sx={{ fontWeight: 800, color: "primary.main", letterSpacing: "0.04em" }}>
+                    {step.punch}
                   </Typography>
                   <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.75 }}>
                     {step.desc}

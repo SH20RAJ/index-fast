@@ -111,6 +111,52 @@ const websiteJsonLd = {
   ],
 };
 
+const stackTheme = {
+  radius: "0.85rem",
+  light: {
+    background: "#f8fafc",
+    foreground: "#0f172a",
+    card: "#ffffff",
+    cardForeground: "#0f172a",
+    popover: "#ffffff",
+    popoverForeground: "#0f172a",
+    primary: "#0ea5e9",
+    primaryForeground: "#ffffff",
+    secondary: "#e2e8f0",
+    secondaryForeground: "#0f172a",
+    muted: "#f1f5f9",
+    mutedForeground: "#475569",
+    accent: "#ecfeff",
+    accentForeground: "#0f172a",
+    destructive: "#dc2626",
+    destructiveForeground: "#ffffff",
+    border: "#cbd5e1",
+    input: "#e2e8f0",
+    ring: "#0ea5e9",
+  },
+  dark: {
+    background: "#020617",
+    foreground: "#e2e8f0",
+    card: "#0f172a",
+    cardForeground: "#f8fafc",
+    popover: "#0f172a",
+    popoverForeground: "#f8fafc",
+    primary: "#38bdf8",
+    primaryForeground: "#082f49",
+    secondary: "#1e293b",
+    secondaryForeground: "#e2e8f0",
+    muted: "#1e293b",
+    mutedForeground: "#94a3b8",
+    accent: "#0f172a",
+    accentForeground: "#e2e8f0",
+    destructive: "#ef4444",
+    destructiveForeground: "#ffffff",
+    border: "#334155",
+    input: "#1e293b",
+    ring: "#38bdf8",
+  },
+} as const;
+
 export default function RootLayout({
   children,
 }: {
@@ -121,7 +167,7 @@ export default function RootLayout({
       <body>
         <PwaRegister />
         <StackProvider app={stackClientApp}>
-          <StackTheme>
+          <StackTheme theme={stackTheme}>
             <ThemeRegistry>{children}</ThemeRegistry>
           </StackTheme>
         </StackProvider>

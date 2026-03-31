@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { ensureDbSchema } from "@/lib/db/bootstrap";
 import { users } from "@/lib/db/schema";
 
 interface SyncUserInput {
@@ -7,6 +8,8 @@ interface SyncUserInput {
 }
 
 export async function ensureUserRecord(input: SyncUserInput) {
+  await ensureDbSchema();
+
   const safeEmail = input.primaryEmail ?? `${input.id}@indexfast.local`;
 
   const [user] = await db
