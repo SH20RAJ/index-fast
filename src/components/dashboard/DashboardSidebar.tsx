@@ -154,7 +154,11 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
               <Typography variant="body2" fontWeight={700} noWrap>
                 {user?.displayName || "User"}
               </Typography>
-              <Typography variant="caption" color="text.secondary" noWrap sx={{ display: "block" }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ display: "block", wordBreak: "break-all", lineHeight: 1.3 }}
+              >
                 {user?.primaryEmail || "No email"}
               </Typography>
             </Box>

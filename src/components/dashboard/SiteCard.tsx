@@ -29,13 +29,12 @@ export default function SiteCard({ site, onSync }: SiteCardProps) {
   return (
     <Card
       sx={{
-        borderRadius: "24px",
+        borderRadius: "18px",
         border: "1px solid",
-        borderColor: "rgba(0,0,0,0.05)",
-        transition: "all 0.2s",
+        borderColor: "divider",
+        boxShadow: "none",
         "&:hover": {
-          borderColor: "primary.main",
-          boxShadow: "0 10px 40px rgba(124, 58, 237, 0.05)",
+          borderColor: "divider",
         },
       }}
     >
@@ -58,7 +57,7 @@ export default function SiteCard({ site, onSync }: SiteCardProps) {
             </Box>
             <Box>
               <Stack direction="row" spacing={1} alignItems="center">
-                <Typography variant="h6" fontWeight={800} color="#111827">
+                <Typography variant="h6" fontWeight={800} color="text.primary">
                   {new URL(site.url).hostname}
                 </Typography>
                 {site.isPro && (
@@ -68,7 +67,8 @@ export default function SiteCard({ site, onSync }: SiteCardProps) {
                       sx={{
                         "& .MuiBadge-badge": {
                           bgcolor: "secondary.main",
-                          border: "2px solid white",
+                          border: "2px solid",
+                          borderColor: "background.paper",
                         },
                       }}
                     />

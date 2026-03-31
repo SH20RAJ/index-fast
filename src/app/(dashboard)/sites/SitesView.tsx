@@ -91,16 +91,14 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                   Add Website
                 </Typography>
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25} alignItems={{ xs: "flex-start", sm: "center" }}>
-                  <Box component="form" action={importAction}>
-                    <Button
-                      type="submit"
-                      variant="outlined"
-                      disabled={importPending}
-                      sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}
-                    >
-                      {importPending ? "Importing..." : "Import from Google Search Console"}
-                    </Button>
-                  </Box>
+                  <Button
+                    onClick={() => importAction()}
+                    variant="outlined"
+                    disabled={importPending}
+                    sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}
+                  >
+                    {importPending ? "Importing..." : "Import from Google Search Console"}
+                  </Button>
                   <Typography variant="body2" color={slotsLeft === 0 ? "error.main" : "text.secondary"}>
                     {slotsLeft} slot(s) left on {planName}
                   </Typography>

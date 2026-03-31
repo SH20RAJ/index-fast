@@ -243,7 +243,7 @@ export async function importGscSitesAction(_: ActionState): Promise<ActionState>
   try {
     const user = await getAuthedUser();
 
-    const connectedAccounts = await stackServerApp.listServerConnectedAccounts(user.id);
+    const connectedAccounts = await user.listConnectedAccounts();
     const googleAccount = connectedAccounts.find((account) => account.provider === "google");
 
     if (!googleAccount) {
@@ -253,18 +253,17 @@ export async function importGscSitesAction(_: ActionState): Promise<ActionState>
       };
     }
 
-    const tokenResponse = await stackServerApp.createServerProviderAccessTokenByAccount(
-      user.id,
-      "google",
-      googleAccount.provider_account_id,
-      GSC_READONLY_SCOPE
-    );
+    const tokenResult = await googleAccount.getAccessToken({ scopes: [GSC_READONLY_SCOPE] });
 
-    if (!tokenResponse.access_token) {
-      return { status: "error", message: "Could not access Google Search Console token." };
+    if (tokenResult.status !== "ok" || !tokenResult.data.accessToken) {
+      return {
+        status: "error",
+        message:
+          "Google Search Console access token is unavailable. Reconnect your Google account and grant Search Console permissions.",
+      };
     }
 
-    const result = await importGscSites(user.id, tokenResponse.access_token);
+    const result = await importGscSites(user.id, tokenResult.data.accessToken);
 
     revalidatePath("/sites");
     revalidatePath("/dashboard");

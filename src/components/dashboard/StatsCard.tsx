@@ -13,13 +13,11 @@ export default function StatsCard({ title, value, icon, color, trend, trendType 
   return (
     <Card
       sx={{
-        borderRadius: "24px",
+        borderRadius: "18px",
         border: "1px solid",
-        borderColor: alpha(color, 0.08),
-        boxShadow: `0 8px 30px ${alpha(color, 0.03)}`,
-        bgcolor: "white",
-        transition: "transform 0.2s ease-in-out",
-        "&:hover": { transform: "translateY(-4px)" },
+        borderColor: "divider",
+        boxShadow: "none",
+        bgcolor: "background.paper",
       }}
     >
       <CardContent sx={{ p: 3 }}>
@@ -60,7 +58,7 @@ export default function StatsCard({ title, value, icon, color, trend, trendType 
             <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: "uppercase", letterSpacing: "0.05em" }}>
               {title}
             </Typography>
-            <Typography variant="h4" fontWeight={900} color="#111827">
+            <Typography variant="h4" fontWeight={900} color="text.primary">
               {value}
             </Typography>
           </Stack>
