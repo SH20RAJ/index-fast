@@ -1,13 +1,9 @@
 import "server-only";
 import { StackServerApp } from "@stackframe/stack";
+import { stackClientApp } from "./stack/client";
 
-/**
- * Stack Auth Server-side Client
- * Uses environment variables:
- * - NEXT_PUBLIC_STACK_PROJECT_ID
- * - NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY
- * - STACK_SECRET_SERVER_KEY
- */
+export { stackClientApp };
+
 export const stackServerApp = new StackServerApp({
-  tokenStore: "nextjs-cookie",
+  inheritsFrom: stackClientApp,
 });
