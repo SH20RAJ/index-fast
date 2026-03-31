@@ -1,87 +1,88 @@
-# IndexFast
+# IndexFast — Lean & Fast SEO Indexing SaaS
 
-IndexFast is a lean SaaS for faster indexing.
-No AI-heavy workflows. No complex setup. Just submit, sync, and track URLs through IndexNow, Bing, and Google Search Console related flows.
+Automated search engine indexing for bloggers, vibe coders, and SEO enthusiasts. No AI bloat, just speed and results.
 
-## Why This Product
+## 🎯 Target Audience
+- **Vibe Coders:** Developers who want to launch fast and see immediate indexing results.
+- **Bloggers & Content Creators:** People who ship daily and need their new posts on Google/Bing within minutes.
+- **E-commerce Store Owners:** Need new product pages indexed instantly to start capturing seasonal or trending traffic.
+- **Programmatic SEO (pSEO) Builders:** Managing 10,000+ pages that need systematic crawling and indexing coordination.
+- **Niche Site Flippers:** Scaling sites quickly to improve traffic metrics for a faster, higher-value exit.
+- **Indie Hackers:** Builders who need early search traction to validate their ideas.
+- **Local Business Owners:** Ensuring their specific service pages (e.g., "Plumber in Austin") are live the moment they launch.
+- **SEO Agencies:** Teams managing multiple client sites who need a unified, high-level "pushed-to-index" dashboard.
 
-Most creators and indie teams publish content faster than search engines discover it.
-IndexFast helps close that gap with simple automation.
+## 🛠️ Core Features (MVP)
 
-## Target Audience
+### 1. Automated Sitemap Pinger
+- **How it works:** Add a sitemap URL once.
+- **Sync:** Runs every 6 hours (Cron).
+- **Action:** Automatically detects new URLs and pushes them to IndexNow and Bing Batch API.
 
-- Vibe coders shipping projects fast and needing pages indexed quickly
-- Bloggers and content teams publishing daily content
-- SEO freelancers and small agencies managing multiple client sites
-- pSEO builders handling large URL volumes
-- Indie hackers validating ideas with organic traffic
-- Local business sites that need service pages indexed fast
+### 2. Instant Bing & IndexNow Submission
+- **Bing API:** Uses `SubmitUrlbatch` for high-volume URL pushes.
+- **IndexNow:** Real-time notification to Bing, Yandex, and other participating engines.
+- **Key Verification:** Simple automated check to ensure your `indexnow.txt` is correctly placed.
 
-## Core MVP Features
+### 3. GSC One-Click Importer
+- **Connect:** Securely list all your verified sites from Google Search Console.
+- **Sync:** Import sites and their metadata in one click to start tracking.
 
-### 1) Sitemap Auto Sync
+### 4. SEO Toolbox
+- **Directory Launcher:** A curated list of 100+ high-DA manual submission sites (Reddit, IndieHackers, ProductHunt, etc.).
+- **Header Status Checker:** Verify if your pages are returning clean `200 OK` responses.
+- **Dead Link Guard:** Flags 404 links in your sitemap before they hurt your indexing quota.
 
-- Add sitemap once
-- Cron checks for new URLs
-- New URLs are auto-submitted
+## 💻 Tech Stack
 
-### 2) IndexNow + Bing Submission
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Authentication:** [Stack Auth](https://stack-auth.com/)
+- **Styling:** [Material UI (MUI)](https://mui.com/) + [Tailwind CSS](https://tailwindcss.com/)
+- **Database:** [PostgreSQL](https://www.postgresql.org/) (via Drizzle ORM)
+- **Runtime:** [Cloudflare Workers](https://workers.cloudflare.com/) (Scaling API submissions)
+- **Automation:** Scheduled Cron Jobs (Syncing sitemaps on autopilot)
 
-- IndexNow push for participating engines
-- Bing batch submission support via:
-  `https://ssl.bing.com/webmaster/api.svc/json/SubmitUrlbatch?apikey=`
-- Fast retries and simple status logging
+## 🔌 API Reference (Fast Implementation)
 
-### 3) Google Search Console Import
+### IndexNow (POST)
+- **Endpoint:** `https://www.bing.com/indexnow`
+- **Body:**
+  ```json
+  {
+    "host": "example.com",
+    "key": "your-key-string",
+    "urlList": ["https://example.com/page1", "https://example.com/page2"]
+  }
+  ```
 
-- Connect Google account
-- List verified sites
-- Import sites into dashboard in one click
+### Bing Batch Submission (POST)
+- **Endpoint:** `https://ssl.bing.com/webmaster/api.svc/json/SubmitUrlbatch?apikey=YOUR_API_KEY`
+- **Body:**
+  ```json
+  {
+    "siteUrl": "https://example.com",
+    "urlList": ["https://example.com/page1", "https://example.com/page2"]
+  }
+  ```
 
-### 4) Lightweight SEO Tools
+## 💸 Monetization Strategy
 
-- Submission directory list
-- Header/status checker (`200/3xx/4xx`)
-- Dead-link checks from sitemap URLs
+| Plan | Features |
+| :--- | :--- |
+| **Free (Starter)** | 1 Site, up to 50 URLs / month, Manual "One-Click" Sync. |
+| **Pro ($49)** | Unlimited Sites, **Auto-Sitemap Sync (Cron)**, Batch Processing. |
+| **Agency ($149)** | White-labeled Reports, API Access, Account Manager. |
 
-## Monetization-First Approach
+## 🗓️ Roadmap
+- [x] Build Core Marketing Landing Pages
+- [x] Integrate Stack Auth
+- [x] Scaffolding for Sitemap Parser & API Utilities
+- [ ] Launch "Submission Stream" Dashboard (v0.1)
+- [ ] Build Postgres Schema & Drizzle Integration (v0.2)
+- [ ] Implement Cron-driven Sitemap Diff Pipeline (v0.3)
+- [ ] Automated Slack/Discord Notifications (v0.4)
 
-- Free: limited sites + manual sync
-- Pro: auto sitemap sync + more quotas + history
-- Agency: multi-site workflows + team access + reporting
-
-Build simple, solve a painful workflow, and charge for automation.
-
-## Current Repo Status
-
-Implemented now:
-
-- Marketing landing pages
-- Auth route scaffold
-- Integration utilities in `src/lib/` for Bing, Google, IndexNow, and sitemap parsing
-- UI component system and app layout
-
-Scaffolded (next build stage):
-
-- Dashboard pages in `src/app/(dashboard)/dashboard/` and `src/app/(dashboard)/sites/`
-- Data models, usage history UI, and paid plan limits
-
-## Stack
-
-- Next.js App Router
-- React + TypeScript
-- Tailwind + MUI
-- Postgres-ready dependencies (Drizzle + postgres)
-- Google APIs + HTTP utility layer
-- Cron-friendly architecture for sitemap sync
-
-Planned deployment style:
-
-- Next.js app for dashboard + API routes
-- Cloudflare Workers for high-throughput submission tasks
-- Cron jobs for periodic sitemap processing
-
-## Local Development
+## 🚀 Local Development
 
 Install and run:
 
@@ -92,34 +93,17 @@ pnpm dev
 
 Open `http://localhost:3000`.
 
-### Environment Variables (minimum)
+### Environment Variables
 
 ```bash
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 GOOGLE_REDIRECT_URI=...
+# Add Stack Auth environment variables as required
 ```
 
-Add auth/provider keys as needed for your Stack setup.
-
-## Scripts
-
-- `pnpm dev` start development server
-- `pnpm build` production build
-- `pnpm start` run production build
-- `pnpm lint` run ESLint
-
-## Roadmap
-
-1. Finish dashboard (sites, submissions, status stream)
-2. Add Postgres schema and persistence
-3. Implement cron-driven sitemap diff pipeline
-4. Add quotas and billing gates for paid plans
-5. Launch directory and SEO utility tools inside dashboard
-
-## Principles
-
-- Keep it simple
-- Avoid compute-heavy features
-- Focus on fast shipping and revenue
-- Build practical SEO workflows, not hype features
+## 📜 Principles
+- Keep it simple & fast
+- Avoid compute-heavy features (No AI BS)
+- Focus on practical SEO workflows
+- Build for revenue from day one
