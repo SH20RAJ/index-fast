@@ -57,7 +57,6 @@ export default function FinalCTA() {
                 boxShadow: "0 20px 40px rgba(0, 0, 0, 0.15)",
                 "&:hover": {
                   bgcolor: "secondary.light",
-                  transform: "scale(1.05)",
                   boxShadow: "0 25px 50px rgba(0, 0, 0, 0.25)",
                 }
               }}

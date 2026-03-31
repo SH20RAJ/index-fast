@@ -72,7 +72,6 @@ function createAppTheme(mode: PaletteMode) {
                 boxShadow: isDark
                   ? "0 8px 20px rgba(124, 58, 237, 0.35)"
                   : "0 8px 20px rgba(124, 58, 237, 0.2)",
-                transform: "scale(1.02)",
               },
             },
           },
