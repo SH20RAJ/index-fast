@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import { Alert, Box, Button, Stack, TextField } from "@mui/material";
-import { updateAccountEmailAction, defaultActionState } from "@/app/(dashboard)/actions";
+import { updateAccountEmailAction } from "@/app/(dashboard)/actions";
+import { defaultActionState } from "@/app/(dashboard)/action-state";
 
 interface AccountEmailFormProps {
   initialEmail: string;

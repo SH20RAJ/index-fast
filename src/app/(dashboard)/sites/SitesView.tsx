@@ -22,11 +22,10 @@ import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import {
   addWebsiteAction,
-  defaultActionState,
   deleteWebsiteAction,
   runWebsiteSyncAction,
-  type ActionState,
 } from "@/app/(dashboard)/actions";
+import { defaultActionState, type ActionState } from "@/app/(dashboard)/action-state";
 
 interface WebsiteRecord {
   id: string;

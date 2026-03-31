@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { StackProvider, StackTheme } from "@stackframe/stack";
 import { stackClientApp } from "@/stack/client";
 import ThemeRegistry from "@/components/ThemeRegistry";
@@ -116,7 +117,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn("font-sans", inter.variable)}>
+    <html lang="en" data-scroll-behavior="smooth" className={cn("font-sans", inter.variable)}>
       <body>
         <PwaRegister />
         <StackProvider app={stackClientApp}>
@@ -124,8 +125,10 @@ export default function RootLayout({
             <ThemeRegistry>{children}</ThemeRegistry>
           </StackTheme>
         </StackProvider>
-        <script
+        <Script
+          id="website-jsonld"
           type="application/ld+json"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </body>

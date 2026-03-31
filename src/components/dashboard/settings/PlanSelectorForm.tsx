@@ -3,7 +3,8 @@
 import { useActionState } from "react";
 import { Alert, Box, Button, Card, CardContent, Chip, Stack, Typography, alpha } from "@mui/material";
 import { PLAN_DEFINITIONS, PlanId } from "@/lib/billing/plans";
-import { defaultActionState, updateSubscriptionPlanAction } from "@/app/(dashboard)/actions";
+import { updateSubscriptionPlanAction } from "@/app/(dashboard)/actions";
+import { defaultActionState } from "@/app/(dashboard)/action-state";
 
 interface PlanSelectorFormProps {
   currentPlanId: PlanId;
