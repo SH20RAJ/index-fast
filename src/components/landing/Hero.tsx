@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import {
   Box,
   Container,
@@ -25,14 +24,14 @@ export default function Hero() {
       <Container maxWidth="md">
         <Stack spacing={4} alignItems="center">
           <Box sx={{ position: "relative" }}>
-             <Box sx={{ display: "inline-flex", p: 1, borderRadius: "10px", bgcolor: alpha(theme.palette.primary.main, 0.05), mb: 2 }}>
-               <BoltIcon sx={{ color: "primary.main", fontSize: 20 }} />
-             </Box>
-            
+            <Box sx={{ display: "inline-flex", p: 1, borderRadius: "10px", bgcolor: alpha(theme.palette.primary.main, 0.05), mb: 2 }}>
+              <BoltIcon sx={{ color: "primary.main", fontSize: 20 }} />
+            </Box>
+
             <Typography variant="h1" sx={{ fontSize: { xs: "2.5rem", md: "4.5rem" }, fontWeight: 900, lineHeight: 1.1, color: "#1F2937" }}>
               Get every URL <br />
               <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", mx: 1 }}>indexed</Box>
-              and 
+              and
               <Box component="span" sx={{ color: "secondary.main", fontFamily: '"Patrick Hand", cursive', rotate: "2deg", display: "inline-block", mx: 1 }}>ranking</Box>
               <br /> in minutes
             </Typography>
@@ -45,7 +44,7 @@ export default function Hero() {
           <Button
             variant="contained"
             size="large"
-            onClick={() => stack.signUp()}
+            onClick={() => stack.redirectToSignUp()}
             sx={{
               py: 2,
               px: 5,
@@ -61,17 +60,17 @@ export default function Hero() {
               }
             }}
           >
-            Start indexing 
+            Start indexing
             <Box sx={{ width: 22, height: 22, borderRadius: "50%", bgcolor: alpha("#ffffff", 0.3), display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px" }}>↗</Box>
           </Button>
 
           <Box sx={{ mt: 6, display: "flex", alignItems: "center", gap: 2, opacity: 0.7 }}>
-             <Box sx={{ display: "flex", gap: -1 }}>
-               {[1,2,3].map(i => (
-                 <Box key={i} sx={{ width: 32, height: 32, borderRadius: "50%", border: "2px solid white", bgcolor: alpha(theme.palette.primary.main, i * 0.2) }} />
-               ))}
-             </Box>
-             <Typography variant="caption" fontWeight="bold">Joined by 1,000+ SEO Experts</Typography>
+            <Box sx={{ display: "flex", gap: -1 }}>
+              {[1, 2, 3].map(i => (
+                <Box key={i} sx={{ width: 32, height: 32, borderRadius: "50%", border: "2px solid white", bgcolor: alpha(theme.palette.primary.main, i * 0.2) }} />
+              ))}
+            </Box>
+            <Typography variant="caption" fontWeight="bold">Joined by 1,000+ SEO Experts</Typography>
           </Box>
         </Stack>
       </Container>

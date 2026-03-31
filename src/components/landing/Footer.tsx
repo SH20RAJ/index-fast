@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import {
   Box,
   Container,
@@ -42,7 +41,7 @@ export default function Footer() {
               The world's fastest indexing solution for modern SEO. helping your content get discovered instantly.
             </Typography>
           </Stack>
-          
+
           <Stack direction="row" spacing={4}>
             <Stack spacing={2}>
               <Typography variant="subtitle2" fontWeight="bold">Product</Typography>
@@ -68,9 +67,9 @@ export default function Footer() {
             </IconButton>
           </Stack>
         </Stack>
-        
+
         <Divider sx={{ my: 6, borderColor: "rgba(124, 58, 237, 0.05)" }} />
-        
+
         <Box textAlign="center">
           <Typography variant="caption" color="text.secondary">
             © {new Date().getFullYear()} IndexFast. Built for speed and visibility.

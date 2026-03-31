@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import React from "react";
 import {
   Box,
   Container,
@@ -7,21 +7,19 @@ import {
   Button,
   Stack,
   alpha,
-  useTheme,
 } from "@mui/material";
 import { useStackApp } from "@stackframe/stack";
 
 export default function FinalCTA() {
-  const theme = useTheme();
   const stack = useStackApp();
 
   return (
     <Box id="cta" sx={{ py: 15, bgcolor: "white" }}>
       <Container maxWidth="lg">
-        <Box 
-          sx={{ 
-            bgcolor: "primary.main", 
-            borderRadius: { xs: "40px", md: "64px" }, 
+        <Box
+          sx={{
+            bgcolor: "primary.main",
+            borderRadius: { xs: "40px", md: "64px" },
             p: { xs: 6, md: 12 },
             textAlign: "center",
             color: "white",
@@ -36,11 +34,11 @@ export default function FinalCTA() {
 
           <Stack spacing={4} alignItems="center" sx={{ position: "relative" }}>
             <Typography variant="h2" sx={{ fontWeight: 900, mb: 1, color: "white" }}>
-              Ready to get your site 
+              Ready to get your site
               <br />
               <Box component="span" sx={{ color: "secondary.main", fontFamily: '"Patrick Hand", cursive', rotate: "2deg", display: "inline-block", mx: 1 }}>indexed?</Box>
             </Typography>
-            
+
             <Typography variant="body1" sx={{ maxWidth: 500, opacity: 0.9, fontSize: "1.1rem" }}>
               Join thousands of experts already using IndexFast to automate their SEO growth. Start your trial today.
             </Typography>
@@ -48,7 +46,7 @@ export default function FinalCTA() {
             <Button
               variant="contained"
               size="large"
-              onClick={() => stack.signUp()}
+              onClick={() => stack.redirectToSignUp()}
               sx={{
                 py: 2.5,
                 px: 6,
@@ -65,7 +63,7 @@ export default function FinalCTA() {
             >
               Start Indexing Now
             </Button>
-            
+
             <Typography variant="caption" sx={{ opacity: 0.7 }}>
               No credit card required. Cancel any time.
             </Typography>

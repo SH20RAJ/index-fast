@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import {
   Box,
   Container,
@@ -9,8 +8,6 @@ import {
   CardContent,
   Button,
   Stack,
-  alpha,
-  useTheme,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useStackApp } from "@stackframe/stack";
@@ -43,34 +40,33 @@ const plans = [
 ];
 
 export default function Pricing() {
-  const theme = useTheme();
   const stack = useStackApp();
 
   return (
     <Box id="pricing" sx={{ py: 15, bgcolor: "white" }}>
       <Container maxWidth="lg">
         <Stack spacing={2} mb={10} textAlign="center">
-           <Typography variant="h2" sx={{ fontWeight: 900, color: "#1F2937", mb: 2 }}>
-             Flexible 
-             <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", ml: 1 }}>pricing</Box>
-           </Typography>
-           <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "600px", mx: "auto" }}>
-             Choose the plan that fits your growth and start getting indexed today. No hidden fees.
-           </Typography>
+          <Typography variant="h2" sx={{ fontWeight: 900, color: "#1F2937", mb: 2 }}>
+            Flexible
+            <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", ml: 1 }}>pricing</Box>
+          </Typography>
+          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "600px", mx: "auto" }}>
+            Choose the plan that fits your growth and start getting indexed today. No hidden fees.
+          </Typography>
         </Stack>
 
         <Grid container spacing={4} alignItems="center">
           {plans.map((p, idx) => (
-            <Grid item xs={12} md={4} key={idx}>
-              <Card 
-                sx={{ 
+            <Grid size={{ xs: 12, md: 4 }} key={idx}>
+              <Card
+                sx={{
                   p: 2,
-                  bgcolor: p.popular ? "primary.main" : "white", 
+                  bgcolor: p.popular ? "primary.main" : "white",
                   color: p.popular ? "white" : "text.primary",
-                  borderRadius: "40px", 
+                  borderRadius: "40px",
                   border: p.popular ? "none" : "1px solid rgba(124, 58, 237, 0.1)",
-                  boxShadow: p.popular 
-                    ? "0 20px 50px rgba(124, 58, 237, 0.25)" 
+                  boxShadow: p.popular
+                    ? "0 20px 50px rgba(124, 58, 237, 0.25)"
                     : "0 10px 40px rgba(124, 58, 237, 0.05)",
                   transform: p.popular ? "scale(1.05)" : "scale(1)",
                   position: "relative",
@@ -83,9 +79,9 @@ export default function Pricing() {
                 <CardContent sx={{ p: 4 }}>
                   <Stack spacing={3}>
                     <Box>
-                       <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, fontFamily: '"Patrick Hand", cursive' }}>{p.name}</Typography>
-                       <Typography variant="h2" sx={{ fontWeight: 900 }}>{p.price}</Typography>
-                       <Typography variant="caption" sx={{ opacity: 0.8 }}>per month</Typography>
+                      <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, fontFamily: '"Patrick Hand", cursive' }}>{p.name}</Typography>
+                      <Typography variant="h2" sx={{ fontWeight: 900 }}>{p.price}</Typography>
+                      <Typography variant="caption" sx={{ opacity: 0.8 }}>per month</Typography>
                     </Box>
 
                     <Typography variant="body2" sx={{ opacity: 0.8, minHeight: "40px" }}>{p.desc}</Typography>
@@ -99,12 +95,12 @@ export default function Pricing() {
                       ))}
                     </Stack>
 
-                    <Button 
+                    <Button
                       variant={p.popular ? "contained" : "outlined"}
                       fullWidth
                       size="large"
-                      onClick={() => stack.signUp()}
-                      sx={{ 
+                      onClick={() => stack.redirectToSignIn()}
+                      sx={{
                         bgcolor: p.popular ? "secondary.main" : "transparent",
                         borderColor: "primary.main",
                         color: p.popular ? "text.primary" : "primary.main",

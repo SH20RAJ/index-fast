@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import {
   AppBar,
   Box,
@@ -19,18 +18,18 @@ export default function Navbar() {
   const user = useUser();
 
   return (
-    <AppBar 
-      position="static" 
-      sx={{ 
-        bgcolor: "transparent", 
+    <AppBar
+      position="static"
+      sx={{
+        bgcolor: "transparent",
         boxShadow: "none",
         pt: 2
       }}
     >
       <Container maxWidth="lg">
-        <Toolbar 
-          disableGutters 
-          sx={{ 
+        <Toolbar
+          disableGutters
+          sx={{
             justifyContent: "space-between",
             bgcolor: "white",
             borderRadius: "9999px",
@@ -70,10 +69,10 @@ export default function Navbar() {
           {/* Links */}
           <Stack direction="row" sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
             {["Home", "Features", "Pricing", "API"].map((item) => (
-              <Button 
+              <Button
                 key={item}
                 variant="text"
-                sx={{ 
+                sx={{
                   borderRadius: "9999px",
                   color: "text.secondary",
                   border: "1px solid transparent",
@@ -103,22 +102,22 @@ export default function Navbar() {
             ) : (
               <>
                 <Button
-                  onClick={() => stack.signIn()}
+                  onClick={() => stack.redirectToSignIn()}
                   sx={{ color: "text.primary", fontWeight: 700, fontSize: "0.875rem" }}
                 >
                   Sign In
                 </Button>
                 <Button
                   variant="contained"
-                  onClick={() => stack.signUp()}
-                  sx={{ 
+                  onClick={() => stack.redirectToSignUp()}
+                  sx={{
                     bgcolor: "primary.main",
                     display: "flex",
                     alignItems: "center",
                     gap: 1
                   }}
                 >
-                  Get Started 
+                  Get Started
                   <Box sx={{ width: 18, height: 18, borderRadius: "50%", bgcolor: alpha("#ffffff", 0.2), display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px" }}>↗</Box>
                 </Button>
               </>

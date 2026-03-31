@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import {
   Box,
   Container,
@@ -40,18 +39,18 @@ export default function FAQ() {
     <Box id="faq" sx={{ py: 15, bgcolor: "#FAF9FF" }}>
       <Container maxWidth="md">
         <Stack spacing={2} mb={10} textAlign="center">
-           <Typography variant="h2" sx={{ fontWeight: 900, color: "#1F2937", mb: 2 }}>
-             Frequently Asked 
-             <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", ml: 1 }}>Questions</Box>
-           </Typography>
+          <Typography variant="h2" sx={{ fontWeight: 900, color: "#1F2937", mb: 2 }}>
+            Frequently Asked
+            <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "-3deg", display: "inline-block", ml: 1 }}>Questions</Box>
+          </Typography>
         </Stack>
 
         <Stack spacing={2}>
           {faqs.map((faq, idx) => (
-            <Accordion 
-              key={idx} 
-              sx={{ 
-                borderRadius: "24px !important", 
+            <Accordion
+              key={idx}
+              sx={{
+                borderRadius: "24px !important",
                 "&:before": { display: "none" },
                 boxShadow: "0 4px 20px rgba(124, 58, 237, 0.03)",
                 border: "1px solid rgba(124, 58, 237, 0.05)",
@@ -59,7 +58,7 @@ export default function FAQ() {
                 overflow: "hidden"
               }}
             >
-              <AccordionSummary 
+              <AccordionSummary
                 expandIcon={<ExpandMoreIcon sx={{ color: "primary.main" }} />}
                 sx={{ px: 4, py: 1 }}
               >
