@@ -1,10 +1,11 @@
 "use client";
 
-import { ThemeProvider, createTheme, responsiveFontSizes } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import type { PaletteMode } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import React, { createContext, useContext, useMemo } from "react";
+import { createDesignTheme } from "@/lib/design-system";
 
 const STORAGE_KEY = "indexfast-color-mode";
 
@@ -14,80 +15,6 @@ interface ColorModeContextValue {
 }
 
 const ColorModeContext = createContext<ColorModeContextValue | null>(null);
-
-function createAppTheme(mode: PaletteMode) {
-  const isDark = mode === "dark";
-
-  return responsiveFontSizes(
-    createTheme({
-      palette: {
-        mode,
-        primary: {
-          main: "#0F172A",
-          light: "#1E293B",
-          dark: "#020617",
-        },
-        secondary: {
-          main: "#2563EB",
-          light: "#3B82F6",
-          dark: "#1D4ED8",
-        },
-        background: {
-          default: isDark ? "#050816" : "#F8FAFC",
-          paper: isDark ? "#0B1020" : "#FFFFFF",
-        },
-        text: {
-          primary: isDark ? "#E5E7EB" : "#0F172A",
-          secondary: isDark ? "#94A3B8" : "#475569",
-        },
-        divider: isDark ? "rgba(148, 163, 184, 0.18)" : "rgba(15, 23, 42, 0.10)",
-      },
-      typography: {
-        fontFamily: '"Outfit", "Manrope", sans-serif',
-        h1: { fontWeight: 800, letterSpacing: "-0.02em" },
-        h2: { fontWeight: 800, letterSpacing: "-0.02em" },
-        h3: { fontWeight: 700 },
-        button: { textTransform: "none", fontWeight: 700 },
-      },
-      shape: {
-        borderRadius: 18,
-      },
-      shadows: [
-        "none",
-        isDark ? "0px 2px 4px rgba(2, 6, 23, 0.35)" : "0px 2px 4px rgba(15, 23, 42, 0.05)",
-        isDark ? "0px 4px 8px rgba(2, 6, 23, 0.4)" : "0px 4px 8px rgba(15, 23, 42, 0.08)",
-        isDark ? "0px 8px 16px rgba(2, 6, 23, 0.45)" : "0px 8px 16px rgba(15, 23, 42, 0.1)",
-        isDark ? "0px 12px 24px rgba(2, 6, 23, 0.5)" : "0px 12px 24px rgba(15, 23, 42, 0.12)",
-        isDark ? "0px 16px 32px rgba(2, 6, 23, 0.55)" : "0px 16px 32px rgba(15, 23, 42, 0.14)",
-        ...Array(19).fill("none"),
-      ] as any,
-      components: {
-        MuiButton: {
-          styleOverrides: {
-            root: {
-              borderRadius: 9999,
-              padding: "12px 24px",
-              boxShadow: "none",
-              "&:hover": {
-                boxShadow: isDark
-                  ? "0 8px 20px rgba(15, 23, 42, 0.28)"
-                  : "0 8px 20px rgba(15, 23, 42, 0.12)",
-              },
-            },
-          },
-        },
-        MuiPaper: {
-          styleOverrides: {
-            root: {
-              boxShadow: isDark ? "0 10px 30px rgba(2, 6, 23, 0.38)" : "0 10px 30px rgba(15, 23, 42, 0.06)",
-              border: "none",
-            },
-          },
-        },
-      },
-    })
-  );
-}
 
 function resolveInitialMode(): PaletteMode {
   if (typeof window === "undefined") return "light";
@@ -129,7 +56,7 @@ export default function ThemeRegistry({ children }: { children: React.ReactNode 
     [mode]
   );
 
-  const theme = useMemo(() => createAppTheme(mode), [mode]);
+  const theme = useMemo(() => createDesignTheme(mode), [mode]);
 
   return (
     <AppRouterCacheProvider options={{ key: "mui" }}>
