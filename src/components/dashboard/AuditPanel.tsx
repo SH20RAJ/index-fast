@@ -165,7 +165,12 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
                             &quot;{issue.cursorPrompt}&quot;
                           </Typography>
                           <Tooltip title="Copy Prompt">
-                            <IconButton size="small" onClick={() => copyPrompt(issue.cursorPrompt)} sx={{ mt: -0.5 }}>
+                            <IconButton
+                              size="small"
+                              aria-label="Copy cursor prompt"
+                              onClick={() => copyPrompt(issue.cursorPrompt)}
+                              sx={{ mt: -0.5 }}
+                            >
                               <ContentCopyIcon fontSize="small" />
                             </IconButton>
                           </Tooltip>

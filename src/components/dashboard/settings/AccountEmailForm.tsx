@@ -18,6 +18,8 @@ export default function AccountEmailForm({ initialEmail }: AccountEmailFormProps
         label="Email"
         name="email"
         type="email"
+        autoComplete="email"
+        spellCheck={false}
         defaultValue={initialEmail}
         required
         fullWidth
@@ -29,7 +31,7 @@ export default function AccountEmailForm({ initialEmail }: AccountEmailFormProps
           disabled={pending}
           sx={{ borderRadius: "12px", textTransform: "none", fontWeight: 800 }}
         >
-          {pending ? "Saving..." : "Save Email"}
+          {pending ? "Saving…" : "Save Email"}
         </Button>
       </Box>
       {state.status !== "idle" ? (

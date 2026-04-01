@@ -3,6 +3,7 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import PublicIcon from "@mui/icons-material/Public";
+import Link from "next/link";
 
 export default function SitesEmptyState() {
   return (
@@ -21,7 +22,13 @@ export default function SitesEmptyState() {
         <Typography variant="h6" color="text.secondary">
           No websites added yet.
         </Typography>
-        <Button variant="outlined" startIcon={<AddIcon />} sx={{ borderRadius: "12px", px: 4, py: 1.5 }}>
+        <Button
+          component={Link}
+          href="/sites"
+          variant="outlined"
+          startIcon={<AddIcon />}
+          sx={{ borderRadius: "12px", px: 4, py: 1.5 }}
+        >
           Add Your First Site
         </Button>
       </Stack>

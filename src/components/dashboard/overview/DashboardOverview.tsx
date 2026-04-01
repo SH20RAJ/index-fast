@@ -64,37 +64,37 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
               </Box>
 
               <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25}>
-                <Link href="/sites" style={{ textDecoration: "none" }}>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddCircleOutlineIcon />}
-                    sx={{
-                      borderRadius: "12px",
-                      textTransform: "none",
-                      bgcolor: "#F8FAFC",
-                      color: "#0F172A",
-                      fontWeight: 800,
-                      "&:hover": { bgcolor: "#E2E8F0" },
-                    }}
-                  >
-                    Add Website
-                  </Button>
-                </Link>
-                <Link href="/settings" style={{ textDecoration: "none" }}>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      borderRadius: "12px",
-                      textTransform: "none",
-                      color: "#F8FAFC",
-                      borderColor: alpha("#F8FAFC", 0.6),
-                      fontWeight: 800,
-                      "&:hover": { borderColor: "#F8FAFC", bgcolor: alpha("#F8FAFC", 0.08) },
-                    }}
-                  >
-                    Manage Plan
-                  </Button>
-                </Link>
+                <Button
+                  component={Link}
+                  href="/sites"
+                  variant="contained"
+                  startIcon={<AddCircleOutlineIcon />}
+                  sx={{
+                    borderRadius: "12px",
+                    textTransform: "none",
+                    bgcolor: "#F8FAFC",
+                    color: "#0F172A",
+                    fontWeight: 800,
+                    "&:hover": { bgcolor: "#E2E8F0" },
+                  }}
+                >
+                  Add Website
+                </Button>
+                <Button
+                  component={Link}
+                  href="/settings"
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "12px",
+                    textTransform: "none",
+                    color: "#F8FAFC",
+                    borderColor: alpha("#F8FAFC", 0.6),
+                    fontWeight: 800,
+                    "&:hover": { borderColor: "#F8FAFC", bgcolor: alpha("#F8FAFC", 0.08) },
+                  }}
+                >
+                  Manage Plan
+                </Button>
               </Stack>
             </Stack>
 

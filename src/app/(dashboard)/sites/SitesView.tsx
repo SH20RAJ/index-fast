@@ -113,7 +113,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                     disabled={importPending}
                     sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}
                   >
-                    {importPending ? "Importing..." : "Import from Google Search Console"}
+                    {importPending ? "Importing…" : "Import from Google Search Console"}
                   </Button>
                   {needsGoogleReconnect ? (
                     <Button
@@ -130,7 +130,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                       }}
                       sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}
                     >
-                      {reconnectPending ? "Reconnecting..." : "Reconnect Google"}
+                      {reconnectPending ? "Reconnecting…" : "Reconnect Google"}
                     </Button>
                   ) : null}
                   <Typography variant="body2" color={slotsLeft === 0 ? "error.main" : "text.secondary"}>
@@ -139,8 +139,23 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                 </Stack>
               </Stack>
 
-              <TextField label="Website URL" name="url" placeholder="https://example.com" fullWidth required />
-              <TextField label="Sitemap URL" name="sitemapUrl" placeholder="https://example.com/sitemap.xml" fullWidth />
+              <TextField
+                label="Website URL"
+                name="url"
+                type="url"
+                autoComplete="url"
+                placeholder="https://example.com"
+                fullWidth
+                required
+              />
+              <TextField
+                label="Sitemap URL"
+                name="sitemapUrl"
+                type="url"
+                autoComplete="off"
+                placeholder="https://example.com/sitemap.xml"
+                fullWidth
+              />
 
               <Stack direction={{ xs: "column", md: "row" }} spacing={1.5}>
                 <TextField label="IndexNow key (optional)" name="indexNowKey" fullWidth />
@@ -155,7 +170,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                   disabled={createPending}
                   sx={{ borderRadius: "11px", fontWeight: 800, textTransform: "none" }}
                 >
-                  {createPending ? "Adding..." : "Add Website"}
+                  {createPending ? "Adding…" : "Add Website"}
                 </Button>
               </Box>
             </Stack>
@@ -223,11 +238,16 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         </Box>
                       )}
 
-                      <Link href={`/sites/${site.id}/audit`} style={{ textDecoration: "none", width: "100%" }}>
-                        <Button variant="outlined" startIcon={<AssessmentOutlinedIcon />} fullWidth sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}>
-                          View Audit
-                        </Button>
-                      </Link>
+                      <Button
+                        component={Link}
+                        href={`/sites/${site.id}/audit`}
+                        variant="outlined"
+                        startIcon={<AssessmentOutlinedIcon />}
+                        fullWidth
+                        sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                      >
+                        View Audit
+                      </Button>
 
                       <Box component="form" action={deleteAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
                         <input type="hidden" name="websiteId" value={site.id} />

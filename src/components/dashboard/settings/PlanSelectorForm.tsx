@@ -58,7 +58,7 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
                     disabled={pending || isCurrent}
                     sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
                   >
-                    {isCurrent ? "Active plan" : pending ? "Updating..." : plan.ctaLabel}
+                    {isCurrent ? "Active plan" : pending ? "Updating…" : plan.ctaLabel}
                   </Button>
                 </Box>
               </Stack>

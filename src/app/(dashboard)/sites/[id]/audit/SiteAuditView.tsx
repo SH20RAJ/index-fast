@@ -3,20 +3,31 @@ import React, { useEffect, useState } from "react";
 import { Box, Stack, Typography, CircularProgress } from "@mui/material";
 import PageHeader from "@/components/dashboard/PageHeader";
 import AuditPanel from "@/components/dashboard/AuditPanel";
+import type { AuditIssue } from "@/components/dashboard/AuditPanel";
 
 interface SiteAuditViewProps {
   id: string;
 }
 
+interface SiteAuditRecord {
+  id: string;
+  url: string;
+  siteHealth?: {
+    score: number;
+    issues: AuditIssue[];
+  };
+}
+
 export default function SiteAuditView({ id }: SiteAuditViewProps) {
-  const [site, setSite] = useState<any>(null);
+  const [site, setSite] = useState<SiteAuditRecord | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/websites")
       .then((res) => res.json())
-      .then((data) => {
-        const found = data.find((s: any) => s.id === id);
+      .then((data: unknown) => {
+        const websites = Array.isArray(data) ? (data as SiteAuditRecord[]) : [];
+        const found = websites.find((s) => s.id === id) ?? null;
         setSite(found);
         setLoading(false);
       })

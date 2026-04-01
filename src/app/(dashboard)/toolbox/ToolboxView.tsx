@@ -363,7 +363,7 @@ export default function ToolboxView() {
             <Stack spacing={2}>
               <TextField
                 fullWidth
-                placeholder="Search by platform, category, or use case..."
+                placeholder="Search by platform, category, or use case…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 InputProps={{
@@ -473,7 +473,13 @@ export default function ToolboxView() {
                               <Typography variant="h6" fontWeight={800} sx={{ lineHeight: 1.25 }}>
                                 {item.name}
                               </Typography>
-                              <MuiLink href={item.url} target="_blank" rel="noopener noreferrer" color="inherit">
+                              <MuiLink
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                color="inherit"
+                                aria-label={`Open ${item.name}`}
+                              >
                                 <LaunchIcon sx={{ fontSize: 18, opacity: 0.55, "&:hover": { opacity: 1 } }} />
                               </MuiLink>
                             </Stack>

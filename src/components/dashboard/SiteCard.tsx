@@ -23,9 +23,11 @@ import { Website } from "@/components/dashboard/types";
 interface SiteCardProps {
   site: Website;
   onSync: (id: string) => void;
+  onOpenGsc?: (id: string) => void;
+  onDeleteSite?: (id: string) => void;
 }
 
-export default function SiteCard({ site, onSync }: SiteCardProps) {
+export default function SiteCard({ site, onSync, onOpenGsc, onDeleteSite }: SiteCardProps) {
   return (
     <Card
       sx={{
@@ -99,6 +101,7 @@ export default function SiteCard({ site, onSync }: SiteCardProps) {
             <Stack direction="row" spacing={1}>
               <Tooltip title="Sync Sitemap">
                 <IconButton
+                  aria-label="Sync sitemap"
                   onClick={() => onSync(site.id)}
                   sx={{
                     bgcolor: alpha("#7C3AED", 0.05),
@@ -111,6 +114,7 @@ export default function SiteCard({ site, onSync }: SiteCardProps) {
               </Tooltip>
               <Tooltip title="AI SEO Audit">
                 <IconButton
+                  aria-label="Open AI SEO audit"
                   component={Link}
                   href={`/sites/${site.id}/audit`}
                   sx={{
@@ -124,6 +128,9 @@ export default function SiteCard({ site, onSync }: SiteCardProps) {
               </Tooltip>
               <Tooltip title="GSC Insights">
                 <IconButton
+                  aria-label="Open GSC insights"
+                  onClick={onOpenGsc ? () => onOpenGsc(site.id) : undefined}
+                  disabled={!onOpenGsc}
                   sx={{
                     bgcolor: alpha("#3B82F6", 0.05),
                     color: "#3B82F6",
@@ -135,6 +142,9 @@ export default function SiteCard({ site, onSync }: SiteCardProps) {
               </Tooltip>
               <Tooltip title="Delete Site">
                 <IconButton
+                  aria-label="Delete site"
+                  onClick={onDeleteSite ? () => onDeleteSite(site.id) : undefined}
+                  disabled={!onDeleteSite}
                   sx={{
                     bgcolor: alpha("#EF4444", 0.05),
                     color: "error.main",
