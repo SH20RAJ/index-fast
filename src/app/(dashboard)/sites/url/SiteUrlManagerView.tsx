@@ -22,6 +22,10 @@ import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import DownloadIcon from "@mui/icons-material/Download";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
+import {
+  buildBingIndexNowPortalUrl,
+  buildGoogleSearchConsolePropertyUrl,
+} from "@/lib/utils";
 
 type SubmitMode = "sitemap" | "urls";
 
@@ -369,23 +373,48 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
           <>
             <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
               <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
-                <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                  <Chip label={`Inventory: ${payload.inventory.total}`} sx={{ borderRadius: "8px", fontWeight: 700 }} />
-                  <Chip
-                    label={`Sitemap URLs: ${payload.sitemapPreview.count}`}
-                    color={payload.sitemapPreview.count > 0 ? "primary" : "default"}
-                    sx={{ borderRadius: "8px", fontWeight: 700 }}
-                  />
-                  <Chip
-                    label={payload.website.indexNowKey ? "IndexNow key set" : "No IndexNow key"}
-                    color={payload.website.indexNowKey ? "success" : "default"}
-                    sx={{ borderRadius: "8px", fontWeight: 700 }}
-                  />
-                  <Chip
-                    label={payload.website.bingApiKey ? "Bing key set" : "No Bing key"}
-                    color={payload.website.bingApiKey ? "success" : "default"}
-                    sx={{ borderRadius: "8px", fontWeight: 700 }}
-                  />
+                <Stack spacing={1.5}>
+                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                    <Chip label={`Inventory: ${payload.inventory.total}`} sx={{ borderRadius: "8px", fontWeight: 700 }} />
+                    <Chip
+                      label={`Sitemap URLs: ${payload.sitemapPreview.count}`}
+                      color={payload.sitemapPreview.count > 0 ? "primary" : "default"}
+                      sx={{ borderRadius: "8px", fontWeight: 700 }}
+                    />
+                    <Chip
+                      label={payload.website.indexNowKey ? "IndexNow key set" : "No IndexNow key"}
+                      color={payload.website.indexNowKey ? "success" : "default"}
+                      sx={{ borderRadius: "8px", fontWeight: 700 }}
+                    />
+                    <Chip
+                      label={payload.website.bingApiKey ? "Bing key set" : "No Bing key"}
+                      color={payload.website.bingApiKey ? "success" : "default"}
+                      sx={{ borderRadius: "8px", fontWeight: 700 }}
+                    />
+                  </Stack>
+
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+                    <Button
+                      component="a"
+                      href={buildBingIndexNowPortalUrl(payload.website.url)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      variant="outlined"
+                      sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                    >
+                      Open Bing IndexNow
+                    </Button>
+                    <Button
+                      component="a"
+                      href={buildGoogleSearchConsolePropertyUrl(payload.website.url)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      variant="outlined"
+                      sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                    >
+                      Open in GSC
+                    </Button>
+                  </Stack>
                 </Stack>
               </CardContent>
             </Card>

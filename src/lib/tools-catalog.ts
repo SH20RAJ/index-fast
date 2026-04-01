@@ -14,6 +14,158 @@ export interface ToolDefinition {
   intentKeywords: string[];
 }
 
+export interface ExternalResourceCategory {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface ExternalResourceLink {
+  title: string;
+  url: string;
+  description: string;
+  categoryId: string;
+}
+
+export const EXTERNAL_RESOURCE_CATEGORIES: ExternalResourceCategory[] = [
+  {
+    id: "bing-webmaster",
+    title: "Bing Webmaster",
+    description: "Core Bing Webmaster and IndexNow resources for setup, validation, and submissions.",
+  },
+  {
+    id: "google-search-console",
+    title: "Google Search Console",
+    description: "Official Google Search Console entry points and documentation.",
+  },
+  {
+    id: "ahrefs-alternatives",
+    title: "Ahrefs Alternatives",
+    description: "Alternative SEO suites and backlink/keyword platforms to compare with Ahrefs.",
+  },
+  {
+    id: "semrush-alternatives",
+    title: "SEMrush Alternatives",
+    description: "Alternative platforms for research, rank tracking, and content workflows.",
+  },
+  {
+    id: "ubersuggest-alternatives",
+    title: "Ubersuggest Alternatives",
+    description: "Alternative options for keyword discovery and lightweight SEO operations.",
+  },
+];
+
+export const EXTERNAL_RESOURCE_LINKS: ExternalResourceLink[] = [
+  {
+    title: "Bing Webmaster Tools",
+    url: "https://www.bing.com/webmasters/about",
+    description: "Main portal for site management, diagnostics, and indexing workflows on Bing.",
+    categoryId: "bing-webmaster",
+  },
+  {
+    title: "Bing IndexNow Dashboard",
+    url: "https://www.bing.com/webmasters/indexnow",
+    description: "Manage and monitor IndexNow submissions directly from Bing Webmaster.",
+    categoryId: "bing-webmaster",
+  },
+  {
+    title: "IndexNow Protocol Docs",
+    url: "https://www.indexnow.org/documentation",
+    description: "Official protocol documentation for implementation and endpoint behavior.",
+    categoryId: "bing-webmaster",
+  },
+  {
+    title: "Google Search Console",
+    url: "https://search.google.com/search-console",
+    description: "Direct access to properties, performance reports, and index status.",
+    categoryId: "google-search-console",
+  },
+  {
+    title: "GSC Help Center",
+    url: "https://support.google.com/webmasters",
+    description: "Official support docs for verification, sitemaps, and issue troubleshooting.",
+    categoryId: "google-search-console",
+  },
+  {
+    title: "URL Inspection Docs",
+    url: "https://support.google.com/webmasters/answer/9012289",
+    description: "Understand indexing state and request indexing with URL Inspection guidance.",
+    categoryId: "google-search-console",
+  },
+  {
+    title: "SE Ranking",
+    url: "https://seranking.com/",
+    description: "Rank tracking and audit suite often used as an Ahrefs alternative.",
+    categoryId: "ahrefs-alternatives",
+  },
+  {
+    title: "Moz Pro",
+    url: "https://moz.com/products/pro",
+    description: "Keyword research, link metrics, and site crawl workflows.",
+    categoryId: "ahrefs-alternatives",
+  },
+  {
+    title: "Mangools",
+    url: "https://mangools.com/",
+    description: "Lightweight SEO suite for keyword and SERP analysis.",
+    categoryId: "ahrefs-alternatives",
+  },
+  {
+    title: "Ahrefs",
+    url: "https://ahrefs.com/",
+    description: "Baseline reference platform for backlink and competitive research.",
+    categoryId: "ahrefs-alternatives",
+  },
+  {
+    title: "Similarweb",
+    url: "https://www.similarweb.com/",
+    description: "Traffic intelligence and competitive analytics alternative to SEMrush.",
+    categoryId: "semrush-alternatives",
+  },
+  {
+    title: "SpyFu",
+    url: "https://www.spyfu.com/",
+    description: "Competitor keyword and PPC visibility data.",
+    categoryId: "semrush-alternatives",
+  },
+  {
+    title: "Serpstat",
+    url: "https://serpstat.com/",
+    description: "All-in-one platform for keyword, audit, and competitor insights.",
+    categoryId: "semrush-alternatives",
+  },
+  {
+    title: "SEMrush",
+    url: "https://www.semrush.com/",
+    description: "Primary suite for search visibility, content, and advertising workflows.",
+    categoryId: "semrush-alternatives",
+  },
+  {
+    title: "KeywordTool.io",
+    url: "https://keywordtool.io/",
+    description: "Keyword suggestion platform with multilingual coverage.",
+    categoryId: "ubersuggest-alternatives",
+  },
+  {
+    title: "LowFruits",
+    url: "https://lowfruits.io/",
+    description: "Find low-competition keyword opportunities for faster wins.",
+    categoryId: "ubersuggest-alternatives",
+  },
+  {
+    title: "AnswerThePublic",
+    url: "https://answerthepublic.com/",
+    description: "Question-led topic discovery and content ideation.",
+    categoryId: "ubersuggest-alternatives",
+  },
+  {
+    title: "Ubersuggest",
+    url: "https://neilpatel.com/ubersuggest/",
+    description: "Reference keyword and SEO suggestion platform.",
+    categoryId: "ubersuggest-alternatives",
+  },
+];
+
 const RESEARCHED_QUERY_MODIFIERS = [
   "free",
   "online",
@@ -508,4 +660,12 @@ export function getCategoryKeywordTargets(categoryId: string): string[] {
   const tools = getToolsByCategory(categoryId);
   const allKeywords = tools.flatMap((tool) => getToolKeywordTargets(tool, 8));
   return uniqueKeywords(allKeywords, 24);
+}
+
+export function getExternalResourceCategoryById(categoryId: string): ExternalResourceCategory | undefined {
+  return EXTERNAL_RESOURCE_CATEGORIES.find((category) => category.id === categoryId);
+}
+
+export function getExternalResourcesByCategory(categoryId: string): ExternalResourceLink[] {
+  return EXTERNAL_RESOURCE_LINKS.filter((link) => link.categoryId === categoryId);
 }

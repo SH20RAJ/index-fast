@@ -13,6 +13,8 @@ import HistoryIcon from "@mui/icons-material/History";
 import BuildIcon from "@mui/icons-material/Build";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LinkIcon from "@mui/icons-material/Link";
+import ArticleIcon from "@mui/icons-material/Article";
+import HandymanIcon from "@mui/icons-material/Handyman";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useColorMode } from "@/components/ThemeRegistry";
@@ -35,11 +37,22 @@ const navItems: NavItem[] = [
     href: "/sites",
     section: "Main",
     children: [
+      { label: "Websites", icon: <LinkIcon />, href: "/sites" },
       { label: "URLs & Submissions", icon: <LinkIcon />, href: "/sites/url" },
     ],
   },
   { label: "Submission Stream", icon: <HistoryIcon />, href: "/submissions", section: "Monitor" },
-  { label: "SEO Toolbox", icon: <BuildIcon />, href: "/toolbox", section: "Tools" },
+  {
+    label: "SEO Toolbox",
+    icon: <BuildIcon />,
+    href: "/toolbox",
+    section: "Tools",
+    children: [
+      { label: "Toolbox Hub", icon: <BuildIcon />, href: "/toolbox" },
+      { label: "Blogs", icon: <ArticleIcon />, href: "/blogs" },
+      { label: "Free SEO Tools", icon: <HandymanIcon />, href: "/tools" },
+    ],
+  },
   { label: "Billing & Settings", icon: <SettingsIcon />, href: "/settings", section: "Account" },
 ];
 

@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import ToolCta from "./_components/ToolCta";
 import {
+  EXTERNAL_RESOURCE_CATEGORIES,
+  getExternalResourcesByCategory,
   SEO_TOOLS,
   TOOL_CATEGORIES,
   getCategoryKeywordTargets,
@@ -204,6 +206,78 @@ export default function ToolsHomePage() {
               </Stack>
             );
           })}
+
+          <Stack spacing={2.2} sx={{ pt: 2.5 }}>
+            <Stack spacing={1}>
+              <Typography variant="h4" fontWeight={900}>
+                SEO Platforms and Alternatives
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 900 }}>
+                Jump straight into Bing Webmaster, Google Search Console, and organized alternative stacks for Ahrefs, SEMrush, and Ubersuggest.
+              </Typography>
+            </Stack>
+
+            <Grid container spacing={2}>
+              {EXTERNAL_RESOURCE_CATEGORIES.map((category) => {
+                const links = getExternalResourcesByCategory(category.id);
+
+                return (
+                  <Grid key={category.id} size={{ xs: 12, md: 6 }}>
+                    <Card
+                      sx={{
+                        border: "1px solid rgba(15,23,42,0.08)",
+                        bgcolor: alpha("#ffffff", 0.86),
+                        height: "100%",
+                      }}
+                    >
+                      <CardContent sx={{ p: 3 }}>
+                        <Stack spacing={1.6}>
+                          <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                            <Chip label={category.title} sx={{ fontWeight: 700, bgcolor: "rgba(14,165,233,0.12)" }} />
+                            <Chip label={`${links.length} links`} size="small" sx={{ fontWeight: 700 }} />
+                          </Stack>
+
+                          <Typography variant="h5" fontWeight={800}>
+                            {category.title}
+                          </Typography>
+
+                          <Typography variant="body1" color="text.secondary">
+                            {category.description}
+                          </Typography>
+
+                          <Divider />
+
+                          <Stack spacing={1}>
+                            {links.slice(0, 3).map((resource) => (
+                              <Typography key={resource.title} variant="body2" color="text.secondary">
+                                • {resource.title}
+                              </Typography>
+                            ))}
+                          </Stack>
+
+                          <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+                            <Link href={`/tools/resources/${category.id}`} style={{ textDecoration: "none" }}>
+                              <Button variant="contained">Open {category.title}</Button>
+                            </Link>
+                            <Button
+                              component="a"
+                              href={links[0]?.url ?? "#"}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              variant="outlined"
+                              disabled={!links[0]}
+                            >
+                              Visit Top Resource
+                            </Button>
+                          </Stack>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </Stack>
 
           <ToolCta
             primaryText="Turn free checks into recurring growth"

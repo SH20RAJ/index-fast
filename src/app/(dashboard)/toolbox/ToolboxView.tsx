@@ -15,18 +15,22 @@ import {
   Link as MuiLink,
   useTheme,
 } from "@mui/material";
+import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
 import LaunchIcon from "@mui/icons-material/Launch";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import BoltIcon from "@mui/icons-material/Bolt";
 import PublicIcon from "@mui/icons-material/Public";
+import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
+import HandymanRoundedIcon from "@mui/icons-material/HandymanRounded";
+import HealthAndSafetyRoundedIcon from "@mui/icons-material/HealthAndSafetyRounded";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { addUtmParams } from "@/lib/utils";
 
 type DirectoryItem = {
   name: string;
   url: string;
-  category: "Launch" | "Community" | "Directory";
+  category: "Launch" | "Community" | "Directory" | "Tech Stack";
   difficulty: "Easy" | "Medium" | "Hard";
   impact: "Low" | "Medium" | "High" | "Very High";
   description: string;
@@ -233,6 +237,227 @@ const directories: DirectoryItem[] = [
     impact: "Medium",
     description: "AI tool listing traffic with strong long-tail discovery potential.",
   },
+  {
+    name: "Google Search Console",
+    url: "https://search.google.com/search-console",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "Very High",
+    description: "Core index coverage, performance, and URL inspection platform for technical SEO.",
+  },
+  {
+    name: "Bing Webmaster Tools",
+    url: "https://www.bing.com/webmasters/about",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "High",
+    description: "Manage Bing indexing, diagnostics, and IndexNow visibility from one dashboard.",
+  },
+  {
+    name: "Google Analytics (GA4)",
+    url: "https://analytics.google.com/",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "Very High",
+    description: "Behavior, attribution, and conversion tracking baseline for every growth workflow.",
+  },
+  {
+    name: "Google AdSense",
+    url: "https://www.google.com/adsense/start/",
+    category: "Tech Stack",
+    difficulty: "Medium",
+    impact: "Medium",
+    description: "Monetization layer for content sites with performance and revenue reporting.",
+  },
+  {
+    name: "Google Tag Manager",
+    url: "https://tagmanager.google.com/",
+    category: "Tech Stack",
+    difficulty: "Medium",
+    impact: "High",
+    description: "Ship tracking and event instrumentation quickly without app redeploys.",
+  },
+  {
+    name: "Looker Studio",
+    url: "https://lookerstudio.google.com/",
+    category: "Tech Stack",
+    difficulty: "Medium",
+    impact: "High",
+    description: "Build stakeholder dashboards combining GA4, GSC, Bing, and rank trackers.",
+  },
+  {
+    name: "Ahrefs",
+    url: "https://ahrefs.com/",
+    category: "Tech Stack",
+    difficulty: "Medium",
+    impact: "Very High",
+    description: "All-in-one suite for backlinks, keyword research, audits, and AI visibility monitoring.",
+  },
+  {
+    name: "SEMrush",
+    url: "https://www.semrush.com/",
+    category: "Tech Stack",
+    difficulty: "Medium",
+    impact: "Very High",
+    description: "SEO plus AI visibility and competitive intelligence for cross-channel growth.",
+  },
+  {
+    name: "Ubersuggest",
+    url: "https://neilpatel.com/ubersuggest/",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "Medium",
+    description: "Lightweight keyword, traffic, and backlink discovery tool for faster starts.",
+  },
+  {
+    name: "SE Ranking",
+    url: "https://seranking.com/",
+    category: "Tech Stack",
+    difficulty: "Medium",
+    impact: "High",
+    description: "AI visibility tracking, rank monitoring, site audits, and agency reporting in one suite.",
+  },
+  {
+    name: "Moz Pro",
+    url: "https://moz.com/products/pro",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "High",
+    description: "Keyword and link intelligence platform with strong authority metrics.",
+  },
+  {
+    name: "Screaming Frog SEO Spider",
+    url: "https://www.screamingfrog.co.uk/seo-spider/",
+    category: "Tech Stack",
+    difficulty: "Hard",
+    impact: "Very High",
+    description: "Technical crawl workhorse for audits, redirects, canonicals, and metadata validation.",
+  },
+  {
+    name: "Sitebulb",
+    url: "https://sitebulb.com/",
+    category: "Tech Stack",
+    difficulty: "Medium",
+    impact: "High",
+    description: "Visual technical auditing with prioritized issues and actionable crawl insights.",
+  },
+  {
+    name: "ContentKing",
+    url: "https://www.contentkingapp.com/",
+    category: "Tech Stack",
+    difficulty: "Medium",
+    impact: "High",
+    description: "24/7 SEO monitoring and alerting for sudden site changes that affect rankings.",
+  },
+  {
+    name: "Similarweb",
+    url: "https://www.similarweb.com/",
+    category: "Tech Stack",
+    difficulty: "Medium",
+    impact: "High",
+    description: "Competitive traffic intelligence for benchmarking acquisition channels and market share.",
+  },
+  {
+    name: "Keyword.com",
+    url: "https://keyword.com/",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "High",
+    description: "SERP rank and AI visibility tracking with agency-friendly reporting workflows.",
+  },
+  {
+    name: "Hotjar",
+    url: "https://www.hotjar.com/",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "Medium",
+    description: "Heatmaps and session recordings to diagnose UX friction hurting conversions.",
+  },
+  {
+    name: "Microsoft Clarity",
+    url: "https://clarity.microsoft.com/",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "Medium",
+    description: "Free behavior analytics and replay data for landing-page optimization loops.",
+  },
+  {
+    name: "Plausible Analytics",
+    url: "https://plausible.io/",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "Medium",
+    description: "Privacy-first analytics alternative with simpler dashboards and low overhead.",
+  },
+  {
+    name: "Matomo",
+    url: "https://matomo.org/",
+    category: "Tech Stack",
+    difficulty: "Medium",
+    impact: "Medium",
+    description: "Self-hosted analytics stack for teams that need ownership and compliance control.",
+  },
+  {
+    name: "Google PageSpeed Insights",
+    url: "https://pagespeed.web.dev/",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "High",
+    description: "Core Web Vitals diagnostics linked to search performance and UX outcomes.",
+  },
+];
+
+const seoMethods = [
+  "Crawlability first: validate robots.txt, sitemap integrity, and canonical consistency.",
+  "Indexation loop: submit critical URLs, inspect index status, and iterate from logs weekly.",
+  "Content system: map pages to search intent clusters before publishing.",
+  "Authority engine: build relevant mentions and backlinks with launch + directory cadence.",
+  "Measurement discipline: connect GSC + GA4 + rank tracking before changing strategy.",
+];
+
+const problemPlaybooks = [
+  {
+    title: "Pages not indexed",
+    signal: "URLs discovered but not indexed or delayed for days.",
+    action: "Run indexability + sitemap checks, then push priority URLs via IndexNow/Bing batch.",
+    href: "/sites/url",
+    cta: "Open URL Manager",
+  },
+  {
+    title: "Traffic dropped suddenly",
+    signal: "Sharp clicks/impressions decline in recent 7-14 days.",
+    action: "Validate crawl errors, server response changes, and submission failures from stream logs.",
+    href: "/submissions",
+    cta: "Open Submission Stream",
+  },
+  {
+    title: "Weak keyword growth",
+    signal: "Content published but rankings and qualified sessions stay flat.",
+    action: "Use tools catalog and blog playbooks to improve intent targeting, internal links, and snippets.",
+    href: "/tools",
+    cta: "Open Free Tools",
+  },
+];
+
+const hubLinks = [
+  {
+    title: "SEO Blogs & Playbooks",
+    description: "Learn proven methods, checklists, and practical SEO workflows.",
+    href: "/blogs",
+    icon: <MenuBookRoundedIcon fontSize="small" />,
+  },
+  {
+    title: "Free SEO Tools",
+    description: "Run technical checks and generators across crawl, metadata, and authority.",
+    href: "/tools",
+    icon: <HandymanRoundedIcon fontSize="small" />,
+  },
+  {
+    title: "Website Problem Scanner",
+    description: "Track issues by site and move directly to fixes from dashboard workflows.",
+    href: "/sites",
+    icon: <HealthAndSafetyRoundedIcon fontSize="small" />,
+  },
 ];
 
 export default function ToolboxView() {
@@ -241,7 +466,13 @@ export default function ToolboxView() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<"All" | DirectoryItem["category"]>("All");
 
-  const categories: Array<"All" | DirectoryItem["category"]> = ["All", "Launch", "Community", "Directory"];
+  const categories: Array<"All" | DirectoryItem["category"]> = [
+    "All",
+    "Launch",
+    "Community",
+    "Directory",
+    "Tech Stack",
+  ];
 
   // Helper function to get UTM-enhanced URL
   const getTrackingUrl = (platform: DirectoryItem) => {
@@ -268,7 +499,7 @@ export default function ToolboxView() {
       acc[item.category].push(item);
       return acc;
     },
-    { Launch: [], Community: [], Directory: [] }
+    { Launch: [], Community: [], Directory: [], "Tech Stack": [] }
   );
 
   const highImpact = directories.filter((d) => d.impact === "High" || d.impact === "Very High").length;
@@ -278,6 +509,7 @@ export default function ToolboxView() {
     Launch: theme.palette.primary.main,
     Community: theme.palette.secondary.main,
     Directory: "#F59E0B",
+    "Tech Stack": "#0EA5E9",
   };
 
   return (
@@ -285,10 +517,59 @@ export default function ToolboxView() {
       <Stack spacing={3.5}>
         <PageHeader
           title="SEO Toolbox"
-          description="Find launch platforms, communities, and directories to earn backlinks, drive traffic, and get early users."
+          description="Find launch channels plus the best SEO and analytics stack to monitor indexing, visibility, and growth."
         />
 
         <Grid container spacing={2}>
+          {hubLinks.map((entry) => (
+            <Grid key={entry.title} size={{ xs: 12, md: 4 }}>
+              <Card
+                sx={{
+                  borderRadius: "18px",
+                  border: "1px solid",
+                  borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
+                  boxShadow: "none",
+                  height: "100%",
+                }}
+              >
+                <CardContent sx={{ p: 2.25, height: "100%" }}>
+                  <Stack spacing={1.25} sx={{ height: "100%" }}>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <Box
+                        sx={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: "8px",
+                          display: "grid",
+                          placeItems: "center",
+                          bgcolor: alpha(theme.palette.primary.main, isDark ? 0.28 : 0.14),
+                          color: "primary.main",
+                        }}
+                      >
+                        {entry.icon}
+                      </Box>
+                      <Typography variant="subtitle1" fontWeight={800}>
+                        {entry.title}
+                      </Typography>
+                    </Stack>
+                    <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1 }}>
+                      {entry.description}
+                    </Typography>
+                    <Button
+                      component={Link}
+                      href={entry.href}
+                      variant="outlined"
+                      sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 700, alignSelf: "flex-start" }}
+                    >
+                      Open
+                    </Button>
+                  </Stack>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+<Grid container spacing={2}>
           <Grid size={{ xs: 12, md: 4 }}>
             <Card
               sx={{
@@ -362,6 +643,9 @@ export default function ToolboxView() {
             </Card>
           </Grid>
         </Grid>
+        
+
+        
 
         <Card
           sx={{
@@ -589,6 +873,66 @@ export default function ToolboxView() {
             </Stack>
           </CardContent>
         </Card>
+
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, lg: 6 }}>
+            <Card
+              sx={{
+                borderRadius: "18px",
+                border: "1px solid",
+                borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
+                boxShadow: "none",
+                height: "100%",
+              }}
+            >
+              <CardContent sx={{ p: 2.5 }}>
+                <Stack spacing={1.25}>
+                  <Typography variant="h6" fontWeight={900}>Methods We Teach</Typography>
+                  {seoMethods.map((method) => (
+                    <Stack key={method} direction="row" spacing={1} alignItems="flex-start">
+                      <Box sx={{ mt: 0.7, width: 6, height: 6, borderRadius: "999px", bgcolor: "primary.main" }} />
+                      <Typography variant="body2" color="text.secondary">{method}</Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid size={{ xs: 12, lg: 6 }}>
+            <Card
+              sx={{
+                borderRadius: "18px",
+                border: "1px solid",
+                borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
+                boxShadow: "none",
+                height: "100%",
+              }}
+            >
+              <CardContent sx={{ p: 2.5 }}>
+                <Stack spacing={1.25}>
+                  <Typography variant="h6" fontWeight={900}>Problem to Improvement Playbooks</Typography>
+                  {problemPlaybooks.map((playbook) => (
+                    <Box key={playbook.title} sx={{ p: 1.25, borderRadius: "10px", bgcolor: alpha(theme.palette.text.primary, isDark ? 0.08 : 0.04) }}>
+                      <Stack spacing={0.6}>
+                        <Typography variant="subtitle2" fontWeight={800}>{playbook.title}</Typography>
+                        <Typography variant="caption" color="text.secondary">Signal: {playbook.signal}</Typography>
+                        <Typography variant="caption" color="text.secondary">Fix: {playbook.action}</Typography>
+                        <Button
+                          component={Link}
+                          href={playbook.href}
+                          size="small"
+                          sx={{ alignSelf: "flex-start", textTransform: "none", fontWeight: 700, px: 0 }}
+                        >
+                          {playbook.cta}
+                        </Button>
+                      </Stack>
+                    </Box>
+                  ))}
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </Stack>
     </Box>
   );
