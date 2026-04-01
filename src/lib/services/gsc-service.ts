@@ -1,4 +1,4 @@
-import { and, eq, count as countFn } from "drizzle-orm";
+import { and, eq, count } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { websites } from "@/lib/db/schema";
 import { listSearchConsoleSites, listSearchConsoleSitemaps } from "@/lib/api/google";
@@ -43,8 +43,8 @@ export async function importGscSites(userId: string, accessToken: string, websit
   }
 
   // Get current website count
-  const [{ count: currentCount }] = await db
-    .select({ count: countFn() })
+  const [{ total: currentCount }] = await db
+    .select({ total: count() })
     .from(websites)
     .where(eq(websites.userId, userId));
 
