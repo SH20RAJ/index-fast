@@ -2,6 +2,9 @@
 import { useActionState, useEffect, useMemo, useState } from "react";
 import {
   Alert,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Card,
@@ -23,6 +26,8 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import {
@@ -75,6 +80,8 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   const [gscStatusMessage, setGscStatusMessage] = useState<string | null>(null);
   const [processLogs, setProcessLogs] = useState<string[]>([]);
   const [editingSiteId, setEditingSiteId] = useState<string | null>(null);
+  const [addWebsiteExpanded, setAddWebsiteExpanded] = useState(initialSites.length === 0);
+  const [siteSearchQuery, setSiteSearchQuery] = useState("");
 
   const [createState, createAction, createPending] = useActionState<ActionState, FormData>(
     addWebsiteAction,
@@ -102,6 +109,32 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   const selectableSites = useMemo(
     () => gscSites.filter((site) => site.supported && !site.alreadyImported),
     [gscSites]
+  );
+
+  const filteredSites = useMemo(() => {
+    const query = siteSearchQuery.trim().toLowerCase();
+    if (!query) {
+      return initialSites;
+    }
+
+    return initialSites.filter((site) =>
+      [site.url, site.sitemapUrl ?? "", site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString() : ""]
+        .join(" ")
+        .toLowerCase()
+        .includes(query)
+    );
+  }, [initialSites, siteSearchQuery]);
+
+  const gscConnectedCount = useMemo(
+    () => initialSites.filter((site) => Boolean(site.gscConnected)).length,
+    [initialSites]
+  );
+
+  const credentialsCompleteCount = useMemo(
+    () =>
+      initialSites.filter((site) => Boolean(site.indexNowKey) && Boolean(site.bingApiKey) && Boolean(getIndexNowKeyLocationUrl(site)))
+        .length,
+    [initialSites]
   );
 
   function getIndexNowKeyLocationUrl(site: WebsiteRecord) {
@@ -243,13 +276,36 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
         {gscError ? <Alert severity="error">{gscError}</Alert> : null}
         {gscStatusMessage ? <Alert severity="success">{gscStatusMessage}</Alert> : null}
 
-        <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
-          <CardContent sx={{ p: { xs: 2.25, md: 3 } }}>
-            <Stack component="form" action={createAction} spacing={2}>
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={1} justifyContent="space-between" alignItems={{ xs: "flex-start", sm: "center" }}>
-                <Typography variant="h6" fontWeight={900}>
-                  Add Website
-                </Typography>
+        <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none", overflow: "hidden" }}>
+          <Accordion
+            expanded={addWebsiteExpanded}
+            onChange={(_, expanded) => setAddWebsiteExpanded(expanded)}
+            disableGutters
+            elevation={0}
+            sx={{ "&:before": { display: "none" }, bgcolor: "transparent" }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreRoundedIcon />}
+              sx={{ px: { xs: 2.25, md: 3 }, py: 1.2 }}
+            >
+              <Stack direction={{ xs: "column", sm: "row" }} alignItems={{ xs: "flex-start", sm: "center" }} justifyContent="space-between" sx={{ width: "100%" }} spacing={1}>
+                <Box>
+                  <Typography variant="h6" fontWeight={900}>
+                    Add Website
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Add a domain, sitemap, and optional indexing credentials.
+                  </Typography>
+                </Box>
+                <Chip
+                  label={`${slotsLeft} slot(s) left on ${planName}`}
+                  color={slotsLeft === 0 ? "error" : "default"}
+                  sx={{ borderRadius: "10px", fontWeight: 700 }}
+                />
+              </Stack>
+            </AccordionSummary>
+            <AccordionDetails sx={{ px: { xs: 2.25, md: 3 }, pb: { xs: 2.25, md: 3 }, pt: 0 }}>
+              <Stack component="form" action={createAction} spacing={2}>
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25} alignItems={{ xs: "flex-start", sm: "center" }}>
                   <Button
                     type="button"
@@ -274,58 +330,55 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                       {gscLoading ? "Loading…" : "Refresh GSC List"}
                     </Button>
                   ) : null}
-                  <Typography variant="body2" color={slotsLeft === 0 ? "error.main" : "text.secondary"}>
-                    {slotsLeft} slot(s) left on {planName}
-                  </Typography>
                 </Stack>
+
+                <TextField
+                  label="Website URL"
+                  name="url"
+                  type="url"
+                  autoComplete="url"
+                  placeholder="https://example.com"
+                  fullWidth
+                  required
+                />
+                <TextField
+                  label="Sitemap URL"
+                  name="sitemapUrl"
+                  type="url"
+                  autoComplete="off"
+                  placeholder="https://example.com/sitemap.xml"
+                  fullWidth
+                />
+
+                <Stack direction={{ xs: "column", md: "row" }} spacing={1.5}>
+                  <TextField label="IndexNow key (optional)" name="indexNowKey" fullWidth />
+                  <TextField label="Bing API key (optional)" name="bingApiKey" fullWidth />
+                </Stack>
+
+                <TextField
+                  label="IndexNow key text URL (optional)"
+                  name="indexNowKeyLocationUrl"
+                  type="url"
+                  autoComplete="off"
+                  placeholder="https://example.com/your-key.txt"
+                  fullWidth
+                  helperText="Used for IndexNow keyLocation validation during auto submission."
+                />
+
+                <Box>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    disabled={createPending}
+                    sx={{ borderRadius: "11px", fontWeight: 800, textTransform: "none" }}
+                  >
+                    {createPending ? "Adding…" : "Add Website"}
+                  </Button>
+                </Box>
               </Stack>
-
-              <TextField
-                label="Website URL"
-                name="url"
-                type="url"
-                autoComplete="url"
-                placeholder="https://example.com"
-                fullWidth
-                required
-              />
-              <TextField
-                label="Sitemap URL"
-                name="sitemapUrl"
-                type="url"
-                autoComplete="off"
-                placeholder="https://example.com/sitemap.xml"
-                fullWidth
-              />
-
-              <Stack direction={{ xs: "column", md: "row" }} spacing={1.5}>
-                <TextField label="IndexNow key (optional)" name="indexNowKey" fullWidth />
-                <TextField label="Bing API key (optional)" name="bingApiKey" fullWidth />
-              </Stack>
-
-              <TextField
-                label="IndexNow key text URL (optional)"
-                name="indexNowKeyLocationUrl"
-                type="url"
-                autoComplete="off"
-                placeholder="https://example.com/your-key.txt"
-                fullWidth
-                helperText="Used for IndexNow keyLocation validation during auto submission."
-              />
-
-              <Box>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  disabled={createPending}
-                  sx={{ borderRadius: "11px", fontWeight: 800, textTransform: "none" }}
-                >
-                  {createPending ? "Adding…" : "Add Website"}
-                </Button>
-              </Box>
-            </Stack>
-          </CardContent>
+            </AccordionDetails>
+          </Accordion>
         </Card>
 
         {(gscConnected || gscLoading || gscSites.length > 0 || processLogs.length > 0) && (
@@ -457,6 +510,32 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
           </Card>
         )}
 
+        <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
+          <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
+            <Stack direction={{ xs: "column", md: "row" }} spacing={1.5} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }}>
+              <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                <Chip label={`Total: ${initialSites.length}`} size="small" sx={{ borderRadius: "8px", fontWeight: 700 }} />
+                <Chip label={`GSC Connected: ${gscConnectedCount}`} size="small" color="primary" sx={{ borderRadius: "8px", fontWeight: 700 }} />
+                <Chip
+                  label={`Keys Complete: ${credentialsCompleteCount}`}
+                  size="small"
+                  color={credentialsCompleteCount > 0 ? "success" : "default"}
+                  sx={{ borderRadius: "8px", fontWeight: 700 }}
+                />
+              </Stack>
+
+              <TextField
+                value={siteSearchQuery}
+                onChange={(event) => setSiteSearchQuery(event.target.value)}
+                size="small"
+                placeholder="Search websites..."
+                InputProps={{ startAdornment: <SearchRoundedIcon sx={{ fontSize: 18, mr: 1, color: "text.secondary" }} /> }}
+                sx={{ width: { xs: "100%", md: 280 } }}
+              />
+            </Stack>
+          </CardContent>
+        </Card>
+
         <Stack spacing={2}>
           {initialSites.length === 0 ? (
             <Card sx={{ borderRadius: "18px", border: "1px dashed", borderColor: "divider", boxShadow: "none" }}>
@@ -470,8 +549,19 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                 </Typography>
               </CardContent>
             </Card>
+          ) : filteredSites.length === 0 ? (
+            <Card sx={{ borderRadius: "18px", border: "1px dashed", borderColor: "divider", boxShadow: "none" }}>
+              <CardContent sx={{ py: 5, textAlign: "center" }}>
+                <Typography variant="h6" fontWeight={900}>
+                  No matching websites
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Try a different search term.
+                </Typography>
+              </CardContent>
+            </Card>
           ) : (
-            initialSites.map((site) => (
+            filteredSites.map((site) => (
               <Card
                 key={site.id}
                 sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}
