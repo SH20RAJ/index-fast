@@ -17,16 +17,12 @@ export async function ensureUserRecord(input: SyncUserInput) {
     .values({
       id: input.id,
       email: safeEmail,
-      isPro: false,
-      subscriptionStatus: undefined,
       updatedAt: new Date(),
     })
     .onConflictDoUpdate({
       target: users.id,
       set: {
         email: safeEmail,
-        isPro: false,
-        subscriptionStatus: undefined,
         updatedAt: new Date(),
       },
     })
