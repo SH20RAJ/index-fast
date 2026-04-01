@@ -33,6 +33,19 @@ export const metadata: Metadata = {
     "generative engine optimization",
   ],
   manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      { rel: "mask-icon", url: "/icon.png", color: "#7C3AED" },
+    ],
+  },
   openGraph: {
     type: "website",
     url: "/",

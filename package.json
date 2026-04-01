@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "deploy": "npx  vercel --prod",
     "start": "next start",
     "lint": "eslint",
     "generate:social-images": "node scripts/generate-social-images.mjs"
