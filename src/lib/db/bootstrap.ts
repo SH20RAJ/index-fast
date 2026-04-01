@@ -139,6 +139,29 @@ export async function ensureDbSchema() {
       "occurred_at" timestamp DEFAULT now()
     );`);
 
+    await run(`CREATE TABLE IF NOT EXISTS "cron_jobs" (
+      "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      "website_id" uuid NOT NULL REFERENCES "websites"("id") ON DELETE CASCADE,
+      "enabled" boolean NOT NULL DEFAULT true,
+      "frequency" text NOT NULL,
+      "engine" submission_engine NOT NULL,
+      "source_mode" text NOT NULL,
+      "last_run_at" timestamp,
+      "next_run_at" timestamp,
+      "created_at" timestamp DEFAULT now(),
+      "updated_at" timestamp DEFAULT now()
+    );`);
+
+    await run(`CREATE INDEX IF NOT EXISTS "idx_websites_user_id" ON "websites"("user_id");`);
+    await run(`CREATE INDEX IF NOT EXISTS "idx_websites_created_at" ON "websites"("created_at");`);
+    await run(`CREATE INDEX IF NOT EXISTS "idx_url_inventory_website_id" ON "url_inventory"("website_id");`);
+    await run(`CREATE INDEX IF NOT EXISTS "idx_submissions_website_id" ON "submissions"("website_id");`);
+    await run(`CREATE INDEX IF NOT EXISTS "idx_submissions_created_at" ON "submissions"("created_at");`);
+    await run(`CREATE INDEX IF NOT EXISTS "idx_usage_events_user_id" ON "usage_events"("user_id");`);
+    await run(`CREATE INDEX IF NOT EXISTS "idx_usage_events_occurred_at" ON "usage_events"("occurred_at");`);
+    await run(`CREATE INDEX IF NOT EXISTS "idx_cron_jobs_website_id" ON "cron_jobs"("website_id");`);
+    await run(`CREATE INDEX IF NOT EXISTS "idx_cron_jobs_next_run_at" ON "cron_jobs"("next_run_at");`);
+
     initialized = true;
     inFlight = null;
   })();

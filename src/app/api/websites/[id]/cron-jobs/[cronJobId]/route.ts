@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
 import { stackServerApp } from "@/stack";
 import { db } from "@/lib/db";
-import { cronJobs, websites } from "@/lib/db/schema";
+import { cronJobs, users, websites } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
+import { resolvePlanId, type PlanId } from "@/lib/billing/plans";
+
+const CRON_PLAN_LIMITS: Record<PlanId, { maxTotalJobs: number; allowHourly: boolean }> = {
+  free: { maxTotalJobs: 1, allowHourly: false },
+  pro: { maxTotalJobs: 25, allowHourly: true },
+  agency: { maxTotalJobs: 200, allowHourly: true },
+};
 
 export async function PATCH(
   request: Request,
@@ -16,6 +23,14 @@ export async function PATCH(
   const { id: websiteId, cronJobId } = await params;
 
   try {
+    const [userRow] = await db
+      .select({ subscriptionStatus: users.subscriptionStatus, isPro: users.isPro })
+      .from(users)
+      .where(eq(users.id, user.id))
+      .limit(1);
+    const planId = resolvePlanId(userRow?.subscriptionStatus ?? null, userRow?.isPro ?? false);
+    const limits = CRON_PLAN_LIMITS[planId];
+
     // Verify website ownership
     const website = await db
       .select()
@@ -28,6 +43,38 @@ export async function PATCH(
     }
 
     const body = (await request.json()) as { enabled?: boolean };
+
+    const [targetJob] = await db
+      .select({ id: cronJobs.id, enabled: cronJobs.enabled, frequency: cronJobs.frequency })
+      .from(cronJobs)
+      .where(and(eq(cronJobs.id, cronJobId), eq(cronJobs.websiteId, websiteId)))
+      .limit(1);
+
+    if (!targetJob) {
+      return NextResponse.json({ error: "Cron job not found" }, { status: 404 });
+    }
+
+    if (body.enabled === true && !targetJob.enabled) {
+      if (!limits.allowHourly && targetJob.frequency === "hourly") {
+        return NextResponse.json(
+          { error: "Hourly schedules are available on Pro and Agency plans." },
+          { status: 403 }
+        );
+      }
+
+      const existingUserJobs = await db
+        .select({ id: cronJobs.id })
+        .from(cronJobs)
+        .innerJoin(websites, eq(cronJobs.websiteId, websites.id))
+        .where(eq(websites.userId, user.id));
+
+      if (existingUserJobs.length > limits.maxTotalJobs) {
+        return NextResponse.json(
+          { error: `Your ${planId.toUpperCase()} plan allows up to ${limits.maxTotalJobs} auto-submit job${limits.maxTotalJobs === 1 ? "" : "s"}.` },
+          { status: 403 }
+        );
+      }
+    }
 
     await db
       .update(cronJobs)

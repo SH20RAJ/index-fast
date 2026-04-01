@@ -39,6 +39,7 @@ const navItems: NavItem[] = [
     children: [
       { label: "Websites", icon: <LinkIcon />, href: "/sites" },
       { label: "URLs & Submissions", icon: <LinkIcon />, href: "/sites/url" },
+      { label: "Auto Submit Jobs", icon: <HistoryIcon />, href: "/sites/jobs" },
     ],
   },
   { label: "Submission Stream", icon: <HistoryIcon />, href: "/submissions", section: "Monitor" },

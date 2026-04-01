@@ -288,13 +288,11 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
       <Stack spacing={3}>
         <PageHeader
           title="Websites"
-          description="Manage tracked websites, trigger indexing syncs, and stay within plan limits."
+          description="Manage websites and run indexing workflows."
           action={
-            <Chip
-              label={`${planName} plan · ${initialSites.length}/${websiteLimit} sites`}
-              color="primary"
-              sx={{ borderRadius: "10px", fontWeight: 800 }}
-            />
+            <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 700 }}>
+              {planName} plan: {initialSites.length}/{websiteLimit} sites
+            </Typography>
           }
         />
 
@@ -327,11 +325,9 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                     Add a domain, sitemap, and optional indexing credentials.
                   </Typography>
                 </Box>
-                <Chip
-                  label={`${slotsLeft} slot(s) left on ${planName}`}
-                  color={slotsLeft === 0 ? "error" : "default"}
-                  sx={{ borderRadius: "10px", fontWeight: 700 }}
-                />
+                <Typography variant="caption" color={slotsLeft === 0 ? "error.main" : "text.secondary"} sx={{ fontWeight: 700 }}>
+                  {slotsLeft} slot(s) left
+                </Typography>
               </Stack>
             </AccordionSummary>
             <AccordionDetails sx={{ px: { xs: 2.25, md: 3 }, pb: { xs: 2.25, md: 3 }, pt: 0 }}>
@@ -540,31 +536,20 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
           </Card>
         )}
 
-        <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
-          <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
-            <Stack direction={{ xs: "column", md: "row" }} spacing={1.5} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }}>
-              <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                <Chip label={`Total: ${initialSites.length}`} size="small" sx={{ borderRadius: "8px", fontWeight: 700 }} />
-                <Chip label={`GSC Connected: ${gscConnectedCount}`} size="small" color="primary" sx={{ borderRadius: "8px", fontWeight: 700 }} />
-                <Chip
-                  label={`Keys Complete: ${credentialsCompleteCount}`}
-                  size="small"
-                  color={credentialsCompleteCount > 0 ? "success" : "default"}
-                  sx={{ borderRadius: "8px", fontWeight: 700 }}
-                />
-              </Stack>
+        <Stack direction={{ xs: "column", md: "row" }} spacing={1.5} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }}>
+          <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+            {initialSites.length} total • {gscConnectedCount} connected to GSC • {credentialsCompleteCount} ready for submission
+          </Typography>
 
-              <TextField
-                value={siteSearchQuery}
-                onChange={(event) => setSiteSearchQuery(event.target.value)}
-                size="small"
-                placeholder="Search websites..."
-                InputProps={{ startAdornment: <SearchRoundedIcon sx={{ fontSize: 18, mr: 1, color: "text.secondary" }} /> }}
-                sx={{ width: { xs: "100%", md: 280 } }}
-              />
-            </Stack>
-          </CardContent>
-        </Card>
+          <TextField
+            value={siteSearchQuery}
+            onChange={(event) => setSiteSearchQuery(event.target.value)}
+            size="small"
+            placeholder="Search websites"
+            InputProps={{ startAdornment: <SearchRoundedIcon sx={{ fontSize: 18, mr: 1, color: "text.secondary" }} /> }}
+            sx={{ width: { xs: "100%", md: 280 } }}
+          />
+        </Stack>
 
         <Stack spacing={2}>
           {initialSites.length === 0 ? (
@@ -613,25 +598,10 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                           Sitemap: {site.sitemapUrl || "Not configured"}
                         </Typography>
                       </Box>
-
-                      <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" alignItems="flex-start">
-                        <Chip
-                          label={site.gscConnected ? "GSC connected" : "GSC not connected"}
-                          size="small"
-                          color={site.gscConnected ? "success" : "default"}
-                          sx={{ borderRadius: "8px", fontWeight: 700 }}
-                        />
-                        <Chip
-                          label={site.indexNowKey && site.bingApiKey ? "Submission keys ready" : "Submission keys missing"}
-                          size="small"
-                          color={site.indexNowKey && site.bingApiKey ? "success" : "default"}
-                          sx={{ borderRadius: "8px", fontWeight: 700 }}
-                        />
-                      </Stack>
                     </Stack>
 
                     <Typography variant="body2" color="text.secondary">
-                      Last sync: {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString() : "Never"}
+                      {site.gscConnected ? "GSC connected" : "GSC not connected"} • {site.indexNowKey && site.bingApiKey ? "Submission keys ready" : "Submission keys missing"} • Last sync: {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString() : "Never"}
                     </Typography>
 
                     <Divider sx={{ borderColor: "divider" }} />
@@ -689,12 +659,23 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                       </Button>
 
                       <Button
+                        variant="outlined"
+                        startIcon={<EditOutlinedIcon />}
+                        onClick={() => setEditingSiteId((prev) => (prev === site.id ? null : site.id))}
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                      >
+                        {editingSiteId === site.id ? "Close Edit" : "Edit Indexing"}
+                      </Button>
+                    </Stack>
+
+                    <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                      <Button
                         component="a"
                         href={buildBingIndexNowPortalUrl(site.url)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        variant="outlined"
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                        variant="text"
+                        sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none", fontWeight: 700 }}
                       >
                         Open Bing IndexNow
                       </Button>
@@ -704,24 +685,15 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         href={buildGoogleSearchConsolePropertyUrl(site.url)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        variant="outlined"
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                        variant="text"
+                        sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none", fontWeight: 700 }}
                       >
                         Open in GSC
                       </Button>
 
-                      <Button
-                        variant="outlined"
-                        startIcon={<EditOutlinedIcon />}
-                        onClick={() => setEditingSiteId((prev) => (prev === site.id ? null : site.id))}
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
-                      >
-                        {editingSiteId === site.id ? "Close Edit" : "Edit Indexing"}
-                      </Button>
-
                       <Box component="form" action={deleteAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
                         <input type="hidden" name="websiteId" value={site.id} />
-                        <Button type="submit" color="error" variant="outlined" startIcon={<DeleteOutlineIcon />} disabled={deletePending} fullWidth sx={{ borderRadius: "9px", textTransform: "none", fontWeight: 700 }}>
+                        <Button type="submit" color="error" variant="text" startIcon={<DeleteOutlineIcon />} disabled={deletePending} fullWidth sx={{ textTransform: "none", fontWeight: 700 }}>
                           Remove
                         </Button>
                       </Box>
