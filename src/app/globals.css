@@ -142,7 +142,9 @@ body {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background;
+    color: var(--mui-palette-text-primary, var(--foreground));
+    background-color: var(--mui-palette-background-default, var(--background));
   }
   html {
     @apply font-sans;

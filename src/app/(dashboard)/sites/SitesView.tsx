@@ -1,5 +1,5 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   Alert,
   Box,
@@ -12,6 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useUser } from "@stackframe/stack";
 import AddIcon from "@mui/icons-material/Add";
 import PublicIcon from "@mui/icons-material/Public";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -27,6 +28,7 @@ import {
   refreshGscMetadataAction,
 } from "@/app/(dashboard)/actions";
 import { defaultActionState, type ActionState } from "@/app/(dashboard)/action-state";
+import { GSC_READONLY_SCOPE } from "@/lib/api/google";
 
 interface WebsiteRecord {
   id: string;
@@ -45,6 +47,9 @@ interface SitesViewProps {
 }
 
 export default function SitesView({ initialSites, planName, websiteLimit }: SitesViewProps) {
+  const user = useUser();
+  const [reconnectPending, setReconnectPending] = useState(false);
+
   const [createState, createAction, createPending] = useActionState<ActionState, FormData>(
     addWebsiteAction,
     defaultActionState
@@ -57,7 +62,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     deleteWebsiteAction,
     defaultActionState
   );
-  const [importState, importAction, importPending] = useActionState<ActionState, void>(
+  const [importState, importAction, importPending] = useActionState<ActionState, FormData>(
     importGscSitesAction,
     defaultActionState
   );
@@ -67,6 +72,9 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   );
 
   const slotsLeft = Math.max(0, websiteLimit - initialSites.length);
+  const needsGoogleReconnect =
+    importState.status === "error" &&
+    /token is unavailable|no google account is connected/i.test(importState.message);
 
   return (
     <Box sx={{ pt: 1, pb: 8 }}>
@@ -98,13 +106,33 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                 </Typography>
                 <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25} alignItems={{ xs: "flex-start", sm: "center" }}>
                   <Button
-                    onClick={() => importAction()}
+                    type="submit"
+                    formAction={importAction}
+                    formNoValidate
                     variant="outlined"
                     disabled={importPending}
                     sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}
                   >
                     {importPending ? "Importing..." : "Import from Google Search Console"}
                   </Button>
+                  {needsGoogleReconnect ? (
+                    <Button
+                      variant="text"
+                      disabled={reconnectPending || !user}
+                      onClick={async () => {
+                        if (!user) return;
+                        setReconnectPending(true);
+                        try {
+                          await user.linkConnectedAccount("google", { scopes: [GSC_READONLY_SCOPE] });
+                        } finally {
+                          setReconnectPending(false);
+                        }
+                      }}
+                      sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}
+                    >
+                      {reconnectPending ? "Reconnecting..." : "Reconnect Google"}
+                    </Button>
+                  ) : null}
                   <Typography variant="body2" color={slotsLeft === 0 ? "error.main" : "text.secondary"}>
                     {slotsLeft} slot(s) left on {planName}
                   </Typography>

@@ -239,7 +239,7 @@ export async function addWebsiteAction(_: ActionState, formData: FormData): Prom
   }
 }
 
-export async function importGscSitesAction(_: ActionState): Promise<ActionState> {
+export async function importGscSitesAction(_: ActionState, _formData: FormData): Promise<ActionState> {
   try {
     const user = await getAuthedUser();
 
@@ -259,7 +259,7 @@ export async function importGscSitesAction(_: ActionState): Promise<ActionState>
       return {
         status: "error",
         message:
-          "Google Search Console access token is unavailable. Reconnect your Google account and grant Search Console permissions.",
+          "Google Search Console access token is unavailable. Click Reconnect Google, approve Search Console permissions, then run import again.",
       };
     }
 

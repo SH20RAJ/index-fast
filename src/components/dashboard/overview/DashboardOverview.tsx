@@ -43,10 +43,7 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
           borderRadius: "20px",
           border: "1px solid",
           borderColor: "divider",
-          background: (theme) =>
-            theme.palette.mode === "dark"
-              ? "linear-gradient(120deg, rgba(15,23,42,0.92) 0%, rgba(30,41,59,0.9) 100%)"
-              : "linear-gradient(120deg, rgba(15,23,42,0.94) 0%, rgba(30,41,59,0.92) 100%)",
+          background: "linear-gradient(120deg, rgba(15,23,42,0.94) 0%, rgba(30,41,59,0.92) 100%)",
           color: "#F8FAFC",
           boxShadow: "none",
         }}

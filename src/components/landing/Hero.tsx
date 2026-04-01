@@ -138,7 +138,7 @@ export default function Hero() {
               <Button
                 variant="outlined"
                 component="a"
-                href="#pricing"
+                href="/sign-in"
                 size="large"
                 sx={{
                   px: 4,
@@ -148,9 +148,24 @@ export default function Hero() {
                   color: "text.primary",
                 }}
               >
-                See plans
+                Sign in
               </Button>
             </Stack>
+
+            <Button
+              component="a"
+              href="#pricing"
+              variant="text"
+              sx={{
+                width: "fit-content",
+                color: "text.secondary",
+                fontWeight: 700,
+                px: 0.5,
+                "&:hover": { color: "text.primary", bgcolor: "transparent" },
+              }}
+            >
+              See plans
+            </Button>
 
             <Stack direction="row" spacing={3} flexWrap="wrap" useFlexGap>
               {trustMetrics.map((stat) => (
