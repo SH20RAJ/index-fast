@@ -1,6 +1,6 @@
 "use client";
 import { Box, Stack, useTheme, alpha, Typography, Button, Drawer, IconButton, Avatar } from "@mui/material";
-import { useUser } from "@stackframe/stack";
+import { useUser, useStackApp } from "@stackframe/stack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BoltIcon from "@mui/icons-material/Bolt";
@@ -12,6 +12,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import BuildIcon from "@mui/icons-material/Build";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LinkIcon from "@mui/icons-material/Link";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { useColorMode } from "@/components/ThemeRegistry";
 
 const SIDEBAR_WIDTH = 280;
@@ -36,6 +37,7 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
   const { mode, toggleColorMode } = useColorMode();
   const pathname = usePathname();
   const user = useUser();
+  const stack = useStackApp();
 
   const displayName = user?.displayName?.trim() || "User";
   const primaryEmail = user?.primaryEmail || "No email";
@@ -189,6 +191,30 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
             </Box>
           </Stack>
         </Box>
+        <Button
+          fullWidth
+          startIcon={<LogoutIcon />}
+          onClick={() => stack.signOut()}
+          sx={{
+            justifyContent: "flex-start",
+            py: 1.2,
+            px: 2,
+            borderRadius: "12px",
+            color: "text.secondary",
+            bgcolor: alpha(theme.palette.error.main, isDark ? 0.08 : 0.05),
+            border: "1px solid",
+            borderColor: alpha(theme.palette.error.main, isDark ? 0.25 : 0.2),
+            "&:hover": {
+              bgcolor: alpha(theme.palette.error.main, isDark ? 0.15 : 0.1),
+              color: theme.palette.error.main,
+              borderColor: alpha(theme.palette.error.main, isDark ? 0.35 : 0.3),
+            },
+            fontWeight: 500,
+            textTransform: "none",
+          }}
+        >
+          Logout
+        </Button>
       </Stack>
     </Stack>
   );
