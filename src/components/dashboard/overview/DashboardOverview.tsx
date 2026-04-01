@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   Avatar,
   Box,
@@ -65,7 +64,7 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
 
               <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25}>
                 <Button
-                  component={Link}
+                  component="a"
                   href="/sites"
                   variant="contained"
                   startIcon={<AddCircleOutlineIcon />}
@@ -81,7 +80,7 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
                   Add Website
                 </Button>
                 <Button
-                  component={Link}
+                  component="a"
                   href="/settings"
                   variant="outlined"
                   sx={{
@@ -204,11 +203,14 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
                   <Typography variant="h6" sx={{ fontWeight: 850 }}>
                     Recent Submission Stream
                   </Typography>
-                  <Link href="/submissions" style={{ textDecoration: "none" }}>
-                    <Button endIcon={<OpenInNewIcon />} sx={{ textTransform: "none", fontWeight: 700 }}>
-                      Open all
-                    </Button>
-                  </Link>
+                  <Button
+                    component="a"
+                    href="/submissions"
+                    endIcon={<OpenInNewIcon />}
+                    sx={{ textTransform: "none", fontWeight: 700 }}
+                  >
+                    Open all
+                  </Button>
                 </Stack>
 
                 {data.recentSubmissions.length === 0 ? (

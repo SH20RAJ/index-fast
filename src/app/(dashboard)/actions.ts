@@ -9,7 +9,7 @@ import { ensureUserRecord } from "@/lib/db/user-sync";
 import { PLAN_DEFINITIONS, PlanDefinition, PlanId, getPlanDefinition, resolvePlanId } from "@/lib/billing/plans";
 import { stackServerApp } from "@/stack";
 import { processWebsiteIndexing } from "@/lib/services/indexing-service";
-import { GSC_READONLY_SCOPE } from "@/lib/api/google";
+import { GSC_READONLY_SCOPE } from "@/lib/google/constants";
 import { importGscSites } from "@/lib/services/gsc-service";
 import {
   getMonthlySubmissionUsageCount,

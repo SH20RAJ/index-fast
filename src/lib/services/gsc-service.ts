@@ -1,3 +1,4 @@
+import "server-only";
 import { and, eq, count } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { websites } from "@/lib/db/schema";

@@ -28,7 +28,7 @@ import {
   refreshGscMetadataAction,
 } from "@/app/(dashboard)/actions";
 import { defaultActionState, type ActionState } from "@/app/(dashboard)/action-state";
-import { GSC_READONLY_SCOPE } from "@/lib/api/google";
+import { GSC_READONLY_SCOPE } from "@/lib/google/constants";
 
 interface WebsiteRecord {
   id: string;

@@ -1,4 +1,6 @@
+import "server-only";
 import { google } from "googleapis";
+import { GSC_READONLY_SCOPE } from "@/lib/google/constants";
 
 /**
  * Google Search Console API Wrapper
@@ -10,8 +12,6 @@ export const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_SECRET,
   process.env.GOOGLE_REDIRECT_URI
 );
-
-export const GSC_READONLY_SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
 
 export type GscSiteEntry = {
   siteUrl: string;
