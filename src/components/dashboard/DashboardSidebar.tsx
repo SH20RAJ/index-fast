@@ -1,5 +1,6 @@
 "use client";
-import { Box, Stack, useTheme, alpha, Typography, Button, Drawer, IconButton, Avatar } from "@mui/material";
+import { useState } from "react";
+import { Box, Stack, useTheme, alpha, Typography, Button, Drawer, IconButton, Avatar, Collapse } from "@mui/material";
 import { useUser, useStackApp } from "@stackframe/stack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,17 +14,33 @@ import BuildIcon from "@mui/icons-material/Build";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LinkIcon from "@mui/icons-material/Link";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useColorMode } from "@/components/ThemeRegistry";
 
 const SIDEBAR_WIDTH = 280;
 
-const navItems = [
-  { label: "Command Center", icon: <DashboardIcon />, href: "/dashboard" },
-  { label: "Websites", icon: <LanguageIcon />, href: "/sites" },
-  { label: "URLs", icon: <LinkIcon />, href: "/sites/url" },
-  { label: "Submission Stream", icon: <HistoryIcon />, href: "/submissions" },
-  { label: "SEO Toolbox", icon: <BuildIcon />, href: "/toolbox" },
-  { label: "Billing & Settings", icon: <SettingsIcon />, href: "/settings" },
+interface NavItem {
+  label: string;
+  icon?: React.ReactNode;
+  href?: string;
+  children?: NavItem[];
+  section?: string;
+}
+
+const navItems: NavItem[] = [
+  { label: "Command Center", icon: <DashboardIcon />, href: "/dashboard", section: "Main" },
+  {
+    label: "Websites",
+    icon: <LanguageIcon />,
+    href: "/sites",
+    section: "Main",
+    children: [
+      { label: "URLs & Submissions", icon: <LinkIcon />, href: "/sites/url" },
+    ],
+  },
+  { label: "Submission Stream", icon: <HistoryIcon />, href: "/submissions", section: "Monitor" },
+  { label: "SEO Toolbox", icon: <BuildIcon />, href: "/toolbox", section: "Tools" },
+  { label: "Billing & Settings", icon: <SettingsIcon />, href: "/settings", section: "Account" },
 ];
 
 interface DashboardSidebarProps {
@@ -38,6 +55,7 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
   const pathname = usePathname();
   const user = useUser();
   const stack = useStackApp();
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set(["Websites"]));
 
   const displayName = user?.displayName?.trim() || "User";
   const primaryEmail = user?.primaryEmail || "No email";
@@ -111,35 +129,122 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
       </Stack>
 
       <Stack spacing={1} sx={{ flexGrow: 1 }}>
-        <Typography variant="overline" sx={{ px: 1.5, color: "text.secondary", letterSpacing: "0.08em" }}>
-          Workspace
-        </Typography>
-        {navItems.map((item) => {
-          const active = isActive(item.href);
+        {/* Group navigation items by section */}
+        {Array.from(new Set(navItems.map(item => item.section))).map((section) => {
+          const sectionItems = navItems.filter(item => item.section === section);
           return (
-            <Button
-              key={item.label}
-              component={Link}
-              href={item.href}
-              startIcon={item.icon}
-              fullWidth
-              onClick={onMobileClose}
-              sx={{
-                justifyContent: "flex-start",
-                py: 1.4,
-                px: 2,
-                borderRadius: "12px",
-                color: active ? "text.primary" : "text.secondary",
-                bgcolor: active ? alpha(theme.palette.primary.main, isDark ? 0.25 : 0.14) : "transparent",
-                "&:hover": {
-                  bgcolor: alpha(theme.palette.primary.main, isDark ? 0.35 : 0.18),
-                  color: "text.primary",
-                },
-                fontWeight: active ? 700 : 500,
-              }}
-            >
-              {item.label}
-            </Button>
+            <Box key={section}>
+              {section !== navItems[0].section && (
+                <Typography 
+                  variant="overline" 
+                  sx={{ 
+                    px: 1.5, 
+                    color: "text.secondary", 
+                    letterSpacing: "0.08em",
+                    mt: 1,
+                    display: "block"
+                  }}
+                >
+                  {section}
+                </Typography>
+              )}
+              {section === navItems[0].section && (
+                <Typography 
+                  variant="overline" 
+                  sx={{ 
+                    px: 1.5, 
+                    color: "text.secondary", 
+                    letterSpacing: "0.08em",
+                    mb: 0.5,
+                    display: "block"
+                  }}
+                >
+                  Workspace
+                </Typography>
+              )}
+              <Stack spacing={0.75}>
+                {sectionItems.map((item) => {
+                  const hasChildren = item.children && item.children.length > 0;
+                  const isExpanded = expandedItems.has(item.label);
+                  const active = item.href ? (pathname === item.href || pathname.startsWith(`${item.href}/`)) : false;
+
+                  return (
+                    <Box key={item.label}>
+                      <Button
+                        component={hasChildren ? "button" : Link}
+                        href={hasChildren ? undefined : item.href}
+                        onClick={() => {
+                          if (hasChildren) {
+                            const newExpanded = new Set(expandedItems);
+                            if (isExpanded) {
+                              newExpanded.delete(item.label);
+                            } else {
+                              newExpanded.add(item.label);
+                            }
+                            setExpandedItems(newExpanded);
+                          } else {
+                            onMobileClose();
+                          }
+                        }}
+                        startIcon={item.icon}
+                        endIcon={hasChildren ? <ExpandMoreIcon sx={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} /> : undefined}
+                        fullWidth
+                        sx={{
+                          justifyContent: "space-between",
+                          py: 1.4,
+                          px: 2,
+                          borderRadius: "12px",
+                          color: active ? "text.primary" : "text.secondary",
+                          bgcolor: active ? alpha(theme.palette.primary.main, isDark ? 0.25 : 0.14) : "transparent",
+                          "&:hover": {
+                            bgcolor: alpha(theme.palette.primary.main, isDark ? 0.35 : 0.18),
+                            color: "text.primary",
+                          },
+                          fontWeight: active ? 700 : 500,
+                        }}
+                      >
+                        {item.label}
+                      </Button>
+                      {hasChildren && (
+                        <Collapse in={isExpanded} timeout="auto">
+                          <Stack spacing={0.5} sx={{ pl: 2, pt: 0.5 }}>
+                            {item.children!.map((child) => {
+                              const childActive = child.href ? (pathname === child.href || pathname.startsWith(`${child.href}/`)) : false;
+                              return (
+                                <Button
+                                  key={child.label}
+                                  component={Link}
+                                  href={child.href || "#"}
+                                  startIcon={child.icon}
+                                  onClick={onMobileClose}
+                                  fullWidth
+                                  sx={{
+                                    justifyContent: "flex-start",
+                                    py: 1.2,
+                                    px: 2,
+                                    borderRadius: "8px",
+                                    color: childActive ? "text.primary" : "text.secondary",
+                                    bgcolor: childActive ? alpha(theme.palette.primary.main, isDark ? 0.2 : 0.1) : "transparent",
+                                    "&:hover": {
+                                      bgcolor: alpha(theme.palette.primary.main, isDark ? 0.25 : 0.12),
+                                      color: "text.primary",
+                                    },
+                                    fontWeight: childActive ? 600 : 400,
+                                    fontSize: "0.9rem",
+                                  }}
+                                >
+                                  {child.label}
+                                </Button>
+                              );
+                            })}
+                          </Stack>
+                        </Collapse>
+                      )}
+                    </Box>
+                  );
+                })}
+              </Stack>
+            </Box>
           );
         })}
       </Stack>

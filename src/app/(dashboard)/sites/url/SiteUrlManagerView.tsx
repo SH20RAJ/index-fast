@@ -16,8 +16,10 @@ import {
   Tabs,
   TextField,
   Typography,
+  Pagination,
 } from "@mui/material";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import DownloadIcon from "@mui/icons-material/Download";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 
@@ -113,6 +115,45 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitResult, setSubmitResult] = useState<SubmitResponse | null>(null);
 
+  // Pagination state
+  const [urlsPage, setUrlsPage] = useState(1);
+  const [logsPage, setLogsPage] = useState(1);
+  const urlsPerPage = 25;
+  const logsPerPage = 15;
+
+  const paginatedUrls = useMemo(() => {
+    if (!payload) return [];
+    const allUrls: Array<{ id: string; url: string; isIndexed: boolean | null; lastDetectedAt: string | null } | string> = [
+      ...(payload.inventory.urls || []),
+    ];
+    // Add sitemap URLs only if we need them
+    if (allUrls.length < urlsPerPage) {
+      const remaining = urlsPerPage - allUrls.length;
+      allUrls.push(
+        ...(payload.sitemapPreview.urls || []).slice(0, remaining).map((url) => url)
+      );
+    }
+    const start = (urlsPage - 1) * urlsPerPage;
+    return allUrls.slice(start, start + urlsPerPage);
+  }, [payload, urlsPage]);
+
+  const urlsTotalPages = useMemo(() => {
+    if (!payload) return 0;
+    const total = (payload.inventory.urls?.length ?? 0) + (payload.sitemapPreview.urls?.length ?? 0);
+    return Math.ceil(total / urlsPerPage);
+  }, [payload]);
+
+  const paginatedLogs = useMemo(() => {
+    if (!submitResult) return [];
+    const start = (logsPage - 1) * logsPerPage;
+    return submitResult.logs.slice(start, start + logsPerPage);
+  }, [submitResult, logsPage]);
+
+  const logsTotalPages = useMemo(() => {
+    if (!submitResult) return 0;
+    return Math.ceil(submitResult.logs.length / logsPerPage);
+  }, [submitResult]);
+
   useEffect(() => {
     if (!siteId) {
       return;
@@ -146,6 +187,90 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
     });
     return map;
   }, [payload]);
+
+  function exportUrls(format: "csv" | "json") {
+    if (!payload) return;
+
+    const allUrls: Array<{ id: string; url: string; isIndexed: boolean | null; lastDetectedAt: string | null } | string> = [
+      ...(payload.inventory.urls || []),
+    ];
+    allUrls.push(...(payload.sitemapPreview.urls || []));
+
+    let content: string;
+    let filename: string;
+
+    if (format === "csv") {
+      const headers = ["URL", "Status", "Last Detected"];
+      const rows = allUrls.map((urlItem) => {
+        const url = typeof urlItem === "object" ? urlItem.url : urlItem;
+        const status = typeof urlItem === "object" ? (urlItem.isIndexed ? "Indexed" : "Not Indexed") : "Unknown";
+        const lastDetected =
+          typeof urlItem === "object" && urlItem.lastDetectedAt
+            ? `"${new Date(urlItem.lastDetectedAt).toLocaleString()}"`
+            : "N/A";
+        return [
+          `"${url.replace(/"/g, '""')}"`,
+          status,
+          lastDetected,
+        ];
+      });
+      content = [headers, ...rows].map((row) => row.join(",")).join("\n");
+      filename = `urls-${new Date().toISOString().split("T")[0]}.csv`;
+    } else {
+      const data = allUrls.map((urlItem) => {
+        if (typeof urlItem === "object") {
+          return {
+            url: urlItem.url,
+            isIndexed: urlItem.isIndexed,
+            lastDetectedAt: urlItem.lastDetectedAt,
+          };
+        }
+        return { url: urlItem, isIndexed: null, lastDetectedAt: null };
+      });
+      content = JSON.stringify(data, null, 2);
+      filename = `urls-${new Date().toISOString().split("T")[0]}.json`;
+    }
+
+    const blob = new Blob([content], { type: format === "csv" ? "text/csv" : "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function exportLogs(format: "csv" | "json") {
+    if (!submitResult) return;
+
+    let content: string;
+    let filename: string;
+
+    if (format === "csv") {
+      const headers = ["Log Entry"];
+      const rows = submitResult.logs.map((log) => [
+        `"${log.replace(/"/g, '""')}"`,
+      ]);
+      content = [headers, ...rows].map((row) => row.join(",")).join("\n");
+      filename = `submission-logs-${new Date().toISOString().split("T")[0]}.csv`;
+    } else {
+      const data = { timestamp: new Date().toISOString(), logs: submitResult.logs };
+      content = JSON.stringify(data, null, 2);
+      filename = `submission-logs-${new Date().toISOString().split("T")[0]}.json`;
+    }
+
+    const blob = new Blob([content], { type: format === "csv" ? "text/csv" : "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 
   async function handleSubmit() {
     if (!siteId) {
@@ -319,14 +444,27 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
                   ) : null}
 
                   {submitResult ? (
-                    <Box sx={{ p: 1.5, border: "1px dashed", borderColor: "divider", borderRadius: "10px", maxHeight: 220, overflow: "auto" }}>
-                      <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 1 }}>Submission Logs</Typography>
-                      <Stack spacing={0.5}>
-                        {submitResult.logs.map((entry) => (
-                          <Typography key={entry} variant="caption" sx={{ fontFamily: "monospace", color: "text.secondary" }}>
-                            {entry}
-                          </Typography>
-                        ))}
+                    <Box sx={{ p: 1.5, border: "1px dashed", borderColor: "divider", borderRadius: "10px", maxHeight: 320, overflow: "auto" }}>
+                      <Stack spacing={1.5}>
+                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                          <Typography variant="subtitle2" fontWeight={800}>Submission Logs ({submitResult.logs.length})</Typography>
+                          <Stack direction="row" spacing={0.5}>
+                            <Button size="small" variant="outlined" startIcon={<DownloadIcon />} onClick={() => exportLogs("csv")}>CSV</Button>
+                            <Button size="small" variant="outlined" startIcon={<DownloadIcon />} onClick={() => exportLogs("json")}>JSON</Button>
+                          </Stack>
+                        </Stack>
+                        <Stack spacing={0.5}>
+                          {paginatedLogs.map((entry) => (
+                            <Typography key={entry} variant="caption" sx={{ fontFamily: "monospace", color: "text.secondary" }}>
+                              {entry}
+                            </Typography>
+                          ))}
+                        </Stack>
+                        {logsTotalPages > 1 && (
+                          <Stack alignItems="center" sx={{ pt: 1 }}>
+                            <Pagination size="small" count={logsTotalPages} page={logsPage} onChange={(_e, page) => setLogsPage(page)} />
+                          </Stack>
+                        )}
                       </Stack>
                     </Box>
                   ) : null}
@@ -381,27 +519,42 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
             <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
               <CardContent>
                 <Stack spacing={1.5}>
-                  <Typography variant="h6" fontWeight={900}>URLs & Inventory</Typography>
-                  {payload.inventory.urls.length === 0 && payload.sitemapPreview.urls.length === 0 ? (
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Typography variant="h6" fontWeight={900}>
+                      URLs & Inventory ({(payload?.inventory.urls?.length ?? 0) + (payload?.sitemapPreview.urls?.length ?? 0)})
+                    </Typography>
+                    <Stack direction="row" spacing={0.5}>
+                      <Button size="small" variant="outlined" startIcon={<DownloadIcon />} onClick={() => exportUrls("csv")}>CSV</Button>
+                      <Button size="small" variant="outlined" startIcon={<DownloadIcon />} onClick={() => exportUrls("json")}>JSON</Button>
+                    </Stack>
+                  </Stack>
+                  {payload?.inventory.urls?.length === 0 && payload.sitemapPreview.urls?.length === 0 ? (
                     <Typography variant="body2" color="text.secondary">No URLs available yet. Run sync or submit from sitemap.</Typography>
                   ) : (
                     <Stack spacing={0.8}>
-                      {payload.inventory.urls.slice(0, 120).map((row) => (
-                        <Stack key={row.id} direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={0.5}>
-                          <Typography variant="body2" sx={{ wordBreak: "break-all" }}>{row.url}</Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Last detected: {row.lastDetectedAt ? new Date(row.lastDetectedAt).toLocaleString() : "N/A"}
-                          </Typography>
-                        </Stack>
-                      ))}
-
-                      {payload.inventory.urls.length < 120
-                        ? payload.sitemapPreview.urls.slice(0, 120 - payload.inventory.urls.length).map((url) => (
-                            <Typography key={url} variant="body2" sx={{ wordBreak: "break-all", color: "text.secondary" }}>
+                      {paginatedUrls.map((urlItem, idx) => {
+                        const url = typeof urlItem === "object" ? urlItem.url : urlItem;
+                        const urlId = typeof urlItem === "object" ? urlItem.id : url;
+                        const lastDetected =
+                          typeof urlItem === "object" && urlItem.lastDetectedAt
+                            ? `Last detected: ${new Date(urlItem.lastDetectedAt).toLocaleString()}`
+                            : "N/A";
+                        return (
+                          <Stack key={`${urlId}-${idx}`} direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={0.5}>
+                            <Typography variant="body2" sx={{ wordBreak: "break-all" }}>
                               {url}
                             </Typography>
-                          ))
-                        : null}
+                            <Typography variant="caption" color="text.secondary">
+                              {lastDetected}
+                            </Typography>
+                          </Stack>
+                        );
+                      })}
+                      {urlsTotalPages > 1 && (
+                        <Stack alignItems="center" sx={{ pt: 2 }}>
+                          <Pagination size="small" count={urlsTotalPages} page={urlsPage} onChange={(_e, page) => setUrlsPage(page)} />
+                        </Stack>
+                      )}
                     </Stack>
                   )}
                 </Stack>

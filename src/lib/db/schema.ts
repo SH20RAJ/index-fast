@@ -152,6 +152,25 @@ export const usageEvents = pgTable("usage_events", {
 }));
 
 /**
+ * Cron Jobs: Automated submission scheduling
+ */
+export const cronJobs = pgTable("cron_jobs", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  websiteId: uuid("website_id").references(() => websites.id, { onDelete: "cascade" }).notNull(),
+  enabled: boolean("enabled").default(true).notNull(),
+  frequency: text("frequency").notNull(), // 'hourly', 'daily', 'weekly', 'monthly'
+  engine: submissionEngineEnum("engine").notNull(), // 'indexnow', 'bing', 'google'
+  sourceMode: text("source_mode").notNull(), // 'sitemap' or 'inventory'
+  lastRunAt: timestamp("last_run_at"),
+  nextRunAt: timestamp("next_run_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => ({
+  websiteIdIdx: index("idx_cron_jobs_website_id").on(table.websiteId),
+  nextRunAtIdx: index("idx_cron_jobs_next_run_at").on(table.nextRunAt),
+}));
+
+/**
  * Exporting Types for Drizzle
  */
 export type User = typeof users.$inferSelect;
@@ -168,3 +187,5 @@ export type Submission = typeof submissions.$inferSelect;
 export type NewSubmission = typeof submissions.$inferInsert;
 export type UsageEvent = typeof usageEvents.$inferSelect;
 export type NewUsageEvent = typeof usageEvents.$inferInsert;
+export type CronJob = typeof cronJobs.$inferSelect;
+export type NewCronJob = typeof cronJobs.$inferInsert;

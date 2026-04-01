@@ -21,6 +21,7 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import BoltIcon from "@mui/icons-material/Bolt";
 import PublicIcon from "@mui/icons-material/Public";
 import PageHeader from "@/components/dashboard/PageHeader";
+import { addUtmParams } from "@/lib/utils";
 
 type DirectoryItem = {
   name: string;
@@ -241,6 +242,17 @@ export default function ToolboxView() {
   const [category, setCategory] = useState<"All" | DirectoryItem["category"]>("All");
 
   const categories: Array<"All" | DirectoryItem["category"]> = ["All", "Launch", "Community", "Directory"];
+
+  // Helper function to get UTM-enhanced URL
+  const getTrackingUrl = (platform: DirectoryItem) => {
+    return addUtmParams(
+      platform.url,
+      "indexfast",
+      "toolbox",
+      platform.category.toLowerCase(),
+      platform.name.toLowerCase().replace(/\s+/g, "_")
+    );
+  };
 
   const filtered = directories.filter((d) => {
     const matchesSearch =
@@ -474,7 +486,7 @@ export default function ToolboxView() {
                                 {item.name}
                               </Typography>
                               <MuiLink
-                                href={item.url}
+                                href={getTrackingUrl(item)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 color="inherit"
@@ -514,7 +526,7 @@ export default function ToolboxView() {
                             <Button
                               variant="contained"
                               component="a"
-                              href={item.url}
+                              href={getTrackingUrl(item)}
                               target="_blank"
                               rel="noopener noreferrer"
                               endIcon={<LaunchIcon />}
