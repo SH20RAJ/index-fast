@@ -72,13 +72,13 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
     <Stack
       spacing={4}
       sx={{
-        p: 3,
+        p: 2.25,
         height: "100%",
         color: "text.primary",
         bgcolor: theme.palette.background.paper,
         background: isDark
-          ? "linear-gradient(180deg, rgba(14,165,233,0.06) 0%, rgba(14,165,233,0) 28%), linear-gradient(180deg, #151B2C 0%, #0F1627 100%)"
-          : "linear-gradient(180deg, rgba(14,165,233,0.04) 0%, rgba(14,165,233,0) 28%), #F8FBFF",
+          ? "linear-gradient(180deg, rgba(14,165,233,0.06) 0%, rgba(14,165,233,0) 18%), #0F1627"
+          : "linear-gradient(180deg, rgba(14,165,233,0.03) 0%, rgba(14,165,233,0) 16%), #F8FBFF",
       }}
     >
       <Stack
@@ -128,7 +128,7 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
         </IconButton>
       </Stack>
 
-      <Stack spacing={1} sx={{ flexGrow: 1 }}>
+      <Stack spacing={1.5} sx={{ flexGrow: 1 }}>
         {/* Group navigation items by section */}
         {Array.from(new Set(navItems.map(item => item.section))).map((section) => {
           const sectionItems = navItems.filter(item => item.section === section);
@@ -138,10 +138,11 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
                 <Typography 
                   variant="overline" 
                   sx={{ 
-                    px: 1.5, 
+                    px: 1.25,
                     color: "text.secondary", 
-                    letterSpacing: "0.08em",
-                    mt: 1,
+                    letterSpacing: "0.12em",
+                    fontSize: "0.66rem",
+                    mt: 0.75,
                     display: "block"
                   }}
                 >
@@ -152,17 +153,18 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
                 <Typography 
                   variant="overline" 
                   sx={{ 
-                    px: 1.5, 
+                    px: 1.25,
                     color: "text.secondary", 
-                    letterSpacing: "0.08em",
-                    mb: 0.5,
+                    letterSpacing: "0.12em",
+                    fontSize: "0.66rem",
+                    mb: 0.35,
                     display: "block"
                   }}
                 >
                   Workspace
                 </Typography>
               )}
-              <Stack spacing={0.75}>
+              <Stack spacing={0.5}>
                 {sectionItems.map((item) => {
                   const hasChildren = item.children && item.children.length > 0;
                   const isExpanded = expandedItems.has(item.label);
@@ -190,24 +192,39 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
                         endIcon={hasChildren ? <ExpandMoreIcon sx={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} /> : undefined}
                         fullWidth
                         sx={{
-                          justifyContent: "space-between",
-                          py: 1.4,
-                          px: 2,
-                          borderRadius: "12px",
+                          justifyContent: "flex-start",
+                          py: 1.1,
+                          px: 1.25,
+                          borderRadius: "10px",
                           color: active ? "text.primary" : "text.secondary",
-                          bgcolor: active ? alpha(theme.palette.primary.main, isDark ? 0.25 : 0.14) : "transparent",
-                          "&:hover": {
-                            bgcolor: alpha(theme.palette.primary.main, isDark ? 0.35 : 0.18),
-                            color: "text.primary",
+                          bgcolor: active ? alpha(theme.palette.primary.main, isDark ? 0.2 : 0.12) : "transparent",
+                          border: "1px solid",
+                          borderColor: active ? alpha(theme.palette.primary.main, isDark ? 0.45 : 0.3) : "transparent",
+                          textAlign: "left",
+                          "& .MuiButton-startIcon": {
+                            minWidth: 18,
+                            marginLeft: 0,
+                            marginRight: 1.15,
                           },
-                          fontWeight: active ? 700 : 500,
+                          "& .MuiButton-endIcon": {
+                            marginLeft: "auto",
+                            marginRight: 0,
+                          },
+                          "&:hover": {
+                            bgcolor: alpha(theme.palette.primary.main, isDark ? 0.28 : 0.16),
+                            color: "text.primary",
+                            borderColor: alpha(theme.palette.primary.main, isDark ? 0.6 : 0.38),
+                          },
+                          fontWeight: active ? 700 : 600,
                         }}
                       >
-                        {item.label}
+                        <Box component="span" sx={{ flexGrow: 1, textAlign: "left", lineHeight: 1.1 }}>
+                          {item.label}
+                        </Box>
                       </Button>
                       {hasChildren && (
                         <Collapse in={isExpanded} timeout="auto">
-                          <Stack spacing={0.5} sx={{ pl: 2, pt: 0.5 }}>
+                          <Stack spacing={0.35} sx={{ pl: 3.1, pt: 0.35 }}>
                             {item.children!.map((child) => {
                               const childActive = child.href ? (pathname === child.href || pathname.startsWith(`${child.href}/`)) : false;
                               return (
@@ -220,20 +237,28 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
                                   fullWidth
                                   sx={{
                                     justifyContent: "flex-start",
-                                    py: 1.2,
-                                    px: 2,
+                                    py: 0.9,
+                                    px: 1.15,
                                     borderRadius: "8px",
                                     color: childActive ? "text.primary" : "text.secondary",
-                                    bgcolor: childActive ? alpha(theme.palette.primary.main, isDark ? 0.2 : 0.1) : "transparent",
+                                    bgcolor: childActive ? alpha(theme.palette.primary.main, isDark ? 0.15 : 0.1) : "transparent",
+                                    textAlign: "left",
+                                    "& .MuiButton-startIcon": {
+                                      minWidth: 16,
+                                      marginLeft: 0,
+                                      marginRight: 1,
+                                    },
                                     "&:hover": {
-                                      bgcolor: alpha(theme.palette.primary.main, isDark ? 0.25 : 0.12),
+                                      bgcolor: alpha(theme.palette.primary.main, isDark ? 0.22 : 0.14),
                                       color: "text.primary",
                                     },
                                     fontWeight: childActive ? 600 : 400,
-                                    fontSize: "0.9rem",
+                                    fontSize: "0.86rem",
                                   }}
                                 >
-                                  {child.label}
+                                  <Box component="span" sx={{ textAlign: "left", width: "100%" }}>
+                                    {child.label}
+                                  </Box>
                                 </Button>
                               );
                             })}

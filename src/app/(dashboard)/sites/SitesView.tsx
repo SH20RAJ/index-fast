@@ -31,6 +31,10 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import {
+  buildBingIndexNowPortalUrl,
+  buildGoogleSearchConsolePropertyUrl,
+} from "@/lib/utils";
+import {
   addWebsiteAction,
   deleteWebsiteAction,
   runWebsiteSyncAction,
@@ -630,6 +634,28 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
                       >
                         URLs & Submit
+                      </Button>
+
+                      <Button
+                        component="a"
+                        href={buildBingIndexNowPortalUrl(site.url)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="outlined"
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                      >
+                        Open Bing IndexNow
+                      </Button>
+
+                      <Button
+                        component="a"
+                        href={buildGoogleSearchConsolePropertyUrl(site.url)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="outlined"
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                      >
+                        Open in GSC
                       </Button>
 
                       <Button
