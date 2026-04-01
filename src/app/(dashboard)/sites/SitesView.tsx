@@ -24,6 +24,7 @@ import {
   deleteWebsiteAction,
   importGscSitesAction,
   runWebsiteSyncAction,
+  refreshGscMetadataAction,
 } from "@/app/(dashboard)/actions";
 import { defaultActionState, type ActionState } from "@/app/(dashboard)/action-state";
 
@@ -60,6 +61,10 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     importGscSitesAction,
     defaultActionState
   );
+  const [refreshState, refreshAction, refreshPending] = useActionState<ActionState, FormData>(
+    refreshGscMetadataAction,
+    defaultActionState
+  );
 
   const slotsLeft = Math.max(0, websiteLimit - initialSites.length);
 
@@ -82,6 +87,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
         {syncState.status !== "idle" ? <Alert severity={syncState.status}>{syncState.message}</Alert> : null}
         {deleteState.status !== "idle" ? <Alert severity={deleteState.status}>{deleteState.message}</Alert> : null}
         {importState.status !== "idle" ? <Alert severity={importState.status}>{importState.message}</Alert> : null}
+        {refreshState.status !== "idle" ? <Alert severity={refreshState.status}>{refreshState.message}</Alert> : null}
 
         <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
           <CardContent sx={{ p: { xs: 2.25, md: 3 } }}>
@@ -179,6 +185,15 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                           Sync Sitemap
                         </Button>
                       </Box>
+
+                      {site.gscConnected && (
+                        <Box component="form" action={refreshAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
+                          <input type="hidden" name="websiteId" value={site.id} />
+                          <Button type="submit" variant="outlined" startIcon={<RefreshIcon />} disabled={refreshPending} fullWidth sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}>
+                            Refresh GSC
+                          </Button>
+                        </Box>
+                      )}
 
                       <Link href={`/sites/${site.id}/audit`} style={{ textDecoration: "none", width: "100%" }}>
                         <Button variant="outlined" startIcon={<AssessmentOutlinedIcon />} fullWidth sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}>

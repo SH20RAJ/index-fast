@@ -263,7 +263,10 @@ export async function importGscSitesAction(_: ActionState): Promise<ActionState>
       };
     }
 
-    const result = await importGscSites(user.id, tokenResult.data.accessToken);
+    // Get plan info to enforce website limit
+    const { plan } = await getSubscriptionSnapshot(user.id);
+
+    const result = await importGscSites(user.id, tokenResult.data.accessToken, plan.websiteLimit);
 
     revalidatePath("/sites");
     revalidatePath("/dashboard");
@@ -434,4 +437,78 @@ export async function loadDashboardData(): Promise<DashboardData> {
       submissionsLimit: plan.submissionLimitMonthly,
     },
   };
+}
+
+export async function refreshGscMetadataAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const websiteId = String(formData.get("websiteId") ?? "");
+
+    if (!websiteId) {
+      return { status: "error", message: "Missing website id." };
+    }
+
+    const [website] = await db
+      .select()
+      .from(websites)
+      .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+
+    if (!website) {
+      return { status: "error", message: "Website not found." };
+    }
+
+    const connectedAccounts = await user.listConnectedAccounts();
+    const googleAccount = connectedAccounts.find((account) => account.provider === "google");
+
+    if (!googleAccount) {
+      return {
+        status: "error",
+        message: "No Google account connected. Connect Google first to refresh GSC metadata.",
+      };
+    }
+
+    const tokenResult = await googleAccount.getAccessToken({ scopes: [GSC_READONLY_SCOPE] });
+
+    if (tokenResult.status !== "ok" || !tokenResult.data.accessToken) {
+      return {
+        status: "error",
+        message: "Could not retrieve Google access token. Reconnect your Google account.",
+      };
+    }
+
+    // Use the GSC service to refresh metadata for this specific site
+    const { listSearchConsoleSitemaps } = await import("@/lib/api/google");
+    const discoveredSitemaps = await listSearchConsoleSitemaps(tokenResult.data.accessToken, website.url);
+    const sitemapUrl = discoveredSitemaps[0] ?? website.sitemapUrl;
+
+    // Update the website with refreshed GSC metadata
+    const siteHealth = (website.siteHealth as any) || {};
+    siteHealth.gsc = {
+      ...siteHealth.gsc,
+      refreshedAt: new Date().toISOString(),
+      discoveredSitemaps,
+    };
+
+    await db
+      .update(websites)
+      .set({
+        sitemapUrl: sitemapUrl || website.sitemapUrl,
+        siteHealth,
+        gscConnected: true,
+      })
+      .where(eq(websites.id, websiteId));
+
+    revalidatePath("/sites");
+    revalidatePath("/dashboard");
+
+    return {
+      status: "success",
+      message: "GSC metadata refreshed successfully.",
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message: error instanceof Error ? error.message : "Failed to refresh GSC metadata.",
+    };
+  }
 }

@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, boolean, integer, pgEnum, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, boolean, integer, pgEnum, jsonb, index } from "drizzle-orm/pg-core";
 
 /**
  * Submission Engine Types
@@ -100,7 +100,10 @@ export const websites = pgTable("websites", {
   siteHealth: jsonb("site_health"), // Storing errors, warnings from GSC/Audit
   lastSyncAt: timestamp("last_sync_at"),
   createdAt: timestamp("created_at").defaultNow(),
-});
+}, (table) => ({
+  userIdIdx: index("idx_websites_user_id").on(table.userId),
+  createdAtIdx: index("idx_websites_created_at").on(table.createdAt),
+}));
 
 /**
  * URL Inventory: Tracking individual URLs and their AI metrics
@@ -115,7 +118,9 @@ export const urlInventory = pgTable("url_inventory", {
   discoverabilityScore: integer("discoverability_score").default(0), // AI citing probability
   lastDetectedAt: timestamp("last_detected_at").defaultNow(),
   lastSubmittedAt: timestamp("last_submitted_at"),
-});
+}, (table) => ({
+  websiteIdIdx: index("idx_url_inventory_website_id").on(table.websiteId),
+}));
 
 /**
  * Submissions: Log of every attempt to notify search engines
@@ -128,7 +133,10 @@ export const submissions = pgTable("submissions", {
   status: submissionStatusEnum("status").notNull(),
   errorMessage: text("error_message"),
   createdAt: timestamp("created_at").defaultNow(),
-});
+}, (table) => ({
+  websiteIdIdx: index("idx_submissions_website_id").on(table.websiteId),
+  createdAtIdx: index("idx_submissions_created_at").on(table.createdAt),
+}));
 
 export const usageEvents = pgTable("usage_events", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -138,7 +146,10 @@ export const usageEvents = pgTable("usage_events", {
   quantity: integer("quantity").notNull().default(1),
   metadata: jsonb("metadata"),
   occurredAt: timestamp("occurred_at").defaultNow(),
-});
+}, (table) => ({
+  userIdIdx: index("idx_usage_events_user_id").on(table.userId),
+  occurredAtIdx: index("idx_usage_events_occurred_at").on(table.occurredAt),
+}));
 
 /**
  * Exporting Types for Drizzle

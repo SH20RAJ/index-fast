@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, count as countFn } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { websites } from "@/lib/db/schema";
 import { listSearchConsoleSites, listSearchConsoleSitemaps } from "@/lib/api/google";
@@ -30,7 +30,7 @@ function inferDefaultSitemap(rawUrl: string) {
   }
 }
 
-export async function importGscSites(userId: string, accessToken: string) {
+export async function importGscSites(userId: string, accessToken: string, websiteLimit: number) {
   const gscSites = await listSearchConsoleSites(accessToken);
   if (!gscSites || gscSites.length === 0) {
     return {
@@ -42,10 +42,40 @@ export async function importGscSites(userId: string, accessToken: string) {
     };
   }
 
+  // Get current website count
+  const [{ count: currentCount }] = await db
+    .select({ count: countFn() })
+    .from(websites)
+    .where(eq(websites.userId, userId));
+
+  const availableSlots = Math.max(0, websiteLimit - (currentCount ?? 0));
+
+  if (availableSlots === 0) {
+    return {
+      message: "Plan limit reached",
+      importedCount: 0,
+      skippedCount: gscSites.length,
+      imported: [],
+      skipped: gscSites.map((site) => ({
+        url: site.siteUrl,
+        reason: `Plan allows maximum ${websiteLimit} website(s). Remove some to import new ones.`,
+      })),
+    };
+  }
+
   const imported: Array<{ id: string; url: string; sitemapUrl: string | null }> = [];
   const skipped: Array<{ url: string; reason: string }> = [];
 
   for (const site of gscSites) {
+    // Stop importing once we hit the limit
+    if (imported.length >= availableSlots) {
+      skipped.push({
+        url: site.siteUrl,
+        reason: `Plan limit reached. ${availableSlots} site(s) imported; remaining skipped.`,
+      });
+      continue;
+    }
+
     const websiteUrl = normalizeWebsiteOrigin(site.siteUrl);
 
     if (!websiteUrl) {
