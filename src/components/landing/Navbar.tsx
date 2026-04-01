@@ -49,12 +49,12 @@ export default function Navbar() {
       position="sticky"
       sx={{
         top: 0,
-        bgcolor: alpha(theme.palette.background.default, mode === "dark" ? 0.82 : 0.85),
-        backdropFilter: "blur(10px)",
+        bgcolor: alpha(theme.palette.background.default, mode === "dark" ? 0.88 : 0.9),
+        backdropFilter: "blur(14px)",
         boxShadow: "none",
         borderBottom: `1px solid ${theme.palette.divider}`,
         zIndex: (theme) => theme.zIndex.appBar,
-        py: 1,
+        py: 0.75,
       }}
     >
       <Container maxWidth="lg">
@@ -62,14 +62,12 @@ export default function Navbar() {
           disableGutters
           sx={{
             justifyContent: "space-between",
-            bgcolor: "background.paper",
-            px: { xs: 2, sm: 4 },
+            bgcolor: alpha(theme.palette.background.paper, mode === "dark" ? 0.72 : 0.9),
+            px: { xs: 1.5, sm: 3 },
             py: 1,
-            border: `1px solid ${theme.palette.divider}`,
-            boxShadow:
-              mode === "dark"
-                ? "0 8px 30px rgba(0, 0, 0, 0.45)"
-                : "0 8px 30px rgba(124, 58, 237, 0.05)",
+            border: `1px solid ${alpha(theme.palette.divider, 0.55)}`,
+            borderRadius: "999px",
+            boxShadow: mode === "dark" ? "0 10px 28px rgba(0, 0, 0, 0.24)" : "0 10px 28px rgba(15, 23, 42, 0.05)",
           }}
         >
           {/* Logo */}
@@ -113,8 +111,8 @@ export default function Navbar() {
                   border: "1px solid transparent",
                   px: 2,
                   "&:hover": {
-                    border: `1px solid ${alpha(theme.palette.primary.main, 0.24)}`,
-                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.14)}`,
+                    bgcolor: alpha(theme.palette.primary.main, 0.05),
                     color: "primary.main",
                   },
                 }}

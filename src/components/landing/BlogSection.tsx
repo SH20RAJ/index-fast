@@ -24,9 +24,9 @@ export default function BlogSection() {
             label="Operator Playbooks"
             sx={{
               alignSelf: "flex-start",
-              bgcolor: alpha("#2563eb", 0.1),
+              bgcolor: alpha("#0F172A", 0.04),
               color: "primary.main",
-              border: `1px solid ${alpha("#2563eb", 0.28)}`,
+              border: `1px solid ${alpha("#0F172A", 0.12)}`,
               fontWeight: 800,
             }}
           />
@@ -44,10 +44,10 @@ export default function BlogSection() {
               <Card
                 sx={{
                   height: "100%",
-                  border: `1px solid ${alpha("#2563eb", 0.18)}`,
+                    border: `1px solid ${alpha("#0F172A", 0.1)}`,
                   bgcolor: "background.paper",
                   backdropFilter: "blur(8px)",
-                  borderRadius: "24px",
+                    borderRadius: "24px",
                 }}
               >
                 <CardContent sx={{ p: 3, display: "flex", flexDirection: "column", gap: 1.4 }}>

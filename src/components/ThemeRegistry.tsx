@@ -23,27 +23,27 @@ function createAppTheme(mode: PaletteMode) {
       palette: {
         mode,
         primary: {
-          main: "#0EA5E9",
-          light: "#38BDF8",
-          dark: "#0284C7",
+          main: "#0F172A",
+          light: "#1E293B",
+          dark: "#020617",
         },
         secondary: {
-          main: "#14B8A6",
-          light: "#2DD4BF",
-          dark: "#0F766E",
+          main: "#2563EB",
+          light: "#3B82F6",
+          dark: "#1D4ED8",
         },
         background: {
-          default: isDark ? "#0B1220" : "#F8FAFC",
-          paper: isDark ? "#101A2F" : "#FFFFFF",
+          default: isDark ? "#050816" : "#F8FAFC",
+          paper: isDark ? "#0B1020" : "#FFFFFF",
         },
         text: {
-          primary: isDark ? "#E6EEF8" : "#0F172A",
-          secondary: isDark ? "#A8B5C7" : "#475569",
+          primary: isDark ? "#E5E7EB" : "#0F172A",
+          secondary: isDark ? "#94A3B8" : "#475569",
         },
-        divider: isDark ? "rgba(148, 163, 184, 0.22)" : "rgba(15, 23, 42, 0.12)",
+        divider: isDark ? "rgba(148, 163, 184, 0.18)" : "rgba(15, 23, 42, 0.10)",
       },
       typography: {
-        fontFamily: '"Outfit", "Inter", sans-serif',
+        fontFamily: '"Outfit", "Manrope", sans-serif',
         h1: { fontWeight: 800, letterSpacing: "-0.02em" },
         h2: { fontWeight: 800, letterSpacing: "-0.02em" },
         h3: { fontWeight: 700 },
@@ -66,12 +66,12 @@ function createAppTheme(mode: PaletteMode) {
           styleOverrides: {
             root: {
               borderRadius: 9999,
-              padding: "12px 28px",
+              padding: "12px 24px",
               boxShadow: "none",
               "&:hover": {
                 boxShadow: isDark
-                  ? "0 8px 20px rgba(14, 165, 233, 0.28)"
-                  : "0 8px 20px rgba(14, 165, 233, 0.18)",
+                  ? "0 8px 20px rgba(15, 23, 42, 0.28)"
+                  : "0 8px 20px rgba(15, 23, 42, 0.12)",
               },
             },
           },
@@ -79,7 +79,7 @@ function createAppTheme(mode: PaletteMode) {
         MuiPaper: {
           styleOverrides: {
             root: {
-              boxShadow: isDark ? "0 10px 30px rgba(2, 6, 23, 0.42)" : "0 10px 30px rgba(15, 23, 42, 0.08)",
+              boxShadow: isDark ? "0 10px 30px rgba(2, 6, 23, 0.38)" : "0 10px 30px rgba(15, 23, 42, 0.06)",
               border: "none",
             },
           },

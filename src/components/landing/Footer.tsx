@@ -16,7 +16,7 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 export default function Footer() {
   return (
-    <Box sx={{ bgcolor: "background.paper", pt: 10, pb: 6, borderTop: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.12)}` }}>
+    <Box sx={{ bgcolor: "background.paper", pt: 10, pb: 6, borderTop: (theme) => `1px solid ${alpha(theme.palette.divider, 0.9)}` }}>
       <Container maxWidth="lg">
         <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }} spacing={4}>
           <Stack spacing={3}>
@@ -26,7 +26,7 @@ export default function Footer() {
                   width: 32,
                   height: 32,
                   borderRadius: "8px",
-                  bgcolor: "primary.main",
+                    bgcolor: "primary.main",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -63,19 +63,19 @@ export default function Footer() {
           </Stack>
 
           <Stack direction="row" spacing={1} sx={{ alignSelf: { xs: "flex-start", md: "center" } }}>
-            <IconButton size="small" sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12), "&:hover": { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2) } }}>
-              <TwitterIcon fontSize="small" sx={{ color: "primary.main" }} />
+            <IconButton size="small" sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.05), "&:hover": { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1) } }}>
+              <TwitterIcon fontSize="small" sx={{ color: "text.primary" }} />
             </IconButton>
-            <IconButton size="small" sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12), "&:hover": { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2) } }}>
-              <GitHubIcon fontSize="small" sx={{ color: "primary.main" }} />
+            <IconButton size="small" sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.05), "&:hover": { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1) } }}>
+              <GitHubIcon fontSize="small" sx={{ color: "text.primary" }} />
             </IconButton>
-            <IconButton size="small" sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12), "&:hover": { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2) } }}>
-              <LinkedInIcon fontSize="small" sx={{ color: "primary.main" }} />
+            <IconButton size="small" sx={{ bgcolor: (theme) => alpha(theme.palette.primary.main, 0.05), "&:hover": { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1) } }}>
+              <LinkedInIcon fontSize="small" sx={{ color: "text.primary" }} />
             </IconButton>
           </Stack>
         </Stack>
 
-        <Divider sx={{ my: 6, borderColor: (theme) => alpha(theme.palette.primary.main, 0.12) }} />
+        <Divider sx={{ my: 6, borderColor: (theme) => alpha(theme.palette.divider, 0.9) }} />
 
         <Box textAlign="center">
           <Typography variant="caption" color="text.secondary">

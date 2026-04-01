@@ -3,22 +3,19 @@
 import {
   Box,
   Button,
-  Chip,
   Container,
   Stack,
   Typography,
   alpha,
   useTheme,
 } from "@mui/material";
-import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
-import TrackChangesRoundedIcon from "@mui/icons-material/TrackChangesRounded";
 import { useStackApp } from "@stackframe/stack";
 
 const feedItems = [
   { source: "Sitemap", url: "/sitemap.xml", status: "Queued" },
-  { source: "Collection", url: "/blog/geo-checklist", status: "Pinged" },
-  { source: "Product", url: "/features/indexnow-sync", status: "Accepted" },
+  { source: "Blog", url: "/blog/geo-checklist", status: "Pinged" },
+  { source: "Feature", url: "/features/indexnow-sync", status: "Accepted" },
 ];
 
 const trustMetrics = [
@@ -51,59 +48,32 @@ export default function Hero() {
           inset: 0,
           background:
             theme.palette.mode === "dark"
-              ? "radial-gradient(circle at 10% 20%, rgba(124,58,237,0.24), transparent 42%), radial-gradient(circle at 84% 18%, rgba(250,204,21,0.16), transparent 38%), linear-gradient(135deg, rgba(15,11,26,0.95), rgba(24,16,38,0.95))"
-              : "radial-gradient(circle at 12% 24%, rgba(124,58,237,0.16), transparent 44%), radial-gradient(circle at 80% 20%, rgba(250,204,21,0.18), transparent 36%), linear-gradient(135deg, #FFFFFF 20%, #F7F4FF 100%)",
+              ? "radial-gradient(circle at 10% 20%, rgba(37,99,235,0.16), transparent 42%), radial-gradient(circle at 84% 18%, rgba(15,23,42,0.24), transparent 38%), linear-gradient(135deg, rgba(5,8,22,0.98), rgba(11,16,32,0.98))"
+              : "radial-gradient(circle at 12% 24%, rgba(37,99,235,0.08), transparent 44%), radial-gradient(circle at 80% 20%, rgba(15,23,42,0.05), transparent 36%), linear-gradient(135deg, #FFFFFF 10%, #F8FAFC 100%)",
           zIndex: -3,
-        }}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          top: "16%",
-          right: "8%",
-          width: { xs: 110, md: 180 },
-          height: { xs: 110, md: 180 },
-          borderRadius: "50%",
-          border: `1px solid ${alpha(theme.palette.secondary.main, 0.5)}`,
-          zIndex: -2,
-          "&::after": {
-            content: '""',
-            position: "absolute",
-            inset: 0,
-            borderRadius: "inherit",
-            border: `1px solid ${alpha(theme.palette.primary.main, 0.4)}`,
-            animation: "pulseRing 2.8s ease-out infinite",
-          },
         }}
       />
 
       <Container maxWidth="lg">
         <Stack direction={{ xs: "column", lg: "row" }} spacing={{ xs: 5, lg: 8 }} alignItems="center">
           <Stack spacing={3.5} sx={{ maxWidth: 700, flex: 1 }}>
-            <Chip
-              icon={<AutoAwesomeRoundedIcon />}
-              label="Built for growth teams that publish every day"
-              sx={{
-                width: "fit-content",
-                bgcolor: alpha(theme.palette.primary.main, 0.12),
-                color: "primary.main",
-                border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
-                fontWeight: 700,
-              }}
-            />
+            <Typography variant="overline" sx={{ letterSpacing: "0.18em", color: "text.secondary", fontWeight: 800 }}>
+              Indexing infrastructure for teams that ship daily
+            </Typography>
 
             <Typography
               variant="h1"
               sx={{
                 lineHeight: 1.03,
-                fontSize: { xs: "2.5rem", md: "4.2rem" },
+                fontSize: { xs: "2.7rem", md: "4.5rem" },
                 color: "text.primary",
+                maxWidth: 820,
               }}
             >
               Get new pages
-              <Box component="span" sx={{ color: "primary.main" }}> crawled faster, </Box>
+              <Box component="span" sx={{ color: "secondary.main" }}> crawled faster, </Box>
               ranked sooner, and seen in
-              <Box component="span" sx={{ color: "secondary.main" }}> AI answers </Box>
+              <Box component="span" sx={{ color: "primary.main" }}> AI answers </Box>
             </Typography>
 
             <Typography
@@ -127,10 +97,7 @@ export default function Hero() {
                 sx={{
                   px: 4,
                   py: 1.8,
-                  boxShadow:
-                    theme.palette.mode === "dark"
-                      ? "0 22px 45px rgba(124,58,237,0.34)"
-                      : "0 22px 45px rgba(124,58,237,0.25)",
+                  bgcolor: "primary.main",
                 }}
               >
                 Start free and submit URLs
@@ -187,23 +154,26 @@ export default function Hero() {
               width: "100%",
               maxWidth: 500,
               p: { xs: 2.5, md: 3.5 },
-              borderRadius: "28px",
-              border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-              bgcolor: alpha(theme.palette.background.paper, 0.82),
+              borderRadius: "26px",
+              border: `1px solid ${alpha(theme.palette.primary.main, 0.12)}`,
+              bgcolor: alpha(theme.palette.background.paper, theme.palette.mode === "dark" ? 0.9 : 0.86),
               backdropFilter: "blur(10px)",
               boxShadow:
                 theme.palette.mode === "dark"
-                  ? "0 30px 60px rgba(0,0,0,0.5)"
-                  : "0 30px 60px rgba(124,58,237,0.14)",
+                  ? "0 30px 60px rgba(0,0,0,0.48)"
+                  : "0 30px 60px rgba(15,23,42,0.08)",
             }}
           >
             <Stack spacing={2.2}>
               <Stack direction="row" alignItems="center" justifyContent="space-between">
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <TrackChangesRoundedIcon sx={{ color: "primary.main" }} />
-                  <Typography fontWeight={800}>Indexing Command Center</Typography>
+                  <Typography variant="subtitle2" sx={{ letterSpacing: "0.14em", fontWeight: 800, color: "text.secondary" }}>
+                    Live pipeline
+                  </Typography>
                 </Stack>
-                <Chip size="small" label="Sync Active" color="success" />
+                <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 700 }}>
+                  Sync active
+                </Typography>
               </Stack>
 
               <Stack spacing={1.2}>
@@ -217,8 +187,8 @@ export default function Hero() {
                       px: 1.5,
                       py: 1,
                       borderRadius: "14px",
-                      bgcolor: alpha(theme.palette.primary.main, 0.07),
-                      border: `1px solid ${alpha(theme.palette.primary.main, 0.18)}`,
+                      bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === "dark" ? 0.08 : 0.04),
+                      border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
                     }}
                   >
                     <Box>
@@ -229,15 +199,9 @@ export default function Hero() {
                         {item.url}
                       </Typography>
                     </Box>
-                    <Chip
-                      size="small"
-                      label={item.status}
-                      sx={{
-                        bgcolor: alpha(theme.palette.secondary.main, 0.26),
-                        color: "text.primary",
-                        fontWeight: 700,
-                      }}
-                    />
+                    <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 700 }}>
+                      {item.status}
+                    </Typography>
                   </Stack>
                 ))}
               </Stack>
@@ -247,7 +211,7 @@ export default function Hero() {
                   p: 2,
                   borderRadius: "16px",
                   bgcolor: alpha(theme.palette.background.default, 0.8),
-                  border: `1px dashed ${alpha(theme.palette.primary.main, 0.3)}`,
+                  border: `1px dashed ${alpha(theme.palette.primary.main, 0.14)}`,
                 }}
               >
                 <Typography variant="body2" color="text.secondary">

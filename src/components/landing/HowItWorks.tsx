@@ -39,7 +39,7 @@ export default function HowItWorks() {
       <Container maxWidth="lg">
         <Stack spacing={2} mb={8} textAlign="center">
           <Stack direction="row" justifyContent="center" mb={1.5}>
-            <Chip label="Execution-first workflow" sx={{ fontWeight: 700 }} />
+            <Chip label="Execution-first workflow" sx={{ fontWeight: 700, bgcolor: alpha(theme.palette.primary.main, 0.05) }} />
           </Stack>
           <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", mb: 2 }}>
             Stop publishing blind. Start indexing with intent.
@@ -55,13 +55,13 @@ export default function HowItWorks() {
               <Box
                 sx={{
                   p: { xs: 3.5, md: 4.5 },
-                  bgcolor: alpha(theme.palette.background.default, theme.palette.mode === "dark" ? 0.8 : 0.72),
-                  borderRadius: "28px",
-                  border: `1px solid ${alpha(theme.palette.primary.main, theme.palette.mode === "dark" ? 0.24 : 0.14)}`,
+                  bgcolor: alpha(theme.palette.background.default, theme.palette.mode === "dark" ? 0.72 : 0.84),
+                  borderRadius: "24px",
+                  border: `1px solid ${alpha(theme.palette.divider, 0.8)}`,
                   boxShadow:
                     theme.palette.mode === "dark"
-                      ? "0 20px 40px rgba(0, 0, 0, 0.35)"
-                      : "0 20px 40px rgba(124, 58, 237, 0.08)",
+                      ? "0 20px 40px rgba(0, 0, 0, 0.26)"
+                      : "0 20px 40px rgba(15, 23, 42, 0.06)",
                   position: "relative",
                   height: "100%",
                   overflow: "hidden",
@@ -75,12 +75,12 @@ export default function HowItWorks() {
                     width: 56,
                     height: 56,
                     borderRadius: "16px",
-                    border: `1px solid ${alpha(theme.palette.primary.main, 0.25)}`,
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.14)}`,
                     display: "grid",
                     placeItems: "center",
                     color: "primary.main",
                     fontWeight: 900,
-                    bgcolor: alpha(theme.palette.primary.main, 0.08),
+                    bgcolor: alpha(theme.palette.primary.main, 0.05),
                   }}
                 >
                   {step.num}

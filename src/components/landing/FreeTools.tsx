@@ -9,19 +9,19 @@ const tools = [
     title: "IndexNow Key Verifier",
     desc: "Validate your key endpoint in seconds and catch delivery failures before they block submissions.",
     icon: <VerifiedUserIcon />,
-    color: "#7C3AED"
+    color: "#0F172A"
   },
   {
     title: "Sitemap Health Audit",
     desc: "Scan for 404s, redirects, and noindex leaks that silently drain crawl budget.",
     icon: <LanguageIcon />,
-    color: "#10B981"
+    color: "#0F172A"
   },
   {
     title: "AI Visibility Test",
     desc: "Preview how AI systems parse your pages and spot missing context before launch.",
     icon: <SearchIcon />,
-    color: "#3B82F6"
+    color: "#2563EB"
   }
 ];
 
@@ -51,16 +51,16 @@ export default function FreeTools() {
                   p: 4,
                   height: "100%",
                   bgcolor: alpha(theme.palette.background.default, theme.palette.mode === "dark" ? 0.8 : 0.74),
-                  borderRadius: "28px",
-                  border: `1px solid ${alpha(tool.color, theme.palette.mode === "dark" ? 0.35 : 0.2)}`,
+                  borderRadius: "24px",
+                  border: `1px solid ${alpha(theme.palette.divider, 0.8)}`,
                   transition: "all 0.2s ease-in-out",
                   "&:hover": {
                     transform: "translateY(-8px)",
                     boxShadow:
                       theme.palette.mode === "dark"
-                        ? "0 20px 40px rgba(0,0,0,0.35)"
-                        : "0 20px 40px rgba(0,0,0,0.05)",
-                    borderColor: alpha(tool.color, 0.2)
+                          ? "0 20px 40px rgba(0,0,0,0.28)"
+                          : "0 20px 40px rgba(15,23,42,0.06)",
+                      borderColor: alpha(theme.palette.primary.main, 0.12)
                   }
                 }}
               >
@@ -68,7 +68,7 @@ export default function FreeTools() {
                   width: 48, 
                   height: 48, 
                   borderRadius: "14px", 
-                  bgcolor: alpha(tool.color, 0.1), 
+                    bgcolor: alpha(tool.color, 0.06), 
                   color: tool.color,
                   display: "flex",
                   alignItems: "center",
@@ -79,7 +79,7 @@ export default function FreeTools() {
                 </Box>
                 <Typography variant="h6" fontWeight={800} sx={{ mb: 1 }}>{tool.title}</Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.7 }}>{tool.desc}</Typography>
-                <Typography variant="button" color="primary.main" fontWeight={800} sx={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 1 }}>
+                <Typography variant="button" color="primary.main" fontWeight={800} sx={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 1, opacity: 0.9 }}>
                   Run free audit <span>→</span>
                 </Typography>
               </Box>

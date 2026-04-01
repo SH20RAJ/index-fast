@@ -27,42 +27,42 @@ const features = [
     desc: "Surface crawl and index blockers instantly, then ship prioritized fixes before rankings are impacted.",
     micro: "Find blockers fast",
     icon: <AutoFixHighIcon />,
-    color: "#4338CA"
+    color: "#0F172A"
   },
   {
     title: "Universal URL Pings",
     desc: "Push URL updates to IndexNow and submission endpoints with retries, logs, and clean operational control.",
     micro: "Reliable delivery",
     icon: <BoltIcon />,
-    color: "#059669"
+    color: "#0F172A"
   },
   {
     title: "AI Visibility Signals",
     desc: "Measure discoverability across AI assistants and close visibility gaps before demand shifts to competitors.",
     micro: "Stay discoverable",
     icon: <PsychologyIcon />,
-    color: "#FACC15"
+    color: "#2563EB"
   },
   {
     title: "Instant Batch Submission",
     desc: "Launch high-priority URL batches in one action with direct Bing and IndexNow integrations.",
     micro: "Ship now",
     icon: <SpeedIcon />,
-    color: "#7C3AED"
+    color: "#0F172A"
   },
   {
     title: "Sitemap Auto-Sync",
     desc: "Watch sitemap changes continuously and auto-submit fresh pages before competitor refresh cycles catch up.",
     micro: "Always current",
     icon: <StorageIcon />,
-    color: "#E11D48"
+    color: "#0F172A"
   },
   {
     title: "GSC Property Sync",
     desc: "Import verified sites from Google Search Console and run indexing operations from one focused dashboard.",
     micro: "Unified operations",
     icon: <SearchIcon />,
-    color: "#0284C7"
+    color: "#0F172A"
   }
 ];
 
@@ -74,7 +74,7 @@ export default function Features() {
       <Container maxWidth="lg">
         <Stack spacing={2} mb={8} textAlign="center">
           <Stack direction="row" justifyContent="center" mb={1.5}>
-            <Chip label="Built for operators, not dashboards-only demos" sx={{ fontWeight: 700 }} />
+            <Chip label="Built for operators" sx={{ fontWeight: 700, bgcolor: alpha(theme.palette.primary.main, 0.05) }} />
           </Stack>
           <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", mb: 2 }}>
             Feature set built to win the indexing race
@@ -91,12 +91,12 @@ export default function Features() {
                 sx={{
                   height: "100%",
                   bgcolor: alpha(theme.palette.background.paper, theme.palette.mode === "dark" ? 0.76 : 0.9),
-                  borderRadius: "28px",
-                  border: `1px solid ${alpha(f.color, theme.palette.mode === "dark" ? 0.35 : 0.2)}`,
+                  borderRadius: "24px",
+                  border: `1px solid ${alpha(theme.palette.divider, 0.8)}`,
                   boxShadow:
                     theme.palette.mode === "dark"
-                      ? "0 18px 36px rgba(0,0,0,0.34)"
-                      : "0 18px 36px rgba(17, 24, 39, 0.07)",
+                      ? "0 18px 36px rgba(0,0,0,0.28)"
+                      : "0 18px 36px rgba(17, 24, 39, 0.06)",
                   transition: "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
                   "&:hover": {
                     transform: "translateY(-8px)",
@@ -108,7 +108,7 @@ export default function Features() {
                 }}
               >
                 <CardContent sx={{ p: 4 }}>
-                  <Box sx={{ width: 46, height: 46, borderRadius: "12px", bgcolor: alpha(f.color, 0.14), display: "flex", alignItems: "center", justifyContent: "center", mb: 3 }}>
+                  <Box sx={{ width: 46, height: 46, borderRadius: "12px", bgcolor: alpha(f.color, 0.08), display: "flex", alignItems: "center", justifyContent: "center", mb: 3 }}>
                     {React.cloneElement(f.icon, { sx: { color: f.color } })}
                   </Box>
                   <Typography variant="h5" sx={{ fontWeight: 900, mb: 1, color: "text.primary" }}>{f.title}</Typography>

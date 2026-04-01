@@ -113,22 +113,20 @@ export default function Pricing() {
               <Card
                 sx={{
                   p: 2,
-                  bgcolor: p.popular ? alpha(theme.palette.primary.main, 0.9) : alpha(theme.palette.background.paper, 0.88),
-                  color: p.popular ? "common.white" : "text.primary",
+                  bgcolor: p.popular ? alpha(theme.palette.primary.main, 0.04) : alpha(theme.palette.background.paper, 0.9),
+                  color: "text.primary",
                   borderRadius: "30px",
                   border: p.popular
-                    ? `1px solid ${alpha(theme.palette.primary.light, 0.5)}`
-                    : `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                  boxShadow: p.popular
-                    ? "0 20px 50px rgba(124, 58, 237, 0.28)"
-                    : theme.palette.mode === "dark"
-                      ? "0 14px 30px rgba(0, 0, 0, 0.35)"
-                      : "0 14px 30px rgba(17, 24, 39, 0.08)",
-                  transform: p.popular ? "scale(1.05)" : "scale(1)",
+                    ? `1px solid ${alpha(theme.palette.primary.main, 0.18)}`
+                    : `1px solid ${alpha(theme.palette.divider, 0.8)}`,
+                  boxShadow: theme.palette.mode === "dark"
+                    ? "0 14px 30px rgba(0, 0, 0, 0.28)"
+                    : "0 14px 30px rgba(17, 24, 39, 0.05)",
+                  transform: "scale(1)",
                   position: "relative",
                   "&:hover": {
-                    transform: p.popular ? "scale(1.08)" : "translateY(-10px)",
-                    boxShadow: "0 25px 60px rgba(124, 58, 237, 0.2)"
+                    transform: "translateY(-8px)",
+                    boxShadow: "0 20px 50px rgba(15, 23, 42, 0.08)"
                   }
                 }}
               >
@@ -140,7 +138,7 @@ export default function Pricing() {
                       <Typography variant="caption" sx={{ opacity: 0.8 }}>per month</Typography>
                     </Box>
 
-                    <Typography variant="body2" sx={{ opacity: 0.8, minHeight: "40px" }}>{p.desc}</Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ minHeight: "40px" }}>{p.desc}</Typography>
 
                     <Stack spacing={1.5} sx={{ my: 3 }}>
                       {p.features.map((f, fidx) => (
@@ -158,11 +156,11 @@ export default function Pricing() {
                       onClick={() => void startCheckout(p.name)}
                       disabled={loadingPlan === p.name}
                       sx={{
-                        bgcolor: p.popular ? "secondary.main" : "transparent",
+                        bgcolor: p.popular ? "primary.main" : "transparent",
                         borderColor: "primary.main",
-                        color: p.popular ? "text.primary" : "primary.main",
+                        color: p.popular ? "common.white" : "primary.main",
                         "&:hover": {
-                          bgcolor: p.popular ? "secondary.light" : "rgba(124, 58, 237, 0.05)",
+                          bgcolor: p.popular ? "primary.dark" : "rgba(15, 23, 42, 0.03)",
                           borderColor: "primary.main"
                         }
                       }}

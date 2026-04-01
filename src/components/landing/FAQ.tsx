@@ -52,20 +52,20 @@ export default function FAQ() {
             <Accordion
               key={idx}
               sx={{
-                borderRadius: "24px !important",
+                borderRadius: "20px !important",
                 "&:before": { display: "none" },
                 bgcolor: "background.default",
                 boxShadow: (theme) =>
                   theme.palette.mode === "dark"
                     ? "0 10px 26px rgba(0,0,0,0.28)"
                     : "0 10px 26px rgba(17,24,39,0.06)",
-                border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.16)}`,
+                border: (theme) => `1px solid ${alpha(theme.palette.divider, 0.9)}`,
                 mb: 2,
                 overflow: "hidden"
               }}
             >
               <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{ color: "primary.main" }} />}
+                expandIcon={<ExpandMoreIcon sx={{ color: "text.secondary" }} />}
                 sx={{ px: 4, py: 1 }}
               >
                 <Typography sx={{ fontWeight: 700, color: "text.primary" }}>{faq.q}</Typography>
