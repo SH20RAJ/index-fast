@@ -26,10 +26,12 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
+import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";
 import {
   buildBingIndexNowPortalUrl,
   buildGoogleSearchConsolePropertyUrl,
@@ -84,6 +86,10 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   const [gscStatusMessage, setGscStatusMessage] = useState<string | null>(null);
   const [processLogs, setProcessLogs] = useState<string[]>([]);
   const [editingSiteId, setEditingSiteId] = useState<string | null>(null);
+  const [cronSiteId, setCronSiteId] = useState<string | null>(null);
+  const [cronJobsBySite, setCronJobsBySite] = useState<Record<string, CronJob[]>>({});
+  const [cronLoadingBySite, setCronLoadingBySite] = useState<Record<string, boolean>>({});
+  const [cronErrorBySite, setCronErrorBySite] = useState<Record<string, string | null>>({});
   const [addWebsiteExpanded, setAddWebsiteExpanded] = useState(initialSites.length === 0);
   const [siteSearchQuery, setSiteSearchQuery] = useState("");
 
@@ -156,6 +162,26 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   function logStep(message: string) {
     const timestamp = new Date().toLocaleTimeString();
     setProcessLogs((prev) => [`[${timestamp}] ${message}`, ...prev].slice(0, 40));
+  }
+
+  async function loadCronJobs(siteId: string) {
+    setCronLoadingBySite((prev) => ({ ...prev, [siteId]: true }));
+    setCronErrorBySite((prev) => ({ ...prev, [siteId]: null }));
+    try {
+      const response = await fetch(`/api/websites/${siteId}/cron-jobs`, { cache: "no-store" });
+      const payload = (await response.json()) as { jobs?: CronJob[]; error?: string };
+      if (!response.ok) {
+        throw new Error(payload.error || "Failed to load cron jobs.");
+      }
+      setCronJobsBySite((prev) => ({ ...prev, [siteId]: payload.jobs ?? [] }));
+    } catch (error) {
+      setCronErrorBySite((prev) => ({
+        ...prev,
+        [siteId]: error instanceof Error ? error.message : "Failed to load cron jobs.",
+      }));
+    } finally {
+      setCronLoadingBySite((prev) => ({ ...prev, [siteId]: false }));
+    }
   }
 
   async function loadGscSites() {
@@ -568,29 +594,39 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
             filteredSites.map((site) => (
               <Card
                 key={site.id}
-                sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}
+                sx={{
+                  borderRadius: "14px",
+                  border: "1px solid",
+                  borderColor: "divider",
+                  boxShadow: "none",
+                  bgcolor: "background.paper",
+                }}
               >
                 <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
-                  <Stack spacing={1.5}>
-                    <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={1.5}>
+                  <Stack spacing={1.25}>
+                    <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={1.25}>
                       <Box>
                         <Typography variant="subtitle1" fontWeight={900} sx={{ wordBreak: "break-all" }}>
                           {site.url}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ wordBreak: "break-all" }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ wordBreak: "break-all", mt: 0.25 }}>
                           Sitemap: {site.sitemapUrl || "Not configured"}
                         </Typography>
                       </Box>
 
                       <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" alignItems="flex-start">
-                        <Chip label={site.indexNowKey ? "IndexNow ready" : "No IndexNow key"} size="small" sx={{ borderRadius: "8px", fontWeight: 700 }} />
-                        <Chip label={site.bingApiKey ? "Bing ready" : "No Bing API key"} size="small" sx={{ borderRadius: "8px", fontWeight: 700 }} />
                         <Chip
-                          label={getIndexNowKeyLocationUrl(site) ? "IndexNow key URL set" : "No IndexNow key URL"}
+                          label={site.gscConnected ? "GSC connected" : "GSC not connected"}
                           size="small"
+                          color={site.gscConnected ? "success" : "default"}
                           sx={{ borderRadius: "8px", fontWeight: 700 }}
                         />
-                        <Chip label={site.gscConnected ? "GSC connected" : "GSC not connected"} size="small" sx={{ borderRadius: "8px", fontWeight: 700 }} />
+                        <Chip
+                          label={site.indexNowKey && site.bingApiKey ? "Submission keys ready" : "Submission keys missing"}
+                          size="small"
+                          color={site.indexNowKey && site.bingApiKey ? "success" : "default"}
+                          sx={{ borderRadius: "8px", fontWeight: 700 }}
+                        />
                       </Stack>
                     </Stack>
 
@@ -600,10 +636,10 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
 
                     <Divider sx={{ borderColor: "divider" }} />
 
-                    <Stack direction="row" spacing={1.25} useFlexGap flexWrap="wrap">
+                    <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
                       <Box component="form" action={syncAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
                         <input type="hidden" name="websiteId" value={site.id} />
-                        <Button type="submit" variant="contained" startIcon={<RefreshIcon />} disabled={syncPending} fullWidth sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}>
+                        <Button type="submit" variant="contained" startIcon={<RefreshIcon />} disabled={syncPending} fullWidth sx={{ borderRadius: "9px", textTransform: "none", fontWeight: 700 }}>
                           Sync Sitemap
                         </Button>
                       </Box>
@@ -611,7 +647,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                       {site.gscConnected && (
                         <Box component="form" action={refreshAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
                           <input type="hidden" name="websiteId" value={site.id} />
-                          <Button type="submit" variant="outlined" startIcon={<RefreshIcon />} disabled={refreshPending} fullWidth sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}>
+                          <Button type="submit" variant="outlined" startIcon={<RefreshIcon />} disabled={refreshPending} fullWidth sx={{ borderRadius: "9px", textTransform: "none", fontWeight: 700 }}>
                             Refresh GSC
                           </Button>
                         </Box>
@@ -622,7 +658,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         href={`/sites/${site.id}/audit`}
                         variant="outlined"
                         startIcon={<AssessmentOutlinedIcon />}
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
                       >
                         View Audit
                       </Button>
@@ -631,9 +667,25 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         component={Link}
                         href={`/sites/url?siteId=${site.id}`}
                         variant="outlined"
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
                       >
                         URLs & Submit
+                      </Button>
+
+                      <Button
+                        variant="outlined"
+                        startIcon={<AccessTimeRoundedIcon />}
+                        onClick={() => {
+                          if (cronSiteId === site.id) {
+                            setCronSiteId(null);
+                            return;
+                          }
+                          setCronSiteId(site.id);
+                          void loadCronJobs(site.id);
+                        }}
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                      >
+                        {cronSiteId === site.id ? "Hide Auto Submit" : "Auto Submit"}
                       </Button>
 
                       <Button
@@ -642,7 +694,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         target="_blank"
                         rel="noopener noreferrer"
                         variant="outlined"
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
                       >
                         Open Bing IndexNow
                       </Button>
@@ -653,7 +705,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         target="_blank"
                         rel="noopener noreferrer"
                         variant="outlined"
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
                       >
                         Open in GSC
                       </Button>
@@ -662,18 +714,39 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         variant="outlined"
                         startIcon={<EditOutlinedIcon />}
                         onClick={() => setEditingSiteId((prev) => (prev === site.id ? null : site.id))}
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
                       >
                         {editingSiteId === site.id ? "Close Edit" : "Edit Indexing"}
                       </Button>
 
                       <Box component="form" action={deleteAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
                         <input type="hidden" name="websiteId" value={site.id} />
-                        <Button type="submit" color="error" variant="outlined" startIcon={<DeleteOutlineIcon />} disabled={deletePending} fullWidth sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}>
+                        <Button type="submit" color="error" variant="outlined" startIcon={<DeleteOutlineIcon />} disabled={deletePending} fullWidth sx={{ borderRadius: "9px", textTransform: "none", fontWeight: 700 }}>
                           Remove
                         </Button>
                       </Box>
                     </Stack>
+
+                    <Collapse in={cronSiteId === site.id} unmountOnExit>
+                      <Box sx={{ mt: 0.5 }}>
+                        {cronErrorBySite[site.id] ? <Alert severity="error" sx={{ mb: 1.25 }}>{cronErrorBySite[site.id]}</Alert> : null}
+                        {cronLoadingBySite[site.id] ? (
+                          <Stack direction="row" spacing={1} alignItems="center" sx={{ py: 1.5 }}>
+                            <CircularProgress size={18} />
+                            <Typography variant="body2" color="text.secondary">Loading schedules...</Typography>
+                          </Stack>
+                        ) : (
+                          <CronJobManager
+                            websiteId={site.id}
+                            websiteUrl={site.url}
+                            cronJobs={cronJobsBySite[site.id] ?? []}
+                            onRefresh={() => {
+                              void loadCronJobs(site.id);
+                            }}
+                          />
+                        )}
+                      </Box>
+                    </Collapse>
 
                     <Collapse in={editingSiteId === site.id} unmountOnExit>
                       <Box
