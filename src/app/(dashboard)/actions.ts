@@ -138,6 +138,8 @@ export async function updateAccountEmailAction(_: ActionState, formData: FormDat
 }
 
 export async function updateSubscriptionPlanAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  let checkoutUrl: string | null = null;
+
   try {
     const user = await getAuthedUser();
     const plan = String(formData.get("plan") ?? "") as PlanId;
@@ -176,31 +178,37 @@ export async function updateSubscriptionPlanAction(_: ActionState, formData: For
         return { status: "error", message: "Could not create Dodo checkout URL." };
       }
 
-      redirect(checkout.checkout_url);
+      checkoutUrl = checkout.checkout_url;
+    } else {
+      const status = "inactive";
+      const isPro = false;
+
+      await db
+        .update(users)
+        .set({
+          isPro,
+          subscriptionStatus: status,
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, user.id));
+
+      revalidatePath("/settings");
+      revalidatePath("/dashboard");
+      revalidatePath("/sites");
+      return { status: "success", message: `Plan updated to ${PLAN_DEFINITIONS[plan].name}.` };
     }
-
-    const status = "inactive";
-    const isPro = false;
-
-    await db
-      .update(users)
-      .set({
-        isPro,
-        subscriptionStatus: status,
-        updatedAt: new Date(),
-      })
-      .where(eq(users.id, user.id));
-
-    revalidatePath("/settings");
-    revalidatePath("/dashboard");
-    revalidatePath("/sites");
-    return { status: "success", message: `Plan updated to ${PLAN_DEFINITIONS[plan].name}.` };
   } catch (error) {
     return {
       status: "error",
       message: error instanceof Error ? error.message : "Failed to update subscription.",
     };
   }
+
+  if (checkoutUrl) {
+    redirect(checkoutUrl);
+  }
+
+  return { status: "error", message: "Could not start checkout." };
 }
 
 export async function openBillingPortalAction() {
