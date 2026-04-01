@@ -7,11 +7,13 @@ import { GSC_READONLY_SCOPE } from "@/lib/google/constants";
  * Documentation: https://developers.google.com/search/apis/search-console-api
  */
 
-export const oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URI
-);
+export function createGoogleOAuthClient(redirectUri?: string) {
+  return new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    redirectUri ?? process.env.GOOGLE_REDIRECT_URI
+  );
+}
 
 export type GscSiteEntry = {
   siteUrl: string;
@@ -23,6 +25,7 @@ function createSearchConsoleClient(accessToken: string) {
     throw new Error("No access token provided for Google API");
   }
 
+  const oauth2Client = createGoogleOAuthClient();
   oauth2Client.setCredentials({ access_token: accessToken });
 
   return google.searchconsole({

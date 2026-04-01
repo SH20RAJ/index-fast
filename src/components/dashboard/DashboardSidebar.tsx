@@ -1,6 +1,6 @@
 "use client";
-import { Box, Stack, useTheme, alpha, Typography, Button, Drawer, IconButton } from "@mui/material";
-import { useUser, UserButton } from "@stackframe/stack";
+import { Box, Stack, useTheme, alpha, Typography, Button, Drawer, IconButton, Avatar } from "@mui/material";
+import { useUser } from "@stackframe/stack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BoltIcon from "@mui/icons-material/Bolt";
@@ -34,6 +34,15 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
   const { mode, toggleColorMode } = useColorMode();
   const pathname = usePathname();
   const user = useUser();
+
+  const displayName = user?.displayName?.trim() || "User";
+  const primaryEmail = user?.primaryEmail || "No email";
+  const initials = displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("") || "U";
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
@@ -149,20 +158,33 @@ export default function DashboardSidebar({ mobileOpen, onMobileClose }: Dashboar
             bgcolor: alpha(theme.palette.background.paper, isDark ? 0.55 : 0.8),
           }}
         >
-          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1.25}>
-            <Box sx={{ minWidth: 0 }}>
-              <Typography variant="body2" fontWeight={700} noWrap>
-                {user?.displayName || "User"}
+          <Stack direction="row" alignItems="center" spacing={1.25}>
+            <Avatar
+              sx={{
+                width: 38,
+                height: 38,
+                fontSize: 14,
+                fontWeight: 800,
+                bgcolor: alpha(theme.palette.primary.main, isDark ? 0.35 : 0.18),
+                color: isDark ? "primary.light" : "primary.dark",
+              }}
+            >
+              {initials}
+            </Avatar>
+            <Box sx={{ minWidth: 0, flex: 1 }}>
+              <Typography variant="body2" fontWeight={700} noWrap title={displayName}>
+                {displayName}
               </Typography>
               <Typography
                 variant="caption"
                 color="text.secondary"
-                sx={{ display: "block", wordBreak: "break-all", lineHeight: 1.3 }}
+                noWrap
+                title={primaryEmail}
+                sx={{ display: "block", lineHeight: 1.3 }}
               >
-                {user?.primaryEmail || "No email"}
+                {primaryEmail}
               </Typography>
             </Box>
-            <UserButton showUserInfo />
           </Stack>
         </Box>
       </Stack>

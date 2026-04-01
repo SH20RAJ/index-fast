@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { websites } from "@/lib/db/schema";
 import { listSearchConsoleSites, listSearchConsoleSitemaps } from "@/lib/api/google";
 
-function normalizeWebsiteOrigin(rawUrl: string) {
+export function normalizeWebsiteOrigin(rawUrl: string) {
   if (rawUrl.startsWith("sc-domain:")) {
     return null;
   }
@@ -31,11 +31,25 @@ function inferDefaultSitemap(rawUrl: string) {
   }
 }
 
-export async function importGscSites(userId: string, accessToken: string, websiteLimit: number) {
-  const gscSites = await listSearchConsoleSites(accessToken);
+export async function importGscSites(
+  userId: string,
+  accessToken: string,
+  websiteLimit: number,
+  selectedPropertyUrls?: string[]
+) {
+  const allGscSites = await listSearchConsoleSites(accessToken);
+  const selectedSet = new Set((selectedPropertyUrls ?? []).map((value) => value.trim()).filter(Boolean));
+  const gscSites =
+    selectedSet.size > 0
+      ? allGscSites.filter((site) => selectedSet.has(site.siteUrl))
+      : allGscSites;
+
   if (!gscSites || gscSites.length === 0) {
     return {
-      message: "No sites found in Google Search Console",
+      message:
+        selectedSet.size > 0
+          ? "No selected sites were found in Google Search Console"
+          : "No sites found in Google Search Console",
       importedCount: 0,
       skippedCount: 0,
       imported: [],
