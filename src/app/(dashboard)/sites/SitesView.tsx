@@ -86,11 +86,13 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   const [gscStatusMessage, setGscStatusMessage] = useState<string | null>(null);
   const [processLogs, setProcessLogs] = useState<string[]>([]);
   const [editingSiteId, setEditingSiteId] = useState<string | null>(null);
+  const [moreActionsSiteId, setMoreActionsSiteId] = useState<string | null>(null);
   const [cronSiteId, setCronSiteId] = useState<string | null>(null);
   const [cronJobsBySite, setCronJobsBySite] = useState<Record<string, CronJob[]>>({});
   const [cronLoadingBySite, setCronLoadingBySite] = useState<Record<string, boolean>>({});
   const [cronErrorBySite, setCronErrorBySite] = useState<Record<string, string | null>>({});
   const [addWebsiteExpanded, setAddWebsiteExpanded] = useState(initialSites.length === 0);
+  const [gscPanelExpanded, setGscPanelExpanded] = useState(false);
   const [siteSearchQuery, setSiteSearchQuery] = useState("");
 
   const [createState, createAction, createPending] = useActionState<ActionState, FormData>(
@@ -265,6 +267,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     if (gscStatus === "connected") {
       setGscStatusMessage("Google connected. Select the properties you want to import.");
       logStep("Google OAuth completed successfully.");
+      setGscPanelExpanded(true);
       void loadGscSites();
     }
 
@@ -408,9 +411,18 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
         </Card>
 
         {(gscConnected || gscLoading || gscSites.length > 0 || processLogs.length > 0) && (
-          <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
-            <CardContent sx={{ p: { xs: 2.25, md: 3 } }}>
-              <Stack spacing={2}>
+          <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none", overflow: "hidden" }}>
+            <Accordion
+              expanded={gscPanelExpanded}
+              onChange={(_, expanded) => setGscPanelExpanded(expanded)}
+              disableGutters
+              elevation={0}
+              sx={{ "&:before": { display: "none" }, bgcolor: "transparent" }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreRoundedIcon />}
+                sx={{ px: { xs: 2.25, md: 3 }, py: 1.2 }}
+              >
                 <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={1.25}>
                   <Box>
                     <Typography variant="h6" fontWeight={900}>Google Search Console Properties</Typography>
@@ -418,6 +430,14 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                       Select properties to import. URL-prefix and domain properties are both supported.
                     </Typography>
                   </Box>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, alignSelf: "center" }}>
+                    {selectableSites.length} importable
+                  </Typography>
+                </Stack>
+              </AccordionSummary>
+              <AccordionDetails sx={{ px: { xs: 2.25, md: 3 }, pb: { xs: 2.25, md: 3 }, pt: 0 }}>
+                <Stack spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={1.25}>
                   <Stack direction="row" spacing={1}>
                     <Button
                       variant="outlined"
@@ -531,8 +551,9 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                     </Stack>
                   </Box>
                 ) : null}
-              </Stack>
-            </CardContent>
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
           </Card>
         )}
 
@@ -614,25 +635,6 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         </Button>
                       </Box>
 
-                      {site.gscConnected && (
-                        <Box component="form" action={refreshAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
-                          <input type="hidden" name="websiteId" value={site.id} />
-                          <Button type="submit" variant="outlined" startIcon={<RefreshIcon />} disabled={refreshPending} fullWidth sx={{ borderRadius: "9px", textTransform: "none", fontWeight: 700 }}>
-                            Refresh GSC
-                          </Button>
-                        </Box>
-                      )}
-
-                      <Button
-                        component={Link}
-                        href={`/sites/${site.id}/audit`}
-                        variant="outlined"
-                        startIcon={<AssessmentOutlinedIcon />}
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
-                      >
-                        View Audit
-                      </Button>
-
                       <Button
                         component={Link}
                         href={`/sites/url?siteId=${site.id}`}
@@ -659,45 +661,74 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                       </Button>
 
                       <Button
-                        variant="outlined"
-                        startIcon={<EditOutlinedIcon />}
-                        onClick={() => setEditingSiteId((prev) => (prev === site.id ? null : site.id))}
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                        variant="text"
+                        onClick={() => setMoreActionsSiteId((prev) => (prev === site.id ? null : site.id))}
+                        sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none", fontWeight: 700 }}
                       >
-                        {editingSiteId === site.id ? "Close Edit" : "Edit Indexing"}
+                        {moreActionsSiteId === site.id ? "Hide more" : "More actions"}
                       </Button>
                     </Stack>
 
-                    <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                      <Button
-                        component="a"
-                        href={buildBingIndexNowPortalUrl(site.url)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        variant="text"
-                        sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none", fontWeight: 700 }}
-                      >
-                        Open Bing IndexNow
-                      </Button>
+                    <Collapse in={moreActionsSiteId === site.id} unmountOnExit>
+                      <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                        {site.gscConnected && (
+                          <Box component="form" action={refreshAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
+                            <input type="hidden" name="websiteId" value={site.id} />
+                            <Button type="submit" variant="outlined" startIcon={<RefreshIcon />} disabled={refreshPending} fullWidth sx={{ borderRadius: "9px", textTransform: "none", fontWeight: 700 }}>
+                              Refresh GSC
+                            </Button>
+                          </Box>
+                        )}
 
-                      <Button
-                        component="a"
-                        href={buildGoogleSearchConsolePropertyUrl(site.url)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        variant="text"
-                        sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none", fontWeight: 700 }}
-                      >
-                        Open in GSC
-                      </Button>
-
-                      <Box component="form" action={deleteAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
-                        <input type="hidden" name="websiteId" value={site.id} />
-                        <Button type="submit" color="error" variant="text" startIcon={<DeleteOutlineIcon />} disabled={deletePending} fullWidth sx={{ textTransform: "none", fontWeight: 700 }}>
-                          Remove
+                        <Button
+                          component={Link}
+                          href={`/sites/${site.id}/audit`}
+                          variant="outlined"
+                          startIcon={<AssessmentOutlinedIcon />}
+                          sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                        >
+                          View Audit
                         </Button>
-                      </Box>
-                    </Stack>
+
+                        <Button
+                          variant="outlined"
+                          startIcon={<EditOutlinedIcon />}
+                          onClick={() => setEditingSiteId((prev) => (prev === site.id ? null : site.id))}
+                          sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                        >
+                          {editingSiteId === site.id ? "Close Edit" : "Edit Indexing"}
+                        </Button>
+
+                        <Button
+                          component="a"
+                          href={buildBingIndexNowPortalUrl(site.url)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          variant="text"
+                          sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none", fontWeight: 700 }}
+                        >
+                          Open Bing IndexNow
+                        </Button>
+
+                        <Button
+                          component="a"
+                          href={buildGoogleSearchConsolePropertyUrl(site.url)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          variant="text"
+                          sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none", fontWeight: 700 }}
+                        >
+                          Open in GSC
+                        </Button>
+
+                        <Box component="form" action={deleteAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
+                          <input type="hidden" name="websiteId" value={site.id} />
+                          <Button type="submit" color="error" variant="text" startIcon={<DeleteOutlineIcon />} disabled={deletePending} fullWidth sx={{ textTransform: "none", fontWeight: 700 }}>
+                            Remove
+                          </Button>
+                        </Box>
+                      </Stack>
+                    </Collapse>
 
                     <Collapse in={cronSiteId === site.id} unmountOnExit>
                       <Box sx={{ mt: 0.5 }}>
