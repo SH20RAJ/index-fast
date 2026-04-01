@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
+import pngToIco from "png-to-ico";
 
 const ROOT = process.cwd();
 const APP_DIR = path.join(ROOT, "src", "app");
@@ -72,7 +73,11 @@ async function generate() {
   await sharp(iconPngBuffer).resize(512, 512).png({ quality: 100 }).toFile(path.join(APP_DIR, "icon.png"));
   await sharp(iconPngBuffer).resize(180, 180).png({ quality: 100 }).toFile(path.join(APP_DIR, "apple-icon.png"));
   await sharp(iconPngBuffer).resize(48, 48).png({ quality: 100 }).toFile(path.join(APP_DIR, "favicon.png"));
-  await sharp(iconPngBuffer).resize(32, 32).toFile(path.join(APP_DIR, "favicon.ico"));
+
+  const icoPng32 = await sharp(iconPngBuffer).resize(32, 32).png().toBuffer();
+  const icoPng16 = await sharp(iconPngBuffer).resize(16, 16).png().toBuffer();
+  const faviconIco = await pngToIco([icoPng16, icoPng32]);
+  await fs.writeFile(path.join(APP_DIR, "favicon.ico"), faviconIco);
 
   await sharp(iconPngBuffer)
     .resize(192, 192)
