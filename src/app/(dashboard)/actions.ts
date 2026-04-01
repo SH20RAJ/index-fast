@@ -95,6 +95,23 @@ function normalizeOptionalUrl(raw: string | null) {
   }
 }
 
+function normalizeOptionalAbsoluteUrl(raw: string | null, fieldLabel: string) {
+  if (!raw) {
+    return null;
+  }
+
+  const value = raw.trim();
+  if (!value) {
+    return null;
+  }
+
+  try {
+    return new URL(value).toString();
+  } catch {
+    throw new Error(`${fieldLabel} must be a valid URL.`);
+  }
+}
+
 export async function updateAccountEmailAction(_: ActionState, formData: FormData): Promise<ActionState> {
   try {
     const user = await getAuthedUser();
@@ -219,6 +236,20 @@ export async function addWebsiteAction(_: ActionState, formData: FormData): Prom
     const sitemapUrl = normalizeOptionalUrl(formData.get("sitemapUrl")?.toString() ?? null);
     const indexNowKey = String(formData.get("indexNowKey") ?? "").trim() || null;
     const bingApiKey = String(formData.get("bingApiKey") ?? "").trim() || null;
+    const indexNowKeyLocationUrl = normalizeOptionalAbsoluteUrl(
+      formData.get("indexNowKeyLocationUrl")?.toString() ?? null,
+      "IndexNow key location URL"
+    );
+
+    const siteHealth = indexNowKeyLocationUrl
+      ? {
+          indexing: {
+            indexNow: {
+              keyLocationUrl: indexNowKeyLocationUrl,
+            },
+          },
+        }
+      : null;
 
     await db.insert(websites).values({
       userId: user.id,
@@ -226,6 +257,7 @@ export async function addWebsiteAction(_: ActionState, formData: FormData): Prom
       sitemapUrl,
       indexNowKey,
       bingApiKey,
+      siteHealth,
     });
 
     revalidatePath("/sites");
@@ -235,6 +267,81 @@ export async function addWebsiteAction(_: ActionState, formData: FormData): Prom
     return {
       status: "error",
       message: error instanceof Error ? error.message : "Failed to add website.",
+    };
+  }
+}
+
+export async function updateWebsiteIndexingKeysAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const websiteId = String(formData.get("websiteId") ?? "").trim();
+
+    if (!websiteId) {
+      return { status: "error", message: "Missing website id." };
+    }
+
+    const [website] = await db
+      .select()
+      .from(websites)
+      .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+
+    if (!website) {
+      return { status: "error", message: "Website not found." };
+    }
+
+    const indexNowKey = String(formData.get("indexNowKey") ?? "").trim() || null;
+    const bingApiKey = String(formData.get("bingApiKey") ?? "").trim() || null;
+    const indexNowKeyLocationUrl = normalizeOptionalAbsoluteUrl(
+      formData.get("indexNowKeyLocationUrl")?.toString() ?? null,
+      "IndexNow key location URL"
+    );
+
+    const currentSiteHealth = ((website.siteHealth as Record<string, unknown> | null) ?? {}) as Record<string, unknown>;
+    const nextSiteHealth: Record<string, unknown> = { ...currentSiteHealth };
+    const indexing =
+      typeof nextSiteHealth.indexing === "object" && nextSiteHealth.indexing !== null
+        ? { ...(nextSiteHealth.indexing as Record<string, unknown>) }
+        : {};
+    const indexNow =
+      typeof indexing.indexNow === "object" && indexing.indexNow !== null
+        ? { ...(indexing.indexNow as Record<string, unknown>) }
+        : {};
+
+    if (indexNowKeyLocationUrl) {
+      indexNow.keyLocationUrl = indexNowKeyLocationUrl;
+    } else {
+      delete indexNow.keyLocationUrl;
+    }
+
+    if (Object.keys(indexNow).length > 0) {
+      indexing.indexNow = indexNow;
+    } else {
+      delete indexing.indexNow;
+    }
+
+    if (Object.keys(indexing).length > 0) {
+      nextSiteHealth.indexing = indexing;
+    } else {
+      delete nextSiteHealth.indexing;
+    }
+
+    await db
+      .update(websites)
+      .set({
+        indexNowKey,
+        bingApiKey,
+        siteHealth: Object.keys(nextSiteHealth).length > 0 ? nextSiteHealth : null,
+      })
+      .where(eq(websites.id, websiteId));
+
+    revalidatePath("/sites");
+    revalidatePath("/dashboard");
+
+    return { status: "success", message: "Indexing credentials updated." };
+  } catch (error) {
+    return {
+      status: "error",
+      message: error instanceof Error ? error.message : "Failed to update indexing credentials.",
     };
   }
 }

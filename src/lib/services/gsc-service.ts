@@ -6,7 +6,16 @@ import { listSearchConsoleSites, listSearchConsoleSitemaps } from "@/lib/api/goo
 
 export function normalizeWebsiteOrigin(rawUrl: string) {
   if (rawUrl.startsWith("sc-domain:")) {
-    return null;
+    const domain = rawUrl.slice("sc-domain:".length).trim();
+    if (!domain) {
+      return null;
+    }
+
+    try {
+      return new URL(`https://${domain}`).origin;
+    } catch {
+      return null;
+    }
   }
 
   const normalized = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
@@ -19,7 +28,16 @@ export function normalizeWebsiteOrigin(rawUrl: string) {
 
 function inferDefaultSitemap(rawUrl: string) {
   if (rawUrl.startsWith("sc-domain:")) {
-    return null;
+    const domain = rawUrl.slice("sc-domain:".length).trim();
+    if (!domain) {
+      return null;
+    }
+
+    try {
+      return `https://${new URL(`https://${domain}`).host}/sitemap.xml`;
+    } catch {
+      return null;
+    }
   }
 
   const normalized = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
@@ -96,7 +114,7 @@ export async function importGscSites(
     if (!websiteUrl) {
       skipped.push({
         url: site.siteUrl,
-        reason: "Only URL-prefix properties are supported right now. Domain properties are skipped.",
+        reason: "Property URL is invalid and could not be normalized.",
       });
       continue;
     }

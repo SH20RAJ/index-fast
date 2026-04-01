@@ -36,16 +36,28 @@ interface AuditPanelProps {
   };
 }
 
+function normalizeAuditResult(input: unknown) {
+  if (!input || typeof input !== "object") {
+    return null;
+  }
+
+  const candidate = input as { score?: unknown; issues?: unknown };
+  return {
+    score: typeof candidate.score === "number" ? candidate.score : 0,
+    issues: Array.isArray(candidate.issues) ? (candidate.issues as AuditIssue[]) : [],
+  };
+}
+
 export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps) {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(initialResult);
+  const [result, setResult] = useState(() => normalizeAuditResult(initialResult));
 
   const runAudit = async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/websites/${websiteId}/audit`, { method: "POST" });
       const data = await res.json();
-      setResult(data);
+      setResult(normalizeAuditResult(data));
     } catch (error) {
       console.error("Audit failed:", error);
     } finally {
@@ -73,6 +85,9 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
     );
   }
 
+  const score = result?.score ?? 0;
+  const issues = result?.issues ?? [];
+
   return (
     <Box>
       <Stack spacing={3}>
@@ -86,14 +101,14 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
                   height: 64,
                   borderRadius: "50%",
                   border: "4px solid",
-                  borderColor: result?.score && result.score > 80 ? "success.main" : result?.score && result.score > 50 ? "warning.main" : "error.main",
+                  borderColor: score > 80 ? "success.main" : score > 50 ? "warning.main" : "error.main",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
                 <Typography variant="h5" fontWeight={900}>
-                  {result?.score}
+                  {score}
                 </Typography>
               </Box>
               <Box>
@@ -117,14 +132,14 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
 
         {/* Issues List */}
         <Stack spacing={2}>
-          {result?.issues.length === 0 ? (
+          {issues.length === 0 ? (
             <Card sx={{ borderRadius: "24px", p: 4, textAlign: "center" }}>
               <CheckCircleIcon color="success" sx={{ fontSize: 48, mb: 1 }} />
               <Typography fontWeight={700}>Everything looks great!</Typography>
               <Typography variant="body2" color="text.secondary">No critical SEO issues found.</Typography>
             </Card>
           ) : (
-            result?.issues.map((issue, idx) => (
+            issues.map((issue, idx) => (
               <Card key={idx} sx={{ borderRadius: "24px", border: "1px solid rgba(0,0,0,0.05)" }}>
                 <CardContent sx={{ p: 3 }}>
                   <Stack direction="row" spacing={2} alignItems="flex-start">

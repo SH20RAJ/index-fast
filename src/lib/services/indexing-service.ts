@@ -79,9 +79,18 @@ async function triggerSubmissions(website: Website, urls: string[], isPro: boole
   const host = new URL(website.url).hostname;
   const submissionsToLog = [];
 
+  const indexNowKeyLocationUrl =
+    typeof website.siteHealth === "object" &&
+    website.siteHealth !== null &&
+    typeof (website.siteHealth as { indexing?: { indexNow?: { keyLocationUrl?: unknown } } }).indexing?.indexNow
+      ?.keyLocationUrl === "string"
+      ? ((website.siteHealth as { indexing?: { indexNow?: { keyLocationUrl?: string } } }).indexing?.indexNow
+          ?.keyLocationUrl as string)
+      : undefined;
+
   // IndexNow
   if (website.indexNowKey) {
-    const res = await submitToIndexNow(host, website.indexNowKey, urls);
+    const res = await submitToIndexNow(host, website.indexNowKey, urls, indexNowKeyLocationUrl);
     submissionsToLog.push({
       websiteId: website.id,
       url: urls.join(", "),

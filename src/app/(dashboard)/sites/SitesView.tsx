@@ -14,6 +14,7 @@ import {
   Stack,
   TextField,
   Typography,
+  Collapse,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import PublicIcon from "@mui/icons-material/Public";
@@ -21,6 +22,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import {
@@ -28,6 +30,7 @@ import {
   deleteWebsiteAction,
   runWebsiteSyncAction,
   refreshGscMetadataAction,
+  updateWebsiteIndexingKeysAction,
 } from "@/app/(dashboard)/actions";
 import { defaultActionState, type ActionState } from "@/app/(dashboard)/action-state";
 
@@ -51,6 +54,7 @@ interface WebsiteRecord {
   sitemapUrl: string | null;
   indexNowKey: string | null;
   bingApiKey: string | null;
+  siteHealth: unknown;
   gscConnected: boolean | null;
   lastSyncAt: Date | null;
 }
@@ -70,6 +74,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   const [gscError, setGscError] = useState<string | null>(null);
   const [gscStatusMessage, setGscStatusMessage] = useState<string | null>(null);
   const [processLogs, setProcessLogs] = useState<string[]>([]);
+  const [editingSiteId, setEditingSiteId] = useState<string | null>(null);
 
   const [createState, createAction, createPending] = useActionState<ActionState, FormData>(
     addWebsiteAction,
@@ -87,6 +92,10 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     refreshGscMetadataAction,
     defaultActionState
   );
+  const [updateKeysState, updateKeysAction, updateKeysPending] = useActionState<ActionState, FormData>(
+    updateWebsiteIndexingKeysAction,
+    defaultActionState
+  );
 
   const slotsLeft = Math.max(0, websiteLimit - initialSites.length);
 
@@ -94,6 +103,18 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     () => gscSites.filter((site) => site.supported && !site.alreadyImported),
     [gscSites]
   );
+
+  function getIndexNowKeyLocationUrl(site: WebsiteRecord) {
+    if (!site.siteHealth || typeof site.siteHealth !== "object") {
+      return "";
+    }
+
+    const root = site.siteHealth as Record<string, unknown>;
+    const indexing = root.indexing as Record<string, unknown> | undefined;
+    const indexNow = indexing?.indexNow as Record<string, unknown> | undefined;
+    const keyLocationUrl = indexNow?.keyLocationUrl;
+    return typeof keyLocationUrl === "string" ? keyLocationUrl : "";
+  }
 
   function logStep(message: string) {
     const timestamp = new Date().toLocaleTimeString();
@@ -218,6 +239,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
         {syncState.status !== "idle" ? <Alert severity={syncState.status}>{syncState.message}</Alert> : null}
         {deleteState.status !== "idle" ? <Alert severity={deleteState.status}>{deleteState.message}</Alert> : null}
         {refreshState.status !== "idle" ? <Alert severity={refreshState.status}>{refreshState.message}</Alert> : null}
+        {updateKeysState.status !== "idle" ? <Alert severity={updateKeysState.status}>{updateKeysState.message}</Alert> : null}
         {gscError ? <Alert severity="error">{gscError}</Alert> : null}
         {gscStatusMessage ? <Alert severity="success">{gscStatusMessage}</Alert> : null}
 
@@ -281,6 +303,16 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                 <TextField label="Bing API key (optional)" name="bingApiKey" fullWidth />
               </Stack>
 
+              <TextField
+                label="IndexNow key text URL (optional)"
+                name="indexNowKeyLocationUrl"
+                type="url"
+                autoComplete="off"
+                placeholder="https://example.com/your-key.txt"
+                fullWidth
+                helperText="Used for IndexNow keyLocation validation during auto submission."
+              />
+
               <Box>
                 <Button
                   type="submit"
@@ -304,7 +336,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                   <Box>
                     <Typography variant="h6" fontWeight={900}>Google Search Console Properties</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Select properties to import. Domain properties are shown but cannot be added yet.
+                      Select properties to import. URL-prefix and domain properties are both supported.
                     </Typography>
                   </Box>
                   <Stack direction="row" spacing={1}>
@@ -345,7 +377,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         ? "Already imported"
                         : site.supported
                         ? site.permissionLevel
-                        : "Domain property unsupported for now";
+                        : "Property format unsupported";
 
                       return (
                         <Box
@@ -401,7 +433,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                       );
                     })}
                     {selectableSites.length === 0 ? (
-                      <Alert severity="info">No importable new URL-prefix properties were found.</Alert>
+                      <Alert severity="info">No importable new properties were found.</Alert>
                     ) : null}
                   </Stack>
                 ) : null}
@@ -459,6 +491,11 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                       <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" alignItems="flex-start">
                         <Chip label={site.indexNowKey ? "IndexNow ready" : "No IndexNow key"} size="small" sx={{ borderRadius: "8px", fontWeight: 700 }} />
                         <Chip label={site.bingApiKey ? "Bing ready" : "No Bing API key"} size="small" sx={{ borderRadius: "8px", fontWeight: 700 }} />
+                        <Chip
+                          label={getIndexNowKeyLocationUrl(site) ? "IndexNow key URL set" : "No IndexNow key URL"}
+                          size="small"
+                          sx={{ borderRadius: "8px", fontWeight: 700 }}
+                        />
                         <Chip label={site.gscConnected ? "GSC connected" : "GSC not connected"} size="small" sx={{ borderRadius: "8px", fontWeight: 700 }} />
                       </Stack>
                     </Stack>
@@ -469,7 +506,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
 
                     <Divider sx={{ borderColor: "divider" }} />
 
-                    <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25}>
+                    <Stack direction="row" spacing={1.25} useFlexGap flexWrap="wrap">
                       <Box component="form" action={syncAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
                         <input type="hidden" name="websiteId" value={site.id} />
                         <Button type="submit" variant="contained" startIcon={<RefreshIcon />} disabled={syncPending} fullWidth sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}>
@@ -491,10 +528,18 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         href={`/sites/${site.id}/audit`}
                         variant="outlined"
                         startIcon={<AssessmentOutlinedIcon />}
-                        fullWidth
-                        sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
                       >
                         View Audit
+                      </Button>
+
+                      <Button
+                        variant="outlined"
+                        startIcon={<EditOutlinedIcon />}
+                        onClick={() => setEditingSiteId((prev) => (prev === site.id ? null : site.id))}
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                      >
+                        {editingSiteId === site.id ? "Close Edit" : "Edit Indexing"}
                       </Button>
 
                       <Box component="form" action={deleteAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
@@ -504,6 +549,63 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                         </Button>
                       </Box>
                     </Stack>
+
+                    <Collapse in={editingSiteId === site.id} unmountOnExit>
+                      <Box
+                        component="form"
+                        action={updateKeysAction}
+                        sx={{
+                          mt: 1,
+                          p: 1.75,
+                          border: "1px solid",
+                          borderColor: "divider",
+                          borderRadius: "12px",
+                          bgcolor: "background.default",
+                        }}
+                      >
+                        <input type="hidden" name="websiteId" value={site.id} />
+                        <Stack spacing={1.5}>
+                          <Typography variant="subtitle2" fontWeight={800}>
+                            Indexing Credentials
+                          </Typography>
+                          <Stack direction={{ xs: "column", md: "row" }} spacing={1.5}>
+                            <TextField
+                              name="bingApiKey"
+                              label="Bing API key"
+                              defaultValue={site.bingApiKey ?? ""}
+                              placeholder="Used with SubmitUrlbatch endpoint"
+                              fullWidth
+                            />
+                            <TextField
+                              name="indexNowKey"
+                              label="IndexNow key"
+                              defaultValue={site.indexNowKey ?? ""}
+                              placeholder="Key in your key .txt file"
+                              fullWidth
+                            />
+                          </Stack>
+                          <TextField
+                            name="indexNowKeyLocationUrl"
+                            label="IndexNow key text URL"
+                            type="url"
+                            defaultValue={getIndexNowKeyLocationUrl(site)}
+                            placeholder="https://example.com/your-key.txt"
+                            helperText="Example: https://yourdomain.com/your-indexnow-key.txt"
+                            fullWidth
+                          />
+                          <Box>
+                            <Button
+                              type="submit"
+                              variant="contained"
+                              disabled={updateKeysPending}
+                              sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                            >
+                              {updateKeysPending ? "Saving..." : "Save Credentials"}
+                            </Button>
+                          </Box>
+                        </Stack>
+                      </Box>
+                    </Collapse>
                   </Stack>
                 </CardContent>
               </Card>
