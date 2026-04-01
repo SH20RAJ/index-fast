@@ -624,6 +624,15 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                       </Button>
 
                       <Button
+                        component={Link}
+                        href={`/sites/url?siteId=${site.id}`}
+                        variant="outlined"
+                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                      >
+                        URLs & Submit
+                      </Button>
+
+                      <Button
                         variant="outlined"
                         startIcon={<EditOutlinedIcon />}
                         onClick={() => setEditingSiteId((prev) => (prev === site.id ? null : site.id))}

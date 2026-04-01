@@ -11,6 +11,7 @@ import LanguageIcon from "@mui/icons-material/Language";
 import HistoryIcon from "@mui/icons-material/History";
 import BuildIcon from "@mui/icons-material/Build";
 import SettingsIcon from "@mui/icons-material/Settings";
+import LinkIcon from "@mui/icons-material/Link";
 import { useColorMode } from "@/components/ThemeRegistry";
 
 const SIDEBAR_WIDTH = 280;
@@ -18,6 +19,7 @@ const SIDEBAR_WIDTH = 280;
 const navItems = [
   { label: "Command Center", icon: <DashboardIcon />, href: "/dashboard" },
   { label: "Websites", icon: <LanguageIcon />, href: "/sites" },
+  { label: "URLs", icon: <LinkIcon />, href: "/sites/url" },
   { label: "Submission Stream", icon: <HistoryIcon />, href: "/submissions" },
   { label: "SEO Toolbox", icon: <BuildIcon />, href: "/toolbox" },
   { label: "Billing & Settings", icon: <SettingsIcon />, href: "/settings" },

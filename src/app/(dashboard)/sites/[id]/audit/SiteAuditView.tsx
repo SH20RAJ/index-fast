@@ -1,12 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Box, Stack, Typography, CircularProgress } from "@mui/material";
+import React from "react";
+import { Box, Stack, Typography } from "@mui/material";
 import PageHeader from "@/components/dashboard/PageHeader";
 import AuditPanel from "@/components/dashboard/AuditPanel";
 import type { AuditIssue } from "@/components/dashboard/AuditPanel";
 
 interface SiteAuditViewProps {
   id: string;
+  initialSite: SiteAuditRecord | null;
 }
 
 interface SiteAuditRecord {
@@ -18,29 +19,16 @@ interface SiteAuditRecord {
   };
 }
 
-export default function SiteAuditView({ id }: SiteAuditViewProps) {
-  const [site, setSite] = useState<SiteAuditRecord | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/websites")
-      .then((res) => res.json())
-      .then((data: unknown) => {
-        const websites = Array.isArray(data) ? (data as SiteAuditRecord[]) : [];
-        const found = websites.find((s) => s.id === id) ?? null;
-        setSite(found);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [id]);
-
-  if (loading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "400px" }}>
-        <CircularProgress />
-      </Box>
-    );
+function getHostname(rawUrl: string) {
+  try {
+    return new URL(rawUrl).hostname;
+  } catch {
+    return rawUrl;
   }
+}
+
+export default function SiteAuditView({ id, initialSite }: SiteAuditViewProps) {
+  const site = initialSite;
 
   if (!site) {
     return (
@@ -55,7 +43,7 @@ export default function SiteAuditView({ id }: SiteAuditViewProps) {
       <Stack spacing={4}>
         <PageHeader
           title="AI SEO Audit"
-          description={`Analyzing SEO health for ${new URL(site.url).hostname}`}
+          description={`Analyzing SEO health for ${getHostname(site.url)}`}
         />
 
         <Box sx={{ maxWidth: "800px", mx: "auto", width: "100%" }}>
