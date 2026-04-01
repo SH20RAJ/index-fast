@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   Box,
@@ -119,7 +118,7 @@ export default async function ResourceCategoryPage({ params }: ResourceCategoryP
                         Open Resource
                       </Button>
                       <Button
-                        component={Link}
+                        component="a"
                         href="/tools"
                         variant="outlined"
                         sx={{ textTransform: "none", fontWeight: 800 }}
