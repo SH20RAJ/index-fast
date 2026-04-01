@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import csv
+import html
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -57,13 +58,44 @@ def normalize_url(raw: str) -> str:
 
 def valid_email(email: str) -> bool:
     lower = email.lower()
-    if any(junk in lower for junk in ["example.com", "wixpress", "cloudflare", "sentry", "telegram.org"]):
+    if any(
+        junk in lower
+        for junk in ["example.com", "wixpress", "cloudflare", "sentry", "telegram.org", "email.com", "@localhost"]
+    ):
+        return False
+    if lower in {"your@email.com", "you@example.com", "admin@example.com"}:
+        return False
+    if lower.startswith(("noreply@", "no-reply@", "donotreply@", "do-not-reply@")):
         return False
     if any(lower.endswith(ext) for ext in [".png", ".jpg", ".jpeg", ".svg", ".webp", ".gif", ".ico", ".css", ".js"]):
         return False
     if any(tok in lower for tok in ["@2x", "@3x", "logo", "picture", "img-"]):
         return False
     return True
+
+
+def html_unescape_deep(text: str) -> str:
+    result = text
+    for _ in range(3):
+        next_text = html.unescape(result)
+        if next_text == result:
+            break
+        result = next_text
+    return result
+
+
+def extract_emails(text: str) -> list[str]:
+    decoded = html_unescape_deep(text)
+    found = sorted(set(EMAIL_RE.findall(decoded)))
+    emails = []
+    seen = set()
+    for item in found:
+        email = item.strip().strip(".,;:()[]{}<>").lower()
+        if not valid_email(email) or email in seen:
+            continue
+        seen.add(email)
+        emails.append(email)
+    return emails
 
 
 def find_first_url(text: str) -> str:
@@ -138,14 +170,15 @@ def enrich_agency_contacts(rows: list[Row]) -> None:
         if not html or "text/html" not in ctype.lower():
             continue
 
-        emails = [e for e in sorted(set(EMAIL_RE.findall(html))) if valid_email(e)]
-        hrefs = re.findall(r"href=[\"']([^\"']+)[\"']", html, flags=re.I)
+        decoded_html = html_unescape_deep(html)
+        emails = extract_emails(decoded_html)
+        hrefs = re.findall(r"href=[\"']([^\"']+)[\"']", decoded_html, flags=re.I)
 
         contact_url = ""
         for href in hrefs[:1000]:
             href_low = href.lower()
             if href_low.startswith("mailto:"):
-                em = href.split(":", 1)[1].split("?", 1)[0].strip()
+                em = href.split(":", 1)[1].split("?", 1)[0].strip().lower()
                 if em and valid_email(em) and em not in emails:
                     emails.append(em)
 
@@ -161,7 +194,7 @@ def enrich_agency_contacts(rows: list[Row]) -> None:
 
         if not emails and contact_url:
             contact_html, _, _ = fetch_text(contact_url, timeout=12)
-            more = [e for e in sorted(set(EMAIL_RE.findall(contact_html))) if valid_email(e)]
+            more = extract_emails(contact_html)
             emails.extend(more)
 
         row.website = final_url

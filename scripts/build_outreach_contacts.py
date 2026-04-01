@@ -14,6 +14,7 @@ Output files:
 from __future__ import annotations
 
 import csv
+import html
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -22,18 +23,14 @@ from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
 SOURCES = [
-    "https://r.jina.ai/http://www.designrush.com/agency/search-engine-optimization",
-    "https://r.jina.ai/http://www.designrush.com/agency/search-engine-optimization?page=2",
-    "https://r.jina.ai/http://www.designrush.com/agency/search-engine-optimization?page=3",
-    "https://r.jina.ai/http://www.designrush.com/agency/search-engine-optimization?page=4",
-    "https://r.jina.ai/http://www.designrush.com/agency/search-engine-optimization?page=5",
-    "https://r.jina.ai/http://www.goodfirms.co/seo-agencies",
-    "https://r.jina.ai/http://www.goodfirms.co/seo-agencies?page=2",
-    "https://r.jina.ai/http://www.goodfirms.co/seo-agencies?page=3",
+    f"https://r.jina.ai/http://www.designrush.com/agency/search-engine-optimization?page={page}"
+    for page in range(1, 26)
 ]
 
 SKIP_HOSTS = {
+    "r.jina.ai",
     "designrush.com",
+    "media.designrush.com",
     "goodfirms.co",
     "facebook.com",
     "facebook.net",
@@ -50,6 +47,7 @@ SKIP_HOSTS = {
 }
 
 LINK_RE = re.compile(r"\((https?://[^)\s]+)\)")
+RAW_LINK_RE = re.compile(r"https?://[^)\s'\">]+")
 AGENCY_LINK_RE = re.compile(r"^### \[[^\]]+\]\((https?://[^)\s]+)\)", re.M)
 SEE_WEBSITE_RE = re.compile(r"\[See [^\]]+ Website\]\((https?://[^)\s]+)\)")
 EMAIL_RE = re.compile(r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", re.I)
@@ -94,6 +92,16 @@ def normalize_home(url: str) -> str:
     return f"{scheme}://{parsed.netloc}"
 
 
+def html_unescape_deep(text: str) -> str:
+    result = text
+    for _ in range(3):
+        next_text = html.unescape(result)
+        if next_text == result:
+            break
+        result = next_text
+    return result
+
+
 def should_keep(url: str) -> bool:
     host = clean_host(url)
     if not host:
@@ -105,6 +113,7 @@ def should_keep(url: str) -> bool:
     if any(
         host.endswith(blocked)
         for blocked in [
+            "r.jina.ai",
             "facebook.com",
             "facebook.net",
             "linkedin.com",
@@ -119,8 +128,27 @@ def should_keep(url: str) -> bool:
     ):
         return False
 
+    parsed = urlparse(url)
+    path_lower = parsed.path.lower()
+    blocked_extensions = (
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".webp",
+        ".gif",
+        ".svg",
+        ".ico",
+        ".pdf",
+        ".mp4",
+        ".zip",
+        ".xml",
+        ".json",
+    )
+    if any(path_lower.endswith(ext) for ext in blocked_extensions):
+        return False
+
     lowered = url.lower()
-    blocked_parts = ["privacy", "terms", "cookie", "login", "signup", "help"]
+    blocked_parts = ["privacy", "terms", "cookie", "login", "signup", "help", "careers", "jobs"]
     if any(part in lowered for part in blocked_parts):
         return False
 
@@ -138,8 +166,8 @@ def collect_candidate_sites() -> list[str]:
         candidate_urls = []
         candidate_urls.extend(AGENCY_LINK_RE.findall(text))
         candidate_urls.extend(SEE_WEBSITE_RE.findall(text))
-        if not candidate_urls:
-            candidate_urls.extend(LINK_RE.findall(text))
+        candidate_urls.extend(LINK_RE.findall(text))
+        candidate_urls.extend(RAW_LINK_RE.findall(text))
 
         for url in candidate_urls:
             if not should_keep(url):
@@ -150,12 +178,27 @@ def collect_candidate_sites() -> list[str]:
             frequencies[home] = frequencies.get(home, 0) + 1
 
     sorted_sites = sorted(frequencies.items(), key=lambda item: (-item[1], item[0]))
-    return [site for site, _ in sorted_sites[:240]]
+    return [site for site, _ in sorted_sites[:500]]
 
 
 def valid_email(email: str) -> bool:
     lower = email.lower()
-    if any(junk in lower for junk in ["example.com", "wixpress", "cloudflare", "sentry"]):
+    if any(
+        junk in lower
+        for junk in [
+            "example.com",
+            "wixpress",
+            "cloudflare",
+            "sentry",
+            "email.com",
+            "mailinator.com",
+            "@localhost",
+        ]
+    ):
+        return False
+    if lower in {"your@email.com", "you@example.com", "admin@example.com"}:
+        return False
+    if lower.startswith(("noreply@", "no-reply@", "donotreply@", "do-not-reply@")):
         return False
     if any(lower.endswith(ext) for ext in [".png", ".jpg", ".jpeg", ".svg", ".webp", ".gif", ".ico", ".css", ".js"]):
         return False
@@ -164,6 +207,22 @@ def valid_email(email: str) -> bool:
     if lower.endswith("@telegram.org"):
         return False
     return True
+
+
+def extract_emails(text: str) -> list[str]:
+    decoded = html_unescape_deep(text)
+    candidates = sorted(set(EMAIL_RE.findall(decoded)))
+    normalized = []
+    seen = set()
+    for candidate in candidates:
+        email = candidate.strip().strip(".,;:()[]{}<>").lower()
+        if not valid_email(email):
+            continue
+        if email in seen:
+            continue
+        seen.add(email)
+        normalized.append(email)
+    return normalized
 
 
 def extract_contact_data(site: str) -> Lead:
@@ -178,16 +237,16 @@ def extract_contact_data(site: str) -> Lead:
     contact_page = ""
 
     if html and "text/html" in content_type.lower():
-        emails = sorted(set(EMAIL_RE.findall(html)))
-        emails = [email for email in emails if valid_email(email)]
+        decoded_html = html_unescape_deep(html)
+        emails = extract_emails(decoded_html)
 
-        hrefs = re.findall(r"href=[\"']([^\"']+)[\"']", html, flags=re.I)
+        hrefs = re.findall(r"href=[\"']([^\"']+)[\"']", decoded_html, flags=re.I)
         for href in hrefs[:1200]:
             href_lower = href.lower()
 
             if href_lower.startswith("mailto:"):
-                mail = href.split(":", 1)[1].split("?", 1)[0].strip()
-                if mail and mail not in emails:
+                mail = href.split(":", 1)[1].split("?", 1)[0].strip().lower()
+                if mail and valid_email(mail) and mail not in emails:
                     emails.append(mail)
 
             if not contact_page:
@@ -200,8 +259,7 @@ def extract_contact_data(site: str) -> Lead:
         if not emails and contact_page:
             contact_html, _, _ = fetch_text(contact_page, timeout=12)
             if contact_html:
-                more = sorted(set(EMAIL_RE.findall(contact_html)))
-                more = [email for email in more if valid_email(email)]
+                more = extract_emails(contact_html)
                 emails.extend(more)
 
     return Lead(

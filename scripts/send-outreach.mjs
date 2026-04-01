@@ -212,7 +212,7 @@ function getInfluencerEmail(contact) {
       </p>
       
       <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 16px;">
-        I built <a href="https://indexfast.co?ref=influencer" style="color:#7C3AED;text-decoration:none;font-weight:600;">IndexFast</a>, a dashboard that automates SEO indexing via IndexNow — think of it as <em>"Google Search Console indexing on autopilot."</em>
+        I built <a href="https://indexfast.co?ref=influencer" style="color:#7C3AED;text-decoration:none;font-weight:600;">IndexFast</a> — a dashboard that helps you <em>get new pages crawled faster, ranked sooner, and seen in AI answers.</em>
       </p>
       
       <div style="background:#f5f3ff;border-radius:8px;padding:20px;margin:0 0 20px;border-left:4px solid #7C3AED;">
