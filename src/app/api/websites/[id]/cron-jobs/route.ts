@@ -3,14 +3,8 @@ import { stackServerApp } from "@/stack";
 import { db } from "@/lib/db";
 import { cronJobs, users, websites } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
-import { resolvePlanId, type PlanId } from "@/lib/billing/plans";
+import { PLAN_DEFINITIONS, resolvePlanId } from "@/lib/billing/plans";
 import { ensureUserRecord } from "@/lib/db/user-sync";
-
-const CRON_PLAN_LIMITS: Record<PlanId, { maxTotalJobs: number; allowHourly: boolean }> = {
-  free: { maxTotalJobs: 1, allowHourly: false },
-  pro: { maxTotalJobs: 25, allowHourly: true },
-  agency: { maxTotalJobs: 200, allowHourly: true },
-};
 
 export async function POST(
   request: Request,
@@ -32,7 +26,7 @@ export async function POST(
       .where(eq(users.id, user.id))
       .limit(1);
     const planId = resolvePlanId(userRow?.subscriptionStatus ?? null, userRow?.isPro ?? false);
-    const limits = CRON_PLAN_LIMITS[planId];
+    const limits = PLAN_DEFINITIONS[planId];
 
     // Verify website ownership
     const website = await db
@@ -64,10 +58,10 @@ export async function POST(
       .innerJoin(websites, eq(cronJobs.websiteId, websites.id))
       .where(eq(websites.userId, user.id));
 
-    if (existingUserJobs.length >= limits.maxTotalJobs) {
+    if (existingUserJobs.length >= limits.cronLimit) {
       const planLabel = planId.toUpperCase();
       return NextResponse.json(
-        { error: `${planLabel} plan allows up to ${limits.maxTotalJobs} auto-submit job${limits.maxTotalJobs === 1 ? "" : "s"}. Upgrade to create more.` },
+        { error: `${planLabel} plan allows up to ${limits.cronLimit} auto-submit job${limits.cronLimit === 1 ? "" : "s"}. Upgrade to create more.` },
         { status: 403 }
       );
     }
@@ -129,13 +123,13 @@ export async function GET(
       .where(eq(users.id, user.id))
       .limit(1);
     const planId = resolvePlanId(userRow?.subscriptionStatus ?? null, userRow?.isPro ?? false);
-    const limits = CRON_PLAN_LIMITS[planId];
+    const limits = PLAN_DEFINITIONS[planId];
 
     return NextResponse.json({
       jobs,
       limits: {
         planId,
-        maxTotalJobs: limits.maxTotalJobs,
+        maxTotalJobs: limits.cronLimit,
         allowHourly: limits.allowHourly,
       },
     });

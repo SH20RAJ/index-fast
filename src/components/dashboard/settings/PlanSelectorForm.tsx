@@ -47,7 +47,7 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
                 </Stack>
 
                 <Typography variant="body2" color="text.secondary">
-                  {plan.websiteLimit} sites · {plan.submissionLimitMonthly.toLocaleString()} submissions/month · {plan.includesPings ? "Includes ping network" : "No ping network"}
+                  {plan.websiteLimit} sites · {plan.submissionLimitMonthly.toLocaleString()} submissions/month · {plan.features.includes("Universal pinging") ? "Includes ping network" : "No ping network"}
                 </Typography>
 
                 <Box component="form" action={formAction}>

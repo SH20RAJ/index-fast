@@ -8,55 +8,72 @@ export interface PlanDefinition {
   websiteLimit: number;
   submissionLimitDaily: number;
   submissionLimitMonthly: number;
-  syncLimitMonthly: number;
-  includesPings: boolean;
-  prioritySupport: boolean;
-  includesTeamSeats: boolean;
+  cronLimit: number;
+  allowHourly: boolean;
+  features: string[];
   ctaLabel: string;
+  popular?: boolean;
 }
 
 export const PLAN_DEFINITIONS: Record<PlanId, PlanDefinition> = {
   free: {
     id: "free",
     name: "Free",
-    tagline: "For solo builders validating ideas",
+    tagline: "Perfect for secondary projects and validation.",
     priceMonthly: 0,
     websiteLimit: 2,
     submissionLimitDaily: 100,
-    submissionLimitMonthly: 1200,
-    syncLimitMonthly: 40,
-    includesPings: false,
-    prioritySupport: false,
-    includesTeamSeats: false,
-    ctaLabel: "Current Starter Plan",
+    submissionLimitMonthly: 5000, // User requested 5k
+    cronLimit: 1, // User requested 1 cron job total
+    allowHourly: false,
+    features: [
+      "5k URLs submissions",
+      "1 cron job total",
+      "Google Search Console",
+      "Basic stats",
+      "Free tools access",
+    ],
+    ctaLabel: "Get Started",
   },
   pro: {
     id: "pro",
     name: "Pro",
-    tagline: "For consistent publishing and growth",
-    priceMonthly: 29,
-    websiteLimit: 12,
-    submissionLimitDaily: 5000,
-    submissionLimitMonthly: 25000,
-    syncLimitMonthly: 300,
-    includesPings: true,
-    prioritySupport: false,
-    includesTeamSeats: false,
-    ctaLabel: "Upgrade to Pro",
+    tagline: "For growth teams scaling traffic and AI reach.",
+    priceMonthly: 49,
+    websiteLimit: 120, // Effectively "Unlimited" (or used as numeric check)
+    submissionLimitDaily: 50000,
+    submissionLimitMonthly: 1000000, // Unlimited URLs interpreted as high limit
+    cronLimit: 25,
+    allowHourly: true,
+    features: [
+      "Unlimited URLs",
+      "Auto sitemap sync",
+      "Lighthouse testing",
+      "AI visibility index GEO",
+      "Universal pinging",
+    ],
+    ctaLabel: "Start Free Trial",
+    popular: true,
   },
   agency: {
     id: "agency",
     name: "Agency",
-    tagline: "For teams running multi-site portfolios",
-    priceMonthly: 99,
-    websiteLimit: 50,
-    submissionLimitDaily: 30000,
-    submissionLimitMonthly: 150000,
-    syncLimitMonthly: 1200,
-    includesPings: true,
-    prioritySupport: true,
-    includesTeamSeats: true,
-    ctaLabel: "Scale with Agency",
+    tagline: "For teams running multi-site portfolios at scale.",
+    priceMonthly: 149,
+    websiteLimit: 1000,
+    submissionLimitDaily: 500000,
+    submissionLimitMonthly: 10000000,
+    cronLimit: 200,
+    allowHourly: true,
+    features: [
+      "AI Analysis of ALL Pages",
+      "Cursor prompt export",
+      "White-label reports",
+      "API access",
+      "Priority support",
+      "Multi-workspace",
+    ],
+    ctaLabel: "Contact Sales",
   },
 };
 

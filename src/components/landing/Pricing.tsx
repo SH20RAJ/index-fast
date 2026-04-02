@@ -16,32 +16,9 @@ import Grid from "@mui/material/Grid2";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useStackApp, useUser } from "@stackframe/stack";
 
-const plans = [
-  {
-    name: "Starter",
-    price: "$0",
-    desc: "Perfect for secondary projects and validation.",
-    features: ["50 URLs / month", "Google Search Console", "Basic stats"],
-    button: "Get Started",
-    popular: false
-  },
-  {
-    name: "Pro",
-    price: "$49",
-    desc: "For growth teams scaling traffic and AI reach.",
-    features: ["Unlimited URLs", "Auto sitemap sync", "AI visibility index", "Universal pinging"],
-    button: "Start Free Trial",
-    popular: true
-  },
-  {
-    name: "Agency",
-    price: "$149",
-    desc: "For multi-site indexing at scale.",
-    features: ["White-label reports", "API access", "Priority support", "Multi-workspace"],
-    button: "Contact Sales",
-    popular: false
-  }
-];
+import { PLAN_DEFINITIONS } from "@/lib/billing/plans";
+
+const plans = Object.values(PLAN_DEFINITIONS);
 
 export default function Pricing() {
   const stack = useStackApp();
@@ -159,12 +136,12 @@ export default function Pricing() {
                     </Typography>
                     <Stack direction="row" alignItems="baseline" spacing={0.5}>
                       <Typography variant="h3" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.04em" }}>
-                        {p.price}
+                        ${p.priceMonthly}
                       </Typography>
                       <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 600 }}>/mo</Typography>
                     </Stack>
                     <Typography variant="body2" sx={{ color: "text.secondary", mt: 1, lineHeight: 1.5 }}>
-                      {p.desc}
+                      {p.tagline}
                     </Typography>
                   </Stack>
 
@@ -200,7 +177,7 @@ export default function Pricing() {
                       }
                     }}
                   >
-                    {loadingPlan === p.name ? "Redirecting..." : p.button}
+                    {loadingPlan === p.name ? "Redirecting..." : p.ctaLabel}
                   </Button>
                 </CardContent>
               </Card>
