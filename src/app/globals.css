@@ -59,6 +59,28 @@ html {
   --radius: 0.75rem;
 }
 
+.dark {
+  --background: #020617;
+  --foreground: #E2E8F0;
+  --card: #0F172A;
+  --card-foreground: #F8FAFC;
+  --popover: #0F172A;
+  --popover-foreground: #F8FAFC;
+  --primary: #38BDF8;
+  --primary-foreground: #082F49;
+  --secondary: #1E293B;
+  --secondary-foreground: #E2E8F0;
+  --muted: #0F172A;
+  --muted-foreground: #94A3B8;
+  --accent: #1E293B;
+  --accent-foreground: #E2E8F0;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border: #334155;
+  --input: #1E293B;
+  --ring: #38BDF8;
+}
+
 body {
   font-family: var(--font-sans), sans-serif;
   -webkit-font-smoothing: antialiased;

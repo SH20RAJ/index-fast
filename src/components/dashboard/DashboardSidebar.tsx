@@ -12,16 +12,13 @@ import {
   LayoutDashboard,
   Settings,
   Wrench,
-  CheckCircle2,
   LogOut,
   Menu,
   Moon,
   Sun,
   ChevronDown,
-  Zap,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -101,29 +98,24 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   };
 
   return (
-    <div className="flex flex-col gap-0 h-full bg-gradient-to-b from-background via-background to-muted/20">
-      {/* Premium Header */}
-      <div className="px-4 pt-6 pb-4 space-y-4 border-b border-border/10 bg-gradient-to-b from-primary/5 to-transparent">
-        <div className="flex items-center gap-3">
-          <div className="relative flex h-12 w-12 items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/60 rounded-2xl opacity-90 blur-sm" />
-            <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/20">
-              <Bolt className="h-6 w-6 text-primary-foreground" />
-            </div>
+    <div className="flex h-full flex-col bg-background">
+      <div className="border-b border-border px-4 py-4">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Bolt className="h-4.5 w-4.5" />
           </div>
-          <div className="flex flex-col gap-0.5">
-            <span className="text-base font-black tracking-tight leading-tight">IndexFast</span>
-            <span className="text-[10px] font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent tracking-widest uppercase">Premium ✨</span>
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold leading-none">IndexFast</span>
+            <span className="text-[11px] text-muted-foreground">Dashboard</span>
           </div>
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="flex-1 overflow-y-auto px-3 py-6 space-y-8">
-        <nav className="space-y-8">
+      <div className="flex-1 overflow-y-auto px-3 py-5">
+        <nav className="space-y-6">
           {navSections.map((section) => (
-            <div key={section.label} className="space-y-3">
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 px-3">
+            <div key={section.label} className="space-y-2">
+              <p className="px-3 text-[11px] font-medium uppercase tracking-wide text-muted-foreground/70">
                 {section.label}
               </p>
               <div className="space-y-1">
@@ -139,61 +131,47 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                           href={item.href || "#"}
                           onClick={handleNavClick}
                           className={cn(
-                            "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 relative group",
+                            "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors",
                             active
-                              ? "bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/30"
-                              : "text-muted-foreground hover:text-foreground"
+                              ? "bg-primary text-primary-foreground"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
                           )}
                         >
-                          {active && (
-                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-primary-foreground to-primary-foreground/60 rounded-r-full" />
-                          )}
-                          <item.icon className={cn(
-                            "w-4 h-4 transition-all duration-300",
-                            active ? "scale-110" : "group-hover:scale-110"
-                          )} />
+                          <item.icon className="h-4 w-4" />
                           <span className="flex-1">{item.label}</span>
-                          {active && <Zap className="w-3 h-3 text-primary-foreground animate-pulse" />}
                         </Link>
                       ) : (
                         <>
                           <button
                             onClick={() => setOpenSubmenu(submenuOpen ? null : item.label)}
                             className={cn(
-                              "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 text-left relative group",
+                              "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
                               active
-                                ? "bg-gradient-to-r from-primary/15 to-primary/5 text-primary"
-                                : "text-muted-foreground hover:text-foreground"
+                                ? "bg-muted text-foreground"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
                             )}
                           >
-                            <item.icon className={cn(
-                              "w-4 h-4 transition-all duration-300",
-                              active ? "text-primary" : ""
-                            )} />
+                            <item.icon className="h-4 w-4" />
                             <span className="flex-1">{item.label}</span>
                             <ChevronDown className={cn(
-                              "w-4 h-4 transition-transform duration-300",
+                              "h-4 w-4 transition-transform",
                               submenuOpen && "rotate-180"
                             )} />
                           </button>
                           {submenuOpen && item.children && (
-                            <div className="mt-2 ml-4 space-y-2 border-l-2 border-primary/30 pl-4 pb-2">
+                            <div className="ml-4 space-y-1 border-l border-border pl-3 py-1">
                               {item.children.map((child) => (
                                 <Link
                                   key={child.href}
                                   href={child.href}
                                   onClick={handleNavClick}
                                   className={cn(
-                                    "flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200",
+                                    "block rounded-md px-2.5 py-1.5 text-xs transition-colors",
                                     pathname === child.href
-                                      ? "text-primary bg-gradient-to-r from-primary/20 to-transparent font-bold"
-                                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                      ? "bg-muted text-foreground"
+                                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
                                   )}
                                 >
-                                  <div className={cn(
-                                    "w-1.5 h-1.5 rounded-full transition-all",
-                                    pathname === child.href ? "bg-primary w-2" : "bg-muted-foreground/30"
-                                  )} />
                                   {child.label}
                                 </Link>
                               ))}
@@ -210,56 +188,55 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         </nav>
       </div>
 
-      {/* Premium User Section */}
-      <div className="border-t border-border/10 bg-gradient-to-t from-muted/40 to-transparent p-4 space-y-4">
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-primary/5 to-transparent border border-primary/10">
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-primary/10 rounded-xl blur" />
-            <Avatar className="relative h-12 w-12 border-2 border-primary/30 shadow-lg shadow-primary/20">
-              <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/40 text-primary font-black">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-          </div>
+      <div className="border-t border-border p-4 space-y-3">
+        <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-3">
+          <Avatar className="h-10 w-10 border border-border">
+            <AvatarFallback className="bg-muted text-foreground text-xs font-semibold">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-bold leading-tight">{displayName}</p>
-            <p className="truncate text-[9px] font-medium text-muted-foreground">{primaryEmail}</p>
+            <p className="truncate text-sm font-medium leading-tight">{displayName}</p>
+            <p className="truncate text-[11px] text-muted-foreground">{primaryEmail}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-2">
           <Button
+            variant="outline"
             size="sm"
-            className="h-10 rounded-xl gap-1.5 text-[11px] font-bold bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300"
+            className="h-9 rounded-md px-2 text-[11px]"
             asChild
           >
             <Link href="/settings">
-              <Settings className="h-4 w-4" />
+              <Settings className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Settings</span>
             </Link>
           </Button>
           <Button
+            variant="outline"
             size="sm"
-            className="h-10 rounded-xl gap-1.5 text-[11px] font-bold bg-muted/50 hover:bg-muted text-foreground transition-all duration-300"
+            className="h-9 rounded-md px-2 text-[11px]"
             onClick={toggleColorMode}
             title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
           >
             {mode === "dark" ? (
-              <Sun className="h-4 w-4" />
+              <Sun className="h-3.5 w-3.5" />
             ) : (
-              <Moon className="h-4 w-4" />
+              <Moon className="h-3.5 w-3.5" />
             )}
             <span className="hidden sm:inline">{mode === "dark" ? "Light" : "Dark"}</span>
           </Button>
           <Button
+            variant="outline"
             size="sm"
-            className="h-10 rounded-xl gap-1.5 text-[11px] font-bold text-destructive bg-destructive/10 hover:bg-destructive/20 transition-all duration-300"
+            className="h-9 rounded-md px-2 text-[11px] text-destructive hover:bg-destructive/10"
             onClick={() => {
               closeSheet?.();
               stack.signOut();
             }}
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Logout</span>
           </Button>
         </div>
