@@ -210,31 +210,6 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         </nav>
       </div>
 
-      {/* Premium Status Card */}
-      <div className="mx-3 mb-6 p-4 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-2xl border border-primary/20 shadow-xl shadow-primary/10 overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full blur-2xl -mr-10 -mt-10" />
-        <div className="relative space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Account Status</p>
-            <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-[9px] font-bold">Premium</Badge>
-          </div>
-          <h4 className="text-sm font-black tracking-tight">Pro Plan Active</h4>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[9px] text-muted-foreground font-medium">Usage this month</span>
-              <span className="text-[9px] font-bold text-primary">75%</span>
-            </div>
-            <div className="h-2 w-full bg-primary/10 rounded-full overflow-hidden border border-primary/20">
-              <div className="h-full w-3/4 bg-gradient-to-r from-primary to-primary/60 rounded-full" />
-            </div>
-          </div>
-          <p className="text-[8px] font-bold text-muted-foreground flex items-center gap-1.5 mt-2">
-            <CheckCircle2 className="h-3 w-3 text-emerald-500 flex-shrink-0" /> 
-            <span>All engines monitored & running</span>
-          </p>
-        </div>
-      </div>
-
       {/* Premium User Section */}
       <div className="border-t border-border/10 bg-gradient-to-t from-muted/40 to-transparent p-4 space-y-4">
         <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-primary/5 to-transparent border border-primary/10">
@@ -316,7 +291,7 @@ export default function DashboardSidebar() {
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex w-72 flex-col border-r border-border/20 bg-background/50 backdrop-blur-sm">
+      <aside className="hidden md:sticky md:top-0 md:flex md:h-screen w-72 flex-col border-r border-border/20 bg-background/50 backdrop-blur-sm">
         <SidebarContent />
       </aside>
     </>
