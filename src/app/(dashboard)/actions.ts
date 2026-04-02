@@ -55,18 +55,26 @@ export interface DashboardData {
 }
 
 export async function getAuthedUser() {
-  console.log("[Dashboard] Fetching authenticated user...");
+  console.log("[Dashboard] Calling Stack getUser()...");
   try {
     const user = await stackServerApp.getUser();
     if (!user) {
-      console.warn("[Dashboard] No user found in session.");
-      throw new Error("Please sign in to continue.");
+      console.warn("[Dashboard] Redirecting guest to sign-in.");
+      redirect("/sign-in");
     }
 
-    console.log(`[Dashboard] User found: ${user.id}. Syncing record...`);
-    await ensureUserRecord({ id: user.id, primaryEmail: user.primaryEmail });
+    console.log(`[Dashboard] User ID: ${user.id}. Email: ${user.primaryEmail || "NONE"}`);
+    
+    // Perform silent DB sync (supported on pooler port 6543)
+    try {
+      await ensureUserRecord({ id: user.id, primaryEmail: user.primaryEmail });
+    } catch (dbError) {
+      console.error("[Dashboard] Background user sync failed (Non-fatal):", dbError);
+    }
+    
     return user;
   } catch (error) {
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) throw error;
     console.error("[Dashboard] Auth error in getAuthedUser:", error);
     throw error;
   }
@@ -479,50 +487,25 @@ export async function deleteWebsiteAction(_: ActionState, formData: FormData): P
 
 export async function loadDashboardData(): Promise<DashboardData> {
   console.log("[Dashboard] Loading dashboard data...");
+  const user = await getAuthedUser();
+  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
   try {
-    const user = await getAuthedUser();
-    console.log(`[Dashboard] Context loaded for user: ${user.id}`);
-
-    const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-
-    console.log("[Dashboard] Fetching user row...");
-    const [userRow] = await db.select().from(users).where(eq(users.id, user.id));
+    console.log(`[Dashboard] Fetching user row for ${user.id}...`);
+    const [userRow] = await db.select().from(users).where(eq(users.id, user.id)).limit(1);
     const planId = resolvePlanId(userRow?.subscriptionStatus ?? null, userRow?.isPro ?? false);
     const plan = getPlanDefinition(planId);
-    console.log(`[Dashboard] Plan resolved: ${planId} (${plan.name})`);
 
-    console.log("[Dashboard] Counting websites...");
-    const websiteResult = await db
-      .select({ websitesCount: count() })
-      .from(websites)
-      .where(eq(websites.userId, user.id));
-    const websitesCount = websiteResult[0]?.websitesCount ?? 0;
-
-    console.log("[Dashboard] Counting monthly submissions...");
-    const submissionsResult = await db
-      .select({ submissionsThisMonth: count() })
-      .from(submissions)
-      .innerJoin(websites, eq(submissions.websiteId, websites.id))
-      .where(and(eq(websites.userId, user.id), gte(submissions.createdAt, monthStart)));
-    const submissionsThisMonth = submissionsResult[0]?.submissionsThisMonth ?? 0;
-
-    console.log("[Dashboard] Counting successful monthly submissions...");
-    const successfulResult = await db
-      .select({ successfulThisMonth: count() })
-      .from(submissions)
-      .innerJoin(websites, eq(submissions.websiteId, websites.id))
-      .where(
-        and(
-          eq(websites.userId, user.id),
-          gte(submissions.createdAt, monthStart),
-          eq(submissions.status, "success")
-        )
-      );
-    const successfulThisMonth = successfulResult[0]?.successfulThisMonth ?? 0;
-
-    console.log("[Dashboard] Fetching recent submissions...");
-    const recentSubmissions = await db
-      .select({
+    console.log("[Dashboard] Fetching counts and submissions...");
+    const [websiteResult, submissionsResult, successfulResult, recentSubmissions, topSitesRaw] = await Promise.all([
+      db.select({ count: count() }).from(websites).where(eq(websites.userId, user.id)),
+      db.select({ count: count() }).from(submissions)
+        .innerJoin(websites, eq(submissions.websiteId, websites.id))
+        .where(and(eq(websites.userId, user.id), gte(submissions.createdAt, monthStart))),
+      db.select({ count: count() }).from(submissions)
+        .innerJoin(websites, eq(submissions.websiteId, websites.id))
+        .where(and(eq(websites.userId, user.id), gte(submissions.createdAt, monthStart), eq(submissions.status, "success"))),
+      db.select({
         id: submissions.id,
         websiteId: websites.id,
         websiteUrl: websites.url,
@@ -530,34 +513,29 @@ export async function loadDashboardData(): Promise<DashboardData> {
         engine: submissions.engine,
         status: submissions.status,
         createdAt: submissions.createdAt,
-      })
-      .from(submissions)
-      .innerJoin(websites, eq(submissions.websiteId, websites.id))
-      .where(eq(websites.userId, user.id))
-      .orderBy(desc(submissions.createdAt))
-      .limit(8);
-
-    console.log("[Dashboard] Fetching top sites...");
-    const topSitesRaw = await db
-      .select({
+      }).from(submissions)
+        .innerJoin(websites, eq(submissions.websiteId, websites.id))
+        .where(eq(websites.userId, user.id))
+        .orderBy(desc(submissions.createdAt))
+        .limit(8),
+      db.select({
         id: websites.id,
         url: websites.url,
         lastSyncAt: websites.lastSyncAt,
         submissions: sql<number>`count(${submissions.id})`,
-      })
-      .from(websites)
-      .leftJoin(submissions, eq(submissions.websiteId, websites.id))
-      .where(eq(websites.userId, user.id))
-      .groupBy(websites.id)
-      .orderBy(desc(sql<number>`count(${submissions.id})`))
-      .limit(5);
+      }).from(websites)
+        .leftJoin(submissions, eq(submissions.websiteId, websites.id))
+        .where(eq(websites.userId, user.id))
+        .groupBy(websites.id)
+        .orderBy(desc(sql<number>`count(${submissions.id})`))
+        .limit(5)
+    ]);
 
-    const topSites = topSitesRaw.map((site) => ({
-      ...site,
-      submissions: Number(site.submissions || 0),
-    }));
+    const websitesCount = websiteResult[0]?.count ?? 0;
+    const submissionsThisMonth = submissionsResult[0]?.count ?? 0;
+    const successfulThisMonth = successfulResult[0]?.count ?? 0;
+    const topSites = topSitesRaw.map((site) => ({ ...site, submissions: Number(site.submissions || 0) }));
 
-    console.log("[Dashboard] Data Load Complete.");
     return {
       userId: user.id,
       email: userRow?.email ?? user.primaryEmail ?? `${user.id}@indexfast.local`,
@@ -576,11 +554,26 @@ export async function loadDashboardData(): Promise<DashboardData> {
       },
     };
   } catch (error) {
-    console.error("[Dashboard] Critical error in loadDashboardData:", error);
-    if (error instanceof Error && error.message.includes("DATABASE_URL")) {
-      throw new Error("Misconfigured database connection. Please check environment variables.");
-    }
-    throw new Error("Dashboard could not be loaded. Please refresh or try again.");
+    console.error("[Dashboard] Critical data load failure:", error);
+    // Return a safe fallback state instead of 500-ing
+    const fallbackPlan = getPlanDefinition("free");
+    return {
+      userId: user.id,
+      email: user.primaryEmail ?? "User",
+      planId: "free",
+      plan: fallbackPlan,
+      websitesCount: 0,
+      submissionsThisMonth: 0,
+      successfulThisMonth: 0,
+      recentSubmissions: [],
+      topSites: [],
+      usage: {
+        websitesUsed: 0,
+        websitesLimit: fallbackPlan.websiteLimit,
+        submissionsUsed: 0,
+        submissionsLimit: fallbackPlan.submissionLimitMonthly,
+      },
+    };
   }
 }
 
