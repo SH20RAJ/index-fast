@@ -1,14 +1,13 @@
 "use client";
 import {
   Box,
-  Chip,
   Container,
-  Grid,
   Typography,
   Stack,
   alpha,
   useTheme,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
 const steps = [
   {
@@ -35,65 +34,74 @@ export default function HowItWorks() {
   const theme = useTheme();
 
   return (
-    <Box id="how-it-works" sx={{ py: { xs: 10, md: 14 }, bgcolor: "background.paper" }}>
+    <Box id="how-it-works" sx={{ py: { xs: 10, md: 16 }, bgcolor: "background.paper" }}>
       <Container maxWidth="lg">
-        <Stack spacing={2} mb={8} textAlign="center">
-          <Stack direction="row" justifyContent="center" mb={1.5}>
-            <Chip label="Execution-first workflow" sx={{ fontWeight: 700, bgcolor: alpha(theme.palette.primary.main, 0.05) }} />
-          </Stack>
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", mb: 2 }}>
-            Stop publishing blind. Start indexing with intent.
+        <Stack spacing={2} mb={10} alignItems="flex-start" sx={{ maxWidth: 800 }}>
+          <Box
+            sx={{
+              px: 1.5,
+              py: 0.5,
+              borderRadius: "99px",
+              border: `1px solid ${theme.palette.divider}`,
+              bgcolor: alpha(theme.palette.text.primary, 0.02),
+            }}
+          >
+            <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary", letterSpacing: "0.02em" }}>
+              Operational Workflow
+            </Typography>
+          </Box>
+          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.03em" }}>
+            Stop publishing blind.
+            <br />
+            Start indexing with intent.
           </Typography>
-          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "720px", mx: "auto", lineHeight: 1.75 }}>
-            Most teams lose momentum after clicking publish. IndexFast gives you a daily operating system to push fresh pages, monitor outcomes, and compound discoverability.
+          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "640px", lineHeight: 1.6, fontSize: "1.1rem" }}>
+            IndexFast gives you a daily operating system to push fresh pages, monitor outcomes, and compound discoverability.
           </Typography>
         </Stack>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={4}>
           {steps.map((step) => (
             <Grid size={{ xs: 12, md: 4 }} key={step.title}>
               <Box
                 sx={{
-                  p: { xs: 3.5, md: 4.5 },
-                  bgcolor: alpha(theme.palette.background.default, theme.palette.mode === "dark" ? 0.72 : 0.84),
-                  borderRadius: "24px",
-                  border: `1px solid ${alpha(theme.palette.divider, 0.8)}`,
-                  boxShadow:
-                    theme.palette.mode === "dark"
-                      ? "0 20px 40px rgba(0, 0, 0, 0.26)"
-                      : "0 20px 40px rgba(15, 23, 42, 0.06)",
-                  position: "relative",
+                  p: { xs: 4, md: 5 },
+                  bgcolor: "background.default",
+                  borderRadius: "12px",
+                  border: `1px solid ${theme.palette.divider}`,
                   height: "100%",
-                  overflow: "hidden",
+                  position: "relative",
+                  transition: "border-color 0.2s",
+                  "&:hover": {
+                    borderColor: "primary.main",
+                  }
                 }}
               >
-                <Box
+                <Typography
+                  variant="h2"
                   sx={{
                     position: "absolute",
-                    top: 18,
-                    right: 18,
-                    width: 56,
-                    height: 56,
-                    borderRadius: "16px",
-                    border: `1px solid ${alpha(theme.palette.primary.main, 0.14)}`,
-                    display: "grid",
-                    placeItems: "center",
-                    color: "primary.main",
+                    top: 24,
+                    right: 40,
+                    fontSize: "4rem",
                     fontWeight: 900,
-                    bgcolor: alpha(theme.palette.primary.main, 0.05),
+                    opacity: 0.05,
+                    color: "text.primary",
+                    userSelect: "none",
+                    pointerEvents: "none",
                   }}
                 >
                   {step.num}
-                </Box>
+                </Typography>
 
-                <Stack spacing={1.8} sx={{ position: "relative", pr: 6 }}>
-                  <Typography variant="h4" sx={{ fontWeight: 900, color: "text.primary" }}>
-                    {step.title}
-                  </Typography>
-                  <Typography variant="caption" sx={{ fontWeight: 800, color: "primary.main", letterSpacing: "0.04em" }}>
+                <Stack spacing={2} sx={{ position: "relative" }}>
+                  <Typography variant="caption" sx={{ fontWeight: 800, color: "primary.main", letterSpacing: "0.05em", textTransform: "uppercase" }}>
                     {step.punch}
                   </Typography>
-                  <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.75 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 800, color: "text.primary", letterSpacing: "-0.02em" }}>
+                    {step.title}
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.6, fontSize: "1rem" }}>
                     {step.desc}
                   </Typography>
                 </Stack>

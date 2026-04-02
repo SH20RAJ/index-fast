@@ -1,5 +1,7 @@
 "use client";
-import { Box, Container, Grid, Typography, Stack, alpha } from "@mui/material";
+import React from "react";
+import { Box, Container, Typography, Stack, alpha, useTheme } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import SearchIcon from "@mui/icons-material/Search";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -9,47 +11,63 @@ const tools = [
     title: "Sitemap Health",
     desc: "Scan for 404s and broken links that waste crawl budget.",
     icon: <LanguageIcon />,
-    color: "#111827"
+    color: "#111111"
   },
   {
     title: "Key Verifier",
     desc: "Validate your IndexNow and Bing credentials instantly.",
     icon: <VerifiedUserIcon />,
-    color: "#111827"
+    color: "#111111"
   },
   {
     title: "AI Analysis",
     desc: "Preview how AI crawlers parse and interpret your pages.",
     icon: <SearchIcon />,
-    color: "#111827"
+    color: "#111111"
   }
 ];
 
 export default function FreeTools() {
+  const theme = useTheme();
+  
   return (
-    <Box id="free-tools" sx={{ py: { xs: 8, md: 12 }, bgcolor: "white" }}>
+    <Box id="free-tools" sx={{ py: { xs: 10, md: 16 }, bgcolor: "background.paper" }}>
       <Container maxWidth="lg">
-        <Stack spacing={2} mb={8} textAlign="center">
-          <Typography variant="h2" sx={{ fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>
+        <Stack spacing={2} mb={10} alignItems="center" textAlign="center">
+          <Box
+            sx={{
+              px: 1.5,
+              py: 0.5,
+              borderRadius: "99px",
+              border: `1px solid ${theme.palette.divider}`,
+              bgcolor: alpha(theme.palette.text.primary, 0.02),
+            }}
+          >
+            <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary", letterSpacing: "0.02em" }}>
+              Public Utilities
+            </Typography>
+          </Box>
+          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.03em" }}>
             Free diagnostic tools
           </Typography>
-          <Typography variant="body1" sx={{ color: "#6B7280", maxWidth: "600px", mx: "auto", fontSize: "1.1rem" }}>
-            Uncover indexing blockers immediately with our free SEO utilities.
+          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "600px", mx: "auto", fontSize: "1.1rem", lineHeight: 1.6 }}>
+            Uncover indexing blockers immediately with our focused SEO diagnostic utilities.
           </Typography>
         </Stack>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={4}>
           {tools.map((tool) => (
             <Grid size={{ xs: 12, md: 4 }} key={tool.title}>
               <Box
                 sx={{
-                  p: 4,
+                  p: { xs: 4, md: 5 },
                   height: "100%",
-                  bgcolor: "white",
+                  bgcolor: "background.default",
                   borderRadius: "12px",
-                  border: "1px solid #E5E7EB",
+                  border: `1px solid ${theme.palette.divider}`,
+                  transition: "all 0.2s ease",
                   "&:hover": {
-                    borderColor: "#111827",
+                    borderColor: "primary.main",
                   }
                 }}
               >
@@ -57,18 +75,37 @@ export default function FreeTools() {
                   width: 40, 
                   height: 40, 
                   borderRadius: "8px", 
-                  bgcolor: "#F3F4F6", 
-                  color: "#111827",
+                  border: `1px solid ${theme.palette.divider}`,
+                  color: "primary.main",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  mb: 2.5
+                  mb: 4
                 }}>
-                  {tool.icon}
+                  {React.cloneElement(tool.icon as React.ReactElement<any>, { sx: { fontSize: 20 } })}
                 </Box>
-                <Typography variant="h6" fontWeight={700} sx={{ mb: 1, color: "#111827" }}>{tool.title}</Typography>
-                <Typography variant="body2" sx={{ color: "#6B7280", mb: 3, lineHeight: 1.6 }}>{tool.desc}</Typography>
-                <Typography variant="button" sx={{ color: "#111827", fontWeight: 600, display: "flex", alignItems: "center", gap: 1, textTransform: "none" }}>
+                <Typography variant="h6" sx={{ fontWeight: 800, mb: 1.5, color: "text.primary", letterSpacing: "-0.01em" }}>
+                  {tool.title}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "text.secondary", mb: 4, lineHeight: 1.6 }}>
+                  {tool.desc}
+                </Typography>
+                <Typography 
+                  variant="button" 
+                  sx={{ 
+                    color: "text.primary", 
+                    fontWeight: 800, 
+                    display: "flex", 
+                    alignItems: "center", 
+                    gap: 1, 
+                    textTransform: "none",
+                    fontSize: "0.85rem",
+                    cursor: "pointer",
+                    "&:hover": {
+                      opacity: 0.7
+                    }
+                  }}
+                >
                   Run audit <span>→</span>
                 </Typography>
               </Box>

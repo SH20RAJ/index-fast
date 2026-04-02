@@ -19,61 +19,57 @@ const feedItems = [
 ];
 
 const trustMetrics = [
-  { value: "4-24h", label: "Typical discovery window" },
-  { value: "99.95%", label: "Webhook delivery" },
-  { value: "10,000+", label: "URLs processed per run" },
+  { value: "4-24h", label: "Discovery window" },
+  { value: "99.95%", label: "Uptime" },
+  { value: "10k+", label: "URLs/run" },
 ];
 
 export default function Hero() {
   const theme = useTheme();
   const stack = useStackApp();
+  const isDark = theme.palette.mode === "dark";
 
   return (
     <Box
       id="home"
       sx={{
         position: "relative",
-        overflow: "hidden",
-        pt: { xs: 8, md: 12 },
-        pb: { xs: 10, md: 14 },
-        "@keyframes pulseRing": {
-          "0%": { transform: "scale(0.9)", opacity: 0.5 },
-          "100%": { transform: "scale(1.2)", opacity: 0 },
-        },
+        pt: { xs: 8, md: 16 },
+        pb: { xs: 10, md: 20 },
+        bgcolor: "background.default",
       }}
     >
-      <Box
-        sx={{
-          position: "absolute",
-          inset: 0,
-          background:
-            theme.palette.mode === "dark"
-              ? "radial-gradient(circle at 10% 20%, rgba(37,99,235,0.16), transparent 42%), radial-gradient(circle at 84% 18%, rgba(15,23,42,0.24), transparent 38%), linear-gradient(135deg, rgba(5,8,22,0.98), rgba(11,16,32,0.98))"
-              : "radial-gradient(circle at 12% 24%, rgba(37,99,235,0.08), transparent 44%), radial-gradient(circle at 80% 20%, rgba(15,23,42,0.05), transparent 36%), linear-gradient(135deg, #FFFFFF 10%, #F8FAFC 100%)",
-          zIndex: -3,
-        }}
-      />
-
       <Container maxWidth="lg">
-        <Stack direction={{ xs: "column", lg: "row" }} spacing={{ xs: 5, lg: 8 }} alignItems="center">
-          <Stack spacing={3.5} sx={{ maxWidth: 700, flex: 1 }}>
-            <Typography variant="overline" sx={{ letterSpacing: "0.18em", color: "text.secondary", fontWeight: 800 }}>
-              Indexing infrastructure for teams that ship daily
-            </Typography>
+        <Stack direction={{ xs: "column", lg: "row" }} spacing={{ xs: 8, lg: 12 }} alignItems="center">
+          <Stack spacing={4} sx={{ flex: 1, textAlign: { xs: "center", lg: "left" }, alignItems: { xs: "center", lg: "flex-start" } }}>
+            <Box
+              sx={{
+                px: 1.5,
+                py: 0.5,
+                borderRadius: "99px",
+                border: `1px solid ${theme.palette.divider}`,
+                bgcolor: alpha(theme.palette.text.primary, 0.02),
+                width: "fit-content",
+              }}
+            >
+              <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary", letterSpacing: "0.02em" }}>
+                Indexing infrastructure for modern teams
+              </Typography>
+            </Box>
 
             <Typography
               variant="h1"
               sx={{
-                lineHeight: 1.03,
-                fontSize: { xs: "2.7rem", md: "4.5rem" },
+                lineHeight: 1,
+                fontSize: { xs: "3rem", md: "5.5rem" },
                 color: "text.primary",
-                maxWidth: 820,
+                fontWeight: 900,
+                letterSpacing: "-0.04em",
               }}
             >
-              Get new pages
-              <Box component="span" sx={{ color: "secondary.main" }}> crawled faster, </Box>
-              ranked sooner, and seen in
-              <Box component="span" sx={{ color: "primary.main" }}> AI answers </Box>
+              Index your site
+              <br />
+              <Box component="span" sx={{ color: "text.secondary" }}>at light speed.</Box>
             </Typography>
 
             <Typography
@@ -82,25 +78,28 @@ export default function Hero() {
                 color: "text.secondary",
                 fontWeight: 500,
                 lineHeight: 1.6,
-                maxWidth: 620,
+                maxWidth: 580,
+                fontSize: "1.125rem",
               }}
             >
-              IndexFast turns indexing into a reliable pipeline: automatic sitemap sync, Bing and IndexNow submissions, endpoint health checks, and a live status feed your team can trust.
+              Stop waiting weeks for search engines. IndexFast automates your sitemap sync, Bing submissions, and IndexNow pings in one unified pipeline.
             </Typography>
 
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ width: { xs: "100%", sm: "auto" } }}>
               <Button
                 variant="contained"
                 size="large"
                 onClick={() => stack.redirectToSignUp()}
-                endIcon={<KeyboardArrowRightRoundedIcon />}
                 sx={{
                   px: 4,
-                  py: 1.8,
+                  py: 1.5,
                   bgcolor: "primary.main",
+                  color: isDark ? "black" : "white",
+                  fontSize: "1rem",
+                  fontWeight: 800,
                 }}
               >
-                Start free and submit URLs
+                Get Started Free
               </Button>
               <Button
                 variant="outlined"
@@ -109,38 +108,28 @@ export default function Hero() {
                 size="large"
                 sx={{
                   px: 4,
-                  py: 1.8,
-                  borderWidth: 1.5,
-                  borderColor: alpha(theme.palette.primary.main, 0.38),
+                  py: 1.5,
+                  borderColor: "divider",
                   color: "text.primary",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  "&:hover": {
+                    borderColor: "text.primary",
+                    bgcolor: alpha(theme.palette.text.primary, 0.04),
+                  },
                 }}
               >
-                Sign in
+                Sign In
               </Button>
             </Stack>
 
-            <Button
-              component="a"
-              href="#pricing"
-              variant="text"
-              sx={{
-                width: "fit-content",
-                color: "text.secondary",
-                fontWeight: 700,
-                px: 0.5,
-                "&:hover": { color: "text.primary", bgcolor: "transparent" },
-              }}
-            >
-              See plans
-            </Button>
-
-            <Stack direction="row" spacing={3} flexWrap="wrap" useFlexGap>
+            <Stack direction="row" spacing={4} sx={{ pt: 2 }}>
               {trustMetrics.map((stat) => (
                 <Box key={stat.label}>
-                  <Typography variant="h5" fontWeight={900} color="text.primary">
+                  <Typography variant="h6" fontWeight={800} color="text.primary" sx={{ lineHeight: 1 }}>
                     {stat.value}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" fontWeight={600}>
                     {stat.label}
                   </Typography>
                 </Box>
@@ -152,73 +141,106 @@ export default function Hero() {
             sx={{
               flex: 1,
               width: "100%",
-              maxWidth: 500,
-              p: { xs: 2.5, md: 3.5 },
-              borderRadius: "26px",
-              border: `1px solid ${alpha(theme.palette.primary.main, 0.12)}`,
-              bgcolor: alpha(theme.palette.background.paper, theme.palette.mode === "dark" ? 0.9 : 0.86),
-              backdropFilter: "blur(10px)",
-              boxShadow:
-                theme.palette.mode === "dark"
-                  ? "0 30px 60px rgba(0,0,0,0.48)"
-                  : "0 30px 60px rgba(15,23,42,0.08)",
+              maxWidth: 540,
+              position: "relative",
             }}
           >
-            <Stack spacing={2.2}>
-              <Stack direction="row" alignItems="center" justifyContent="space-between">
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <Typography variant="subtitle2" sx={{ letterSpacing: "0.14em", fontWeight: 800, color: "text.secondary" }}>
-                    Live pipeline
-                  </Typography>
-                </Stack>
-                <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 700 }}>
-                  Sync active
-                </Typography>
-              </Stack>
-
-              <Stack spacing={1.2}>
-                {feedItems.map((item) => (
-                  <Stack
-                    key={item.url}
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{
-                      px: 1.5,
-                      py: 1,
-                      borderRadius: "14px",
-                      bgcolor: alpha(theme.palette.primary.main, theme.palette.mode === "dark" ? 0.08 : 0.04),
-                      border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-                    }}
-                  >
-                    <Box>
-                      <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 700 }}>
-                        {item.source}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: "text.primary", fontWeight: 700 }}>
-                        {item.url}
-                      </Typography>
-                    </Box>
-                    <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 700 }}>
-                      {item.status}
+            {/* Minimal Dashboard Preview */}
+            <Box
+              sx={{
+                p: { xs: 2.5, md: 4 },
+                borderRadius: "16px",
+                border: `1px solid ${theme.palette.divider}`,
+                bgcolor: "background.paper",
+                boxShadow: isDark ? "0 20px 40px rgba(0,0,0,0.4)" : "0 20px 40px rgba(0,0,0,0.03)",
+              }}
+            >
+              <Stack spacing={3}>
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                  <Stack direction="row" spacing={1.5} alignItems="center">
+                    <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: "success.main" }} />
+                    <Typography variant="subtitle2" sx={{ fontWeight: 800, color: "text.primary", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                      Pipeline Status
                     </Typography>
                   </Stack>
-                ))}
-              </Stack>
+                  <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 700 }}>
+                    Live
+                  </Typography>
+                </Stack>
 
-              <Box
-                sx={{
-                  p: 2,
-                  borderRadius: "16px",
-                  bgcolor: alpha(theme.palette.background.default, 0.8),
-                  border: `1px dashed ${alpha(theme.palette.primary.main, 0.14)}`,
-                }}
-              >
-                <Typography variant="body2" color="text.secondary">
-                  Last run: 342 URLs across 6 properties, 97.8% accepted by API validators, median response 2.1s.
-                </Typography>
-              </Box>
-            </Stack>
+                <Stack spacing={1.5}>
+                  {feedItems.map((item) => (
+                    <Stack
+                      key={item.url}
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      sx={{
+                        p: 2,
+                        borderRadius: "12px",
+                        border: `1px solid ${theme.palette.divider}`,
+                        bgcolor: alpha(theme.palette.text.primary, 0.01),
+                        transition: "all 0.2s",
+                        "&:hover": {
+                          borderColor: "primary.main",
+                          bgcolor: alpha(theme.palette.primary.main, 0.02),
+                        }
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="caption" sx={{ color: "text.secondary", display: "block", mb: 0.2, fontWeight: 700 }}>
+                          {item.source}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: "text.primary", fontWeight: 700, fontFamily: "monospace" }}>
+                          {item.url}
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          px: 1.25,
+                          py: 0.5,
+                          borderRadius: "6px",
+                          bgcolor: item.status === "Accepted" ? alpha(theme.palette.success.main, 0.1) : alpha(theme.palette.primary.main, 0.05),
+                          color: item.status === "Accepted" ? "success.main" : "primary.main",
+                        }}
+                      >
+                        <Typography variant="caption" sx={{ fontWeight: 800 }}>
+                          {item.status}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  ))}
+                </Stack>
+
+                <Box
+                  sx={{
+                    p: 2,
+                    borderRadius: "12px",
+                    bgcolor: alpha(theme.palette.text.primary, 0.03),
+                    border: `1px dashed ${theme.palette.divider}`,
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.8rem", lineHeight: 1.5 }}>
+                    <strong>Latest Scan:</strong> 1,204 URLs synced from XML sitemaps. 98.2% validation rate. Median submission latency: 840ms.
+                  </Typography>
+                </Box>
+              </Stack>
+            </Box>
+
+            {/* Decorative Element */}
+            <Box
+              sx={{
+                position: "absolute",
+                top: -20,
+                right: -20,
+                width: 100,
+                height: 100,
+                bgcolor: "primary.main",
+                filter: "blur(80px)",
+                opacity: isDark ? 0.2 : 0.1,
+                zIndex: -1,
+              }}
+            />
           </Box>
         </Stack>
       </Container>

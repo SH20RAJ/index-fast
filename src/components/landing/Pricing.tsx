@@ -4,14 +4,15 @@ import {
   Alert,
   Box,
   Container,
-  Grid,
   Typography,
   Card,
   CardContent,
   Button,
   Stack,
   alpha,
+  useTheme,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useStackApp, useUser } from "@stackframe/stack";
 
@@ -37,7 +38,7 @@ const plans = [
     price: "$149",
     desc: "For multi-site indexing at scale.",
     features: ["White-label reports", "API access", "Priority support", "Multi-workspace"],
-    button: "Book Demo",
+    button: "Contact Sales",
     popular: false
   }
 ];
@@ -45,8 +46,10 @@ const plans = [
 export default function Pricing() {
   const stack = useStackApp();
   const user = useUser();
+  const theme = useTheme();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const isDark = theme.palette.mode === "dark";
 
   async function startCheckout(planName: string) {
     if (planName === "Starter") {
@@ -88,18 +91,31 @@ export default function Pricing() {
   }
 
   return (
-    <Box id="pricing" sx={{ py: { xs: 8, md: 12 }, bgcolor: "white" }}>
+    <Box id="pricing" sx={{ py: { xs: 10, md: 16 }, bgcolor: "background.default" }}>
       <Container maxWidth="lg">
-        <Stack spacing={2} mb={8} textAlign="center">
-          <Typography variant="h2" sx={{ fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>
-            Simple pricing
+        <Stack spacing={2} mb={10} alignItems="center" textAlign="center">
+          <Box
+            sx={{
+              px: 1.5,
+              py: 0.5,
+              borderRadius: "99px",
+              border: `1px solid ${theme.palette.divider}`,
+              bgcolor: alpha(theme.palette.text.primary, 0.02),
+            }}
+          >
+            <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary", letterSpacing: "0.02em" }}>
+              Pricing Plans
+            </Typography>
+          </Box>
+          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.03em" }}>
+            Simple, predictable pricing
           </Typography>
-          <Typography variant="body1" sx={{ color: "#6B7280", maxWidth: "600px", mx: "auto", fontSize: "1.1rem" }}>
-            Choose the plan that fits your execution volume. No hidden fees or complex tiers.
+          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "600px", mx: "auto", fontSize: "1.1rem", lineHeight: 1.6 }}>
+            Choose the level of execution your properties need. No hidden fees or complex seat-based tiers.
           </Typography>
         </Stack>
 
-        <Grid container spacing={3} alignItems="stretch">
+        <Grid container spacing={4} alignItems="stretch">
           {plans.map((p) => (
             <Grid size={{ xs: 12, md: 4 }} key={p.name}>
               <Card
@@ -107,46 +123,58 @@ export default function Pricing() {
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
-                  bgcolor: "white",
+                  bgcolor: "background.paper",
                   borderRadius: "12px",
-                  border: p.popular ? "2px solid #111827" : "1px solid #E5E7EB",
-                  boxShadow: "none",
+                  border: `1px solid ${p.popular ? "primary.main" : "divider"}`,
+                  boxShadow: p.popular ? (isDark ? "0 20px 40px rgba(0,0,0,0.4)" : "0 20px 40px rgba(0,0,0,0.03)") : "none",
                   position: "relative",
-                  p: 1,
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    borderColor: "primary.main",
+                  }
                 }}
               >
                 {p.popular && (
                   <Box sx={{
                     position: "absolute",
-                    top: 0,
+                    top: 16,
                     right: 24,
-                    transform: "translateY(-50%)",
-                    bgcolor: "#111827",
-                    color: "white",
+                    bgcolor: "primary.main",
+                    color: isDark ? "black" : "white",
                     px: 1.5,
-                    py: 0.5,
-                    borderRadius: "999px",
-                    fontSize: "0.75rem",
-                    fontWeight: 700,
+                    py: 0.4,
+                    borderRadius: "99px",
+                    fontSize: "0.7rem",
+                    fontWeight: 900,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
                   }}>
                     Popular
                   </Box>
                 )}
-                <CardContent sx={{ p: 4, flexGrow: 1, display: "flex", flexDirection: "column" }}>
-                  <Stack spacing={1} mb={4}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: "#111827" }}>{p.name}</Typography>
+                <CardContent sx={{ p: { xs: 4, md: 5 }, flexGrow: 1, display: "flex", flexDirection: "column" }}>
+                  <Stack spacing={0.5} mb={4}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 800, color: p.popular ? "primary.main" : "text.secondary", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      {p.name}
+                    </Typography>
                     <Stack direction="row" alignItems="baseline" spacing={0.5}>
-                      <Typography variant="h3" sx={{ fontWeight: 800, color: "#111827" }}>{p.price}</Typography>
-                      <Typography variant="body2" color="text.secondary">/mo</Typography>
+                      <Typography variant="h3" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.04em" }}>
+                        {p.price}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 600 }}>/mo</Typography>
                     </Stack>
-                    <Typography variant="body2" sx={{ color: "#6B7280" }}>{p.desc}</Typography>
+                    <Typography variant="body2" sx={{ color: "text.secondary", mt: 1, lineHeight: 1.5 }}>
+                      {p.desc}
+                    </Typography>
                   </Stack>
 
-                  <Stack spacing={1.5} sx={{ mb: 4, flexGrow: 1 }}>
+                  <Stack spacing={2} sx={{ mb: 6, flexGrow: 1 }}>
                     {p.features.map((f, fidx) => (
                       <Stack key={fidx} direction="row" spacing={1.5} alignItems="center">
-                        <CheckCircleIcon sx={{ fontSize: 16, color: "#111827" }} />
-                        <Typography variant="body2" sx={{ color: "#374151" }}>{f}</Typography>
+                        <CheckCircleIcon sx={{ fontSize: 16, color: p.popular ? "primary.main" : "text.secondary", opacity: 0.8 }} />
+                        <Typography variant="body2" sx={{ color: "text.primary", fontWeight: 500 }}>
+                          {f}
+                        </Typography>
                       </Stack>
                     ))}
                   </Stack>
@@ -159,14 +187,16 @@ export default function Pricing() {
                     disabled={loadingPlan === p.name}
                     sx={{
                       borderRadius: "8px",
-                      py: 1.25,
-                      fontWeight: 600,
-                      bgcolor: p.popular ? "#111827" : "transparent",
-                      color: p.popular ? "white" : "#111827",
-                      borderColor: "#111827",
+                      py: 1.5,
+                      fontWeight: 800,
+                      fontSize: "0.9rem",
+                      bgcolor: p.popular ? "primary.main" : "transparent",
+                      color: p.popular ? (isDark ? "black" : "white") : "text.primary",
+                      borderColor: "divider",
                       "&:hover": {
-                        bgcolor: p.popular ? "#1F2937" : alpha("#111827", 0.04),
-                        borderColor: "#111827",
+                        bgcolor: p.popular ? "primary.main" : alpha(theme.palette.text.primary, 0.04),
+                        borderColor: "primary.main",
+                        opacity: p.popular ? 0.9 : 1,
                       }
                     }}
                   >
@@ -179,9 +209,11 @@ export default function Pricing() {
         </Grid>
 
         {checkoutError ? (
-          <Alert severity="error" sx={{ mt: 3, borderRadius: "8px" }}>
-            {checkoutError}
-          </Alert>
+          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+            <Alert severity="error" sx={{ borderRadius: "8px", maxWidth: 600, width: "100%" }}>
+              {checkoutError}
+            </Alert>
+          </Box>
         ) : null}
       </Container>
     </Box>

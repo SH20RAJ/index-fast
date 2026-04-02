@@ -4,67 +4,101 @@ import {
   Container,
   Typography,
   Stack,
-  alpha,
+  useTheme,
 } from "@mui/material";
 import Link from "next/link";
 import BoltIcon from "@mui/icons-material/Bolt";
 
 export default function Footer() {
+  const theme = useTheme();
+
   return (
-    <Box sx={{ bgcolor: "white", pt: 8, pb: 6, borderTop: "1px solid #E5E7EB" }}>
+    <Box sx={{ bgcolor: "background.default", pt: 10, pb: 8, borderTop: `1px solid ${theme.palette.divider}` }}>
       <Container maxWidth="lg">
         <Stack
           direction={{ xs: "column", md: "row" }}
           justifyContent="space-between"
-          alignItems={{ xs: "flex-start", md: "center" }}
-          spacing={4}
+          alignItems={{ xs: "flex-start", md: "flex-start" }}
+          spacing={6}
         >
-          <Stack spacing={2}>
-            <Stack direction="row" alignItems="center" spacing={1}>
+          <Stack spacing={3} sx={{ maxWidth: 400 }}>
+            <Stack direction="row" alignItems="center" spacing={1.5}>
               <Box
                 sx={{
-                  width: 24,
-                  height: 24,
-                  borderRadius: "4px",
-                  bgcolor: "#111827",
+                  width: 32,
+                  height: 32,
+                  borderRadius: "6px",
+                  bgcolor: "text.primary",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
-                <BoltIcon sx={{ color: "white", fontSize: 16 }} />
+                <BoltIcon sx={{ color: "background.default", fontSize: 20 }} />
               </Box>
-              <Typography variant="body1" fontWeight="700" color="#111827">
+              <Typography variant="h6" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.02em" }}>
                 IndexFast
               </Typography>
             </Stack>
-            <Typography variant="body2" sx={{ color: "#6B7280", maxWidth: 300 }}>
-              Industrial-grade indexing infrastructure for modern search visibility.
+            <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.6, fontSize: "1rem" }}>
+              The high-velocity URL submission system built for SEO operators and growth teams. Ship faster, rank earlier.
             </Typography>
           </Stack>
 
-          <Stack direction="row" spacing={3} sx={{ flexWrap: "wrap", rowGap: 1 }}>
-            <Link href="/" style={{ textDecoration: "none" }}>
-              <Typography variant="body2" sx={{ color: "#6B7280", "&:hover": { color: "#111827" } }}>Home</Typography>
-            </Link>
-            <Link href="/blog" style={{ textDecoration: "none" }}>
-              <Typography variant="body2" sx={{ color: "#6B7280", "&:hover": { color: "#111827" } }}>Blog</Typography>
-            </Link>
-            <Link href="/pricing" style={{ textDecoration: "none" }}>
-              <Typography variant="body2" sx={{ color: "#6B7280", "&:hover": { color: "#111827" } }}>Pricing</Typography>
-            </Link>
-            <Link href="/privacy" style={{ textDecoration: "none" }}>
-              <Typography variant="body2" sx={{ color: "#6B7280", "&:hover": { color: "#111827" } }}>Privacy</Typography>
-            </Link>
-            <Link href="/contact" style={{ textDecoration: "none" }}>
-              <Typography variant="body2" sx={{ color: "#6B7280", "&:hover": { color: "#111827" } }}>Contact</Typography>
-            </Link>
+          <Stack direction="row" spacing={{ xs: 3, md: 6 }} sx={{ flexWrap: "wrap", rowGap: 4 }}>
+            <Stack spacing={2}>
+              <Typography variant="caption" sx={{ fontWeight: 900, color: "text.primary", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                Platform
+              </Typography>
+              <Stack spacing={1.5}>
+                <Link href="/" style={{ textDecoration: "none" }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500, "&:hover": { color: "primary.main" } }}>Home</Typography>
+                </Link>
+                <Link href="/pricing" style={{ textDecoration: "none" }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500, "&:hover": { color: "primary.main" } }}>Pricing</Typography>
+                </Link>
+                <Link href="/blog" style={{ textDecoration: "none" }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500, "&:hover": { color: "primary.main" } }}>Insights</Typography>
+                </Link>
+              </Stack>
+            </Stack>
+
+            <Stack spacing={2}>
+              <Typography variant="caption" sx={{ fontWeight: 900, color: "text.primary", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                Legal
+              </Typography>
+              <Stack spacing={1.5}>
+                <Link href="/privacy" style={{ textDecoration: "none" }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500, "&:hover": { color: "primary.main" } }}>Privacy Policy</Typography>
+                </Link>
+                <Link href="/terms" style={{ textDecoration: "none" }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500, "&:hover": { color: "primary.main" } }}>Terms of Service</Typography>
+                </Link>
+              </Stack>
+            </Stack>
+
+            <Stack spacing={2}>
+              <Typography variant="caption" sx={{ fontWeight: 900, color: "text.primary", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                Support
+              </Typography>
+              <Stack spacing={1.5}>
+                <Link href="/contact" style={{ textDecoration: "none" }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500, "&:hover": { color: "primary.main" } }}>Contact Us</Typography>
+                </Link>
+                <Link href="https://twitter.com/indexfast" style={{ textDecoration: "none" }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500, "&:hover": { color: "primary.main" } }}>Twitter / X</Typography>
+                </Link>
+              </Stack>
+            </Stack>
           </Stack>
         </Stack>
 
-        <Box sx={{ mt: 6, pt: 4, borderTop: "1px solid #F3F4F6", textAlign: "center" }}>
-          <Typography variant="caption" sx={{ color: "#9CA3AF" }}>
-            © {new Date().getFullYear()} IndexFast. All rights reserved.
+        <Box sx={{ mt: 10, pt: 4, borderTop: `1px solid ${theme.palette.divider}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2 }}>
+          <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 500 }}>
+            © {new Date().getFullYear()} IndexFast Inc.
+          </Typography>
+          <Typography variant="caption" sx={{ color: "text.secondary", fontWeight: 500 }}>
+            Crafted for search visibility.
           </Typography>
         </Box>
       </Container>

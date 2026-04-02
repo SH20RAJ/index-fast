@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import {
   Box,
   Container,
@@ -8,6 +9,7 @@ import {
   AccordionDetails,
   Stack,
   alpha,
+  useTheme,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -35,19 +37,34 @@ const faqs = [
 ];
 
 export default function FAQ() {
+  const theme = useTheme();
+  
   return (
-    <Box id="faq" sx={{ py: { xs: 8, md: 12 }, bgcolor: "white" }}>
+    <Box id="faq" sx={{ py: { xs: 10, md: 16 }, bgcolor: "background.default" }}>
       <Container maxWidth="md">
-        <Stack spacing={2} mb={8} textAlign="center">
-          <Typography variant="h2" sx={{ fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>
+        <Stack spacing={2} mb={10} alignItems="center" textAlign="center">
+          <Box
+            sx={{
+              px: 1.5,
+              py: 0.5,
+              borderRadius: "99px",
+              border: `1px solid ${theme.palette.divider}`,
+              bgcolor: alpha(theme.palette.text.primary, 0.02),
+            }}
+          >
+            <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary", letterSpacing: "0.02em" }}>
+              Common Questions
+            </Typography>
+          </Box>
+          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.03em" }}>
             Frequently asked questions
           </Typography>
-          <Typography variant="body1" sx={{ color: "#6B7280", maxWidth: "600px", mx: "auto", fontSize: "1.1rem" }}>
+          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "600px", mx: "auto", fontSize: "1.1rem", lineHeight: 1.6 }}>
             Everything you need to know about safety, setup, and indexing outcomes.
           </Typography>
         </Stack>
 
-        <Stack spacing={1}>
+        <Stack spacing={0}>
           {faqs.map((faq, idx) => (
             <Accordion
               key={idx}
@@ -55,19 +72,29 @@ export default function FAQ() {
               sx={{
                 "&:before": { display: "none" },
                 bgcolor: "transparent",
-                borderBottom: "1px solid #E5E7EB",
+                borderBottom: `1px solid ${theme.palette.divider}`,
                 borderRadius: "0 !important",
-                mx: 0,
+                m: "0 !important",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  bgcolor: alpha(theme.palette.text.primary, 0.01),
+                }
               }}
             >
               <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{ fontSize: 20, color: "#9CA3AF" }} />}
-                sx={{ px: 0, py: 1 }}
+                expandIcon={<ExpandMoreIcon sx={{ fontSize: 20, color: "text.secondary" }} />}
+                sx={{ 
+                  px: 2, 
+                  py: 1,
+                  "& .MuiAccordionSummary-content": {
+                    my: 2
+                  }
+                }}
               >
-                <Typography sx={{ fontWeight: 600, color: "#374151", fontSize: "1.1rem" }}>{faq.q}</Typography>
+                <Typography sx={{ fontWeight: 800, color: "text.primary", fontSize: "1.1rem", letterSpacing: "-0.01em" }}>{faq.q}</Typography>
               </AccordionSummary>
-              <AccordionDetails sx={{ px: 0, pb: 4 }}>
-                <Typography sx={{ color: "#6B7280", lineHeight: 1.6, maxWidth: "600px" }}>{faq.a}</Typography>
+              <AccordionDetails sx={{ px: 2, pb: 4 }}>
+                <Typography sx={{ color: "text.secondary", lineHeight: 1.6, maxWidth: "700px", fontSize: "1rem" }}>{faq.a}</Typography>
               </AccordionDetails>
             </Accordion>
           ))}

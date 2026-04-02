@@ -38,23 +38,17 @@ export default function Navbar() {
     { label: "Pricing", href: "/#pricing" },
   ];
 
-  const secondaryLinks = [
-    { label: "Contact", href: "/contact" },
-    { label: "Status", href: "/status" },
-    { label: "Privacy", href: "/privacy" },
-  ];
-
   return (
     <AppBar
       position="sticky"
       sx={{
         top: 0,
-        bgcolor: alpha(theme.palette.background.default, mode === "dark" ? 0.88 : 0.9),
+        bgcolor: mode === "dark" ? "background.default" : "white",
         backdropFilter: "blur(14px)",
         boxShadow: "none",
         borderBottom: `1px solid ${theme.palette.divider}`,
         zIndex: (theme) => theme.zIndex.appBar,
-        py: 0.75,
+        transition: "all 0.2s ease",
       }}
     >
       <Container maxWidth="lg">
@@ -62,34 +56,44 @@ export default function Navbar() {
           disableGutters
           sx={{
             justifyContent: "space-between",
-            bgcolor: alpha(theme.palette.background.paper, mode === "dark" ? 0.72 : 0.9),
-            px: { xs: 1.5, sm: 3 },
-            py: 1,
-            border: `1px solid ${alpha(theme.palette.divider, 0.55)}`,
-            borderRadius: "999px",
-            boxShadow: mode === "dark" ? "0 10px 28px rgba(0, 0, 0, 0.24)" : "0 10px 28px rgba(15, 23, 42, 0.05)",
+            height: 72,
           }}
         >
           {/* Logo */}
-          <Stack direction="row" alignItems="center" spacing={1.5} component={Link} href="/" sx={{ textDecoration: "none", color: "inherit" }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1.25}
+            component={Link}
+            href="/"
+            sx={{
+              textDecoration: "none",
+              color: "inherit",
+              "& svg": { color: "primary.main" },
+              transition: "opacity 0.2s",
+              "&:hover": { opacity: 0.8 },
+            }}
+          >
             <Box
               sx={{
-                width: 38,
-                height: 38,
-                borderRadius: "10px",
+                width: 32,
+                height: 32,
+                borderRadius: "8px",
                 bgcolor: "primary.main",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <BoltIcon sx={{ color: "white", fontSize: 20 }} />
+              <BoltIcon sx={{ color: "white", fontSize: 18 }} />
             </Box>
             <Typography
               variant="h6"
               sx={{
+                fontSize: "1.1rem",
                 fontWeight: 900,
                 color: "text.primary",
+                letterSpacing: "-0.02em",
                 display: { xs: "none", sm: "block" }
               }}
             >
@@ -97,8 +101,17 @@ export default function Navbar() {
             </Typography>
           </Stack>
 
-          {/* Links */}
-          <Stack direction="row" sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
+          {/* Center Links */}
+          <Stack
+            direction="row"
+            spacing={0.5}
+            sx={{
+              display: { xs: "none", md: "flex" },
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)"
+            }}
+          >
             {primaryLinks.map((item) => (
               <Button
                 key={item.label}
@@ -106,14 +119,14 @@ export default function Navbar() {
                 component={Link}
                 href={item.href}
                 sx={{
-                  borderRadius: "9999px",
+                  borderRadius: "8px",
                   color: "text.secondary",
-                  border: "1px solid transparent",
+                  fontSize: "0.9rem",
+                  fontWeight: 600,
                   px: 2,
                   "&:hover": {
-                    border: `1px solid ${alpha(theme.palette.primary.main, 0.14)}`,
-                    bgcolor: alpha(theme.palette.primary.main, 0.05),
-                    color: "primary.main",
+                    bgcolor: alpha(theme.palette.text.primary, 0.04),
+                    color: "text.primary",
                   },
                 }}
               >
@@ -122,26 +135,18 @@ export default function Navbar() {
             ))}
           </Stack>
 
-          {/* Auth */}
-          <Stack direction="row" spacing={2} alignItems="center">
-            <IconButton
-              aria-label="Open menu"
-              onClick={() => setMobileOpen(true)}
-              sx={{ display: { xs: "inline-flex", md: "none" } }}
-            >
-              <MenuIcon />
-            </IconButton>
-
+          {/* Right Actions */}
+          <Stack direction="row" spacing={1.5} alignItems="center">
             <IconButton
               aria-label="Toggle dark mode"
               onClick={toggleColorMode}
               size="small"
               sx={{
-                width: 34,
-                height: 34,
+                width: 38,
+                height: 38,
                 border: `1px solid ${theme.palette.divider}`,
-                bgcolor: alpha(theme.palette.background.default, 0.6),
-                color: mode === "dark" ? "secondary.main" : "primary.main",
+                borderRadius: "8px",
+                color: mode === "dark" ? "secondary.main" : "text.secondary",
               }}
             >
               {mode === "dark" ? (
@@ -156,8 +161,12 @@ export default function Navbar() {
                 variant="contained"
                 component={Link}
                 href="/dashboard"
-                size="small"
-                sx={{ display: { xs: "none", sm: "inline-flex" } }}
+                sx={{
+                  display: { xs: "none", sm: "inline-flex" },
+                  bgcolor: "primary.main",
+                  color: "white",
+                  fontWeight: 700,
+                }}
               >
                 Dashboard
               </Button>
@@ -166,7 +175,13 @@ export default function Navbar() {
                 <Button
                   component={Link}
                   href="/sign-in"
-                  sx={{ color: "text.primary", fontWeight: 700, fontSize: "0.875rem", display: { xs: "none", sm: "inline-flex" } }}
+                  sx={{
+                    color: "text.primary",
+                    fontWeight: 700,
+                    fontSize: "0.875rem",
+                    display: { xs: "none", sm: "inline-flex" },
+                    px: 2,
+                  }}
                 >
                   Sign In
                 </Button>
@@ -176,17 +191,24 @@ export default function Navbar() {
                   href="/sign-up"
                   sx={{
                     bgcolor: "primary.main",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    px: { xs: 1.75, sm: 2.25 },
+                    color: mode === "dark" ? "black" : "white",
+                    fontWeight: 800,
+                    fontSize: "0.875rem",
+                    px: 2.5,
                   }}
                 >
                   Get Started
-                  <Box sx={{ width: 18, height: 18, borderRadius: "50%", bgcolor: alpha("#ffffff", 0.2), display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px" }}>↗</Box>
                 </Button>
               </>
             )}
+
+            <IconButton
+              aria-label="Open menu"
+              onClick={() => setMobileOpen(true)}
+              sx={{ display: { xs: "inline-flex", md: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
           </Stack>
         </Toolbar>
       </Container>
@@ -198,51 +220,75 @@ export default function Navbar() {
         sx={{
           display: { xs: "block", md: "none" },
           "& .MuiDrawer-paper": {
-            width: 290,
-            p: 2,
+            width: "100%",
+            maxWidth: 320,
+            p: 3,
             bgcolor: "background.paper",
           },
         }}
       >
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
-          <Typography variant="subtitle1" fontWeight={900}>
-            Menu
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 4 }}>
+          <Typography variant="h6" fontWeight={900}>
+            Navigation
           </Typography>
           <IconButton onClick={() => setMobileOpen(false)} aria-label="Close menu">
             <CloseIcon />
           </IconButton>
         </Stack>
-        <Divider sx={{ mb: 1.5 }} />
+
         <List sx={{ p: 0 }}>
-          {primaryLinks.concat(secondaryLinks).map((item) => (
+          {primaryLinks.map((item) => (
             <ListItemButton
               key={item.label}
               component={Link}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              sx={{ borderRadius: "10px" }}
+              sx={{ borderRadius: "8px", mb: 0.5 }}
             >
-              <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: 700 }} />
+              <ListItemText
+                primary={item.label}
+                primaryTypographyProps={{ fontWeight: 700, fontSize: "1.1rem" }}
+              />
             </ListItemButton>
           ))}
         </List>
-        <Divider sx={{ my: 1.5 }} />
-        <Stack spacing={1.2}>
-          {user ? (
-            <Button variant="contained" component={Link} href="/dashboard" onClick={() => setMobileOpen(false)}>
-              Open Dashboard
-            </Button>
-          ) : (
-            <>
-              <Button component={Link} href="/sign-in" variant="outlined">
-                Sign In
+
+        <Box sx={{ mt: "auto", pt: 4 }}>
+          <Divider sx={{ mb: 3 }} />
+          <Stack spacing={1.5}>
+            {user ? (
+              <Button
+                variant="contained"
+                fullWidth
+                component={Link}
+                href="/dashboard"
+                onClick={() => setMobileOpen(false)}
+              >
+                Dashboard
               </Button>
-              <Button component={Link} href="/sign-up" variant="contained">
-                Get Started
-              </Button>
-            </>
-          )}
-        </Stack>
+            ) : (
+              <>
+                <Button
+                  component={Link}
+                  href="/sign-in"
+                  variant="outlined"
+                  fullWidth
+                  sx={{ color: "text.primary", borderColor: "divider" }}
+                >
+                  Sign In
+                </Button>
+                <Button
+                  component={Link}
+                  href="/sign-up"
+                  variant="contained"
+                  fullWidth
+                >
+                  Get Started
+                </Button>
+              </>
+            )}
+          </Stack>
+        </Box>
       </Drawer>
     </AppBar>
   );
