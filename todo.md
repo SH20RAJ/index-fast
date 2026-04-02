@@ -5,9 +5,21 @@ after_auth_return_to
 
 3. later also list the techstacks of the website.
 
-4. add dark mode, recreate hero section .
+<!-- 4. add dark mode, recreate hero section .
 
-5. add a blog section to landing page.
+5. add a blog section to landing page. -->
+
+
+
+
+create a single constant file to manage data related to plans and subscriptions and use that import in frontend and backend both ,
+free -> 5k
+
+
+
+
+
+
 
 
 Next high-impact move is to turn your traffic pages into working tools and conversion flows.
