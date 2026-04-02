@@ -3,13 +3,7 @@ import { stackServerApp } from "@/stack";
 import { db } from "@/lib/db";
 import { cronJobs, users, websites } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
-import { resolvePlanId, type PlanId } from "@/lib/billing/plans";
-
-const CRON_PLAN_LIMITS: Record<PlanId, { maxTotalJobs: number; allowHourly: boolean }> = {
-  free: { maxTotalJobs: 1, allowHourly: false },
-  pro: { maxTotalJobs: 25, allowHourly: true },
-  agency: { maxTotalJobs: 200, allowHourly: true },
-};
+import { PLAN_DEFINITIONS, resolvePlanId } from "@/lib/billing/plans";
 
 export async function PATCH(
   request: Request,
@@ -29,7 +23,7 @@ export async function PATCH(
       .where(eq(users.id, user.id))
       .limit(1);
     const planId = resolvePlanId(userRow?.subscriptionStatus ?? null, userRow?.isPro ?? false);
-    const limits = CRON_PLAN_LIMITS[planId];
+    const limits = PLAN_DEFINITIONS[planId];
 
     // Verify website ownership
     const website = await db
@@ -68,9 +62,9 @@ export async function PATCH(
         .innerJoin(websites, eq(cronJobs.websiteId, websites.id))
         .where(eq(websites.userId, user.id));
 
-      if (existingUserJobs.length > limits.maxTotalJobs) {
+      if (existingUserJobs.length >= limits.cronLimit) {
         return NextResponse.json(
-          { error: `Your ${planId.toUpperCase()} plan allows up to ${limits.maxTotalJobs} auto-submit job${limits.maxTotalJobs === 1 ? "" : "s"}.` },
+          { error: `Your ${planId.toUpperCase()} plan allows up to ${limits.cronLimit} auto-submit job${limits.cronLimit === 1 ? "" : "s"}.` },
           { status: 403 }
         );
       }

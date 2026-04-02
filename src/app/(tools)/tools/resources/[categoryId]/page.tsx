@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Container,
-  Divider,
-  Stack,
-  Typography,
-} from "@/components/ui/mui";
-import { alpha } from "@/lib/color";
+import { ArrowLeft, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   EXTERNAL_RESOURCE_CATEGORIES,
   getExternalResourceCategoryById,
@@ -63,76 +56,39 @@ export default async function ResourceCategoryPage({ params }: ResourceCategoryP
   const resources = getExternalResourcesByCategory(category.id);
 
   return (
-    <Box
-      sx={{
-        py: { xs: 8, md: 12 },
-        background:
-          "radial-gradient(960px 460px at 12% -8%, rgba(14,165,233,0.18), transparent 60%), radial-gradient(820px 420px at 88% -15%, rgba(34,197,94,0.14), transparent 64%)",
-      }}
-    >
-      <Container maxWidth="md">
-        <Stack spacing={3}>
-          <Chip
-            label="External SEO Resource Hub"
-            sx={{
-              alignSelf: "flex-start",
-              border: "1px solid rgba(14,165,233,0.35)",
-              bgcolor: "rgba(14,165,233,0.08)",
-              color: "info.main",
-              fontWeight: 800,
-            }}
-          />
+    <div className="bg-background py-10 md:py-14">
+      <div className="container mx-auto max-w-4xl space-y-6 px-4">
+        <div className="space-y-2">
+          <Badge variant="secondary">External SEO resource hub</Badge>
+          <h1 className="text-3xl font-semibold tracking-tight">{category.title}</h1>
+          <p className="text-muted-foreground">{category.description}</p>
+        </div>
 
-          <Typography variant="h2">{category.title}</Typography>
-          <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 840 }}>
-            {category.description}
-          </Typography>
-
-          <Stack spacing={2}>
-            {resources.map((resource) => (
-              <Card
-                key={resource.title}
-                sx={{
-                  border: "1px solid rgba(15,23,42,0.08)",
-                  bgcolor: alpha("#ffffff", 0.88),
-                }}
-              >
-                <CardContent sx={{ p: 3 }}>
-                  <Stack spacing={1.25}>
-                    <Typography variant="h5" fontWeight={800}>
-                      {resource.title}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      {resource.description}
-                    </Typography>
-                    <Divider />
-                    <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-                      <Button
-                        component="a"
-                        href={resource.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        variant="contained"
-                        sx={{ textTransform: "none", fontWeight: 800 }}
-                      >
-                        Open Resource
-                      </Button>
-                      <Button
-                        component="a"
-                        href="/tools"
-                        variant="outlined"
-                        sx={{ textTransform: "none", fontWeight: 800 }}
-                      >
-                        Back to Tools Directory
-                      </Button>
-                    </Stack>
-                  </Stack>
-                </CardContent>
-              </Card>
-            ))}
-          </Stack>
-        </Stack>
-      </Container>
-    </Box>
+        <div className="space-y-3">
+          {resources.map((resource) => (
+            <Card key={resource.title}>
+              <CardHeader>
+                <CardTitle className="text-xl">{resource.title}</CardTitle>
+                <CardDescription>{resource.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-2">
+                <Button asChild>
+                  <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                    Open resource
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href="/tools">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to tools
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

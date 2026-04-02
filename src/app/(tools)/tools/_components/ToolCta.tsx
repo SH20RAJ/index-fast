@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Box, Button, Stack, Typography } from "@/components/ui/mui";
 import { useStackApp, useUser } from "@stackframe/stack";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 
 interface ToolCtaProps {
   primaryText: string;
@@ -14,36 +15,26 @@ export default function ToolCta({ primaryText, secondaryText }: ToolCtaProps) {
   const user = useUser();
 
   return (
-    <Box
-      sx={{
-        border: "1px solid rgba(124, 58, 237, 0.18)",
-        borderRadius: 4,
-        p: { xs: 3, md: 4 },
-        background: "linear-gradient(140deg, rgba(124,58,237,0.08), rgba(250,204,21,0.08))",
-      }}
-    >
-      <Stack spacing={2}>
-        <Typography variant="h5" fontWeight={800} color="text.primary">
-          {primaryText}
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          {secondaryText}
-        </Typography>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+    <Card>
+      <CardContent className="space-y-4 p-6">
+        <div className="space-y-1">
+          <CardTitle className="text-xl">{primaryText}</CardTitle>
+          <CardDescription className="text-sm">{secondaryText}</CardDescription>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
           {user ? (
-            <Button variant="contained" component={Link} href="/dashboard">
-              Open Dashboard
+            <Button asChild>
+              <Link href="/dashboard">Open dashboard</Link>
             </Button>
           ) : (
-            <Button variant="contained" onClick={() => stack.redirectToSignUp()}>
-              Create Free Account
-            </Button>
+            <Button onClick={() => stack.redirectToSignUp()}>Create free account</Button>
           )}
-          <Button variant="outlined" component={Link} href="/#pricing">
-            View Pro Plans
+          <Button variant="outline" asChild>
+            <Link href="/#pricing">View pro plans</Link>
           </Button>
-        </Stack>
-      </Stack>
-    </Box>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
