@@ -20,15 +20,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { 
-  Loader2, 
-  Briefcase, 
-  Globe, 
-  Zap, 
-  CheckCircle2, 
-  AlertCircle,
-  Calendar
-} from "lucide-react";
+import { Loader2, Globe, AlertCircle, Calendar } from "lucide-react";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";
@@ -120,16 +112,16 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
     <div className="space-y-8 pb-16">
       <PageHeader
         title="Auto Submit Jobs"
-        description="Schedule recurring submissions to IndexNow/Bing and monitor automation state."
+        description="Schedule recurring submissions and monitor automation status."
         action={
           <div className="w-full sm:w-[320px]">
             <Select value={siteId} onValueChange={setSiteId}>
-              <SelectTrigger className="h-11 bg-card/30 backdrop-blur-sm border-border/40 font-bold rounded-xl ring-offset-background transition-all focus:ring-2 focus:ring-primary/20">
+              <SelectTrigger className="h-10 rounded-md border-border bg-background">
                 <SelectValue placeholder="Select a website" />
               </SelectTrigger>
-              <SelectContent className="rounded-xl border-border/40 font-bold">
+              <SelectContent>
                 {sites.map((site) => (
-                  <SelectItem key={site.id} value={site.id} className="focus:bg-primary/5 focus:text-primary rounded-lg transition-colors">
+                  <SelectItem key={site.id} value={site.id}>
                     {site.url}
                   </SelectItem>
                 ))}
@@ -148,28 +140,28 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
       )}
 
       {selectedSite && (
-        <Card className="border-border/40 bg-card/30 backdrop-blur-sm shadow-xl shadow-primary/5 rounded-[24px] overflow-hidden">
+        <Card>
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
               <div className="space-y-1">
-                <h4 className="text-sm font-black tracking-tighter flex items-center gap-2">
-                  <Globe className="h-3.5 w-3.5 text-primary" />
+                <h4 className="flex items-center gap-2 text-sm font-medium tracking-tight">
+                  <Globe className="h-3.5 w-3.5 text-muted-foreground" />
                   {selectedSite.url}
                 </h4>
-                <p className="text-[11px] font-medium text-muted-foreground/60 break-all">
+                <p className="break-all text-xs text-muted-foreground">
                   Sitemap: {selectedSite.sitemapUrl || "Not configured"}
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className="h-7 px-3 text-[10px] font-black uppercase tracking-widest bg-muted border-none">
+                <Badge variant="secondary" className="h-7 px-3 text-[10px] uppercase tracking-wide">
                   Jobs: {jobs.length}
                 </Badge>
                 <Badge 
                   variant="default" 
                   className={cn(
-                    "h-7 px-3 text-[10px] font-black uppercase tracking-widest border-none",
-                    jobs.some(j => j.enabled) ? "bg-emerald-500/10 text-emerald-600" : "bg-muted text-muted-foreground/60"
+                    "h-7 px-3 text-[10px] uppercase tracking-wide",
+                    jobs.some(j => j.enabled) ? "bg-emerald-500/15 text-emerald-500" : "bg-muted text-muted-foreground"
                   )}
                 >
                   Active: {jobs.filter((job) => job.enabled).length}
@@ -181,9 +173,9 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
       )}
 
       {loading && (
-        <div className="flex items-center gap-3 p-4 bg-muted/20 rounded-2xl border border-border/10">
+        <div className="flex items-center gap-3 rounded-md border border-border bg-muted/30 p-3">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+          <p className="text-xs text-muted-foreground">
             Fetching schedules...
           </p>
         </div>

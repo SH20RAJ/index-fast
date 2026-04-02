@@ -33,12 +33,9 @@ import {
   Trash2, 
   Clock, 
   Calendar, 
-  Settings2, 
   Zap, 
   AlertCircle,
   Loader2,
-  CheckCircle2,
-  XCircle,
   Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -175,34 +172,34 @@ export default function CronJobManager({
   };
 
   return (
-    <Card className="border-border/40 bg-card/30 backdrop-blur-sm overflow-hidden">
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
         <div className="space-y-1">
-          <CardTitle className="text-xl font-black tracking-tight flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-primary" /> Auto-Submit Schedule
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+            <Calendar className="h-5 w-5 text-muted-foreground" /> Auto-Submit Schedule
           </CardTitle>
-          <CardDescription className="text-xs font-medium">
+          <CardDescription className="text-xs">
             Setup recurring submissions to IndexNow, Bing, or Google.
           </CardDescription>
         </div>
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogTrigger asChild>
-            <Button className="gap-2 font-bold shadow-lg shadow-primary/20">
+            <Button className="gap-2">
               <Plus className="h-4 w-4" /> Add Schedule
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-black tracking-tighter">New Schedule</DialogTitle>
-              <DialogDescription className="font-medium">
+              <DialogTitle>New Schedule</DialogTitle>
+              <DialogDescription>
                 Automate indexing for <span className="text-primary">{siteUrl}</span>
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-6 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="frequency" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Frequency</Label>
+                <Label htmlFor="frequency" className="ml-1 text-xs text-muted-foreground">Frequency</Label>
                 <Select value={frequency} onValueChange={(v: any) => setFrequency(v)}>
-                  <SelectTrigger className="bg-muted/30 border-border/40 h-11">
+                  <SelectTrigger className="h-10">
                     <SelectValue placeholder="Select frequency" />
                   </SelectTrigger>
                   <SelectContent>
@@ -214,9 +211,9 @@ export default function CronJobManager({
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="engine" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Search Engine</Label>
+                <Label htmlFor="engine" className="ml-1 text-xs text-muted-foreground">Search Engine</Label>
                 <Select value={engine} onValueChange={(v: any) => setEngine(v)}>
-                  <SelectTrigger className="bg-muted/30 border-border/40 h-11">
+                  <SelectTrigger className="h-10">
                     <SelectValue placeholder="Select engine" />
                   </SelectTrigger>
                   <SelectContent>
@@ -227,9 +224,9 @@ export default function CronJobManager({
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="source" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Submission Source</Label>
+                <Label htmlFor="source" className="ml-1 text-xs text-muted-foreground">Submission Source</Label>
                 <Select value={sourceMode} onValueChange={(v: any) => setSourceMode(v)}>
-                  <SelectTrigger className="bg-muted/30 border-border/40 h-11">
+                  <SelectTrigger className="h-10">
                     <SelectValue placeholder="Select source" />
                   </SelectTrigger>
                   <SelectContent>
@@ -240,8 +237,8 @@ export default function CronJobManager({
               </div>
             </div>
             <DialogFooter className="pt-2">
-              <Button onClick={() => setOpenDialog(false)} variant="ghost" className="font-bold">Cancel</Button>
-              <Button onClick={handleCreateCronJob} disabled={loading} className="gap-2 font-black px-8">
+              <Button onClick={() => setOpenDialog(false)} variant="ghost">Cancel</Button>
+              <Button onClick={handleCreateCronJob} disabled={loading} className="gap-2 px-8">
                 {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                 Create Schedule
               </Button>
@@ -261,12 +258,12 @@ export default function CronJobManager({
             <p className="text-xs font-medium">{loadError}</p>
           </div>
         ) : initialJobs.length === 0 ? (
-          <div className="p-12 text-center border-2 border-dashed border-border/40 rounded-3xl bg-muted/10 space-y-4">
-            <div className="h-16 w-16 rounded-full bg-muted/20 flex items-center justify-center mx-auto">
+          <div className="space-y-4 rounded-xl border border-dashed border-border bg-muted/20 p-12 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-muted/30">
               <Clock className="h-8 w-8 text-muted-foreground opacity-30" />
             </div>
             <div className="space-y-1">
-              <p className="font-black tracking-tight">No active schedules</p>
+              <p className="font-semibold tracking-tight">No active schedules</p>
               <p className="text-xs text-muted-foreground max-w-[240px] mx-auto">
                 Create your first automated task to keep your site perpetually indexed.
               </p>
@@ -278,34 +275,34 @@ export default function CronJobManager({
               <div
                 key={cron.id}
                 className={cn(
-                  "flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border border-border/40 bg-background/40 transition-all hover:bg-background/60 group",
+                  "group flex flex-col justify-between rounded-lg border border-border bg-card p-4 transition-colors hover:bg-muted/30 sm:flex-row sm:items-center",
                   !cron.enabled && "opacity-60"
                 )}
               >
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline" className="font-black uppercase text-[10px] bg-primary/5 text-primary border-primary/20">
+                    <Badge variant="outline" className="text-[10px] uppercase tracking-wide">
                       {cron.frequency}
                     </Badge>
                     <Badge variant="outline" className={cn(
-                      "font-black uppercase text-[10px] border-none px-2",
-                      cron.engine === "indexnow" ? "bg-emerald-500/10 text-emerald-600" :
-                      cron.engine === "bing" ? "bg-blue-500/10 text-blue-600" :
-                      "bg-amber-500/10 text-amber-600"
+                      "text-[10px] uppercase tracking-wide",
+                      cron.engine === "indexnow" ? "bg-emerald-500/15 text-emerald-500" :
+                      cron.engine === "bing" ? "bg-blue-500/15 text-blue-500" :
+                      "bg-amber-500/15 text-amber-500"
                     )}>
                       {cron.engine}
                     </Badge>
-                    <Badge variant="secondary" className="font-black uppercase text-[10px] bg-muted/50 border-none">
+                    <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">
                       {cron.sourceMode}
                     </Badge>
                     <div className="flex items-center gap-1.5 ml-2">
                       <Activity className={cn("h-3 w-3", cron.enabled ? "text-emerald-500" : "text-muted-foreground")} />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
                         {cron.enabled ? "Active" : "Paused"}
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground opacity-70">
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1"><History className="h-3 w-3" /> Last: {formatLastRun(cron.lastRunAt)}</span>
                     <span className="flex items-center gap-1"><Zap className="h-3 w-3" /> Next: {formatNextRun(cron.nextRunAt)}</span>
                   </div>
@@ -325,7 +322,7 @@ export default function CronJobManager({
                     variant="ghost"
                     onClick={() => handleDeleteCronJob(cron.id)}
                     disabled={deleting === cron.id}
-                    className="h-9 w-9 rounded-xl text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                    className="h-9 w-9 rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                   >
                     {deleting === cron.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
                   </Button>
