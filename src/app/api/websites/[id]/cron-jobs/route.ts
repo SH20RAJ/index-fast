@@ -60,30 +60,43 @@ export async function POST(
 
     if (existingUserJobs.length >= limits.cronLimit) {
       const planLabel = planId.toUpperCase();
+      console.warn(`Plan limit reached for user ${user.id}: ${existingUserJobs.length}/${limits.cronLimit}`);
       return NextResponse.json(
-        { error: `${planLabel} plan allows up to ${limits.cronLimit} auto-submit job${limits.cronLimit === 1 ? "" : "s"}. Upgrade to create more.` },
+        { error: `Your ${planLabel} plan allows up to ${limits.cronLimit} auto-submit job${limits.cronLimit === 1 ? "" : "s"}. Upgrade to create more.` },
         { status: 403 }
       );
     }
 
     const nextRunDate = calculateNextRun(body.frequency);
 
+    // Validate engine type matches enum
+    const validEngines = ["indexnow", "bing", "google"] as const;
+    const engine = body.engine as typeof validEngines[number];
+    
+    if (!validEngines.includes(engine)) {
+      return NextResponse.json({ error: `Invalid engine: ${body.engine}` }, { status: 400 });
+    }
+
+    console.log(`Creating cron job for website ${websiteId}: ${body.frequency}, ${engine}, ${body.sourceMode}`);
+
     const result = await db.insert(cronJobs).values({
-      websiteId,
+      websiteId: websiteId as any, // websiteId is uuid in schema
       enabled: true,
       frequency: body.frequency,
-      engine: body.engine as "indexnow" | "bing" | "google",
+      engine: engine,
       sourceMode: body.sourceMode,
       nextRunAt: nextRunDate,
     });
+
+    console.log(`Cron job created successfully:`, result);
 
     return NextResponse.json({
       message: "Cron job created successfully",
     });
   } catch (error) {
-    console.error("Error creating cron job:", error);
+    console.error("CRITICAL ERROR creating cron job:", error);
     return NextResponse.json(
-      { error: "Failed to create cron job" },
+      { error: error instanceof Error ? error.message : "Failed to create cron job" },
       { status: 500 }
     );
   }

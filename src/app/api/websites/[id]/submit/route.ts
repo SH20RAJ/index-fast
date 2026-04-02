@@ -63,177 +63,196 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const user = await stackServerApp.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const { id } = await params;
-
-  const [website] = await db
-    .select()
-    .from(websites)
-    .where(and(eq(websites.id, id), eq(websites.userId, user.id)));
-
-  if (!website) {
-    return NextResponse.json({ error: "Website not found" }, { status: 404 });
-  }
-
-  const body = await request.json().catch(() => ({}));
-  const mode = body?.mode === "sitemap" ? "sitemap" : "urls";
-  const sitemapUrl = typeof body?.sitemapUrl === "string" ? body.sitemapUrl.trim() : "";
-  const rawUrls = typeof body?.urls === "string" ? body.urls : "";
-
-  const logs: string[] = [];
-  const appendLog = (entry: string) => {
-    logs.push(`[${new Date().toISOString()}] ${entry}`);
-  };
-
-  let urls: string[] = [];
-  if (mode === "sitemap") {
-    const targetSitemap = sitemapUrl || website.sitemapUrl;
-    if (!targetSitemap) {
-      return NextResponse.json({ error: "No sitemap URL provided for sitemap mode." }, { status: 400 });
+  try {
+    const user = await stackServerApp.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    appendLog(`Fetching sitemap: ${targetSitemap}`);
-    urls = normalizeHttpUrls(await parseSitemap(targetSitemap));
-    appendLog(`Parsed ${urls.length} URL(s) from sitemap.`);
-  } else {
-    urls = normalizeHttpUrls(parseManualUrls(rawUrls));
-    appendLog(`Parsed ${urls.length} manual URL(s).`);
-  }
+    const { id } = await params;
 
-  if (urls.length === 0) {
-    return NextResponse.json({ error: "No valid URLs to submit." }, { status: 400 });
-  }
+    const [website] = await db
+      .select()
+      .from(websites)
+      .where(and(eq(websites.id, id), eq(websites.userId, user.id)));
 
-  const host = new URL(website.url).hostname;
-  const indexNowKeyLocation = resolveIndexNowKeyLocation(website.siteHealth);
-
-  const indexNowStats = {
-    enabled: Boolean(website.indexNowKey),
-    batches: 0,
-    successBatches: 0,
-    failedBatches: 0,
-    submittedUrls: 0,
-  };
-
-  const bingStats = {
-    enabled: Boolean(website.bingApiKey),
-    batches: 0,
-    successBatches: 0,
-    failedBatches: 0,
-    submittedUrls: 0,
-  };
-
-  const submissionLogs: Array<{
-    websiteId: string;
-    url: string;
-    engine: "indexnow" | "bing";
-    status: "success" | "failed";
-    errorMessage?: string;
-  }> = [];
-
-  if (website.indexNowKey) {
-    const indexNowBatches = splitIntoBatches(urls, INDEXNOW_BATCH_SIZE);
-    indexNowStats.batches = indexNowBatches.length;
-    appendLog(`IndexNow enabled with ${indexNowBatches.length} batch(es).`);
-
-    for (let i = 0; i < indexNowBatches.length; i += 1) {
-      const batch = indexNowBatches[i];
-      const batchNo = i + 1;
-      appendLog(`Submitting IndexNow batch ${batchNo}/${indexNowBatches.length} (${batch.length} URLs).`);
-
-      const res = await submitToIndexNow(host, website.indexNowKey, batch, indexNowKeyLocation);
-      if (res.success) {
-        indexNowStats.successBatches += 1;
-        indexNowStats.submittedUrls += batch.length;
-        appendLog(`IndexNow batch ${batchNo} success.`);
-      } else {
-        indexNowStats.failedBatches += 1;
-        appendLog(`IndexNow batch ${batchNo} failed: ${res.error || "Unknown error"}`);
-      }
-
-      submissionLogs.push({
-        websiteId: website.id,
-        url: `Manual IndexNow batch ${batchNo} (${batch.length} URLs)`,
-        engine: "indexnow",
-        status: res.success ? "success" : "failed",
-        errorMessage: res.success ? undefined : res.error,
-      });
-
-      if (batchNo < indexNowBatches.length) {
-        await sleep(INDEXNOW_BATCH_DELAY_MS);
-      }
+    if (!website) {
+      return NextResponse.json({ error: "Website not found" }, { status: 404 });
     }
-  } else {
-    appendLog("IndexNow skipped: key not configured.");
-  }
 
-  if (website.bingApiKey) {
-    appendLog("Submitting Bing batch requests.");
-    const bingResults = await submitToBingBatch(website.url, urls, website.bingApiKey);
-    bingStats.batches = bingResults.length;
+    const body = await request.json().catch(() => ({}));
+    const mode = body?.mode === "sitemap" ? "sitemap" : "urls";
+    const sitemapUrl = typeof body?.sitemapUrl === "string" ? body.sitemapUrl.trim() : "";
+    const rawUrls = typeof body?.urls === "string" ? body.urls : "";
 
-    bingResults.forEach((res, index) => {
-      const batchNo = index + 1;
-      if (res.success) {
-        bingStats.successBatches += 1;
-        bingStats.submittedUrls += res.count ?? 0;
-        appendLog(`Bing batch ${batchNo} success (${res.count ?? 0} URLs).`);
-      } else {
-        bingStats.failedBatches += 1;
-        appendLog(`Bing batch ${batchNo} failed: ${res.error || "Unknown error"}`);
+    const logs: string[] = [];
+    const appendLog = (entry: string) => {
+      logs.push(`[${new Date().toISOString()}] ${entry}`);
+    };
+
+    let urls: string[] = [];
+    if (mode === "sitemap") {
+      const targetSitemap = sitemapUrl || website.sitemapUrl;
+      if (!targetSitemap) {
+        return NextResponse.json({ error: "No sitemap URL provided for sitemap mode." }, { status: 400 });
       }
 
-      submissionLogs.push({
-        websiteId: website.id,
-        url: `Manual Bing batch ${batchNo}`,
-        engine: "bing",
-        status: res.success ? "success" : "failed",
-        errorMessage: res.success ? undefined : res.error,
+      appendLog(`Fetching sitemap: ${targetSitemap}`);
+      urls = normalizeHttpUrls(await parseSitemap(targetSitemap));
+      appendLog(`Parsed ${urls.length} URL(s) from sitemap.`);
+    } else {
+      urls = normalizeHttpUrls(parseManualUrls(rawUrls));
+      appendLog(`Parsed ${urls.length} manual URL(s).`);
+    }
+
+    if (urls.length === 0) {
+      return NextResponse.json({ error: "No valid URLs to submit." }, { status: 400 });
+    }
+
+    const host = new URL(website.url).hostname;
+    const indexNowKeyLocation = resolveIndexNowKeyLocation(website.siteHealth);
+
+    const indexNowStats = {
+      enabled: Boolean(website.indexNowKey),
+      batches: 0,
+      successBatches: 0,
+      failedBatches: 0,
+      submittedUrls: 0,
+    };
+
+    const bingStats = {
+      enabled: Boolean(website.bingApiKey),
+      batches: 0,
+      successBatches: 0,
+      failedBatches: 0,
+      submittedUrls: 0,
+    };
+
+    const submissionLogs: Array<{
+      websiteId: string;
+      url: string;
+      engine: "indexnow" | "bing";
+      status: "success" | "failed";
+      errorMessage?: string;
+    }> = [];
+
+    if (website.indexNowKey) {
+      const indexNowBatches = splitIntoBatches(urls, INDEXNOW_BATCH_SIZE);
+      indexNowStats.batches = indexNowBatches.length;
+      appendLog(`IndexNow enabled with ${indexNowBatches.length} batch(es).`);
+
+      for (let i = 0; i < indexNowBatches.length; i += 1) {
+        const batch = indexNowBatches[i];
+        const batchNo = i + 1;
+        appendLog(`Submitting IndexNow batch ${batchNo}/${indexNowBatches.length} (${batch.length} URLs).`);
+
+        const res = await submitToIndexNow(host, website.indexNowKey, batch, indexNowKeyLocation);
+        if (res.success) {
+          indexNowStats.successBatches += 1;
+          indexNowStats.submittedUrls += batch.length;
+          appendLog(`IndexNow batch ${batchNo} success.`);
+        } else {
+          indexNowStats.failedBatches += 1;
+          appendLog(`IndexNow batch ${batchNo} failed: ${res.error || "Unknown error"}`);
+        }
+
+        submissionLogs.push({
+          websiteId: website.id,
+          url: `Manual IndexNow batch ${batchNo} (${batch.length} URLs)`,
+          engine: "indexnow",
+          status: res.success ? "success" : "failed",
+          errorMessage: res.success ? undefined : res.error,
+        });
+
+        if (batchNo < indexNowBatches.length) {
+          await sleep(INDEXNOW_BATCH_DELAY_MS);
+        }
+      }
+    } else {
+      appendLog("IndexNow skipped: key not configured.");
+    }
+
+    if (website.bingApiKey) {
+      appendLog("Submitting Bing batch requests.");
+      const bingResults = await submitToBingBatch(website.url, urls, website.bingApiKey);
+      bingStats.batches = bingResults.length;
+
+      bingResults.forEach((res, index) => {
+        const batchNo = index + 1;
+        if (res.success) {
+          bingStats.successBatches += 1;
+          bingStats.submittedUrls += res.count ?? 0;
+          appendLog(`Bing batch ${batchNo} success (${res.count ?? 0} URLs).`);
+        } else {
+          bingStats.failedBatches += 1;
+          appendLog(`Bing batch ${batchNo} failed: ${res.error || "Unknown error"}`);
+        }
+
+        submissionLogs.push({
+          websiteId: website.id,
+          url: `Manual Bing batch ${batchNo}`,
+          engine: "bing",
+          status: res.success ? "success" : "failed",
+          errorMessage: res.success ? undefined : res.error,
+        });
       });
+    } else {
+      appendLog("Bing skipped: API key not configured.");
+    }
+
+    if (submissionLogs.length > 0) {
+      // Small batches for submission logs too, though typically these are few (batch summaries)
+      await db.insert(submissions).values(submissionLogs);
+    }
+
+    appendLog("Updating URL inventory...");
+    const [existingInventory] = await Promise.all([
+      db
+        .select({ url: urlInventory.url })
+        .from(urlInventory)
+        .where(eq(urlInventory.websiteId, website.id)),
+    ]);
+    const existingSet = new Set(existingInventory.map((row) => row.url));
+    const freshUrls = urls.filter((url) => !existingSet.has(url));
+
+    if (freshUrls.length > 0) {
+      appendLog(`Found ${freshUrls.length} new URL(s). Inserting into inventory...`);
+      const inventoryBatches = splitIntoBatches(freshUrls, 500);
+      for (let i = 0; i < inventoryBatches.length; i++) {
+        const batch = inventoryBatches[i];
+        await db.insert(urlInventory).values(
+          batch.map((url) => ({
+            websiteId: website.id,
+            url,
+            isIndexed: false,
+            lastDetectedAt: new Date(),
+            lastSubmittedAt: new Date(),
+          }))
+        );
+        if (inventoryBatches.length > 1) {
+          appendLog(`Inventory batch ${i + 1}/${inventoryBatches.length} inserted.`);
+        }
+      }
+      appendLog("Inventory update complete.");
+    }
+
+    await db.update(websites).set({ lastSyncAt: new Date() }).where(eq(websites.id, website.id));
+
+    return NextResponse.json({
+      mode,
+      totalUrls: urls.length,
+      logs,
+      stats: {
+        indexNow: indexNowStats,
+        bing: bingStats,
+        insertedInventoryUrls: freshUrls.length,
+      },
     });
-  } else {
-    appendLog("Bing skipped: API key not configured.");
-  }
-
-  if (submissionLogs.length > 0) {
-    await db.insert(submissions).values(submissionLogs);
-  }
-
-  const [existingInventory] = await Promise.all([
-    db
-      .select({ url: urlInventory.url })
-      .from(urlInventory)
-      .where(eq(urlInventory.websiteId, website.id)),
-  ]);
-  const existingSet = new Set(existingInventory.map((row) => row.url));
-  const freshUrls = urls.filter((url) => !existingSet.has(url));
-
-  if (freshUrls.length > 0) {
-    await db.insert(urlInventory).values(
-      freshUrls.map((url) => ({
-        websiteId: website.id,
-        url,
-        isIndexed: false,
-        lastDetectedAt: new Date(),
-        lastSubmittedAt: new Date(),
-      }))
+  } catch (error) {
+    console.error("Error in website submit:", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Internal Server Error" },
+      { status: 500 }
     );
   }
-
-  await db.update(websites).set({ lastSyncAt: new Date() }).where(eq(websites.id, website.id));
-
-  return NextResponse.json({
-    mode,
-    totalUrls: urls.length,
-    logs,
-    stats: {
-      indexNow: indexNowStats,
-      bing: bingStats,
-      insertedInventoryUrls: freshUrls.length,
-    },
-  });
 }

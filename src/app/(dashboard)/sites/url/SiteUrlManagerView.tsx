@@ -296,9 +296,17 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
         }),
       });
 
-      const data = (await response.json()) as SubmitResponse | { error?: string };
+      const contentType = response.headers.get("content-type");
+      let data: any;
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        throw new Error(text || `Server returned ${response.status} ${response.statusText}`);
+      }
+
       if (!response.ok) {
-        throw new Error((data as { error?: string }).error || "Submission failed.");
+        throw new Error(data.error || "Submission failed.");
       }
 
       setSubmitResult(data as SubmitResponse);
