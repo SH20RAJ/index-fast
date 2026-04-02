@@ -1,8 +1,8 @@
-import { Box, Stack } from "@mui/material";
-import SpeedIcon from "@mui/icons-material/Speed";
-import LanguageIcon from "@mui/icons-material/Language";
-import HistoryIcon from "@mui/icons-material/History";
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import { Box, Stack } from "@/components/ui/mui";
+import { SpeedIcon } from "@/components/icons/mui-icons";
+import { LanguageIcon } from "@/components/icons/mui-icons";
+import { HistoryIcon } from "@/components/icons/mui-icons";
+import { AutoFixHighIcon } from "@/components/icons/mui-icons";
 import StatsCard from "@/components/dashboard/StatsCard";
 
 export default function DashboardStatsSection() {

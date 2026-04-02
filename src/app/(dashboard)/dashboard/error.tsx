@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, Typography } from "@/components/ui/mui";
 import Link from "next/link";
 
 export default function Error({

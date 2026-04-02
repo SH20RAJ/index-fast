@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@/components/ui/mui";
 import { useStackApp, useUser } from "@stackframe/stack";
 
 interface ToolCtaProps {

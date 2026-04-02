@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Typography, Stack, alpha } from "@mui/material";
+import { Box, Container, Typography, Stack, alpha } from "@/components/ui/mui";
 
 export default function PrivacyView() {
   const sections = [

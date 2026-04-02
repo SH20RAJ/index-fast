@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { Alert, Box, Button, Stack, TextField } from "@mui/material";
+import { Alert, Box, Button, Stack, TextField } from "@/components/ui/mui";
 import { updateAccountEmailAction } from "@/app/(dashboard)/actions";
 import { defaultActionState } from "@/app/(dashboard)/action-state";
 

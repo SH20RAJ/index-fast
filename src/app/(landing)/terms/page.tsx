@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Box } from "@mui/material";
+import { Box } from "@/components/ui/mui";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import TermsView from "./TermsView";

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { Box, Typography, TextField, Button, Alert, Stack } from '@mui/material';
+import { Box, Typography, TextField, Button, Alert, Stack } from '@/components/ui/mui';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 

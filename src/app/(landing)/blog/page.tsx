@@ -8,7 +8,7 @@ import {
   Grid2 as Grid,
   Stack,
   Typography,
-} from "@mui/material";
+} from "@/components/ui/mui";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { BLOG_POSTS } from "@/lib/blog-catalog";

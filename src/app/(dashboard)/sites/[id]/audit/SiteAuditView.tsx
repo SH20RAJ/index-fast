@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@/components/ui/mui";
 import PageHeader from "@/components/dashboard/PageHeader";
 import AuditPanel from "@/components/dashboard/AuditPanel";
 import type { AuditIssue } from "@/components/dashboard/AuditPanel";

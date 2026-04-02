@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { Box } from "@mui/material";
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
@@ -21,9 +20,9 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <Box sx={{ position: "relative", minHeight: "100vh", bgcolor: "background.default" }}>
+    <div className="relative min-h-screen bg-background text-foreground">
       <Navbar />
-      <Box component="main">
+      <main>
         <Hero />
         <HowItWorks />
         <Features />
@@ -32,8 +31,8 @@ export default function LandingPage() {
         <Pricing />
         <FAQ />
         <FinalCTA />
-      </Box>
+      </main>
       <Footer />
-    </Box>
+    </div>
   );
 }

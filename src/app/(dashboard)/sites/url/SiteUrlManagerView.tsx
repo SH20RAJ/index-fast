@@ -17,9 +17,9 @@ import {
   TextField,
   Typography,
   Pagination,
-} from "@mui/material";
-import SendRoundedIcon from "@mui/icons-material/SendRounded";
-import DownloadIcon from "@mui/icons-material/Download";
+} from "@/components/ui/mui";
+import { SendRoundedIcon } from "@/components/icons/mui-icons";
+import { DownloadIcon } from "@/components/icons/mui-icons";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import {

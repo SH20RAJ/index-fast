@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Stack } from "@mui/material";
+import { Box, Stack } from "@/components/ui/mui";
 import SiteCard from "@/components/dashboard/SiteCard";
 import { Website } from "@/components/dashboard/types";
 

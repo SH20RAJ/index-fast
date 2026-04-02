@@ -14,16 +14,16 @@ import {
   alpha,
   Link as MuiLink,
   useTheme,
-} from "@mui/material";
+} from "@/components/ui/mui";
 import Link from "next/link";
-import SearchIcon from "@mui/icons-material/Search";
-import LaunchIcon from "@mui/icons-material/Launch";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import BoltIcon from "@mui/icons-material/Bolt";
-import PublicIcon from "@mui/icons-material/Public";
-import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
-import HandymanRoundedIcon from "@mui/icons-material/HandymanRounded";
-import HealthAndSafetyRoundedIcon from "@mui/icons-material/HealthAndSafetyRounded";
+import { SearchIcon } from "@/components/icons/mui-icons";
+import { LaunchIcon } from "@/components/icons/mui-icons";
+import { TrendingUpIcon } from "@/components/icons/mui-icons";
+import { BoltIcon } from "@/components/icons/mui-icons";
+import { PublicIcon } from "@/components/icons/mui-icons";
+import { MenuBookRoundedIcon } from "@/components/icons/mui-icons";
+import { HandymanRoundedIcon } from "@/components/icons/mui-icons";
+import { HealthAndSafetyRoundedIcon } from "@/components/icons/mui-icons";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { addUtmParams } from "@/lib/utils";
 

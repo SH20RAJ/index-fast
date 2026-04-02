@@ -18,17 +18,17 @@ import {
   TextField,
   Typography,
   Collapse,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import PublicIcon from "@mui/icons-material/Public";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
-import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+} from "@/components/ui/mui";
+import { AddIcon } from "@/components/icons/mui-icons";
+import { PublicIcon } from "@/components/icons/mui-icons";
+import { RefreshIcon } from "@/components/icons/mui-icons";
+import { DeleteOutlineIcon } from "@/components/icons/mui-icons";
+import { AssessmentOutlinedIcon } from "@/components/icons/mui-icons";
+import { CheckCircleOutlineIcon } from "@/components/icons/mui-icons";
+import { EditOutlinedIcon } from "@/components/icons/mui-icons";
+import { AccessTimeRoundedIcon } from "@/components/icons/mui-icons";
+import { ExpandMoreRoundedIcon } from "@/components/icons/mui-icons";
+import { SearchRoundedIcon } from "@/components/icons/mui-icons";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";

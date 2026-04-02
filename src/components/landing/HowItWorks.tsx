@@ -1,13 +1,7 @@
 "use client";
-import {
-  Box,
-  Container,
-  Typography,
-  Stack,
-  alpha,
-  useTheme,
-} from "@mui/material";
-import Grid from "@mui/material/Grid2";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 const steps = [
   {
@@ -27,89 +21,41 @@ const steps = [
     title: "Scale with Proof",
     desc: "Track accepted requests, failures, and trend lines so teams can double down on what actually improves discovery.",
     punch: "Execution with visibility",
-  }
+  },
 ];
 
 export default function HowItWorks() {
-  const theme = useTheme();
-
   return (
-    <Box id="how-it-works" sx={{ py: { xs: 10, md: 16 }, bgcolor: "background.paper" }}>
-      <Container maxWidth="lg">
-        <Stack spacing={2} mb={10} alignItems="flex-start" sx={{ maxWidth: 800 }}>
-          <Box
-            sx={{
-              px: 1.5,
-              py: 0.5,
-              borderRadius: "99px",
-              border: `1px solid ${theme.palette.divider}`,
-              bgcolor: alpha(theme.palette.text.primary, 0.02),
-            }}
-          >
-            <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary", letterSpacing: "0.02em" }}>
-              Operational Workflow
-            </Typography>
-          </Box>
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.03em" }}>
+    <section id="how-it-works" className="border-b border-border/70 bg-card/30 py-14 sm:py-20">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 max-w-2xl space-y-3 sm:mb-12">
+          <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase">
+            Operational Workflow
+          </Badge>
+          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
             Stop publishing blind.
-            <br />
-            Start indexing with intent.
-          </Typography>
-          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "640px", lineHeight: 1.6, fontSize: "1.1rem" }}>
+            <span className="block text-muted-foreground">Start indexing with intent.</span>
+          </h2>
+          <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
             IndexFast gives you a daily operating system to push fresh pages, monitor outcomes, and compound discoverability.
-          </Typography>
-        </Stack>
+          </p>
+        </div>
 
-        <Grid container spacing={4}>
+        <div className="grid gap-4 md:grid-cols-3">
           {steps.map((step) => (
-            <Grid size={{ xs: 12, md: 4 }} key={step.title}>
-              <Box
-                sx={{
-                  p: { xs: 4, md: 5 },
-                  bgcolor: "background.default",
-                  borderRadius: "12px",
-                  border: `1px solid ${theme.palette.divider}`,
-                  height: "100%",
-                  position: "relative",
-                  transition: "border-color 0.2s",
-                  "&:hover": {
-                    borderColor: "primary.main",
-                  }
-                }}
-              >
-                <Typography
-                  variant="h2"
-                  sx={{
-                    position: "absolute",
-                    top: 24,
-                    right: 40,
-                    fontSize: "4rem",
-                    fontWeight: 900,
-                    opacity: 0.05,
-                    color: "text.primary",
-                    userSelect: "none",
-                    pointerEvents: "none",
-                  }}
-                >
-                  {step.num}
-                </Typography>
-
-                <Stack spacing={2} sx={{ position: "relative" }}>
-                  <Typography variant="caption" sx={{ fontWeight: 800, color: "primary.main", letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                    {step.punch}
-                  </Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 800, color: "text.primary", letterSpacing: "-0.02em" }}>
-                    {step.title}
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.6, fontSize: "1rem" }}>
-                    {step.desc}
-                  </Typography>
-                </Stack>
-              </Box>
-            </Grid>
+            <Card key={step.title} className="relative overflow-hidden border-border/70 bg-background/90">
+              <span className="pointer-events-none absolute -right-4 -top-4 text-8xl font-black tracking-tighter text-muted/35">
+                {step.num}
+              </span>
+              <CardContent className="relative space-y-3 p-5 sm:p-6">
+                <p className="text-[11px] font-bold tracking-[0.14em] text-primary uppercase">{step.punch}</p>
+                <h3 className="text-xl font-bold tracking-tight">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
+              </CardContent>
+            </Card>
           ))}
-        </Grid>
-      </Container>
-    </Box>
+        </div>
+      </div>
+    </section>
   );
 }

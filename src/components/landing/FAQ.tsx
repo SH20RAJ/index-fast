@@ -1,105 +1,57 @@
 "use client";
-import React from "react";
-import {
-  Box,
-  Container,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Stack,
-  alpha,
-  useTheme,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+import { ChevronDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const faqs = [
   {
     q: "How fast is indexing?",
-    a: "URLs typically get crawled and indexed in 4-24 hours. Without automation, this process can take weeks."
+    a: "URLs typically get crawled and indexed in 4-24 hours. Without automation, this process can take weeks.",
   },
   {
     q: "Is it safe for SEO?",
-    a: "Yes. We use official Google and Bing Indexing APIs. This is the recommended method for notifying search engines."
+    a: "Yes. We use official Bing and IndexNow APIs. This is the recommended way to notify engines.",
   },
   {
     q: "Do I need to be a developer?",
-    a: "No. Our interface is designed for non-technical users. If you can use a browser, you can use IndexFast."
+    a: "No. The dashboard is built for operators and marketers, not only engineers.",
   },
   {
     q: "Can I cancel any time?",
-    a: "Yes. We offer monthly billing with no long-term contracts. You can cancel directly from your dashboard."
+    a: "Yes. We offer monthly billing with no long contracts. You can cancel directly from your dashboard.",
   },
   {
     q: "What sites are supported?",
-    a: "Any site verified in Google Search Console, including WordPress, Shopify, and custom builds."
-  }
+    a: "Any site verified in Search Console, including WordPress, Shopify, and custom builds.",
+  },
 ];
 
 export default function FAQ() {
-  const theme = useTheme();
-  
   return (
-    <Box id="faq" sx={{ py: { xs: 10, md: 16 }, bgcolor: "background.default" }}>
-      <Container maxWidth="md">
-        <Stack spacing={2} mb={10} alignItems="center" textAlign="center">
-          <Box
-            sx={{
-              px: 1.5,
-              py: 0.5,
-              borderRadius: "99px",
-              border: `1px solid ${theme.palette.divider}`,
-              bgcolor: alpha(theme.palette.text.primary, 0.02),
-            }}
-          >
-            <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary", letterSpacing: "0.02em" }}>
-              Common Questions
-            </Typography>
-          </Box>
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.03em" }}>
-            Frequently asked questions
-          </Typography>
-          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "600px", mx: "auto", fontSize: "1.1rem", lineHeight: 1.6 }}>
-            Everything you need to know about safety, setup, and indexing outcomes.
-          </Typography>
-        </Stack>
+    <section id="faq" className="border-b border-border/70 py-14 sm:py-20">
+      <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 space-y-3 text-center sm:mb-10">
+          <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase">
+            Common Questions
+          </Badge>
+          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">Frequently asked questions</h2>
+          <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Everything you need to know about setup, safety, and indexing outcomes.
+          </p>
+        </div>
 
-        <Stack spacing={0}>
-          {faqs.map((faq, idx) => (
-            <Accordion
-              key={idx}
-              elevation={0}
-              sx={{
-                "&:before": { display: "none" },
-                bgcolor: "transparent",
-                borderBottom: `1px solid ${theme.palette.divider}`,
-                borderRadius: "0 !important",
-                m: "0 !important",
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  bgcolor: alpha(theme.palette.text.primary, 0.01),
-                }
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{ fontSize: 20, color: "text.secondary" }} />}
-                sx={{ 
-                  px: 2, 
-                  py: 1,
-                  "& .MuiAccordionSummary-content": {
-                    my: 2
-                  }
-                }}
-              >
-                <Typography sx={{ fontWeight: 800, color: "text.primary", fontSize: "1.1rem", letterSpacing: "-0.01em" }}>{faq.q}</Typography>
-              </AccordionSummary>
-              <AccordionDetails sx={{ px: 2, pb: 4 }}>
-                <Typography sx={{ color: "text.secondary", lineHeight: 1.6, maxWidth: "700px", fontSize: "1rem" }}>{faq.a}</Typography>
-              </AccordionDetails>
-            </Accordion>
+        <div className="divide-y divide-border rounded-xl border border-border/70 bg-card/70">
+          {faqs.map((faq) => (
+            <details key={faq.q} className="group p-4 sm:p-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold tracking-tight">
+                {faq.q}
+                <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-open:rotate-180" />
+              </summary>
+              <p className="pt-3 text-sm leading-relaxed text-muted-foreground">{faq.a}</p>
+            </details>
           ))}
-        </Stack>
-      </Container>
-    </Box>
+        </div>
+      </div>
+    </section>
   );
 }

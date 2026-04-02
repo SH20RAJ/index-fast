@@ -1,118 +1,68 @@
 "use client";
-import React from "react";
-import { Box, Container, Typography, Stack, alpha, useTheme } from "@mui/material";
-import Grid from "@mui/material/Grid2";
-import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
-import SearchIcon from "@mui/icons-material/Search";
-import LanguageIcon from "@mui/icons-material/Language";
+
+import Link from "next/link";
+import { Globe, Search, ShieldCheck } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 const tools = [
   {
     title: "Sitemap Health",
     desc: "Scan for 404s and broken links that waste crawl budget.",
-    icon: <LanguageIcon />,
-    color: "#111111"
+    icon: Globe,
+    href: "/tools",
   },
   {
     title: "Key Verifier",
     desc: "Validate your IndexNow and Bing credentials instantly.",
-    icon: <VerifiedUserIcon />,
-    color: "#111111"
+    icon: ShieldCheck,
+    href: "/tools",
   },
   {
     title: "AI Analysis",
     desc: "Preview how AI crawlers parse and interpret your pages.",
-    icon: <SearchIcon />,
-    color: "#111111"
-  }
+    icon: Search,
+    href: "/tools",
+  },
 ];
 
 export default function FreeTools() {
-  const theme = useTheme();
-  
   return (
-    <Box id="free-tools" sx={{ py: { xs: 10, md: 16 }, bgcolor: "background.paper" }}>
-      <Container maxWidth="lg">
-        <Stack spacing={2} mb={10} alignItems="center" textAlign="center">
-          <Box
-            sx={{
-              px: 1.5,
-              py: 0.5,
-              borderRadius: "99px",
-              border: `1px solid ${theme.palette.divider}`,
-              bgcolor: alpha(theme.palette.text.primary, 0.02),
-            }}
-          >
-            <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary", letterSpacing: "0.02em" }}>
-              Public Utilities
-            </Typography>
-          </Box>
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.03em" }}>
-            Free diagnostic tools
-          </Typography>
-          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "600px", mx: "auto", fontSize: "1.1rem", lineHeight: 1.6 }}>
-            Uncover indexing blockers immediately with our focused SEO diagnostic utilities.
-          </Typography>
-        </Stack>
+    <section id="free-tools" className="border-b border-border/70 bg-card/30 py-14 sm:py-20">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 space-y-3 text-center sm:mb-12">
+          <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase">
+            Public Utilities
+          </Badge>
+          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">Free diagnostic tools</h2>
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Uncover indexing blockers immediately with focused utilities you can run in minutes.
+          </p>
+        </div>
 
-        <Grid container spacing={4}>
-          {tools.map((tool) => (
-            <Grid size={{ xs: 12, md: 4 }} key={tool.title}>
-              <Box
-                sx={{
-                  p: { xs: 4, md: 5 },
-                  height: "100%",
-                  bgcolor: "background.default",
-                  borderRadius: "12px",
-                  border: `1px solid ${theme.palette.divider}`,
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    borderColor: "primary.main",
-                  }
-                }}
-              >
-                <Box sx={{ 
-                  width: 40, 
-                  height: 40, 
-                  borderRadius: "8px", 
-                  border: `1px solid ${theme.palette.divider}`,
-                  color: "primary.main",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  mb: 4
-                }}>
-                  {React.cloneElement(tool.icon as React.ReactElement<any>, { sx: { fontSize: 20 } })}
-                </Box>
-                <Typography variant="h6" sx={{ fontWeight: 800, mb: 1.5, color: "text.primary", letterSpacing: "-0.01em" }}>
-                  {tool.title}
-                </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary", mb: 4, lineHeight: 1.6 }}>
-                  {tool.desc}
-                </Typography>
-                <Typography 
-                  variant="button" 
-                  sx={{ 
-                    color: "text.primary", 
-                    fontWeight: 800, 
-                    display: "flex", 
-                    alignItems: "center", 
-                    gap: 1, 
-                    textTransform: "none",
-                    fontSize: "0.85rem",
-                    cursor: "pointer",
-                    "&:hover": {
-                      opacity: 0.7
-                    }
-                  }}
-                >
-                  Run audit <span>→</span>
-                </Typography>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </Box>
+        <div className="grid gap-4 md:grid-cols-3">
+          {tools.map((tool) => {
+            const Icon = tool.icon;
+            return (
+              <Card key={tool.title} className="border-border/70 bg-background/90">
+                <CardContent className="space-y-4 p-5 sm:p-6">
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border/70 bg-muted/40">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-lg font-bold tracking-tight">{tool.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{tool.desc}</p>
+                  <Button asChild variant="outline" className="w-full justify-between">
+                    <Link href={tool.href}>
+                      Run audit <span>{"->"}</span>
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }

@@ -1,32 +1,22 @@
 "use client";
+
 import { useState } from "react";
-import {
-  Alert,
-  Box,
-  Container,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-  Stack,
-  alpha,
-  useTheme,
-} from "@mui/material";
-import Grid from "@mui/material/Grid2";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { Check } from "lucide-react";
 import { useStackApp, useUser } from "@stackframe/stack";
 
 import { PLAN_DEFINITIONS } from "@/lib/billing/plans";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 const plans = Object.values(PLAN_DEFINITIONS);
 
 export default function Pricing() {
   const stack = useStackApp();
   const user = useUser();
-  const theme = useTheme();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const isDark = theme.palette.mode === "dark";
 
   async function startCheckout(planName: string) {
     if (planName === "Starter") {
@@ -68,136 +58,67 @@ export default function Pricing() {
   }
 
   return (
-    <Box id="pricing" sx={{ py: { xs: 10, md: 16 }, bgcolor: "background.default" }}>
-      <Container maxWidth="lg">
-        <Stack spacing={2} mb={10} alignItems="center" textAlign="center">
-          <Box
-            sx={{
-              px: 1.5,
-              py: 0.5,
-              borderRadius: "99px",
-              border: `1px solid ${theme.palette.divider}`,
-              bgcolor: alpha(theme.palette.text.primary, 0.02),
-            }}
-          >
-            <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary", letterSpacing: "0.02em" }}>
-              Pricing Plans
-            </Typography>
-          </Box>
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.03em" }}>
-            Simple, predictable pricing
-          </Typography>
-          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "600px", mx: "auto", fontSize: "1.1rem", lineHeight: 1.6 }}>
-            Choose the level of execution your properties need. No hidden fees or complex seat-based tiers.
-          </Typography>
-        </Stack>
+    <section id="pricing" className="border-b border-border/70 bg-card/30 py-14 sm:py-20">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 space-y-3 text-center sm:mb-12">
+          <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase">
+            Pricing Plans
+          </Badge>
+          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">Simple, predictable pricing</h2>
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Choose the level of indexing execution your properties need. No hidden fees.
+          </p>
+        </div>
 
-        <Grid container spacing={4} alignItems="stretch">
+        <div className="grid gap-4 md:grid-cols-3">
           {plans.map((p) => (
-            <Grid size={{ xs: 12, md: 4 }} key={p.name}>
-              <Card
-                sx={{
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  bgcolor: "background.paper",
-                  borderRadius: "12px",
-                  border: `1px solid ${p.popular ? "primary.main" : "divider"}`,
-                  boxShadow: p.popular ? (isDark ? "0 20px 40px rgba(0,0,0,0.4)" : "0 20px 40px rgba(0,0,0,0.03)") : "none",
-                  position: "relative",
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    borderColor: "primary.main",
-                  }
-                }}
-              >
-                {p.popular && (
-                  <Box sx={{
-                    position: "absolute",
-                    top: 16,
-                    right: 24,
-                    bgcolor: "primary.main",
-                    color: isDark ? "black" : "white",
-                    px: 1.5,
-                    py: 0.4,
-                    borderRadius: "99px",
-                    fontSize: "0.7rem",
-                    fontWeight: 900,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                  }}>
-                    Popular
-                  </Box>
-                )}
-                <CardContent sx={{ p: { xs: 4, md: 5 }, flexGrow: 1, display: "flex", flexDirection: "column" }}>
-                  <Stack spacing={0.5} mb={4}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 800, color: p.popular ? "primary.main" : "text.secondary", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                      {p.name}
-                    </Typography>
-                    <Stack direction="row" alignItems="baseline" spacing={0.5}>
-                      <Typography variant="h3" sx={{ fontWeight: 900, color: "text.primary", letterSpacing: "-0.04em" }}>
-                        ${p.priceMonthly}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 600 }}>/mo</Typography>
-                    </Stack>
-                    {p.trialDays && (
-                      <Typography variant="caption" sx={{ color: "primary.main", fontWeight: 800, mt: 0.5 }}>
-                        Includes {p.trialDays}-day free trial
-                      </Typography>
-                    )}
-                    <Typography variant="body2" sx={{ color: "text.secondary", mt: p.trialDays ? 1 : 1.5, lineHeight: 1.5 }}>
-                      {p.tagline}
-                    </Typography>
-                  </Stack>
+            <Card key={p.name} className={p.popular ? "border-primary/60 bg-background" : "border-border/70 bg-background/90"}>
+              <CardContent className="flex h-full flex-col gap-4 p-5 sm:p-6">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs font-bold tracking-[0.14em] text-muted-foreground uppercase">{p.name}</p>
+                    {p.popular ? <Badge>Popular</Badge> : null}
+                  </div>
+                  <div className="flex items-end gap-1">
+                    <span className="text-3xl font-black tracking-tight">${p.priceMonthly}</span>
+                    <span className="pb-1 text-sm text-muted-foreground">/mo</span>
+                  </div>
+                  {p.trialDays ? (
+                    <p className="text-xs font-medium text-primary">Includes {p.trialDays}-day free trial</p>
+                  ) : null}
+                  <p className="text-sm text-muted-foreground">{p.tagline}</p>
+                </div>
 
-                  <Stack spacing={2} sx={{ mb: 6, flexGrow: 1 }}>
-                    {p.features.map((f, fidx) => (
-                      <Stack key={fidx} direction="row" spacing={1.5} alignItems="center">
-                        <CheckCircleIcon sx={{ fontSize: 16, color: p.popular ? "primary.main" : "text.secondary", opacity: 0.8 }} />
-                        <Typography variant="body2" sx={{ color: "text.primary", fontWeight: 500 }}>
-                          {f}
-                        </Typography>
-                      </Stack>
-                    ))}
-                  </Stack>
+                <div className="flex-1 space-y-2">
+                  {p.features.map((f, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-primary" />
+                      <span className="text-sm">{f}</span>
+                    </div>
+                  ))}
+                </div>
 
-                  <Button
-                    variant={p.popular ? "contained" : "outlined"}
-                    fullWidth
-                    size="large"
-                    onClick={() => void startCheckout(p.name)}
-                    disabled={loadingPlan === p.name}
-                    sx={{
-                      borderRadius: "8px",
-                      py: 1.5,
-                      fontWeight: 800,
-                      fontSize: "0.9rem",
-                      bgcolor: p.popular ? "primary.main" : "transparent",
-                      color: p.popular ? (isDark ? "black" : "white") : "text.primary",
-                      borderColor: "divider",
-                      "&:hover": {
-                        bgcolor: p.popular ? "primary.main" : alpha(theme.palette.text.primary, 0.04),
-                        borderColor: "primary.main",
-                        opacity: p.popular ? 0.9 : 1,
-                      }
-                    }}
-                  >
-                    {loadingPlan === p.name ? "Redirecting..." : p.ctaLabel}
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
+                <Button
+                  className="w-full"
+                  variant={p.popular ? "default" : "outline"}
+                  onClick={() => void startCheckout(p.name)}
+                  disabled={loadingPlan === p.name}
+                >
+                  {loadingPlan === p.name ? "Redirecting..." : p.ctaLabel}
+                </Button>
+              </CardContent>
+            </Card>
           ))}
-        </Grid>
+        </div>
 
         {checkoutError ? (
-          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-            <Alert severity="error" sx={{ borderRadius: "8px", maxWidth: 600, width: "100%" }}>
-              {checkoutError}
+          <div className="mx-auto mt-4 max-w-2xl">
+            <Alert variant="destructive">
+              <AlertDescription>{checkoutError}</AlertDescription>
             </Alert>
-          </Box>
+          </div>
         ) : null}
-      </Container>
-    </Box>
+      </div>
+    </section>
   );
 }

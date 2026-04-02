@@ -11,7 +11,7 @@ import {
   Stack,
   Typography,
   alpha,
-} from "@mui/material";
+} from "@/components/ui/mui";
 import {
   EXTERNAL_RESOURCE_CATEGORIES,
   getExternalResourceCategoryById,
