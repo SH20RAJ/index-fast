@@ -358,7 +358,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
         </div>
 
         <Card className="overflow-hidden border-border/50 shadow-sm transition-all hover:shadow-md">
-          <Accordion value={(addWebsiteExpanded ? "add" : undefined) as any} onValueChange={(val: any) => setAddWebsiteExpanded(val === "add")}>
+          <Accordion type="single" collapsible value={(addWebsiteExpanded ? "add" : undefined) as any} onValueChange={(val: any) => setAddWebsiteExpanded(val === "add")}>
             <AccordionItem value="add" className="border-none">
               <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]>div>svg]:rotate-180">
                 <div className="flex w-full items-center justify-between text-left">
@@ -479,7 +479,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
 
         {(gscConnected || gscLoading || gscSites.length > 0 || processLogs.length > 0) && (
           <Card className="overflow-hidden border-border/50 shadow-sm">
-            <Accordion value={(gscPanelExpanded ? "gsc" : undefined) as any} onValueChange={(val: any) => setGscPanelExpanded(val === "gsc")}>
+            <Accordion type="single" collapsible value={(gscPanelExpanded ? "gsc" : undefined) as any} onValueChange={(val: any) => setGscPanelExpanded(val === "gsc")}>
               <AccordionItem value="gsc" className="border-none">
                 <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]>div>svg]:rotate-180">
                   <div className="flex w-full items-center justify-between text-left">

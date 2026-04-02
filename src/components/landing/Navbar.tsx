@@ -62,8 +62,10 @@ export default function Navbar() {
             {mode === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger render={<Button variant="outline" size="icon" aria-label="Open menu" />}>
-              <Menu className="h-4 w-4" />
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" aria-label="Open menu">
+                <Menu className="h-4 w-4" />
+              </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[88vw] max-w-sm">
               <SheetHeader>
