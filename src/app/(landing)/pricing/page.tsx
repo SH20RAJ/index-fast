@@ -1,7 +1,5 @@
 import { Metadata } from "next";
-import Navbar from "@/components/landing/Navbar";
 import Pricing from "@/components/landing/Pricing";
-import Footer from "@/components/landing/Footer";
 
 export const metadata: Metadata = {
   title: "Pricing - IndexFast",
@@ -12,13 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function PricingPage() {
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
-      <main className="flex-1">
-        <Pricing />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <Pricing />;
 }

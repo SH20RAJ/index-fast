@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Features from "@/components/landing/Features";
@@ -8,7 +7,7 @@ import BlogSection from "@/components/landing/BlogSection";
 import Pricing from "@/components/landing/Pricing";
 import FAQ from "@/components/landing/FAQ";
 import FinalCTA from "@/components/landing/FinalCTA";
-import Footer from "@/components/landing/Footer";
+import ChatBot from "@/components/landing/ChatBot";
 
 export const metadata: Metadata = {
   title: "IndexFast - Automated SEO Indexing & URL Submission",
@@ -20,19 +19,16 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen bg-background text-foreground">
-      <Navbar />
-      <main>
-        <Hero />
-        <HowItWorks />
-        <Features />
-        <FreeTools />
-        <BlogSection />
-        <Pricing />
-        <FAQ />
-        <FinalCTA />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <Hero />
+      <HowItWorks />
+      <Features />
+      <FreeTools />
+      <BlogSection />
+      <Pricing />
+      <FAQ />
+      <FinalCTA />
+      <ChatBot />
+    </>
   );
 }

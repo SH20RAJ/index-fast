@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import Navbar from "@/components/landing/Navbar";
-import Footer from "@/components/landing/Footer";
 import { BLOG_POSTS } from "@/lib/blog-catalog";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.net";
@@ -55,8 +53,7 @@ const blogCollectionJsonLd = {
 
 export default function BlogIndexPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Navbar />
+    <>
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <div className="mb-8 space-y-3 sm:mb-10">
           <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Editorial Hub</p>
@@ -90,8 +87,7 @@ export default function BlogIndexPage() {
           ))}
         </div>
       </main>
-      <Footer />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogCollectionJsonLd) }} />
-    </div>
+    </>
   );
 }

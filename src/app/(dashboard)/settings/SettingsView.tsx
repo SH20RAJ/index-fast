@@ -1,5 +1,6 @@
-import { Box, Button, Card, CardContent, Chip, Grid, Stack, Typography } from "@/components/ui/mui";
-import { alpha } from "@/lib/color";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import type { User } from "@/lib/db/schema";
 import type { PlanId } from "@/lib/billing/plans";
 import PageHeader from "@/components/dashboard/PageHeader";
@@ -14,90 +15,93 @@ interface SettingsViewProps {
 
 export default function SettingsView({ initialSettings, planId }: SettingsViewProps) {
   return (
-    <Box sx={{ pt: 1, pb: 8 }}>
-      <Stack spacing={3}>
-        <PageHeader
-          title="Settings & Billing"
-          description="Control account identity, subscription tier, and monetization limits from one console."
-        />
+    <div className="space-y-6 pb-8">
+      <PageHeader
+        title="Settings & Billing"
+        description="Control account identity, subscription tier, and monetization limits from one console."
+      />
 
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, md: 5 }}>
-            <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none", height: "100%" }}>
-              <CardContent sx={{ p: { xs: 2.25, md: 3 } }}>
-                <Stack spacing={2}>
-                  <Typography variant="h6" sx={{ fontWeight: 900 }}>
-                    Account Email
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    This email is used for billing receipts, quota notices, and indexing incident updates.
-                  </Typography>
-                  <AccountEmailForm initialEmail={initialSettings.email} />
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 7 }}>
-            <Card
-              sx={{
-                borderRadius: "16px",
-                border: "1px solid",
-                borderColor: alpha("#0F172A", 0.08),
-                boxShadow: "none",
-                background: "linear-gradient(150deg, rgba(15,23,42,0.04) 0%, rgba(12,74,110,0.04) 100%)",
-                height: "100%",
-              }}
-            >
-              <CardContent sx={{ p: { xs: 2.25, md: 3 } }}>
-                <Stack spacing={1.5}>
-                  <Typography variant="h6" sx={{ fontWeight: 900 }}>
-                    Current Subscription Snapshot
-                  </Typography>
-                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                    <Chip label={`Plan: ${planId.toUpperCase()}`} sx={{ borderRadius: "8px", fontWeight: 800 }} color="primary" />
-                    <Chip label={`Status: ${initialSettings.subscriptionStatus || "inactive"}`} sx={{ borderRadius: "8px", fontWeight: 800 }} />
-                    <Chip label={initialSettings.isPro ? "Pings Enabled" : "Pings Disabled"} sx={{ borderRadius: "8px", fontWeight: 800 }} color={initialSettings.isPro ? "success" : "default"} />
-                  </Stack>
-
-                  <Typography variant="body2" color="text.secondary" sx={{ wordBreak: "break-word" }}>
-                    Customer ID: {initialSettings.dodoCustomerId || "Not linked"}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ wordBreak: "break-word" }}>
-                    Subscription ID: {initialSettings.dodoSubscriptionId || "Not linked"}
-                  </Typography>
-
-                  {initialSettings.dodoCustomerId ? (
-                    <Box component="form" action={openBillingPortalAction}>
-                      <Button variant="outlined" sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }} type="submit">
-                        Open Billing Portal
-                      </Button>
-                    </Box>
-                  ) : (
-                    <Typography variant="caption" color="text.secondary">
-                      Billing portal unlocks after your first paid checkout.
-                    </Typography>
-                  )}
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-
-        <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
-          <CardContent sx={{ p: { xs: 2.25, md: 3 } }}>
-            <Stack spacing={2}>
-              <Typography variant="h6" sx={{ fontWeight: 900 }}>
-                Subscription Plans
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Free plan changes are instant. Paid plans redirect to secure Dodo checkout and sync back via webhooks.
-              </Typography>
-              <PlanSelectorForm currentPlanId={planId} />
-            </Stack>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Account Email */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Account Email</CardTitle>
+            <CardDescription>
+              Used for billing receipts, quota notices, and incident updates.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AccountEmailForm initialEmail={initialSettings.email} />
           </CardContent>
         </Card>
-      </Stack>
-    </Box>
+
+        {/* Subscription Snapshot */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Subscription Status</CardTitle>
+            <CardDescription>Your current plan and billing information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="default" className="text-xs font-semibold">
+                {planId.toUpperCase()}
+              </Badge>
+              <Badge
+                variant="outline"
+                className="text-xs font-semibold"
+              >
+                {initialSettings.subscriptionStatus || "Inactive"}
+              </Badge>
+              <Badge
+                variant={initialSettings.isPro ? "default" : "secondary"}
+                className="text-xs font-semibold"
+              >
+                {initialSettings.isPro ? "Pings Enabled" : "Pings Disabled"}
+              </Badge>
+            </div>
+
+            <div className="space-y-2 text-sm">
+              <p className="text-muted-foreground">
+                <span className="font-semibold text-foreground">Customer ID:</span>{" "}
+                <code className="bg-muted px-2 py-1 rounded text-xs">
+                  {initialSettings.dodoCustomerId || "Not linked"}
+                </code>
+              </p>
+              <p className="text-muted-foreground">
+                <span className="font-semibold text-foreground">Subscription ID:</span>{" "}
+                <code className="bg-muted px-2 py-1 rounded text-xs">
+                  {initialSettings.dodoSubscriptionId || "Not linked"}
+                </code>
+              </p>
+            </div>
+
+            {initialSettings.dodoCustomerId ? (
+              <form action={openBillingPortalAction}>
+                <Button type="submit" variant="outline" className="w-full">
+                  Open Billing Portal
+                </Button>
+              </form>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Billing portal unlocks after your first paid checkout.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Subscription Plans */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Subscription Plans</CardTitle>
+          <CardDescription>
+            Free plan changes are instant. Paid plans redirect to secure checkout and sync back via webhooks.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <PlanSelectorForm currentPlanId={planId} />
+        </CardContent>
+      </Card>
+    </div>
   );
 }

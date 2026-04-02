@@ -5,8 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import Navbar from "@/components/landing/Navbar";
-import Footer from "@/components/landing/Footer";
 import { BLOG_POSTS, getBlogPostBySlug } from "@/lib/blog-catalog";
 
 interface BlogPostPageProps {
@@ -92,8 +90,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Navbar />
+    <>
       <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
         <div className="space-y-4">
           <div className="flex flex-wrap gap-2">
@@ -175,9 +172,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </div>
       </main>
-      <Footer />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-    </div>
+    </>
   );
 }

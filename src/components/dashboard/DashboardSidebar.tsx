@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useStackApp, useUser } from "@stackframe/stack";
+import { useColorMode } from "@/components/ThemeRegistry";
 import {
   Activity,
   Bolt,
@@ -14,7 +15,10 @@ import {
   CheckCircle2,
   LogOut,
   Menu,
-  X,
+  Moon,
+  Sun,
+  ChevronDown,
+  Zap,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -74,6 +78,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   const pathname = usePathname();
   const user = useUser();
   const stack = useStackApp();
+  const { mode, toggleColorMode } = useColorMode();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const displayName = user?.displayName?.trim() || "User";
@@ -96,24 +101,29 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   };
 
   return (
-    <div className="flex flex-col gap-6 h-full">
-      {/* Header */}
-      <div className="flex items-center gap-2.5 px-4 pt-4">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
-          <Bolt className="h-5 w-5 text-primary-foreground" />
-        </div>
-        <div className="flex flex-col">
-          <span className="text-sm font-black tracking-tighter leading-none">IndexFast</span>
-          <span className="text-[10px] font-bold text-primary tracking-widest uppercase">Premium</span>
+    <div className="flex flex-col gap-0 h-full bg-gradient-to-b from-background via-background to-muted/20">
+      {/* Premium Header */}
+      <div className="px-4 pt-6 pb-4 space-y-4 border-b border-border/10 bg-gradient-to-b from-primary/5 to-transparent">
+        <div className="flex items-center gap-3">
+          <div className="relative flex h-12 w-12 items-center justify-center">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/60 rounded-2xl opacity-90 blur-sm" />
+            <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/20">
+              <Bolt className="h-6 w-6 text-primary-foreground" />
+            </div>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-base font-black tracking-tight leading-tight">IndexFast</span>
+            <span className="text-[10px] font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent tracking-widest uppercase">Premium ✨</span>
+          </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto px-3">
-        <nav className="space-y-6">
+      <div className="flex-1 overflow-y-auto px-3 py-6 space-y-8">
+        <nav className="space-y-8">
           {navSections.map((section) => (
-            <div key={section.label} className="space-y-2">
-              <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/50 px-3">
+            <div key={section.label} className="space-y-3">
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 px-3">
                 {section.label}
               </p>
               <div className="space-y-1">
@@ -129,54 +139,61 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                           href={item.href || "#"}
                           onClick={handleNavClick}
                           className={cn(
-                            "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold transition-colors",
+                            "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 relative group",
                             active
-                              ? "bg-primary text-primary-foreground"
-                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                              ? "bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/30"
+                              : "text-muted-foreground hover:text-foreground"
                           )}
                         >
-                          <item.icon className="w-4 h-4" />
-                          <span>{item.label}</span>
+                          {active && (
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-primary-foreground to-primary-foreground/60 rounded-r-full" />
+                          )}
+                          <item.icon className={cn(
+                            "w-4 h-4 transition-all duration-300",
+                            active ? "scale-110" : "group-hover:scale-110"
+                          )} />
+                          <span className="flex-1">{item.label}</span>
+                          {active && <Zap className="w-3 h-3 text-primary-foreground animate-pulse" />}
                         </Link>
                       ) : (
                         <>
                           <button
                             onClick={() => setOpenSubmenu(submenuOpen ? null : item.label)}
                             className={cn(
-                              "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold transition-colors text-left",
+                              "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 text-left relative group",
                               active
-                                ? "bg-primary/10 text-primary"
-                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                ? "bg-gradient-to-r from-primary/15 to-primary/5 text-primary"
+                                : "text-muted-foreground hover:text-foreground"
                             )}
                           >
-                            <item.icon className="w-4 h-4" />
+                            <item.icon className={cn(
+                              "w-4 h-4 transition-all duration-300",
+                              active ? "text-primary" : ""
+                            )} />
                             <span className="flex-1">{item.label}</span>
-                            <svg
-                              className={cn(
-                                "w-4 h-4 transition-transform",
-                                submenuOpen && "rotate-180"
-                              )}
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                            </svg>
+                            <ChevronDown className={cn(
+                              "w-4 h-4 transition-transform duration-300",
+                              submenuOpen && "rotate-180"
+                            )} />
                           </button>
                           {submenuOpen && item.children && (
-                            <div className="ml-4 space-y-1 border-l border-border/50 pl-3">
+                            <div className="mt-2 ml-4 space-y-2 border-l-2 border-primary/30 pl-4 pb-2">
                               {item.children.map((child) => (
                                 <Link
                                   key={child.href}
                                   href={child.href}
                                   onClick={handleNavClick}
                                   className={cn(
-                                    "block px-3 py-2 rounded-lg text-xs font-semibold transition-colors",
+                                    "flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200",
                                     pathname === child.href
-                                      ? "text-primary bg-primary/10"
-                                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                                      ? "text-primary bg-gradient-to-r from-primary/20 to-transparent font-bold"
+                                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                   )}
                                 >
+                                  <div className={cn(
+                                    "w-1.5 h-1.5 rounded-full transition-all",
+                                    pathname === child.href ? "bg-primary w-2" : "bg-muted-foreground/30"
+                                  )} />
                                   {child.label}
                                 </Link>
                               ))}
@@ -193,55 +210,82 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         </nav>
       </div>
 
-      {/* Status */}
-      <div className="mx-3 p-4 bg-muted/30 rounded-lg border border-border/50">
-        <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Status</p>
-        <h4 className="text-xs font-semibold tracking-tight mb-2">Pro Plan Active</h4>
-        <div className="h-1.5 w-full bg-primary/20 rounded-full overflow-hidden">
-          <div className="h-full w-3/4 bg-primary" />
+      {/* Premium Status Card */}
+      <div className="mx-3 mb-6 p-4 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-2xl border border-primary/20 shadow-xl shadow-primary/10 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full blur-2xl -mr-10 -mt-10" />
+        <div className="relative space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Account Status</p>
+            <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-[9px] font-bold">Premium</Badge>
+          </div>
+          <h4 className="text-sm font-black tracking-tight">Pro Plan Active</h4>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] text-muted-foreground font-medium">Usage this month</span>
+              <span className="text-[9px] font-bold text-primary">75%</span>
+            </div>
+            <div className="h-2 w-full bg-primary/10 rounded-full overflow-hidden border border-primary/20">
+              <div className="h-full w-3/4 bg-gradient-to-r from-primary to-primary/60 rounded-full" />
+            </div>
+          </div>
+          <p className="text-[8px] font-bold text-muted-foreground flex items-center gap-1.5 mt-2">
+            <CheckCircle2 className="h-3 w-3 text-emerald-500 flex-shrink-0" /> 
+            <span>All engines monitored & running</span>
+          </p>
         </div>
-        <p className="text-[9px] font-medium text-muted-foreground mt-2 flex items-center gap-1">
-          <CheckCircle2 className="h-2.5 w-2.5 text-emerald-500" /> All engines monitored
-        </p>
       </div>
 
-      {/* User Section */}
-      <div className="border-t border-border/20 p-4 space-y-4">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10 border-2 border-primary/20">
-            <AvatarFallback className="bg-gradient-to-br from-primary/10 to-primary/30 text-primary font-black text-xs">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
+      {/* Premium User Section */}
+      <div className="border-t border-border/10 bg-gradient-to-t from-muted/40 to-transparent p-4 space-y-4">
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-primary/5 to-transparent border border-primary/10">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-primary/10 rounded-xl blur" />
+            <Avatar className="relative h-12 w-12 border-2 border-primary/30 shadow-lg shadow-primary/20">
+              <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/40 text-primary font-black">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+          </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold leading-none mb-1">{displayName}</p>
-            <p className="truncate text-[10px] font-medium text-muted-foreground">{primaryEmail}</p>
+            <p className="truncate text-sm font-bold leading-tight">{displayName}</p>
+            <p className="truncate text-[9px] font-medium text-muted-foreground">{primaryEmail}</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <Button
-            variant="outline"
             size="sm"
-            className="h-9 rounded-lg gap-2 text-xs font-semibold"
+            className="h-10 rounded-xl gap-1.5 text-[11px] font-bold bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300"
             asChild
           >
             <Link href="/settings">
-              <Settings className="h-3.5 w-3.5" />
-              Settings
+              <Settings className="h-4 w-4" />
+              <span className="hidden sm:inline">Settings</span>
             </Link>
           </Button>
           <Button
-            variant="ghost"
             size="sm"
-            className="h-9 rounded-lg gap-2 text-xs font-semibold hover:text-destructive"
+            className="h-10 rounded-xl gap-1.5 text-[11px] font-bold bg-muted/50 hover:bg-muted text-foreground transition-all duration-300"
+            onClick={toggleColorMode}
+            title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
+          >
+            {mode === "dark" ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+            <span className="hidden sm:inline">{mode === "dark" ? "Light" : "Dark"}</span>
+          </Button>
+          <Button
+            size="sm"
+            className="h-10 rounded-xl gap-1.5 text-[11px] font-bold text-destructive bg-destructive/10 hover:bg-destructive/20 transition-all duration-300"
             onClick={() => {
               closeSheet?.();
               stack.signOut();
             }}
           >
-            <LogOut className="h-3.5 w-3.5" />
-            Logout
+            <LogOut className="h-4 w-4" />
+            <span className="hidden sm:inline">Logout</span>
           </Button>
         </div>
       </div>
@@ -276,163 +320,5 @@ export default function DashboardSidebar() {
         <SidebarContent />
       </aside>
     </>
-  );
-}
-                      {!hasChildren ? (
-                        <SidebarMenuButton
-                          asChild
-                          isActive={active}
-                          tooltip={item.label}
-                          onMouseEnter={() => setHoveredItem(item.label)}
-                          onMouseLeave={() => setHoveredItem(null)}
-                          className={cn(
-                            "relative group h-10 px-3 rounded-xl transition-all duration-300",
-                            active 
-                              ? "bg-primary/10 text-primary font-black shadow-sm" 
-                              : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
-                          )}
-                        >
-                          <Link href={item.href || "#"}>
-                            <item.icon className={cn(
-                              "h-4 w-4 transition-transform duration-300 group-hover:scale-110",
-                              active ? "text-primary stroke-[2.5px]" : "opacity-70 group-hover:opacity-100"
-                            )} />
-                            <span className="tracking-tight">{item.label}</span>
-                            {active && (
-                              <motion.div
-                                layoutId="active-pill"
-                                className="absolute left-0 w-1 h-5 bg-primary rounded-full"
-                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                              />
-                            )}
-                          </Link>
-                        </SidebarMenuButton>
-                      ) : (
-                        <div className="space-y-1">
-                          <SidebarMenuButton
-                            isActive={active}
-                            tooltip={item.label}
-                            className={cn(
-                              "group h-10 px-3 rounded-xl transition-all duration-300",
-                              active 
-                                ? "bg-primary/5 text-primary font-black" 
-                                : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
-                            )}
-                          >
-                            <item.icon className={cn(
-                              "h-4 w-4 transition-transform duration-300 group-hover:scale-110",
-                              active ? "text-primary stroke-[2.5px]" : "opacity-70 group-hover:opacity-100"
-                            )} />
-                            <span className="tracking-tight">{item.label}</span>
-                            <ChevronRight className={cn(
-                              "ml-auto h-3.5 w-3.5 opacity-40 transition-transform group-data-[state=open]:rotate-90",
-                              active && "opacity-100"
-                            )} />
-                          </SidebarMenuButton>
-                          <SidebarMenuSub className="border-l-0 ml-4 pl-4 relative">
-                            <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-primary/20 via-primary/5 to-transparent" />
-                            {item.children?.map((child) => (
-                              <SidebarMenuSubItem key={child.href}>
-                                <SidebarMenuSubButton
-                                  asChild
-                                  isActive={pathname === child.href}
-                                  className={cn(
-                                    "h-8 px-3 rounded-lg transition-all duration-200 text-xs",
-                                    pathname === child.href 
-                                      ? "text-primary font-black bg-primary/5" 
-                                      : "text-muted-foreground/70 hover:text-foreground hover:bg-muted/20"
-                                  )}
-                                >
-                                  <Link href={child.href}>{child.label}</Link>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                            ))}
-                          </SidebarMenuSub>
-                        </div>
-                      )}
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-
-        <SidebarSeparator className="my-6 opacity-40" />
-        
-        <SidebarGroup>
-          <div className="px-3 mb-3 bg-muted/30 rounded-2xl p-4 border border-border/10 relative overflow-hidden group/upgrade">
-            <div className="absolute top-0 right-0 p-2 opacity-10 group-hover/upgrade:opacity-20 transition-opacity">
-              <Sparkles className="h-8 w-8 text-primary" />
-            </div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Status</p>
-            <h4 className="text-xs font-black tracking-tight mb-2">Pro Plan Active</h4>
-            <div className="h-1.5 w-full bg-primary/20 rounded-full overflow-hidden">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: "75%" }}
-                className="h-full bg-primary"
-              />
-            </div>
-            <p className="text-[9px] font-bold text-muted-foreground mt-2 flex items-center gap-1">
-              <CheckCircle2 className="h-2.5 w-2.5 text-emerald-500" /> All engines monitored
-            </p>
-          </div>
-        </SidebarGroup>
-      </SidebarContent>
-
-      <SidebarFooter className="p-4 space-y-4 bg-muted/40 border-t border-border/20 backdrop-blur-md">
-        <div className="flex items-center gap-3 w-full">
-          <Avatar className="h-10 w-10 border-2 border-primary/20 shadow-xl shadow-primary/5 group-hover:scale-105 transition-transform">
-            <AvatarFallback className="bg-gradient-to-br from-primary/10 to-primary/30 text-primary font-black text-xs">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-black tracking-tight leading-none mb-1">{displayName}</p>
-            <p className="truncate text-[10px] font-bold text-muted-foreground opacity-60">{primaryEmail}</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-9 px-0 rounded-xl gap-2 text-[11px] font-black uppercase tracking-tighter border-border/40 bg-background/50 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all active:scale-95"
-            asChild
-          >
-            <Link href="/settings">
-              <Settings className="h-3.5 w-3.5" />
-              Settings
-            </Link>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-9 px-0 rounded-xl gap-2 text-[11px] font-black uppercase tracking-tighter text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all active:scale-95"
-            onClick={() => stack.signOut()}
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            Logout
-          </Button>
-        </div>
-      </SidebarFooter>
-
-      <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(0, 0, 0, 0.1);
-          border-radius: 10px;
-        }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.1);
-        }
-      `}</style>
-    </Sidebar>
   );
 }
