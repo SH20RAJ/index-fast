@@ -12,8 +12,37 @@ after_auth_return_to
 
 
 
-create a single constant file to manage data related to plans and subscriptions and use that import in frontend and backend both ,
-free -> 5k
+create a single constant file to manage data related to plans and subscriptions limits , for no redundancy, and use that import in frontend and backend both ,
+
+1.
+free -> 5k urls submissions - 1 cron job totlal Google Search Console
+
+Basic stats
+Free tools access
+
+2. Pro -> Unlimited URLs
+
+Auto sitemap sync
+Lighthouse testing
+
+AI visibility index GEO
+
+Universal pinging (to pingomatic, bing, google , yandex, indexnow, and all search engines and other services)
+
+3. Agency ->
+
+AI Analysis of ALL Pages (can export a cursor prompt to fix/improve)
+
+White-label reports
+
+API access
+
+Priority support
+
+Multi-workspace
+
+
+
 
 
 
