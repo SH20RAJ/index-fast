@@ -77,6 +77,17 @@ export async function POST(
       return NextResponse.json({ error: `Invalid engine: ${body.engine}` }, { status: 400 });
     }
 
+    const validFrequencies = ["hourly", "daily", "weekly", "monthly"] as const;
+    const validSourceModes = ["sitemap", "inventory"] as const;
+
+    if (!validFrequencies.includes(body.frequency as typeof validFrequencies[number])) {
+      return NextResponse.json({ error: `Invalid frequency: ${body.frequency}` }, { status: 400 });
+    }
+
+    if (!validSourceModes.includes(body.sourceMode as typeof validSourceModes[number])) {
+      return NextResponse.json({ error: `Invalid source mode: ${body.sourceMode}` }, { status: 400 });
+    }
+
     console.log(`Creating cron job for website ${websiteId}: ${body.frequency}, ${engine}, ${body.sourceMode}`);
 
     const result = await db.insert(cronJobs).values({

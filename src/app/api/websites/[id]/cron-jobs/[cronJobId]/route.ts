@@ -68,7 +68,7 @@ export async function PATCH(
         .innerJoin(websites, eq(cronJobs.websiteId, websites.id))
         .where(eq(websites.userId, user.id));
 
-      if (existingUserJobs.length > limits.maxTotalJobs) {
+      if (existingUserJobs.length >= limits.maxTotalJobs) {
         return NextResponse.json(
           { error: `Your ${planId.toUpperCase()} plan allows up to ${limits.maxTotalJobs} auto-submit job${limits.maxTotalJobs === 1 ? "" : "s"}.` },
           { status: 403 }

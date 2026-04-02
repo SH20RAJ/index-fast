@@ -1,15 +1,12 @@
-import { Box } from "@/components/ui/mui";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 
 export default function ToolsGroupLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", flexDirection: "column" }}>
+    <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
-      <Box component="main" sx={{ flex: 1 }}>
-        {children}
-      </Box>
+      <main className="flex-1">{children}</main>
       <Footer />
-    </Box>
+    </div>
   );
 }
