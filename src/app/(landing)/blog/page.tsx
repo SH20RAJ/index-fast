@@ -4,12 +4,10 @@ import {
   Box,
   Card,
   CardContent,
-  Chip,
   Container,
-  Grid,
+  Grid2 as Grid,
   Stack,
   Typography,
-  Button,
 } from "@mui/material";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
@@ -64,56 +62,117 @@ const blogCollectionJsonLd = {
 
 export default function BlogIndexPage() {
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", flexDirection: "column" }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "white", display: "flex", flexDirection: "column" }}>
       <Navbar />
-      <Box component="main" sx={{ py: { xs: 8, md: 12 }, flex: 1 }}>
+      <Box component="main" sx={{ py: { xs: 8, md: 10 }, flex: 1 }}>
         <Container maxWidth="lg">
-          <Stack spacing={3} sx={{ mb: 6 }}>
-            <Chip
-              label="SEO + GEO Editorial Hub"
+          <Stack spacing={2.5} sx={{ mb: 7 }}>
+            <Typography
+              variant="overline"
               sx={{
-                alignSelf: "flex-start",
-                border: "1px solid rgba(124,58,237,0.2)",
-                bgcolor: "rgba(124,58,237,0.07)",
-                color: "primary.main",
-                fontWeight: 800,
+                color: "text.secondary",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                fontSize: "0.75rem",
               }}
-            />
-            <Typography variant="h2" sx={{ maxWidth: 920 }}>
-              Long-form SEO playbooks for indexing, AI visibility, and conversion-led growth
+            >
+              Editorial Hub
             </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 860, fontWeight: 500 }}>
-              Every guide is written to be actionable for operators shipping content weekly. Use these frameworks to improve discovery speed, reduce indexing waste, and build a stronger SEO to signup funnel.
+            <Typography
+              variant="h2"
+              sx={{
+                maxWidth: 920,
+                fontWeight: 800,
+                letterSpacing: "-0.03em",
+                lineHeight: 1.1,
+              }}
+            >
+              SEO playbooks for indexing and conversion-led growth
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                maxWidth: 800,
+                color: "text.secondary",
+                fontWeight: 400,
+                lineHeight: 1.6,
+              }}
+            >
+              Frameworks and operating models for teams shipping content weekly.
             </Typography>
           </Stack>
 
           <Grid container spacing={3}>
             {BLOG_POSTS.map((post) => (
               <Grid key={post.slug} size={{ xs: 12, md: 6 }}>
-                <Card sx={{ height: "100%", border: "1px solid rgba(124,58,237,0.1)" }}>
-                  <CardContent sx={{ p: 3.5 }}>
-                    <Stack spacing={1.5}>
-                      <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
-                        <Chip label={post.primaryKeyword} size="small" />
-                        <Chip label={`${post.readingMinutes} min read`} size="small" variant="outlined" />
+                <Link href={`/blog/${post.slug}`} style={{ textDecoration: "none", display: "block", height: "100%" }}>
+                  <Card
+                    sx={{
+                      height: "100%",
+                      border: "1px solid #E5E7EB",
+                      boxShadow: "none",
+                      borderRadius: "12px",
+                      transition: "border-color 0.2s ease",
+                      "&:hover": {
+                        borderColor: "#7C3AED",
+                      },
+                    }}
+                  >
+                    <CardContent sx={{ p: 4 }}>
+                      <Stack spacing={2}>
+                        <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
+                          <Box
+                            sx={{
+                              px: 1.5,
+                              py: 0.5,
+                              bgcolor: "#F9FAFB",
+                              border: "1px solid #E5E7EB",
+                              borderRadius: "6px",
+                              fontSize: "0.75rem",
+                              fontWeight: 600,
+                              color: "text.primary",
+                            }}
+                          >
+                            {post.primaryKeyword}
+                          </Box>
+                          <Box
+                            sx={{
+                              px: 1.5,
+                              py: 0.5,
+                              bgcolor: "transparent",
+                              border: "1px solid #E5E7EB",
+                              borderRadius: "6px",
+                              fontSize: "0.75rem",
+                              fontWeight: 500,
+                              color: "text.secondary",
+                            }}
+                          >
+                            {post.readingMinutes} min read
+                          </Box>
+                        </Stack>
+                        <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
+                          {post.title}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            color: "text.secondary",
+                            lineHeight: 1.6,
+                            display: "-webkit-box",
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                          }}
+                        >
+                          {post.description}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: "text.disabled", fontWeight: 500 }}>
+                          Published {post.publishedAt}
+                        </Typography>
                       </Stack>
-                      <Typography variant="h4" fontWeight={900}>
-                        {post.title}
-                      </Typography>
-                      <Typography variant="body1" color="text.secondary">
-                        {post.description}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Published {post.publishedAt} · Updated {post.updatedAt}
-                      </Typography>
-                      <Box>
-                        <Link href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
-                          <Button variant="contained">Read full guide</Button>
-                        </Link>
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               </Grid>
             ))}
           </Grid>

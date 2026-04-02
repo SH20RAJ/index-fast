@@ -10,9 +10,7 @@ import {
   CardContent,
   Button,
   Stack,
-  Chip,
   alpha,
-  useTheme,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useStackApp, useUser } from "@stackframe/stack";
@@ -21,24 +19,24 @@ const plans = [
   {
     name: "Starter",
     price: "$0",
-    desc: "For solo builders validating indexing workflows",
-    features: ["Up to 50 URLs / month", "Google Search Console sync", "Basic submission analytics"],
+    desc: "Perfect for secondary projects and validation.",
+    features: ["50 URLs / month", "Google Search Console", "Basic stats"],
     button: "Get Started",
     popular: false
   },
   {
     name: "Pro",
     price: "$49",
-    desc: "For growth teams scaling traffic and AI reach",
-    features: ["Unlimited URLs", "Auto sitemap sync (6h)", "AI visibility insights", "Universal ping network"],
+    desc: "For growth teams scaling traffic and AI reach.",
+    features: ["Unlimited URLs", "Auto sitemap sync", "AI visibility index", "Universal pinging"],
     button: "Start Free Trial",
     popular: true
   },
   {
     name: "Agency",
     price: "$149",
-    desc: "For agencies running multi-site indexing operations",
-    features: ["White-label reporting", "API access", "Priority support", "Multi-workspace controls"],
+    desc: "For multi-site indexing at scale.",
+    features: ["White-label reports", "API access", "Priority support", "Multi-workspace"],
     button: "Book Demo",
     popular: false
   }
@@ -47,7 +45,6 @@ const plans = [
 export default function Pricing() {
   const stack = useStackApp();
   const user = useUser();
-  const theme = useTheme();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
@@ -91,83 +88,90 @@ export default function Pricing() {
   }
 
   return (
-    <Box id="pricing" sx={{ py: { xs: 10, md: 14 }, bgcolor: "background.default" }}>
+    <Box id="pricing" sx={{ py: { xs: 8, md: 12 }, bgcolor: "white" }}>
       <Container maxWidth="lg">
         <Stack spacing={2} mb={8} textAlign="center">
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", mb: 1 }}>
-            Plans that pay back in saved hours and faster rankings
+          <Typography variant="h2" sx={{ fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>
+            Simple pricing
           </Typography>
-          <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "700px", mx: "auto", lineHeight: 1.75 }}>
-            Choose based on execution volume, not feature gates. Upgrade when your team is ready, not before.
+          <Typography variant="body1" sx={{ color: "#6B7280", maxWidth: "600px", mx: "auto", fontSize: "1.1rem" }}>
+            Choose the plan that fits your execution volume. No hidden fees or complex tiers.
           </Typography>
-          <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" useFlexGap>
-            <Chip label="No setup fee" variant="outlined" />
-            <Chip label="Cancel anytime" variant="outlined" />
-            <Chip label="Priority onboarding" variant="outlined" />
-          </Stack>
         </Stack>
 
-        <Grid container spacing={4} alignItems="center">
+        <Grid container spacing={3} alignItems="stretch">
           {plans.map((p) => (
             <Grid size={{ xs: 12, md: 4 }} key={p.name}>
               <Card
                 sx={{
-                  p: 2,
-                  bgcolor: p.popular ? alpha(theme.palette.primary.main, 0.04) : alpha(theme.palette.background.paper, 0.9),
-                  color: "text.primary",
-                  borderRadius: "30px",
-                  border: p.popular
-                    ? `1px solid ${alpha(theme.palette.primary.main, 0.18)}`
-                    : `1px solid ${alpha(theme.palette.divider, 0.8)}`,
-                  boxShadow: theme.palette.mode === "dark"
-                    ? "0 14px 30px rgba(0, 0, 0, 0.28)"
-                    : "0 14px 30px rgba(17, 24, 39, 0.05)",
-                  transform: "scale(1)",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  bgcolor: "white",
+                  borderRadius: "12px",
+                  border: p.popular ? "2px solid #111827" : "1px solid #E5E7EB",
+                  boxShadow: "none",
                   position: "relative",
-                  "&:hover": {
-                    transform: "translateY(-8px)",
-                    boxShadow: "0 20px 50px rgba(15, 23, 42, 0.08)"
-                  }
+                  p: 1,
                 }}
               >
-                <CardContent sx={{ p: 4 }}>
-                  <Stack spacing={3}>
-                    <Box>
-                      <Typography variant="h5" sx={{ fontWeight: 900, mb: 1 }}>{p.name}</Typography>
-                      <Typography variant="h2" sx={{ fontWeight: 900 }}>{p.price}</Typography>
-                      <Typography variant="caption" sx={{ opacity: 0.8 }}>per month</Typography>
-                    </Box>
-
-                    <Typography variant="body2" color="text.secondary" sx={{ minHeight: "40px" }}>{p.desc}</Typography>
-
-                    <Stack spacing={1.5} sx={{ my: 3 }}>
-                      {p.features.map((f, fidx) => (
-                        <Stack key={fidx} direction="row" spacing={1.5} alignItems="center">
-                          <CheckCircleIcon sx={{ fontSize: 18, color: p.popular ? "white" : "primary.main" }} />
-                          <Typography variant="body2">{f}</Typography>
-                        </Stack>
-                      ))}
+                {p.popular && (
+                  <Box sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 24,
+                    transform: "translateY(-50%)",
+                    bgcolor: "#111827",
+                    color: "white",
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: "999px",
+                    fontSize: "0.75rem",
+                    fontWeight: 700,
+                  }}>
+                    Popular
+                  </Box>
+                )}
+                <CardContent sx={{ p: 4, flexGrow: 1, display: "flex", flexDirection: "column" }}>
+                  <Stack spacing={1} mb={4}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: "#111827" }}>{p.name}</Typography>
+                    <Stack direction="row" alignItems="baseline" spacing={0.5}>
+                      <Typography variant="h3" sx={{ fontWeight: 800, color: "#111827" }}>{p.price}</Typography>
+                      <Typography variant="body2" color="text.secondary">/mo</Typography>
                     </Stack>
-
-                    <Button
-                      variant={p.popular ? "contained" : "outlined"}
-                      fullWidth
-                      size="large"
-                      onClick={() => void startCheckout(p.name)}
-                      disabled={loadingPlan === p.name}
-                      sx={{
-                        bgcolor: p.popular ? "primary.main" : "transparent",
-                        borderColor: "primary.main",
-                        color: p.popular ? "common.white" : "primary.main",
-                        "&:hover": {
-                          bgcolor: p.popular ? "primary.dark" : "rgba(15, 23, 42, 0.03)",
-                          borderColor: "primary.main"
-                        }
-                      }}
-                    >
-                      {loadingPlan === p.name ? "Redirecting..." : p.button}
-                    </Button>
+                    <Typography variant="body2" sx={{ color: "#6B7280" }}>{p.desc}</Typography>
                   </Stack>
+
+                  <Stack spacing={1.5} sx={{ mb: 4, flexGrow: 1 }}>
+                    {p.features.map((f, fidx) => (
+                      <Stack key={fidx} direction="row" spacing={1.5} alignItems="center">
+                        <CheckCircleIcon sx={{ fontSize: 16, color: "#111827" }} />
+                        <Typography variant="body2" sx={{ color: "#374151" }}>{f}</Typography>
+                      </Stack>
+                    ))}
+                  </Stack>
+
+                  <Button
+                    variant={p.popular ? "contained" : "outlined"}
+                    fullWidth
+                    size="large"
+                    onClick={() => void startCheckout(p.name)}
+                    disabled={loadingPlan === p.name}
+                    sx={{
+                      borderRadius: "8px",
+                      py: 1.25,
+                      fontWeight: 600,
+                      bgcolor: p.popular ? "#111827" : "transparent",
+                      color: p.popular ? "white" : "#111827",
+                      borderColor: "#111827",
+                      "&:hover": {
+                        bgcolor: p.popular ? "#1F2937" : alpha("#111827", 0.04),
+                        borderColor: "#111827",
+                      }
+                    }}
+                  >
+                    {loadingPlan === p.name ? "Redirecting..." : p.button}
+                  </Button>
                 </CardContent>
               </Card>
             </Grid>
@@ -175,7 +179,7 @@ export default function Pricing() {
         </Grid>
 
         {checkoutError ? (
-          <Alert severity="error" sx={{ mt: 3 }}>
+          <Alert severity="error" sx={{ mt: 3, borderRadius: "8px" }}>
             {checkoutError}
           </Alert>
         ) : null}

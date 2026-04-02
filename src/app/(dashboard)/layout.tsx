@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+export const dynamic = "force-dynamic";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 
 export const metadata: Metadata = {

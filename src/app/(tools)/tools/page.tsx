@@ -1,25 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  alpha,
   Box,
   Button,
   Card,
   CardContent,
-  Chip,
   Container,
-  Divider,
-  Grid,
+  Grid2 as Grid,
   Stack,
   Typography,
 } from "@mui/material";
 import ToolCta from "./_components/ToolCta";
 import {
-  EXTERNAL_RESOURCE_CATEGORIES,
-  getExternalResourcesByCategory,
   SEO_TOOLS,
   TOOL_CATEGORIES,
-  getCategoryKeywordTargets,
   getToolsByCategory,
 } from "@/lib/tools-catalog";
 
@@ -49,152 +43,161 @@ export const metadata: Metadata = {
 
 export default function ToolsHomePage() {
   return (
-    <Box
-      sx={{
-        py: { xs: 8, md: 12 },
-        background:
-          "radial-gradient(960px 460px at 12% -8%, rgba(14,165,233,0.18), transparent 60%), radial-gradient(820px 420px at 88% -15%, rgba(34,197,94,0.14), transparent 64%)",
-      }}
-    >
+    <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: "white" }}>
       <Container maxWidth="lg">
-        <Stack spacing={4.5}>
-          <Stack spacing={2.2}>
-            <Chip
-              label="Free SEO Tool Stack"
+        <Stack spacing={6}>
+          <Stack spacing={2.5}>
+            <Box
               sx={{
-                alignSelf: "flex-start",
-                border: "1px solid rgba(14,165,233,0.35)",
-                bgcolor: "rgba(14,165,233,0.08)",
-                color: "info.main",
-                fontWeight: 800,
+                px: 1.5,
+                py: 0.5,
+                bgcolor: "#F9FAFB",
+                border: "1px solid #E5E7EB",
+                borderRadius: "6px",
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                color: "text.primary",
+                display: "inline-block",
+                width: "fit-content",
               }}
-            />
+            >
+              Free SEO Tool Stack
+            </Box>
 
-            <Typography variant="h2" sx={{ maxWidth: 980 }}>
-              Free SEO tools directory with category-based workflows, quick checks, and scale-ready automation paths
+            <Typography
+              variant="h2"
+              sx={{
+                maxWidth: 900,
+                fontWeight: 800,
+                letterSpacing: "-0.04em",
+                lineHeight: 1.1,
+              }}
+            >
+              Free SEO tools directory for practical workflows
             </Typography>
 
-            <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 920, fontWeight: 500 }}>
-              Browse every tool by SEO function, run a focused diagnostic in minutes, and move into repeatable project workflows when your growth loop is ready.
+            <Typography
+              variant="h6"
+              sx={{
+                maxWidth: 800,
+                color: "text.secondary",
+                fontWeight: 400,
+                lineHeight: 1.6,
+              }}
+            >
+              Browse every tool by function, run diagnostics in minutes, and transition to automated projects when you
+              are ready to scale.
             </Typography>
           </Stack>
 
-          <Grid container spacing={1.4}>
+          <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 4 }}>
-              <Card sx={{ border: "1px solid rgba(15,23,42,0.08)", bgcolor: alpha("#ffffff", 0.78) }}>
-                <CardContent sx={{ p: 2.5 }}>
-                  <Typography variant="overline" color="text.secondary" fontWeight={700}>
+              <Card sx={{ border: "1px solid #E5E7EB", boxShadow: "none", borderRadius: "12px" }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Typography
+                    variant="overline"
+                    sx={{ color: "text.secondary", fontWeight: 700, letterSpacing: "0.05em" }}
+                  >
                     Directory Coverage
                   </Typography>
-                  <Typography variant="h4" fontWeight={900}>
+                  <Typography variant="h4" sx={{ fontWeight: 800 }}>
                     {SEO_TOOLS.length} tools
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Active across crawl, keywords, links, authority, and metadata.
-                  </Typography>
                 </CardContent>
               </Card>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-              <Card sx={{ border: "1px solid rgba(15,23,42,0.08)", bgcolor: alpha("#ffffff", 0.78) }}>
-                <CardContent sx={{ p: 2.5 }}>
-                  <Typography variant="overline" color="text.secondary" fontWeight={700}>
-                    Category Architecture
+              <Card sx={{ border: "1px solid #E5E7EB", boxShadow: "none", borderRadius: "12px" }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Typography
+                    variant="overline"
+                    sx={{ color: "text.secondary", fontWeight: 700, letterSpacing: "0.05em" }}
+                  >
+                    Category Track
                   </Typography>
-                  <Typography variant="h4" fontWeight={900}>
+                  <Typography variant="h4" sx={{ fontWeight: 800 }}>
                     {TOOL_CATEGORIES.length} tracks
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Organized to match SEO execution order, from crawl to snippets.
-                  </Typography>
                 </CardContent>
               </Card>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-              <Card sx={{ border: "1px solid rgba(15,23,42,0.08)", bgcolor: alpha("#ffffff", 0.78) }}>
-                <CardContent sx={{ p: 2.5 }}>
-                  <Typography variant="overline" color="text.secondary" fontWeight={700}>
-                    SEO Intent Model
+              <Card sx={{ border: "1px solid #E5E7EB", boxShadow: "none", borderRadius: "12px" }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Typography
+                    variant="overline"
+                    sx={{ color: "text.secondary", fontWeight: 700, letterSpacing: "0.05em" }}
+                  >
+                    SEO Intent
                   </Typography>
-                  <Typography variant="h4" fontWeight={900}>
-                    Researched keywords
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Keyword targets reflect live market query patterns for discovery pages.
+                  <Typography variant="h4" sx={{ fontWeight: 800 }}>
+                    Targeted
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
           </Grid>
 
-          <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-            {TOOL_CATEGORIES.map((category) => (
-              <Chip key={category.id} label={category.title} sx={{ fontWeight: 700 }} />
-            ))}
-          </Stack>
-
           {TOOL_CATEGORIES.map((category) => {
             const categoryTools = getToolsByCategory(category.id);
-            const categoryKeywordTargets = getCategoryKeywordTargets(category.id).slice(0, 6);
-
             return (
-              <Stack key={category.id} spacing={2.2} sx={{ pt: 2.5 }}>
+              <Stack key={category.id} spacing={3} sx={{ pt: 4 }}>
                 <Stack spacing={1}>
-                  <Typography variant="h4" fontWeight={900}>
+                  <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
                     {category.title}
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 900 }}>
+                  <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: 800 }}>
                     {category.description}
                   </Typography>
-                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ pt: 0.4 }}>
-                    {categoryKeywordTargets.map((keyword) => (
-                      <Chip
-                        key={keyword}
-                        size="small"
-                        label={keyword}
-                        sx={{
-                          border: "1px solid rgba(2,6,23,0.1)",
-                          bgcolor: "rgba(255,255,255,0.7)",
-                        }}
-                      />
-                    ))}
-                  </Stack>
                 </Stack>
 
-                <Grid container spacing={2}>
+                <Grid container spacing={3}>
                   {categoryTools.map((tool) => (
                     <Grid size={{ xs: 12, md: 6 }} key={tool.slug}>
                       <Card
                         sx={{
-                          border: "1px solid rgba(15,23,42,0.08)",
-                          bgcolor: alpha("#ffffff", 0.84),
+                          border: "1px solid #E5E7EB",
+                          boxShadow: "none",
+                          borderRadius: "12px",
                           height: "100%",
+                          transition: "border-color 0.2s ease",
+                          "&:hover": { borderColor: "#7C3AED" },
                         }}
                       >
-                        <CardContent sx={{ p: 3 }}>
-                          <Stack spacing={1.8}>
-                            <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                              <Chip
-                                label={tool.primaryKeyword}
-                                size="small"
-                                sx={{ alignSelf: "flex-start", fontWeight: 700, bgcolor: "rgba(34,197,94,0.12)" }}
-                              />
-                              <Chip
-                                label={category.badge}
-                                size="small"
-                                sx={{ alignSelf: "flex-start", bgcolor: "rgba(14,165,233,0.12)" }}
-                              />
+                        <CardContent sx={{ p: 4 }}>
+                          <Stack spacing={2.5}>
+                            <Stack direction="row" spacing={1}>
+                              <Box
+                                sx={{
+                                  px: 1.2,
+                                  py: 0.4,
+                                  bgcolor: "#F9FAFB",
+                                  border: "1px solid #E5E7EB",
+                                  borderRadius: "4px",
+                                  fontSize: "0.7rem",
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {tool.primaryKeyword}
+                              </Box>
                             </Stack>
-                            <Typography variant="h5" fontWeight={800}>
+                            <Typography variant="h5" sx={{ fontWeight: 800 }}>
                               {tool.title}
                             </Typography>
-                            <Typography variant="body1" color="text.secondary">
+                            <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.6 }}>
                               {tool.description}
                             </Typography>
-                            <Divider />
-                            <Box>
+                            <Box sx={{ pt: 1 }}>
                               <Link href={`/tools/${tool.slug}`} style={{ textDecoration: "none" }}>
-                                <Button variant="contained">Open {tool.title}</Button>
+                                <Button
+                                  variant="contained"
+                                  sx={{
+                                    px: 3,
+                                    borderRadius: "8px",
+                                  }}
+                                >
+                                  Open tool
+                                </Button>
                               </Link>
                             </Box>
                           </Stack>
@@ -207,81 +210,9 @@ export default function ToolsHomePage() {
             );
           })}
 
-          <Stack spacing={2.2} sx={{ pt: 2.5 }}>
-            <Stack spacing={1}>
-              <Typography variant="h4" fontWeight={900}>
-                SEO Platforms and Alternatives
-              </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 900 }}>
-                Jump straight into Bing Webmaster, Google Search Console, and organized alternative stacks for Ahrefs, SEMrush, and Ubersuggest.
-              </Typography>
-            </Stack>
-
-            <Grid container spacing={2}>
-              {EXTERNAL_RESOURCE_CATEGORIES.map((category) => {
-                const links = getExternalResourcesByCategory(category.id);
-
-                return (
-                  <Grid key={category.id} size={{ xs: 12, md: 6 }}>
-                    <Card
-                      sx={{
-                        border: "1px solid rgba(15,23,42,0.08)",
-                        bgcolor: alpha("#ffffff", 0.86),
-                        height: "100%",
-                      }}
-                    >
-                      <CardContent sx={{ p: 3 }}>
-                        <Stack spacing={1.6}>
-                          <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                            <Chip label={category.title} sx={{ fontWeight: 700, bgcolor: "rgba(14,165,233,0.12)" }} />
-                            <Chip label={`${links.length} links`} size="small" sx={{ fontWeight: 700 }} />
-                          </Stack>
-
-                          <Typography variant="h5" fontWeight={800}>
-                            {category.title}
-                          </Typography>
-
-                          <Typography variant="body1" color="text.secondary">
-                            {category.description}
-                          </Typography>
-
-                          <Divider />
-
-                          <Stack spacing={1}>
-                            {links.slice(0, 3).map((resource) => (
-                              <Typography key={resource.title} variant="body2" color="text.secondary">
-                                • {resource.title}
-                              </Typography>
-                            ))}
-                          </Stack>
-
-                          <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-                            <Link href={`/tools/resources/${category.id}`} style={{ textDecoration: "none" }}>
-                              <Button variant="contained">Open {category.title}</Button>
-                            </Link>
-                            <Button
-                              component="a"
-                              href={links[0]?.url ?? "#"}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              variant="outlined"
-                              disabled={!links[0]}
-                            >
-                              Visit Top Resource
-                            </Button>
-                          </Stack>
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Stack>
-
           <ToolCta
             primaryText="Turn free checks into recurring growth"
-            secondaryText="Create an account to save scans, add projects, and automate daily IndexNow plus Bing submissions from sitemap updates."
+            secondaryText="Create an account to save scans, add projects, and automate daily indexing workflows from sitemap updates."
           />
         </Stack>
       </Container>

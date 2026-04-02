@@ -13,65 +13,61 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const faqs = [
   {
-    q: "How long does it take for my pages to get indexed?",
-    a: "With IndexFast, we've seen URLs get crawled and indexed in as little as 4-24 hours. Without automation, this process can take weeks."
+    q: "How fast is indexing?",
+    a: "URLs typically get crawled and indexed in 4-24 hours. Without automation, this process can take weeks."
   },
   {
-    q: "Is it safe for my website's SEO?",
-    a: "Yes, we use official Google and Bing Indexing APIs. This is the recommended method for notifying search engines about new content."
+    q: "Is it safe for SEO?",
+    a: "Yes. We use official Google and Bing Indexing APIs. This is the recommended method for notifying search engines."
   },
   {
-    q: "Do I need to be a developer to use IndexFast?",
-    a: "Not at all. Our interface is designed for non-technical users. If you can copy and paste a URL, you can use IndexFast."
+    q: "Do I need to be a developer?",
+    a: "No. Our interface is designed for non-technical users. If you can use a browser, you can use IndexFast."
   },
   {
-    q: "Can I cancel my subscription any time?",
-    a: "Yes, we offer monthly billing with no long-term contracts. You can manage your subscription directly from your dashboard."
+    q: "Can I cancel any time?",
+    a: "Yes. We offer monthly billing with no long-term contracts. You can cancel directly from your dashboard."
   },
   {
     q: "What sites are supported?",
-    a: "Any site that is verified in Google Search Console can be indexed through our platform, including WordPress, Shopify, and custom builds."
+    a: "Any site verified in Google Search Console, including WordPress, Shopify, and custom builds."
   }
 ];
 
 export default function FAQ() {
   return (
-    <Box id="faq" sx={{ py: { xs: 10, md: 14 }, bgcolor: "background.paper" }}>
+    <Box id="faq" sx={{ py: { xs: 8, md: 12 }, bgcolor: "white" }}>
       <Container maxWidth="md">
-        <Stack spacing={2} mb={7} textAlign="center">
-          <Typography variant="h2" sx={{ fontWeight: 900, color: "text.primary", mb: 1 }}>
-            Questions teams ask before switching to IndexFast
+        <Stack spacing={2} mb={8} textAlign="center">
+          <Typography variant="h2" sx={{ fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>
+            Frequently asked questions
           </Typography>
-          <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.75 }}>
-            Straight answers on safety, setup time, and expected indexing outcomes.
+          <Typography variant="body1" sx={{ color: "#6B7280", maxWidth: "600px", mx: "auto", fontSize: "1.1rem" }}>
+            Everything you need to know about safety, setup, and indexing outcomes.
           </Typography>
         </Stack>
 
-        <Stack spacing={2}>
+        <Stack spacing={1}>
           {faqs.map((faq, idx) => (
             <Accordion
               key={idx}
+              elevation={0}
               sx={{
-                borderRadius: "20px !important",
                 "&:before": { display: "none" },
-                bgcolor: "background.default",
-                boxShadow: (theme) =>
-                  theme.palette.mode === "dark"
-                    ? "0 10px 26px rgba(0,0,0,0.28)"
-                    : "0 10px 26px rgba(17,24,39,0.06)",
-                border: (theme) => `1px solid ${alpha(theme.palette.divider, 0.9)}`,
-                mb: 2,
-                overflow: "hidden"
+                bgcolor: "transparent",
+                borderBottom: "1px solid #E5E7EB",
+                borderRadius: "0 !important",
+                mx: 0,
               }}
             >
               <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{ color: "text.secondary" }} />}
-                sx={{ px: 4, py: 1 }}
+                expandIcon={<ExpandMoreIcon sx={{ fontSize: 20, color: "#9CA3AF" }} />}
+                sx={{ px: 0, py: 1 }}
               >
-                <Typography sx={{ fontWeight: 700, color: "text.primary" }}>{faq.q}</Typography>
+                <Typography sx={{ fontWeight: 600, color: "#374151", fontSize: "1.1rem" }}>{faq.q}</Typography>
               </AccordionSummary>
-              <AccordionDetails sx={{ px: 4, pb: 4 }}>
-                <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>{faq.a}</Typography>
+              <AccordionDetails sx={{ px: 0, pb: 4 }}>
+                <Typography sx={{ color: "#6B7280", lineHeight: 1.6, maxWidth: "600px" }}>{faq.a}</Typography>
               </AccordionDetails>
             </Accordion>
           ))}

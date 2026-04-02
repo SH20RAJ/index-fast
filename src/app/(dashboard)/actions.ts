@@ -54,14 +54,22 @@ export interface DashboardData {
   };
 }
 
-async function getAuthedUser() {
-  const user = await stackServerApp.getUser();
-  if (!user) {
-    throw new Error("Please sign in to continue.");
-  }
+export async function getAuthedUser() {
+  console.log("[Dashboard] Fetching authenticated user...");
+  try {
+    const user = await stackServerApp.getUser();
+    if (!user) {
+      console.warn("[Dashboard] No user found in session.");
+      throw new Error("Please sign in to continue.");
+    }
 
-  await ensureUserRecord({ id: user.id, primaryEmail: user.primaryEmail });
-  return user;
+    console.log(`[Dashboard] User found: ${user.id}. Syncing record...`);
+    await ensureUserRecord({ id: user.id, primaryEmail: user.primaryEmail });
+    return user;
+  } catch (error) {
+    console.error("[Dashboard] Auth error in getAuthedUser:", error);
+    throw error;
+  }
 }
 
 function normalizeWebsiteUrl(raw: string) {
@@ -470,88 +478,110 @@ export async function deleteWebsiteAction(_: ActionState, formData: FormData): P
 }
 
 export async function loadDashboardData(): Promise<DashboardData> {
-  const user = await getAuthedUser();
-  const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  console.log("[Dashboard] Loading dashboard data...");
+  try {
+    const user = await getAuthedUser();
+    console.log(`[Dashboard] Context loaded for user: ${user.id}`);
 
-  const [userRow] = await db.select().from(users).where(eq(users.id, user.id));
-  const planId = resolvePlanId(userRow?.subscriptionStatus ?? null, userRow?.isPro ?? false);
-  const plan = getPlanDefinition(planId);
+    const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
-  const [{ websitesCount }] = await db
-    .select({ websitesCount: count() })
-    .from(websites)
-    .where(eq(websites.userId, user.id));
+    console.log("[Dashboard] Fetching user row...");
+    const [userRow] = await db.select().from(users).where(eq(users.id, user.id));
+    const planId = resolvePlanId(userRow?.subscriptionStatus ?? null, userRow?.isPro ?? false);
+    const plan = getPlanDefinition(planId);
+    console.log(`[Dashboard] Plan resolved: ${planId} (${plan.name})`);
 
-  const [{ submissionsThisMonth }] = await db
-    .select({ submissionsThisMonth: count() })
-    .from(submissions)
-    .innerJoin(websites, eq(submissions.websiteId, websites.id))
-    .where(and(eq(websites.userId, user.id), gte(submissions.createdAt, monthStart)));
+    console.log("[Dashboard] Counting websites...");
+    const websiteResult = await db
+      .select({ websitesCount: count() })
+      .from(websites)
+      .where(eq(websites.userId, user.id));
+    const websitesCount = websiteResult[0]?.websitesCount ?? 0;
 
-  const [{ successfulThisMonth }] = await db
-    .select({ successfulThisMonth: count() })
-    .from(submissions)
-    .innerJoin(websites, eq(submissions.websiteId, websites.id))
-    .where(
-      and(
-        eq(websites.userId, user.id),
-        gte(submissions.createdAt, monthStart),
-        eq(submissions.status, "success")
-      )
-    );
+    console.log("[Dashboard] Counting monthly submissions...");
+    const submissionsResult = await db
+      .select({ submissionsThisMonth: count() })
+      .from(submissions)
+      .innerJoin(websites, eq(submissions.websiteId, websites.id))
+      .where(and(eq(websites.userId, user.id), gte(submissions.createdAt, monthStart)));
+    const submissionsThisMonth = submissionsResult[0]?.submissionsThisMonth ?? 0;
 
-  const recentSubmissions = await db
-    .select({
-      id: submissions.id,
-      websiteId: websites.id,
-      websiteUrl: websites.url,
-      url: submissions.url,
-      engine: submissions.engine,
-      status: submissions.status,
-      createdAt: submissions.createdAt,
-    })
-    .from(submissions)
-    .innerJoin(websites, eq(submissions.websiteId, websites.id))
-    .where(eq(websites.userId, user.id))
-    .orderBy(desc(submissions.createdAt))
-    .limit(8);
+    console.log("[Dashboard] Counting successful monthly submissions...");
+    const successfulResult = await db
+      .select({ successfulThisMonth: count() })
+      .from(submissions)
+      .innerJoin(websites, eq(submissions.websiteId, websites.id))
+      .where(
+        and(
+          eq(websites.userId, user.id),
+          gte(submissions.createdAt, monthStart),
+          eq(submissions.status, "success")
+        )
+      );
+    const successfulThisMonth = successfulResult[0]?.successfulThisMonth ?? 0;
 
-  const topSitesRaw = await db
-    .select({
-      id: websites.id,
-      url: websites.url,
-      lastSyncAt: websites.lastSyncAt,
-      submissions: sql<number>`count(${submissions.id})`,
-    })
-    .from(websites)
-    .leftJoin(submissions, eq(submissions.websiteId, websites.id))
-    .where(eq(websites.userId, user.id))
-    .groupBy(websites.id)
-    .orderBy(desc(sql<number>`count(${submissions.id})`))
-    .limit(5);
+    console.log("[Dashboard] Fetching recent submissions...");
+    const recentSubmissions = await db
+      .select({
+        id: submissions.id,
+        websiteId: websites.id,
+        websiteUrl: websites.url,
+        url: submissions.url,
+        engine: submissions.engine,
+        status: submissions.status,
+        createdAt: submissions.createdAt,
+      })
+      .from(submissions)
+      .innerJoin(websites, eq(submissions.websiteId, websites.id))
+      .where(eq(websites.userId, user.id))
+      .orderBy(desc(submissions.createdAt))
+      .limit(8);
 
-  const topSites = topSitesRaw.map((site) => ({
-    ...site,
-    submissions: Number(site.submissions || 0),
-  }));
+    console.log("[Dashboard] Fetching top sites...");
+    const topSitesRaw = await db
+      .select({
+        id: websites.id,
+        url: websites.url,
+        lastSyncAt: websites.lastSyncAt,
+        submissions: sql<number>`count(${submissions.id})`,
+      })
+      .from(websites)
+      .leftJoin(submissions, eq(submissions.websiteId, websites.id))
+      .where(eq(websites.userId, user.id))
+      .groupBy(websites.id)
+      .orderBy(desc(sql<number>`count(${submissions.id})`))
+      .limit(5);
 
-  return {
-    userId: user.id,
-    email: userRow?.email ?? user.primaryEmail ?? `${user.id}@indexfast.local`,
-    planId,
-    plan,
-    websitesCount,
-    submissionsThisMonth,
-    successfulThisMonth,
-    recentSubmissions,
-    topSites,
-    usage: {
-      websitesUsed: websitesCount,
-      websitesLimit: plan.websiteLimit,
-      submissionsUsed: submissionsThisMonth,
-      submissionsLimit: plan.submissionLimitMonthly,
-    },
-  };
+    const topSites = topSitesRaw.map((site) => ({
+      ...site,
+      submissions: Number(site.submissions || 0),
+    }));
+
+    console.log("[Dashboard] Data Load Complete.");
+    return {
+      userId: user.id,
+      email: userRow?.email ?? user.primaryEmail ?? `${user.id}@indexfast.local`,
+      planId,
+      plan,
+      websitesCount,
+      submissionsThisMonth,
+      successfulThisMonth,
+      recentSubmissions,
+      topSites,
+      usage: {
+        websitesUsed: websitesCount,
+        websitesLimit: plan.websiteLimit,
+        submissionsUsed: submissionsThisMonth,
+        submissionsLimit: plan.submissionLimitMonthly,
+      },
+    };
+  } catch (error) {
+    console.error("[Dashboard] Critical error in loadDashboardData:", error);
+    if (error instanceof Error && error.message.includes("DATABASE_URL")) {
+      throw new Error("Misconfigured database connection. Please check environment variables.");
+    }
+    throw new Error("Dashboard could not be loaded. Please refresh or try again.");
+  }
 }
 
 export async function refreshGscMetadataAction(_: ActionState, formData: FormData): Promise<ActionState> {
