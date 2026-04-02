@@ -21,7 +21,7 @@ const feedItems = [
 const trustMetrics = [
   { value: "4-24h", label: "Discovery window" },
   { value: "99.95%", label: "Uptime" },
-  { value: "10k+", label: "URLs/run" },
+  { value: "10M+", label: "URLs/run" },
 ];
 
 export default function Hero() {
