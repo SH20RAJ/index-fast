@@ -1,17 +1,23 @@
-import Link from "next/link";
 import {
-  Activity,
-  ArrowUpRight,
-  CheckCircle2,
-  Globe,
-  Layers,
-  Sparkles,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Grid,
+  LinearProgress,
+  Stack,
+  Typography,
+} from "@/components/ui/mui";
+import { alpha } from "@/lib/color";
+import { AddCircleOutlineIcon } from "@/components/icons/mui-icons";
+import { AutoGraphIcon } from "@/components/icons/mui-icons";
+import { BoltIcon } from "@/components/icons/mui-icons";
+import { CalendarMonthIcon } from "@/components/icons/mui-icons";
+import { DoneAllIcon } from "@/components/icons/mui-icons";
+import { HubIcon } from "@/components/icons/mui-icons";
+import { OpenInNewIcon } from "@/components/icons/mui-icons";
 import type { DashboardData } from "@/app/(dashboard)/actions";
 
 interface DashboardOverviewProps {
@@ -19,13 +25,15 @@ interface DashboardOverviewProps {
 }
 
 function ratio(used: number, limit: number) {
-  if (limit <= 0) return 0;
+  if (limit <= 0) {
+    return 0;
+  }
   return Math.min(100, Math.round((used / limit) * 100));
 }
 
 function formatNumber(num: number) {
-  if (num >= 1000000) return `${(num / 1000000).toFixed(1).replace(/\.0$/, "")}M`;
-  if (num >= 1000) return `${(num / 1000).toFixed(1).replace(/\.0$/, "")}K`;
+  if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
   return num.toString();
 }
 
@@ -33,144 +41,348 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
   const websiteRatio = ratio(data.usage.websitesUsed, data.usage.websitesLimit);
   const submissionRatio = ratio(data.usage.submissionsUsed, data.usage.submissionsLimit);
 
-  const metrics = [
-    { label: "Active sites", value: formatNumber(data.websitesCount), icon: Globe },
-    { label: "Submissions", value: formatNumber(data.submissionsThisMonth), icon: Activity },
-    {
-      label: "Success rate",
-      value: data.submissionsThisMonth > 0 ? `${Math.round((data.successfulThisMonth / data.submissionsThisMonth) * 100)}%` : "0%",
-      icon: CheckCircle2,
-    },
-    { label: "Plan capacity", value: formatNumber(data.usage.websitesLimit), icon: Layers },
-  ];
-
   return (
-    <div className="space-y-4 md:space-y-6">
-      <Card>
-        <CardHeader className="space-y-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary">Live analytics</Badge>
-            <Badge variant="outline">{data.plan.name} tier</Badge>
-            <Badge variant="outline">${data.plan.priceMonthly}/mo</Badge>
-          </div>
-          <CardTitle className="text-2xl md:text-3xl">Operations Center</CardTitle>
-          <CardDescription className="max-w-2xl text-sm md:text-base">
-            Minimal command view for indexing throughput, site health, and plan usage.
-          </CardDescription>
-          <div className="flex flex-wrap gap-2">
-            <Button asChild>
-              <Link href="/sites">Add website</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="/settings">Subscription</Link>
-            </Button>
-          </div>
-        </CardHeader>
-      </Card>
+    <Stack spacing={3.5}>
+      <Card
+        sx={{
+          borderRadius: "24px",
+          border: "1px solid",
+          borderColor: alpha("#000", 0.08),
+          bgcolor: "#fff",
+          boxShadow: "0 4px 20px -12px rgba(0,0,0,0.1)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <CardContent sx={{ p: { xs: 3, md: 4.5 } }}>
+          <Stack spacing={3}>
+            <Stack direction={{ xs: "column", md: "row" }} spacing={3} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }}>
+              <Box>
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
+                  <Chip
+                    label="Live Analytics"
+                    size="small"
+                    sx={{
+                      height: 20,
+                      fontSize: "0.65rem",
+                      fontWeight: 800,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      bgcolor: alpha("#0EA5E9", 0.1),
+                      color: "#0EA5E9",
+                      border: `1px solid ${alpha("#0EA5E9", 0.2)}`,
+                    }}
+                  />
+                </Stack>
+                <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: "-0.02em", color: "#0F172A", mb: 1 }}>
+                  Operations Center
+                </Typography>
+                <Typography sx={{ color: "text.secondary", maxWidth: 600, fontSize: "1.05rem", lineHeight: 1.6 }}>
+                  Track your indexing pipeline velocity, monitor site health, and manage your subscription resources in real-time.
+                </Typography>
+              </Box>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {metrics.map((metric) => (
-          <Card key={metric.label} size="sm">
-            <CardContent className="flex items-center gap-3">
-              <div className="rounded-md border border-border p-2">
-                <metric.icon className="h-4 w-4" />
-              </div>
-              <div>
-                <div className="text-xl font-semibold">{metric.value}</div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wide">{metric.label}</div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+              <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+                <Button
+                  component="a"
+                  href="/sites"
+                  variant="contained"
+                  disableElevation
+                  startIcon={<AddCircleOutlineIcon />}
+                  sx={{
+                    borderRadius: "14px",
+                    px: 3,
+                    py: 1.25,
+                    textTransform: "none",
+                    bgcolor: "#0F172A",
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: "0.95rem",
+                    "&:hover": { bgcolor: "#1E293B" },
+                  }}
+                >
+                  Add Website
+                </Button>
+                <Button
+                  component="a"
+                  href="/settings"
+                  variant="outlined"
+                  sx={{
+                    borderRadius: "14px",
+                    px: 3,
+                    py: 1.25,
+                    textTransform: "none",
+                    color: "#0F172A",
+                    borderColor: alpha("#0F172A", 0.15),
+                    fontWeight: 700,
+                    fontSize: "0.95rem",
+                    "&:hover": { borderColor: "#0F172A", bgcolor: alpha("#0F172A", 0.04) },
+                  }}
+                >
+                  Subscription
+                </Button>
+              </Stack>
+            </Stack>
 
-      <div className="grid gap-4 lg:grid-cols-5">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Resources & quota</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs">
-                <span>Websites</span>
-                <span>{data.usage.websitesUsed}/{formatNumber(data.usage.websitesLimit)}</span>
-              </div>
-              <Progress value={websiteRatio} />
-            </div>
-
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs">
-                <span>Monthly submissions</span>
-                <span>{formatNumber(data.usage.submissionsUsed)}/{formatNumber(data.usage.submissionsLimit)}</span>
-              </div>
-              <Progress value={submissionRatio} />
-            </div>
-
-            <p className="rounded-md border border-border bg-muted/40 p-2.5 text-xs text-muted-foreground">{data.plan.tagline}</p>
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-3">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle>Activity stream</CardTitle>
-              <CardDescription>Latest indexing submissions.</CardDescription>
-            </div>
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/submissions">View history <ArrowUpRight className="ml-1 h-4 w-4" /></Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {data.recentSubmissions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center gap-2 rounded-md border border-dashed border-border p-8 text-center">
-                <Sparkles className="h-5 w-5 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">No submissions yet. Add a site to start syncing.</p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {data.recentSubmissions.map((entry) => (
-                  <div key={entry.id} className="rounded-md border border-border p-3">
-                    <div className="truncate text-sm font-medium">{entry.websiteUrl ?? "Site"}</div>
-                    <div className="truncate text-xs text-muted-foreground">{entry.url}</div>
-                    <div className="mt-2 flex items-center gap-2">
-                      <Badge variant="outline">{entry.engine.toUpperCase()}</Badge>
-                      <Badge variant={entry.status === "success" ? "secondary" : "destructive"}>{entry.status.toUpperCase()}</Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Top sites</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {data.topSites.length === 0 ? (
-            <div className="rounded-md border border-dashed border-border p-6 text-sm text-muted-foreground">No sites connected yet.</div>
-          ) : (
-            <div className="space-y-3">
-              {data.topSites.map((site, idx) => (
-                <div key={site.id}>
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div>
-                      <p className="text-sm font-medium">{site.url}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Last sync: {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString() : "Pending first sync"}
-                      </p>
-                    </div>
-                    <Badge variant="outline">{formatNumber(site.submissions)} submissions</Badge>
-                  </div>
-                  {idx !== data.topSites.length - 1 && <Separator className="mt-3" />}
-                </div>
-              ))}
-            </div>
-          )}
+            <Stack direction="row" spacing={1.5}>
+              <Chip
+                icon={<BoltIcon sx={{ color: "inherit !important", fontSize: "0.9rem" }} />}
+                label={`${data.plan.name} Tier`}
+                sx={{
+                  bgcolor: "#fff",
+                  color: "#0F172A",
+                  fontWeight: 700,
+                  fontSize: "0.8rem",
+                  border: "1px solid",
+                  borderColor: alpha("#0F172A", 0.08),
+                  height: 32,
+                  px: 0.5,
+                }}
+              />
+              <Chip
+                icon={<CalendarMonthIcon sx={{ color: "inherit !important", fontSize: "0.9rem" }} />}
+                label={`$${data.plan.priceMonthly}/mo`}
+                sx={{
+                  bgcolor: "#fff",
+                  color: "#0F172A",
+                  fontWeight: 700,
+                  fontSize: "0.8rem",
+                  border: "1px solid",
+                  borderColor: alpha("#0F172A", 0.08),
+                  height: 32,
+                  px: 0.5,
+                }}
+              />
+            </Stack>
+          </Stack>
         </CardContent>
       </Card>
-    </div>
+
+      <Grid container spacing={2.5}>
+        {[
+          { label: "Active Sites", value: formatNumber(data.websitesCount), icon: <HubIcon />, color: "#0F172A" },
+          { label: "Total Submissions", value: formatNumber(data.submissionsThisMonth), icon: <AutoGraphIcon />, color: "#0F172A" },
+          { label: "Success Rate", value: data.submissionsThisMonth > 0 ? `${Math.round((data.successfulThisMonth / data.submissionsThisMonth) * 100)}%` : "0%", icon: <DoneAllIcon />, color: "#10B981" },
+          { label: "Plan Capacity", value: `${formatNumber(data.usage.websitesLimit)} Max`, icon: <BoltIcon />, color: "#F59E0B" },
+        ].map((metric) => (
+          <Grid key={metric.label} item xs={12} sm={6} lg={3}>
+            <Card sx={{ borderRadius: "20px", border: "1px solid", borderColor: alpha("#000", 0.06), boxShadow: "none", transition: "all 0.2s", "&:hover": { borderColor: alpha(metric.color, 0.2), transform: "translateY(-2px)" } }}>
+              <CardContent sx={{ p: 3 }}>
+                <Stack direction="row" spacing={2.5} alignItems="center">
+                  <Avatar sx={{ width: 48, height: 48, bgcolor: alpha(metric.color, 0.05), color: metric.color, borderRadius: "14px", border: `1px solid ${alpha(metric.color, 0.1)}` }}>
+                    {metric.icon}
+                  </Avatar>
+                  <Box>
+                    <Typography variant="h4" sx={{ fontWeight: 800, color: "#0F172A", mb: 0.2 }}>
+                      {metric.value}
+                    </Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 600, color: "text.secondary", textTransform: "uppercase", letterSpacing: "0.06em", fontSize: "0.7rem" }}>
+                      {metric.label}
+                    </Typography>
+                  </Box>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Grid container spacing={2.5}>
+        <Grid item xs={12} md={5}>
+          <Card sx={{ borderRadius: "20px", border: "1px solid", borderColor: alpha("#000", 0.06), boxShadow: "none", height: "100%", bgcolor: alpha("#F8FAFC", 0.5) }}>
+            <CardContent sx={{ p: 3.5 }}>
+              <Stack spacing={3}>
+                <Typography variant="h6" sx={{ fontWeight: 800, color: "#0F172A" }}>
+                  Resources & Quota
+                </Typography>
+
+                <Box>
+                  <Stack direction="row" justifyContent="space-between" sx={{ mb: 1.5 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 700, color: "#0F172A" }}>Websites</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: "#0F172A" }}>
+                      {data.usage.websitesUsed} <Box component="span" sx={{ opacity: 0.4, fontWeight: 500 }}>/</Box> {formatNumber(data.usage.websitesLimit)}
+                    </Typography>
+                  </Stack>
+                  <LinearProgress
+                    variant="determinate"
+                    value={websiteRatio}
+                    sx={{
+                      height: 10,
+                      borderRadius: "5px",
+                      bgcolor: alpha("#0EA5E9", 0.1),
+                      "& .MuiLinearProgress-bar": { bgcolor: "#0EA5E9", borderRadius: "5px" },
+                    }}
+                  />
+                </Box>
+ 
+                <Box>
+                  <Stack direction="row" justifyContent="space-between" sx={{ mb: 1.5 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 700, color: "#0F172A" }}>Monthly Submissions</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: "#0F172A" }}>
+                      {formatNumber(data.usage.submissionsUsed)} <Box component="span" sx={{ opacity: 0.4, fontWeight: 500 }}>/</Box> {formatNumber(data.usage.submissionsLimit)}
+                    </Typography>
+                  </Stack>
+                  <LinearProgress
+                    variant="determinate"
+                    value={submissionRatio}
+                    sx={{
+                      height: 10,
+                      borderRadius: "5px",
+                      bgcolor: alpha("#0F172A", 0.08),
+                      "& .MuiLinearProgress-bar": { bgcolor: "#0F172A", borderRadius: "5px" },
+                    }}
+                  />
+                </Box>
+
+                <Typography variant="body2" sx={{ color: "text.secondary", bgcolor: "#fff", p: 2, borderRadius: "12px", border: "1px solid", borderColor: alpha("#000", 0.04), fontSize: "0.85rem" }}>
+                  {data.plan.tagline}
+                </Typography>
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={7}>
+          <Card sx={{ borderRadius: "20px", border: "1px solid", borderColor: alpha("#000", 0.06), boxShadow: "none", height: "100%" }}>
+            <CardContent sx={{ p: 3.5 }}>
+              <Stack spacing={2.5}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                  <Typography variant="h6" sx={{ fontWeight: 800, color: "#0F172A" }}>
+                    Activity Stream
+                  </Typography>
+                  <Button
+                    component="a"
+                    href="/submissions"
+                    variant="text"
+                    endIcon={<OpenInNewIcon sx={{ fontSize: "1.1rem !important" }} />}
+                    sx={{ textTransform: "none", fontWeight: 800, color: "#0F172A", "&:hover": { bgcolor: alpha("#0F172A", 0.05) } }}
+                  >
+                    View History
+                  </Button>
+                </Stack>
+
+                {data.recentSubmissions.length === 0 ? (
+                  <Box sx={{
+                    py: 8,
+                    textAlign: "center",
+                    bgcolor: alpha("#F8FAFC", 0.5),
+                    borderRadius: "16px",
+                    border: "1px dashed",
+                    borderColor: alpha("#000", 0.1),
+                  }}>
+                    <AutoGraphIcon sx={{ fontSize: 44, color: alpha("#0F172A", 0.15), mb: 2 }} />
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary", px: 5, maxWidth: 320, mx: "auto", lineHeight: 1.6 }}>
+                      Your indexing pipeline is empty. Add a site to start monitoring submissions.
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Stack spacing={1.25}>
+                    {data.recentSubmissions.map((entry) => (
+                      <Stack
+                        key={entry.id}
+                        direction={{ xs: "column", sm: "row" }}
+                        spacing={2}
+                        justifyContent="space-between"
+                        sx={{
+                          p: 1.75,
+                          borderRadius: "14px",
+                          border: "1px solid",
+                          borderColor: alpha("#0F172A", 0.05),
+                          transition: "all 0.2s",
+                          "&:hover": { borderColor: alpha("#0F172A", 0.15), bgcolor: alpha("#F8FAFC", 0.5) }
+                        }}
+                      >
+                        <Box sx={{ minWidth: 0 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 800, color: "#0F172A" }} noWrap>
+                            {entry.websiteUrl ?? "Site"}
+                          </Typography>
+                          <Typography variant="caption" sx={{ color: "text.secondary", display: "block" }} noWrap>
+                            {entry.url}
+                          </Typography>
+                        </Box>
+                        <Stack direction="row" spacing={1.25} alignItems="center">
+                          <Chip size="small" label={entry.engine.toUpperCase()} sx={{ fontWeight: 800, bgcolor: alpha("#0F172A", 0.04), borderRadius: "6px" }} />
+                          <Chip
+                            size="small"
+                            label={entry.status.toUpperCase()}
+                            sx={{
+                              fontWeight: 800,
+                              borderRadius: "6px",
+                              bgcolor: entry.status === "success" ? alpha("#10B981", 0.12) : alpha("#EF4444", 0.1),
+                              color: entry.status === "success" ? "#059669" : "#DC2626",
+                            }}
+                          />
+                        </Stack>
+                      </Stack>
+                    ))}
+                  </Stack>
+                )}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Card sx={{ borderRadius: "20px", border: "1px solid", borderColor: alpha("#000", 0.06), boxShadow: "none" }}>
+        <CardContent sx={{ p: 3.5 }}>
+          <Stack spacing={2.5}>
+            <Typography variant="h6" sx={{ fontWeight: 800, color: "#0F172A" }}>
+              High-Traffic Assets
+            </Typography>
+            {data.topSites.length === 0 ? (
+              <Box sx={{
+                py: 6,
+                textAlign: "center",
+                bgcolor: alpha("#6366F1", 0.025),
+                borderRadius: "16px",
+                border: "1px dashed",
+                borderColor: alpha("#6366F1", 0.15),
+              }}>
+                <HubIcon sx={{ fontSize: 40, color: alpha("#6366F1", 0.15), mb: 2 }} />
+                <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary" }}>
+                  Connect your first property to track traffic.
+                </Typography>
+              </Box>
+            ) : (
+              <Stack spacing={1.25}>
+                {data.topSites.map((site) => (
+                  <Stack
+                    key={site.id}
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{ 
+                      p: 1.75, 
+                      borderRadius: "14px", 
+                      border: "1px solid", 
+                      borderColor: alpha("#0F172A", 0.05),
+                      "&:hover": { borderColor: alpha("#0F172A", 0.15), bgcolor: alpha("#F8FAFC", 0.5) }
+                    }}
+                  >
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 800, color: "#0F172A" }} noWrap>{site.url}</Typography>
+                      <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                        Last sync: {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString() : "Pending first sync"}
+                      </Typography>
+                    </Box>
+                    <Chip 
+                      label={`${formatNumber(site.submissions)} submissions`} 
+                      sx={{ 
+                        fontWeight: 800, 
+                        bgcolor: "#F1F5F9", 
+                        borderRadius: "8px",
+                        border: "1px solid",
+                        borderColor: alpha("#000", 0.04)
+                      }} 
+                    />
+                  </Stack>
+                ))}
+              </Stack>
+            )}
+          </Stack>
+        </CardContent>
+      </Card>
+    </Stack>
   );
 }
+
