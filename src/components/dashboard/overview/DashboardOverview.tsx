@@ -1,23 +1,17 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Grid,
-  LinearProgress,
-  Stack,
-  Typography,
-} from "@/components/ui/mui";
-import { alpha } from "@/lib/color";
-import { AddCircleOutlineIcon } from "@/components/icons/mui-icons";
-import { AutoGraphIcon } from "@/components/icons/mui-icons";
-import { BoltIcon } from "@/components/icons/mui-icons";
-import { CalendarMonthIcon } from "@/components/icons/mui-icons";
-import { DoneAllIcon } from "@/components/icons/mui-icons";
-import { HubIcon } from "@/components/icons/mui-icons";
-import { OpenInNewIcon } from "@/components/icons/mui-icons";
+"use client";
+
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { 
+  Plus,
+  Settings,
+  ExternalLink,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import type { DashboardData } from "@/app/(dashboard)/actions";
 
 interface DashboardOverviewProps {
@@ -40,349 +34,208 @@ function formatNumber(num: number) {
 export default function DashboardOverview({ data }: DashboardOverviewProps) {
   const websiteRatio = ratio(data.usage.websitesUsed, data.usage.websitesLimit);
   const submissionRatio = ratio(data.usage.submissionsUsed, data.usage.submissionsLimit);
+  const successRate = data.submissionsThisMonth > 0 ? Math.round((data.successfulThisMonth / data.submissionsThisMonth) * 100) : 0;
 
   return (
-    <Stack spacing={3.5}>
-      <Card
-        sx={{
-          borderRadius: "24px",
-          border: "1px solid",
-          borderColor: alpha("#000", 0.08),
-          bgcolor: "#fff",
-          boxShadow: "0 4px 20px -12px rgba(0,0,0,0.1)",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <CardContent sx={{ p: { xs: 3, md: 4.5 } }}>
-          <Stack spacing={3}>
-            <Stack direction={{ xs: "column", md: "row" }} spacing={3} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }}>
-              <Box>
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
-                  <Chip
-                    label="Live Analytics"
-                    size="small"
-                    sx={{
-                      height: 20,
-                      fontSize: "0.65rem",
-                      fontWeight: 800,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      bgcolor: alpha("#0EA5E9", 0.1),
-                      color: "#0EA5E9",
-                      border: `1px solid ${alpha("#0EA5E9", 0.2)}`,
-                    }}
-                  />
-                </Stack>
-                <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: "-0.02em", color: "#0F172A", mb: 1 }}>
-                  Operations Center
-                </Typography>
-                <Typography sx={{ color: "text.secondary", maxWidth: 600, fontSize: "1.05rem", lineHeight: 1.6 }}>
-                  Track your indexing pipeline velocity, monitor site health, and manage your subscription resources in real-time.
-                </Typography>
-              </Box>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <p className="text-sm text-muted-foreground">
+            Monitor your indexing activity and manage subscription resources.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button asChild>
+            <Link href="/sites">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Website
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/settings">
+              <Settings className="w-4 h-4 mr-2" />
+              Subscription
+            </Link>
+          </Button>
+        </div>
+      </div>
 
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
-                <Button
-                  component="a"
-                  href="/sites"
-                  variant="contained"
-                  disableElevation
-                  startIcon={<AddCircleOutlineIcon />}
-                  sx={{
-                    borderRadius: "14px",
-                    px: 3,
-                    py: 1.25,
-                    textTransform: "none",
-                    bgcolor: "#0F172A",
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: "0.95rem",
-                    "&:hover": { bgcolor: "#1E293B" },
-                  }}
-                >
-                  Add Website
-                </Button>
-                <Button
-                  component="a"
-                  href="/settings"
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "14px",
-                    px: 3,
-                    py: 1.25,
-                    textTransform: "none",
-                    color: "#0F172A",
-                    borderColor: alpha("#0F172A", 0.15),
-                    fontWeight: 700,
-                    fontSize: "0.95rem",
-                    "&:hover": { borderColor: "#0F172A", bgcolor: alpha("#0F172A", 0.04) },
-                  }}
-                >
-                  Subscription
-                </Button>
-              </Stack>
-            </Stack>
-
-            <Stack direction="row" spacing={1.5}>
-              <Chip
-                icon={<BoltIcon sx={{ color: "inherit !important", fontSize: "0.9rem" }} />}
-                label={`${data.plan.name} Tier`}
-                sx={{
-                  bgcolor: "#fff",
-                  color: "#0F172A",
-                  fontWeight: 700,
-                  fontSize: "0.8rem",
-                  border: "1px solid",
-                  borderColor: alpha("#0F172A", 0.08),
-                  height: 32,
-                  px: 0.5,
-                }}
-              />
-              <Chip
-                icon={<CalendarMonthIcon sx={{ color: "inherit !important", fontSize: "0.9rem" }} />}
-                label={`$${data.plan.priceMonthly}/mo`}
-                sx={{
-                  bgcolor: "#fff",
-                  color: "#0F172A",
-                  fontWeight: 700,
-                  fontSize: "0.8rem",
-                  border: "1px solid",
-                  borderColor: alpha("#0F172A", 0.08),
-                  height: 32,
-                  px: 0.5,
-                }}
-              />
-            </Stack>
-          </Stack>
+      {/* Plan Info */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Plan</p>
+              <p className="text-lg font-semibold">{data.plan.name}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Monthly Cost</p>
+              <p className="text-lg font-semibold">${data.plan.priceMonthly}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Active Sites</p>
+              <p className="text-lg font-semibold">{data.websitesCount}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Success Rate</p>
+              <p className="text-lg font-semibold">{successRate}%</p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
-      <Grid container spacing={2.5}>
-        {[
-          { label: "Active Sites", value: formatNumber(data.websitesCount), icon: <HubIcon />, color: "#0F172A" },
-          { label: "Total Submissions", value: formatNumber(data.submissionsThisMonth), icon: <AutoGraphIcon />, color: "#0F172A" },
-          { label: "Success Rate", value: data.submissionsThisMonth > 0 ? `${Math.round((data.successfulThisMonth / data.submissionsThisMonth) * 100)}%` : "0%", icon: <DoneAllIcon />, color: "#10B981" },
-          { label: "Plan Capacity", value: `${formatNumber(data.usage.websitesLimit)} Max`, icon: <BoltIcon />, color: "#F59E0B" },
-        ].map((metric) => (
-          <Grid key={metric.label} item xs={12} sm={6} lg={3}>
-            <Card sx={{ borderRadius: "20px", border: "1px solid", borderColor: alpha("#000", 0.06), boxShadow: "none", transition: "all 0.2s", "&:hover": { borderColor: alpha(metric.color, 0.2), transform: "translateY(-2px)" } }}>
-              <CardContent sx={{ p: 3 }}>
-                <Stack direction="row" spacing={2.5} alignItems="center">
-                  <Avatar sx={{ width: 48, height: 48, bgcolor: alpha(metric.color, 0.05), color: metric.color, borderRadius: "14px", border: `1px solid ${alpha(metric.color, 0.1)}` }}>
-                    {metric.icon}
-                  </Avatar>
-                  <Box>
-                    <Typography variant="h4" sx={{ fontWeight: 800, color: "#0F172A", mb: 0.2 }}>
-                      {metric.value}
-                    </Typography>
-                    <Typography variant="caption" sx={{ fontWeight: 600, color: "text.secondary", textTransform: "uppercase", letterSpacing: "0.06em", fontSize: "0.7rem" }}>
-                      {metric.label}
-                    </Typography>
-                  </Box>
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Websites</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{data.usage.websitesUsed}</p>
+            <p className="text-xs text-muted-foreground mt-1">of {formatNumber(data.usage.websitesLimit)}</p>
+          </CardContent>
+        </Card>
 
-      <Grid container spacing={2.5}>
-        <Grid item xs={12} md={5}>
-          <Card sx={{ borderRadius: "20px", border: "1px solid", borderColor: alpha("#000", 0.06), boxShadow: "none", height: "100%", bgcolor: alpha("#F8FAFC", 0.5) }}>
-            <CardContent sx={{ p: 3.5 }}>
-              <Stack spacing={3}>
-                <Typography variant="h6" sx={{ fontWeight: 800, color: "#0F172A" }}>
-                  Resources & Quota
-                </Typography>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Submissions This Month</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{formatNumber(data.submissionsThisMonth)}</p>
+            <p className="text-xs text-muted-foreground mt-1">of {formatNumber(data.usage.submissionsLimit)}</p>
+          </CardContent>
+        </Card>
 
-                <Box>
-                  <Stack direction="row" justifyContent="space-between" sx={{ mb: 1.5 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 700, color: "#0F172A" }}>Websites</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 800, color: "#0F172A" }}>
-                      {data.usage.websitesUsed} <Box component="span" sx={{ opacity: 0.4, fontWeight: 500 }}>/</Box> {formatNumber(data.usage.websitesLimit)}
-                    </Typography>
-                  </Stack>
-                  <LinearProgress
-                    variant="determinate"
-                    value={websiteRatio}
-                    sx={{
-                      height: 10,
-                      borderRadius: "5px",
-                      bgcolor: alpha("#0EA5E9", 0.1),
-                      "& .MuiLinearProgress-bar": { bgcolor: "#0EA5E9", borderRadius: "5px" },
-                    }}
-                  />
-                </Box>
- 
-                <Box>
-                  <Stack direction="row" justifyContent="space-between" sx={{ mb: 1.5 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 700, color: "#0F172A" }}>Monthly Submissions</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 800, color: "#0F172A" }}>
-                      {formatNumber(data.usage.submissionsUsed)} <Box component="span" sx={{ opacity: 0.4, fontWeight: 500 }}>/</Box> {formatNumber(data.usage.submissionsLimit)}
-                    </Typography>
-                  </Stack>
-                  <LinearProgress
-                    variant="determinate"
-                    value={submissionRatio}
-                    sx={{
-                      height: 10,
-                      borderRadius: "5px",
-                      bgcolor: alpha("#0F172A", 0.08),
-                      "& .MuiLinearProgress-bar": { bgcolor: "#0F172A", borderRadius: "5px" },
-                    }}
-                  />
-                </Box>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Successful</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{formatNumber(data.successfulThisMonth)}</p>
+            <p className="text-xs text-muted-foreground mt-1">{successRate}% success rate</p>
+          </CardContent>
+        </Card>
 
-                <Typography variant="body2" sx={{ color: "text.secondary", bgcolor: "#fff", p: 2, borderRadius: "12px", border: "1px solid", borderColor: alpha("#000", 0.04), fontSize: "0.85rem" }}>
-                  {data.plan.tagline}
-                </Typography>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium">Plan Capacity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{formatNumber(data.usage.websitesLimit)}</p>
+            <p className="text-xs text-muted-foreground mt-1">max websites</p>
+          </CardContent>
+        </Card>
+      </div>
 
-        <Grid item xs={12} md={7}>
-          <Card sx={{ borderRadius: "20px", border: "1px solid", borderColor: alpha("#000", 0.06), boxShadow: "none", height: "100%" }}>
-            <CardContent sx={{ p: 3.5 }}>
-              <Stack spacing={2.5}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="h6" sx={{ fontWeight: 800, color: "#0F172A" }}>
-                    Activity Stream
-                  </Typography>
-                  <Button
-                    component="a"
-                    href="/submissions"
-                    variant="text"
-                    endIcon={<OpenInNewIcon sx={{ fontSize: "1.1rem !important" }} />}
-                    sx={{ textTransform: "none", fontWeight: 800, color: "#0F172A", "&:hover": { bgcolor: alpha("#0F172A", 0.05) } }}
-                  >
-                    View History
-                  </Button>
-                </Stack>
+      {/* Resources Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Resources & Quota</CardTitle>
+          <CardDescription>{data.plan.tagline}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-sm font-medium">Websites</p>
+              <p className="text-sm text-muted-foreground">
+                {data.usage.websitesUsed} of {formatNumber(data.usage.websitesLimit)}
+              </p>
+            </div>
+            <Progress value={websiteRatio} className="h-2" />
+          </div>
 
-                {data.recentSubmissions.length === 0 ? (
-                  <Box sx={{
-                    py: 8,
-                    textAlign: "center",
-                    bgcolor: alpha("#F8FAFC", 0.5),
-                    borderRadius: "16px",
-                    border: "1px dashed",
-                    borderColor: alpha("#000", 0.1),
-                  }}>
-                    <AutoGraphIcon sx={{ fontSize: 44, color: alpha("#0F172A", 0.15), mb: 2 }} />
-                    <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary", px: 5, maxWidth: 320, mx: "auto", lineHeight: 1.6 }}>
-                      Your indexing pipeline is empty. Add a site to start monitoring submissions.
-                    </Typography>
-                  </Box>
-                ) : (
-                  <Stack spacing={1.25}>
-                    {data.recentSubmissions.map((entry) => (
-                      <Stack
-                        key={entry.id}
-                        direction={{ xs: "column", sm: "row" }}
-                        spacing={2}
-                        justifyContent="space-between"
-                        sx={{
-                          p: 1.75,
-                          borderRadius: "14px",
-                          border: "1px solid",
-                          borderColor: alpha("#0F172A", 0.05),
-                          transition: "all 0.2s",
-                          "&:hover": { borderColor: alpha("#0F172A", 0.15), bgcolor: alpha("#F8FAFC", 0.5) }
-                        }}
-                      >
-                        <Box sx={{ minWidth: 0 }}>
-                          <Typography variant="body2" sx={{ fontWeight: 800, color: "#0F172A" }} noWrap>
-                            {entry.websiteUrl ?? "Site"}
-                          </Typography>
-                          <Typography variant="caption" sx={{ color: "text.secondary", display: "block" }} noWrap>
-                            {entry.url}
-                          </Typography>
-                        </Box>
-                        <Stack direction="row" spacing={1.25} alignItems="center">
-                          <Chip size="small" label={entry.engine.toUpperCase()} sx={{ fontWeight: 800, bgcolor: alpha("#0F172A", 0.04), borderRadius: "6px" }} />
-                          <Chip
-                            size="small"
-                            label={entry.status.toUpperCase()}
-                            sx={{
-                              fontWeight: 800,
-                              borderRadius: "6px",
-                              bgcolor: entry.status === "success" ? alpha("#10B981", 0.12) : alpha("#EF4444", 0.1),
-                              color: entry.status === "success" ? "#059669" : "#DC2626",
-                            }}
-                          />
-                        </Stack>
-                      </Stack>
-                    ))}
-                  </Stack>
-                )}
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      <Card sx={{ borderRadius: "20px", border: "1px solid", borderColor: alpha("#000", 0.06), boxShadow: "none" }}>
-        <CardContent sx={{ p: 3.5 }}>
-          <Stack spacing={2.5}>
-            <Typography variant="h6" sx={{ fontWeight: 800, color: "#0F172A" }}>
-              High-Traffic Assets
-            </Typography>
-            {data.topSites.length === 0 ? (
-              <Box sx={{
-                py: 6,
-                textAlign: "center",
-                bgcolor: alpha("#6366F1", 0.025),
-                borderRadius: "16px",
-                border: "1px dashed",
-                borderColor: alpha("#6366F1", 0.15),
-              }}>
-                <HubIcon sx={{ fontSize: 40, color: alpha("#6366F1", 0.15), mb: 2 }} />
-                <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary" }}>
-                  Connect your first property to track traffic.
-                </Typography>
-              </Box>
-            ) : (
-              <Stack spacing={1.25}>
-                {data.topSites.map((site) => (
-                  <Stack
-                    key={site.id}
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    sx={{ 
-                      p: 1.75, 
-                      borderRadius: "14px", 
-                      border: "1px solid", 
-                      borderColor: alpha("#0F172A", 0.05),
-                      "&:hover": { borderColor: alpha("#0F172A", 0.15), bgcolor: alpha("#F8FAFC", 0.5) }
-                    }}
-                  >
-                    <Box sx={{ minWidth: 0 }}>
-                      <Typography variant="body2" sx={{ fontWeight: 800, color: "#0F172A" }} noWrap>{site.url}</Typography>
-                      <Typography variant="caption" sx={{ color: "text.secondary" }}>
-                        Last sync: {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString() : "Pending first sync"}
-                      </Typography>
-                    </Box>
-                    <Chip 
-                      label={`${formatNumber(site.submissions)} submissions`} 
-                      sx={{ 
-                        fontWeight: 800, 
-                        bgcolor: "#F1F5F9", 
-                        borderRadius: "8px",
-                        border: "1px solid",
-                        borderColor: alpha("#000", 0.04)
-                      }} 
-                    />
-                  </Stack>
-                ))}
-              </Stack>
-            )}
-          </Stack>
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-sm font-medium">Monthly Submissions</p>
+              <p className="text-sm text-muted-foreground">
+                {formatNumber(data.usage.submissionsUsed)} of {formatNumber(data.usage.submissionsLimit)}
+              </p>
+            </div>
+            <Progress value={submissionRatio} className="h-2" />
+          </div>
         </CardContent>
       </Card>
-    </Stack>
+
+      {/* Activity Section */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-4">
+          <div>
+            <CardTitle>Recent Activity</CardTitle>
+            <CardDescription>Your latest submissions</CardDescription>
+          </div>
+          <Button asChild variant="ghost" size="sm" className="gap-2">
+            <Link href="/submissions">
+              View All <ExternalLink className="w-3 h-3" />
+            </Link>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {data.recentSubmissions.length === 0 ? (
+            <div className="py-8 text-center text-muted-foreground">
+              <p className="text-sm">No submissions yet</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {data.recentSubmissions.map((entry) => (
+                <div key={entry.id} className="flex items-center justify-between p-3 rounded-lg border">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{entry.websiteUrl ?? "Site"}</p>
+                    <p className="text-xs text-muted-foreground truncate">{entry.url}</p>
+                  </div>
+                  <div className="flex items-center gap-2 ml-2">
+                    <Badge variant="outline" className="text-xs">
+                      {entry.engine.toUpperCase()}
+                    </Badge>
+                    {entry.status === "success" ? (
+                      <Badge className="text-xs bg-green-100 text-green-800 hover:bg-green-100">
+                        <CheckCircle2 className="w-3 h-3 mr-1" />
+                        Success
+                      </Badge>
+                    ) : (
+                      <Badge className="text-xs bg-red-100 text-red-800 hover:bg-red-100">
+                        <AlertCircle className="w-3 h-3 mr-1" />
+                        Failed
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Top Sites */}
+      <Card>
+        <CardHeader>
+          <CardTitle>High-Traffic Assets</CardTitle>
+          <CardDescription>Your most active properties</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {data.topSites.length === 0 ? (
+            <div className="py-8 text-center text-muted-foreground">
+              <p className="text-sm">No properties tracked yet</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {data.topSites.map((site) => (
+                <div key={site.id} className="p-4 rounded-lg border">
+                  <p className="text-sm font-medium truncate mb-1">{site.url}</p>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    Last sync: {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleDateString() : "Pending"}
+                  </p>
+                  <Badge variant="secondary" className="text-xs">
+                    {formatNumber(site.submissions)} submissions
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 

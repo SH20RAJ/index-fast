@@ -51,7 +51,6 @@ import {
   ListFilter
 } from "lucide-react";
 import Link from "next/link";
-import PageHeader from "@/components/dashboard/PageHeader";
 import {
   buildBingIndexNowPortalUrl,
   buildGoogleSearchConsolePropertyUrl,
@@ -351,10 +350,16 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
   if (sites.length === 0) {
     return (
       <div className="space-y-6 pb-16">
-        <PageHeader
-          title="Site URLs"
-          description="Inspect sitemaps, URL inventory, and push manual submissions."
-        />
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-1.5">
+            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+              Site URLs
+            </h1>
+            <p className="text-muted-foreground text-sm sm:text-base max-w-[600px]">
+              Inspect sitemaps, URL inventory, and push manual submissions.
+            </p>
+          </div>
+        </div>
         <Card className="border-dashed border-2 bg-muted/20">
           <CardContent className="flex flex-col items-center justify-center py-16 text-center space-y-4">
             <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
@@ -377,26 +382,30 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
 
   return (
     <div className="space-y-8 pb-16">
-      <PageHeader
-        title="Site URLs"
-        description="List sitemap URLs, inspect inventory, and manually submit sitemap or URL lists."
-        action={
-          <div className="w-full sm:w-[320px]">
-            <Select value={siteId} onValueChange={setSiteId}>
-              <SelectTrigger className="h-11 bg-card/30 backdrop-blur-sm border-border/40 font-bold rounded-xl ring-offset-background transition-all focus:ring-2 focus:ring-primary/20">
-                <SelectValue placeholder="Select a website" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl border-border/40 font-bold">
-                {sites.map((site) => (
-                  <SelectItem key={site.id} value={site.id} className="focus:bg-primary/5 focus:text-primary rounded-lg transition-colors">
-                    {site.url}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        }
-      />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-1.5">
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            Site URLs
+          </h1>
+          <p className="text-muted-foreground text-sm sm:text-base max-w-[600px]">
+            List sitemap URLs, inspect inventory, and manually submit sitemap or URL lists.
+          </p>
+        </div>
+        <div className="w-full sm:w-[320px]">
+          <Select value={siteId} onValueChange={setSiteId}>
+            <SelectTrigger className="h-11 bg-card/30 backdrop-blur-sm border-border/40 font-bold rounded-xl ring-offset-background transition-all focus:ring-2 focus:ring-primary/20">
+              <SelectValue placeholder="Select a website" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl border-border/40 font-bold">
+              {sites.map((site) => (
+                <SelectItem key={site.id} value={site.id} className="focus:bg-primary/5 focus:text-primary rounded-lg transition-colors">
+                  {site.url}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
       {error && (
         <Alert variant="destructive">

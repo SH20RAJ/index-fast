@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useStackApp, useUser } from "@stackframe/stack";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Activity,
   Bolt,
@@ -13,45 +12,22 @@ import {
   Settings,
   Wrench,
   CheckCircle2,
-  FileText,
-  ChevronLeft,
-  ChevronRight,
   LogOut,
-  ExternalLink,
-  ShieldCheck,
-  AlertCircle,
-  Search,
-  Sparkles,
-  Command,
-  UserCircle2,
+  Menu,
+  X,
 } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarSeparator,
-} from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navSections = [
   {
     label: "Workspace",
     items: [
       {
-        label: "Command Center",
+        label: "Dashboard",
         href: "/dashboard",
         icon: LayoutDashboard,
       },
@@ -71,17 +47,17 @@ const navSections = [
     label: "Monitor",
     items: [
       {
-        label: "Submission Stream",
+        label: "Submissions",
         href: "/submissions",
         icon: Activity,
       },
     ],
   },
   {
-    label: "SEO Tools",
+    label: "Tools",
     items: [
       {
-        label: "Toolbox Hub",
+        label: "Toolbox",
         href: "/toolbox",
         icon: Wrench,
         children: [
@@ -94,11 +70,11 @@ const navSections = [
   },
 ];
 
-export default function DashboardSidebar() {
+function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   const pathname = usePathname();
   const user = useUser();
   const stack = useStackApp();
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const displayName = user?.displayName?.trim() || "User";
   const primaryEmail = user?.primaryEmail || "No email";
@@ -115,39 +91,193 @@ export default function DashboardSidebar() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-  return (
-    <Sidebar variant="sidebar" collapsible="icon" className="border-r border-border/40 bg-background/50 backdrop-blur-xl">
-      <SidebarHeader className="h-16 flex flex-row items-center gap-3 px-4 relative group">
-        <Link href="/" className="flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95">
-          <motion.div 
-            whileHover={{ rotate: 180 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-xl shadow-primary/30"
-          >
-            <Bolt className="h-5 w-5 text-primary-foreground" />
-          </motion.div>
-          <div className="flex flex-col">
-            <span className="text-sm font-black tracking-tighter leading-none">IndexFast</span>
-            <span className="text-[10px] font-bold text-primary tracking-widest uppercase mt-0.5">Premium</span>
-          </div>
-        </Link>
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
-      </SidebarHeader>
+  const handleNavClick = () => {
+    closeSheet?.();
+  };
 
-      <SidebarContent className="px-2 py-6 custom-scrollbar">
-        {navSections.map((section) => (
-          <SidebarGroup key={section.label} className="mt-4 first:mt-0">
-            <SidebarGroupLabel className="px-3 text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/50 mb-2">
-              {section.label}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu className="gap-1">
+  return (
+    <div className="flex flex-col gap-6 h-full">
+      {/* Header */}
+      <div className="flex items-center gap-2.5 px-4 pt-4">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
+          <Bolt className="h-5 w-5 text-primary-foreground" />
+        </div>
+        <div className="flex flex-col">
+          <span className="text-sm font-black tracking-tighter leading-none">IndexFast</span>
+          <span className="text-[10px] font-bold text-primary tracking-widest uppercase">Premium</span>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div className="flex-1 overflow-y-auto px-3">
+        <nav className="space-y-6">
+          {navSections.map((section) => (
+            <div key={section.label} className="space-y-2">
+              <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/50 px-3">
+                {section.label}
+              </p>
+              <div className="space-y-1">
                 {section.items.map((item) => {
                   const hasChildren = Boolean(item.children?.length);
                   const active = item.href ? isActive(item.href) : false;
+                  const submenuOpen = openSubmenu === item.label;
 
                   return (
-                    <SidebarMenuItem key={item.label}>
+                    <div key={item.label}>
+                      {!hasChildren ? (
+                        <Link
+                          href={item.href || "#"}
+                          onClick={handleNavClick}
+                          className={cn(
+                            "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold transition-colors",
+                            active
+                              ? "bg-primary text-primary-foreground"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          )}
+                        >
+                          <item.icon className="w-4 h-4" />
+                          <span>{item.label}</span>
+                        </Link>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => setOpenSubmenu(submenuOpen ? null : item.label)}
+                            className={cn(
+                              "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold transition-colors text-left",
+                              active
+                                ? "bg-primary/10 text-primary"
+                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                            )}
+                          >
+                            <item.icon className="w-4 h-4" />
+                            <span className="flex-1">{item.label}</span>
+                            <svg
+                              className={cn(
+                                "w-4 h-4 transition-transform",
+                                submenuOpen && "rotate-180"
+                              )}
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                            </svg>
+                          </button>
+                          {submenuOpen && item.children && (
+                            <div className="ml-4 space-y-1 border-l border-border/50 pl-3">
+                              {item.children.map((child) => (
+                                <Link
+                                  key={child.href}
+                                  href={child.href}
+                                  onClick={handleNavClick}
+                                  className={cn(
+                                    "block px-3 py-2 rounded-lg text-xs font-semibold transition-colors",
+                                    pathname === child.href
+                                      ? "text-primary bg-primary/10"
+                                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                                  )}
+                                >
+                                  {child.label}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </nav>
+      </div>
+
+      {/* Status */}
+      <div className="mx-3 p-4 bg-muted/30 rounded-lg border border-border/50">
+        <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Status</p>
+        <h4 className="text-xs font-semibold tracking-tight mb-2">Pro Plan Active</h4>
+        <div className="h-1.5 w-full bg-primary/20 rounded-full overflow-hidden">
+          <div className="h-full w-3/4 bg-primary" />
+        </div>
+        <p className="text-[9px] font-medium text-muted-foreground mt-2 flex items-center gap-1">
+          <CheckCircle2 className="h-2.5 w-2.5 text-emerald-500" /> All engines monitored
+        </p>
+      </div>
+
+      {/* User Section */}
+      <div className="border-t border-border/20 p-4 space-y-4">
+        <div className="flex items-center gap-3">
+          <Avatar className="h-10 w-10 border-2 border-primary/20">
+            <AvatarFallback className="bg-gradient-to-br from-primary/10 to-primary/30 text-primary font-black text-xs">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold leading-none mb-1">{displayName}</p>
+            <p className="truncate text-[10px] font-medium text-muted-foreground">{primaryEmail}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-9 rounded-lg gap-2 text-xs font-semibold"
+            asChild
+          >
+            <Link href="/settings">
+              <Settings className="h-3.5 w-3.5" />
+              Settings
+            </Link>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-9 rounded-lg gap-2 text-xs font-semibold hover:text-destructive"
+            onClick={() => {
+              closeSheet?.();
+              stack.signOut();
+            }}
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            Logout
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function DashboardSidebar() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {/* Mobile Menu Button */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-16 px-4 flex items-center border-b border-border/20 bg-background/95 backdrop-blur-sm">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="rounded-lg">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-72 p-0">
+            <SidebarContent closeSheet={() => setOpen(false)} />
+          </SheetContent>
+        </Sheet>
+        <div className="flex-1 text-center">
+          <h1 className="font-bold">Dashboard</h1>
+        </div>
+      </div>
+
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-72 flex-col border-r border-border/20 bg-background/50 backdrop-blur-sm">
+        <SidebarContent />
+      </aside>
+    </>
+  );
+}
                       {!hasChildren ? (
                         <SidebarMenuButton
                           asChild

@@ -36,12 +36,19 @@ export function useColorMode() {
 
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = React.useState<PaletteMode>("light");
+  const mounted = React.useRef(false);
 
   React.useEffect(() => {
     setMode(resolveInitialMode());
   }, []);
 
   React.useEffect(() => {
+    // Don't overwrite localStorage on the initial render — wait until the
+    // real mode has been resolved from storage/system preference first.
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
     window.localStorage.setItem(STORAGE_KEY, mode);
   }, [mode]);
 
