@@ -23,6 +23,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { Slot } from "@radix-ui/react-slot"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { SidebarLeftIcon } from "@hugeicons/core-free-icons"
 
@@ -510,13 +511,18 @@ function SidebarMenuButton({
   size = "default",
   tooltip,
   className,
+  asChild = false,
   ...props
 }: useRender.ComponentProps<"button"> &
   React.ComponentProps<"button"> & {
     isActive?: boolean
     tooltip?: string | React.ComponentProps<typeof TooltipContent>
+    asChild?: boolean
   } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const { isMobile, state } = useSidebar()
+  
+  const Comp = asChild ? Slot : "button"
+
   const comp = useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
@@ -675,14 +681,16 @@ function SidebarMenuSubButton({
   size = "md",
   isActive = false,
   className,
+  asChild = false,
   ...props
 }: useRender.ComponentProps<"a"> &
   React.ComponentProps<"a"> & {
     size?: "sm" | "md"
     isActive?: boolean
+    asChild?: boolean
   }) {
   return useRender({
-    defaultTagName: "a",
+    defaultTagName: asChild ? (Slot as any) : "a",
     props: mergeProps<"a">(
       {
         className: cn(

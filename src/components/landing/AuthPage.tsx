@@ -1,23 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Box,
-  Button,
-  Chip,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-  alpha,
-} from "@/components/ui/mui";
-import { LockRoundedIcon } from "@/components/icons/mui-icons";
-import { RocketLaunchRoundedIcon } from "@/components/icons/mui-icons";
-import { ShieldRoundedIcon } from "@/components/icons/mui-icons";
-import { QueryStatsRoundedIcon } from "@/components/icons/mui-icons";
-import { AutoGraphRoundedIcon } from "@/components/icons/mui-icons";
-import { CheckCircleRoundedIcon } from "@/components/icons/mui-icons";
+import { motion } from "framer-motion";
+import { 
+  Lock, 
+  Rocket, 
+  ShieldCheck, 
+  Activity, 
+  Zap, 
+  CheckCircle2,
+  ArrowRight,
+  TrendingUp,
+  Fingerprint,
+  Sparkles
+} from "lucide-react";
 import { useStackApp } from "@stackframe/stack";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 type AuthMode = "sign-in" | "sign-up";
 
@@ -47,133 +47,137 @@ export default function AuthPage({ mode }: AuthPageProps) {
       ];
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background:
-          "radial-gradient(1200px 600px at 10% -10%, rgba(34,197,94,0.16), transparent 50%), radial-gradient(1000px 500px at 100% 0%, rgba(14,165,233,0.18), transparent 55%), #f7fafc",
-        py: { xs: 8, md: 12 },
-      }}
-    >
-      <Container maxWidth="lg">
-        <Grid container spacing={3} alignItems="stretch">
-          <Grid size={{ xs: 12, md: 7 }}>
-            <Box
-              sx={{
-                p: { xs: 3, md: 5 },
-                borderRadius: "28px",
-                border: "1px solid rgba(2,6,23,0.08)",
-                background:
-                  "linear-gradient(160deg, rgba(255,255,255,0.95) 0%, rgba(241,245,249,0.96) 100%)",
-                boxShadow: "0 30px 80px rgba(2,6,23,0.09)",
-                height: "100%",
-              }}
-            >
-              <Stack direction="row" spacing={1} mb={2.5} flexWrap="wrap">
-                <Chip icon={<ShieldRoundedIcon />} label="Secure auth" size="small" />
-                <Chip icon={<QueryStatsRoundedIcon />} label="Realtime visibility" size="small" />
-                <Chip icon={<AutoGraphRoundedIcon />} label="Operational SEO" size="small" />
-              </Stack>
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-slate-950 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background Gradients */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-sky-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-              <Typography
-                variant="h2"
-                sx={{
-                  fontWeight: 900,
-                  color: "#0f172a",
-                  lineHeight: 1.08,
-                  fontSize: { xs: "2rem", md: "3.1rem" },
-                  mb: 1.6,
-                }}
+      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch relative z-10">
+        {/* Left Column: Form Section */}
+        <motion.div 
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="lg:col-span-7 bg-white/80 dark:bg-slate-900/50 backdrop-blur-xl rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl shadow-slate-200/50 dark:shadow-black/50 p-8 md:p-12 flex flex-col justify-center"
+        >
+          <div className="flex flex-wrap gap-2 mb-8">
+            <Badge variant="secondary" className="h-7 px-3 text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-600 border-none">
+              <ShieldCheck className="mr-1.5 h-3 w-3" /> Secure Auth
+            </Badge>
+            <Badge variant="secondary" className="h-7 px-3 text-[10px] font-black uppercase tracking-widest bg-sky-500/10 text-sky-600 border-none">
+              <Activity className="mr-1.5 h-3 w-3" /> Realtime Ops
+            </Badge>
+            <Badge variant="secondary" className="h-7 px-3 text-[10px] font-black uppercase tracking-widest bg-amber-500/10 text-amber-600 border-none">
+              <Zap className="mr-1.5 h-3 w-3" /> 10x Velocity
+            </Badge>
+          </div>
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.95] mb-6">
+            {pageTitle}
+          </h1>
+
+          <p className="text-lg font-medium text-slate-500 dark:text-slate-400 mb-10 max-w-xl leading-relaxed">
+            {pageDescription}
+          </p>
+
+          <div className="space-y-4 mb-12">
+            {bullets.map((item, idx) => (
+              <motion.div 
+                key={item} 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + idx * 0.1 }}
+                className="flex items-start gap-3"
               >
-                {pageTitle}
-              </Typography>
+                <div className="mt-1 h-5 w-5 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                </div>
+                <span className="text-[15px] font-bold text-slate-700 dark:text-slate-300">
+                  {item}
+                </span>
+              </motion.div>
+            ))}
+          </div>
 
-              <Typography sx={{ color: "#334155", fontSize: { xs: "1rem", md: "1.07rem" }, lineHeight: 1.75, mb: 3.5 }}>
-                {pageDescription}
-              </Typography>
-
-              <Stack spacing={1.2} mb={4}>
-                {bullets.map((item) => (
-                  <Stack key={item} direction="row" spacing={1.2} alignItems="center">
-                    <CheckCircleRoundedIcon sx={{ color: "#059669", fontSize: 20 }} />
-                    <Typography sx={{ color: "#1e293b", fontWeight: 600 }}>{item}</Typography>
-                  </Stack>
-                ))}
-              </Stack>
-
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={1.4}>
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={isSignIn ? <LockRoundedIcon /> : <RocketLaunchRoundedIcon />}
-                  onClick={() => (isSignIn ? stack.redirectToSignIn() : stack.redirectToSignUp())}
-                  sx={{
-                    px: 3,
-                    py: 1.25,
-                    borderRadius: "12px",
-                    background: "linear-gradient(135deg, #0ea5e9, #22c55e)",
-                    boxShadow: "0 12px 24px rgba(14,165,233,0.28)",
-                    color: "#fff",
-                  }}
-                >
-                  {isSignIn ? "Continue to Sign In" : "Continue to Sign Up"}
-                </Button>
-
-                <Button
-                  component={Link}
-                  href={isSignIn ? "/sign-up" : "/sign-in"}
-                  size="large"
-                  variant="outlined"
-                  sx={{ px: 3, py: 1.25, borderRadius: "12px", borderColor: alpha("#0f172a", 0.2), color: "#0f172a" }}
-                >
-                  {isSignIn ? "New here? Create account" : "Already have an account? Sign in"}
-                </Button>
-              </Stack>
-            </Box>
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 5 }}>
-            <Box
-              sx={{
-                p: { xs: 3, md: 4 },
-                borderRadius: "28px",
-                background:
-                  "linear-gradient(145deg, rgba(15,23,42,0.98) 0%, rgba(30,41,59,0.98) 100%)",
-                color: "#f8fafc",
-                border: "1px solid rgba(148,163,184,0.24)",
-                boxShadow: "0 28px 70px rgba(2,6,23,0.35)",
-                height: "100%",
-              }}
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <Button 
+              size="lg"
+              onClick={() => (isSignIn ? stack.redirectToSignIn() : stack.redirectToSignUp())}
+              className="h-14 px-8 font-black rounded-2xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white shadow-xl shadow-sky-500/25 gap-3 w-full sm:w-auto transition-all active:scale-95 group"
             >
-              <Typography variant="overline" sx={{ color: "#67e8f9", letterSpacing: "0.12em" }}>
-                Performance Snapshot
-              </Typography>
-              <Typography variant="h4" sx={{ fontWeight: 900, mb: 1.2 }}>
-                Faster indexing, cleaner operations
-              </Typography>
-              <Typography sx={{ color: "#cbd5e1", lineHeight: 1.75, mb: 3 }}>
-                Teams use IndexFast to reduce manual indexing tasks, push new URLs quickly, and keep discovery workflows consistent across every project.
-              </Typography>
+              {isSignIn ? <Lock className="h-5 w-5" /> : <Rocket className="h-5 w-5" />}
+              {isSignIn ? "Continue to Sign In" : "Continue to Sign Up"}
+              <ArrowRight className="h-4 w-4 opacity-50 group-hover:translate-x-1 transition-transform" />
+            </Button>
 
-              <Grid container spacing={1.2}>
-                {[
-                  { k: "Workflow setup", v: "< 2 min" },
-                  { k: "Submission speed", v: "Near-instant" },
-                  { k: "Ops visibility", v: "Realtime" },
-                  { k: "Manual workload", v: "Lower" },
-                ].map((item) => (
-                  <Grid size={{ xs: 6 }} key={item.k}>
-                    <Box sx={{ p: 1.5, borderRadius: "14px", bgcolor: "rgba(15,23,42,0.55)", border: "1px solid rgba(148,163,184,0.2)" }}>
-                      <Typography sx={{ color: "#67e8f9", fontWeight: 800, fontSize: "0.95rem" }}>{item.v}</Typography>
-                      <Typography sx={{ color: "#cbd5e1", fontSize: "0.82rem" }}>{item.k}</Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
+            <Button 
+              asChild
+              variant="outline" 
+              size="lg"
+              className="h-14 px-8 font-black rounded-2xl border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 w-full sm:w-auto transition-all active:scale-95"
+            >
+              <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
+                {isSignIn ? "Create Workspace" : "Access Workspace"}
+              </Link>
+            </Button>
+          </div>
+        </motion.div>
+
+        {/* Right Column: Teaser Section */}
+        <motion.div 
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-[40px] p-8 md:p-12 flex flex-col justify-between relative overflow-hidden group shadow-2xl shadow-black/50"
+        >
+          {/* Decorative Elements */}
+          <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none group-hover:scale-110 group-hover:rotate-12 transition-all duration-700">
+            <Fingerprint className="h-32 w-32 text-sky-400 stroke-[0.5px]" />
+          </div>
+
+          <div className="space-y-6 relative z-10">
+            <div className="flex items-center gap-2 text-sky-400">
+              <Sparkles className="h-5 w-5 fill-current" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Efficiency Snapshot</span>
+            </div>
+            
+            <h2 className="text-3xl font-black tracking-tighter text-white leading-tight">
+              Faster indexing, cleaner operations.
+            </h2>
+            
+            <p className="text-slate-400 font-medium leading-relaxed">
+              Teams use IndexFast to automate manual SEO indexing, push instant discovery signals, and unify workflow transparency.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 mt-12 relative z-10">
+            {[
+              { k: "Workflow setup", v: "< 2 min", c: "text-emerald-400" },
+              { k: "Submission speed", v: "Realtime", c: "text-sky-400" },
+              { k: "Ops visibility", v: "Live", c: "text-amber-400" },
+              { k: "Manual workload", v: "-80%", c: "text-rose-400" },
+            ].map((item) => (
+              <div key={item.k} className="p-4 bg-slate-950/50 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors">
+                <p className={cn("text-base font-black tracking-tighter", item.c)}>{item.v}</p>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{item.k}</p>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-8 flex items-center gap-3 opacity-30 group-hover:opacity-60 transition-opacity">
+            <div className="h-[1px] flex-1 bg-slate-800" />
+            <TrendingUp className="h-4 w-4 text-sky-400" />
+            <div className="h-[1px] flex-1 bg-slate-800" />
+          </div>
+        </motion.div>
+      </div>
+      
+      {/* Footer Branding */}
+      <div className="absolute bottom-12 left-0 right-0 flex justify-center opacity-10 pointer-events-none">
+        <span className="text-[120px] font-black tracking-[-0.1em] leading-none select-none">
+          INDEXFAST
+        </span>
+      </div>
+    </div>
   );
 }

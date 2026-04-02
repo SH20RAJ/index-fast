@@ -1,34 +1,38 @@
 "use client";
 import { useActionState, useEffect, useMemo, useState } from "react";
+import { cn } from "@/lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
 import {
-  Alert,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Checkbox,
-  Chip,
-  CircularProgress,
-  Divider,
-  FormControlLabel,
-  Stack,
-  TextField,
-  Typography,
-  Collapse,
-} from "@/components/ui/mui";
-import { AddIcon } from "@/components/icons/mui-icons";
-import { PublicIcon } from "@/components/icons/mui-icons";
-import { RefreshIcon } from "@/components/icons/mui-icons";
-import { DeleteOutlineIcon } from "@/components/icons/mui-icons";
-import { AssessmentOutlinedIcon } from "@/components/icons/mui-icons";
-import { CheckCircleOutlineIcon } from "@/components/icons/mui-icons";
-import { EditOutlinedIcon } from "@/components/icons/mui-icons";
-import { AccessTimeRoundedIcon } from "@/components/icons/mui-icons";
-import { ExpandMoreRoundedIcon } from "@/components/icons/mui-icons";
-import { SearchRoundedIcon } from "@/components/icons/mui-icons";
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { 
+  Plus, 
+  Globe, 
+  RefreshCw, 
+  Trash2, 
+  BarChart3, 
+  CheckCircle2, 
+  Edit, 
+  Clock, 
+  ChevronDown, 
+  Search,
+  AlertCircle,
+  ExternalLink,
+  ChevronRight,
+  MoreVertical,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";
@@ -115,6 +119,8 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     updateWebsiteIndexingKeysAction,
     defaultActionState
   );
+
+  const isPremium = planName.toLowerCase() !== "free";
 
   const slotsLeft = Math.max(0, websiteLimit - initialSites.length);
 
@@ -287,218 +293,264 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   }, []);
 
   return (
-    <Box sx={{ pt: 1, pb: 8 }}>
-      <Stack spacing={3}>
+    <div className="space-y-8 pb-10">
+      <div className="flex flex-col gap-6">
         <PageHeader
           title="Websites"
           description="Manage websites and run indexing workflows."
           action={
-            <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 700 }}>
-              {planName} plan: {initialSites.length}/{websiteLimit} sites
-            </Typography>
+            <div className="text-sm font-semibold text-muted-foreground bg-secondary/50 px-3 py-1.5 rounded-full border border-border/50">
+              {planName} plan: {initialSites.length} / {websiteLimit} sites
+            </div>
           }
         />
 
-        {createState.status !== "idle" ? <Alert severity={createState.status}>{createState.message}</Alert> : null}
-        {syncState.status !== "idle" ? <Alert severity={syncState.status}>{syncState.message}</Alert> : null}
-        {deleteState.status !== "idle" ? <Alert severity={deleteState.status}>{deleteState.message}</Alert> : null}
-        {refreshState.status !== "idle" ? <Alert severity={refreshState.status}>{refreshState.message}</Alert> : null}
-        {updateKeysState.status !== "idle" ? <Alert severity={updateKeysState.status}>{updateKeysState.message}</Alert> : null}
-        {gscError ? <Alert severity="error">{gscError}</Alert> : null}
-        {gscStatusMessage ? <Alert severity="success">{gscStatusMessage}</Alert> : null}
+        <div className="space-y-4">
+          {createState.status !== "idle" && (
+            <Alert variant={createState.status === "error" ? "destructive" : "default"}>
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle className="capitalize">{createState.status}</AlertTitle>
+              <AlertDescription>{createState.message}</AlertDescription>
+            </Alert>
+          )}
+          {syncState.status !== "idle" && (
+            <Alert variant={syncState.status === "error" ? "destructive" : "default"}>
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle className="capitalize">{syncState.status}</AlertTitle>
+              <AlertDescription>{syncState.message}</AlertDescription>
+            </Alert>
+          )}
+          {deleteState.status !== "idle" && (
+            <Alert variant={deleteState.status === "error" ? "destructive" : "default"}>
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle className="capitalize">{deleteState.status}</AlertTitle>
+              <AlertDescription>{deleteState.message}</AlertDescription>
+            </Alert>
+          )}
+          {refreshState.status !== "idle" && (
+            <Alert variant={refreshState.status === "error" ? "destructive" : "default"}>
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle className="capitalize">{refreshState.status}</AlertTitle>
+              <AlertDescription>{refreshState.message}</AlertDescription>
+            </Alert>
+          )}
+          {updateKeysState.status !== "idle" && (
+            <Alert variant={updateKeysState.status === "error" ? "destructive" : "default"}>
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle className="capitalize">{updateKeysState.status}</AlertTitle>
+              <AlertDescription>{updateKeysState.message}</AlertDescription>
+            </Alert>
+          )}
+          {gscError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>GSC Error</AlertTitle>
+              <AlertDescription>{gscError}</AlertDescription>
+            </Alert>
+          )}
+          {gscStatusMessage && (
+            <Alert className="border-emerald-500/50 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <AlertTitle>Success</AlertTitle>
+              <AlertDescription>{gscStatusMessage}</AlertDescription>
+            </Alert>
+          )}
+        </div>
 
-        <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none", overflow: "hidden" }}>
-          <Accordion
-            expanded={addWebsiteExpanded}
-            onChange={(_, expanded) => setAddWebsiteExpanded(expanded)}
-            disableGutters
-            elevation={0}
-            sx={{ "&:before": { display: "none" }, bgcolor: "transparent" }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreRoundedIcon />}
-              sx={{ px: { xs: 2.25, md: 3 }, py: 1.2 }}
-            >
-              <Stack direction={{ xs: "column", sm: "row" }} alignItems={{ xs: "flex-start", sm: "center" }} justifyContent="space-between" sx={{ width: "100%" }} spacing={1}>
-                <Box>
-                  <Typography variant="h6" fontWeight={900}>
-                    Add Website
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Add a domain, sitemap, and optional indexing credentials.
-                  </Typography>
-                </Box>
-                <Typography variant="caption" color={slotsLeft === 0 ? "error.main" : "text.secondary"} sx={{ fontWeight: 700 }}>
-                  {slotsLeft} slot(s) left
-                </Typography>
-              </Stack>
-            </AccordionSummary>
-            <AccordionDetails sx={{ px: { xs: 2.25, md: 3 }, pb: { xs: 2.25, md: 3 }, pt: 0 }}>
-              <Stack component="form" action={createAction} spacing={2}>
-                <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25} alignItems={{ xs: "flex-start", sm: "center" }}>
-                  <Button
-                    type="button"
-                    variant="outlined"
-                    onClick={() => {
-                      logStep("Opening Google OAuth consent screen...");
-                      window.location.href = "/api/gsc/oauth/start?returnTo=/sites";
-                    }}
-                    sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}
-                  >
-                    Connect Google Search Console
-                  </Button>
-                  {gscConnected ? (
+        <Card className="overflow-hidden border-border/50 shadow-sm transition-all hover:shadow-md">
+          <Accordion value={(addWebsiteExpanded ? "add" : undefined) as any} onValueChange={(val: any) => setAddWebsiteExpanded(val === "add")}>
+            <AccordionItem value="add" className="border-none">
+              <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]>div>svg]:rotate-180">
+                <div className="flex w-full items-center justify-between text-left">
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-bold tracking-tight">Add Website</h3>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Add a domain, sitemap, and optional indexing credentials.
+                    </p>
+                  </div>
+                  <div className={cn(
+                    "mr-4 text-xs font-black uppercase tracking-widest",
+                    slotsLeft === 0 ? "text-destructive" : "text-muted-foreground/60"
+                  )}>
+                    {slotsLeft} slot(s) left
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-6 pt-2">
+                <form action={createAction} className="space-y-6">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                     <Button
-                      variant="text"
+                      type="button"
+                      variant="outline"
                       onClick={() => {
-                        void loadGscSites();
+                        logStep("Opening Google OAuth consent screen...");
+                        window.location.href = "/api/gsc/oauth/start?returnTo=/sites";
                       }}
-                      disabled={gscLoading}
-                      sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}
+                      className="h-10 font-bold tracking-tight"
                     >
-                      {gscLoading ? "Loading…" : "Refresh GSC List"}
+                      <Globe className="mr-2 h-4 w-4 text-primary" />
+                      Connect Google Search Console
                     </Button>
-                  ) : null}
-                </Stack>
+                    {gscConnected && (
+                      <Button
+                        variant="ghost"
+                        onClick={() => void loadGscSites()}
+                        disabled={gscLoading}
+                        className="h-10 font-bold tracking-tight text-muted-foreground hover:text-primary"
+                      >
+                        {gscLoading ? <Spinner className="mr-2 h-4 w-4" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+                        Refresh GSC List
+                      </Button>
+                    )}
+                  </div>
 
-                <TextField
-                  label="Website URL"
-                  name="url"
-                  type="url"
-                  autoComplete="url"
-                  placeholder="https://example.com"
-                  fullWidth
-                  required
-                />
-                <TextField
-                  label="Sitemap URL"
-                  name="sitemapUrl"
-                  type="url"
-                  autoComplete="off"
-                  placeholder="https://example.com/sitemap.xml"
-                  fullWidth
-                />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="url" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Website URL</Label>
+                      <Input
+                        id="url"
+                        name="url"
+                        type="url"
+                        placeholder="https://example.com"
+                        required
+                        className="h-11 bg-muted/30 focus-visible:ring-primary/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="sitemapUrl" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Sitemap URL</Label>
+                      <Input
+                        id="sitemapUrl"
+                        name="sitemapUrl"
+                        type="url"
+                        placeholder="https://example.com/sitemap.xml"
+                        className="h-11 bg-muted/30 focus-visible:ring-primary/20"
+                      />
+                    </div>
+                  </div>
 
-                <Stack direction={{ xs: "column", md: "row" }} spacing={1.5}>
-                  <TextField label="IndexNow key (optional)" name="indexNowKey" fullWidth />
-                  <TextField label="Bing API key (optional)" name="bingApiKey" fullWidth />
-                </Stack>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="indexNowKey" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">IndexNow key (optional)</Label>
+                      <Input
+                        id="indexNowKey"
+                        name="indexNowKey"
+                        placeholder="e.g. 52627..."
+                        className="h-11 bg-muted/30"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="bingApiKey" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Bing API key (optional)</Label>
+                      <Input
+                        id="bingApiKey"
+                        name="bingApiKey"
+                        placeholder="e.g. key_..."
+                        className="h-11 bg-muted/30"
+                      />
+                    </div>
+                  </div>
 
-                <TextField
-                  label="IndexNow key text URL (optional)"
-                  name="indexNowKeyLocationUrl"
-                  type="url"
-                  autoComplete="off"
-                  placeholder="https://example.com/your-key.txt"
-                  fullWidth
-                  helperText="Used for IndexNow keyLocation validation during auto submission."
-                />
+                  <div className="space-y-2">
+                    <Label htmlFor="indexNowKeyLocationUrl" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">IndexNow key text URL (optional)</Label>
+                    <Input
+                      id="indexNowKeyLocationUrl"
+                      name="indexNowKeyLocationUrl"
+                      type="url"
+                      placeholder="https://example.com/your-key.txt"
+                      className="h-11 bg-muted/30"
+                    />
+                    <p className="text-[10px] font-medium text-muted-foreground/70">
+                      Used for IndexNow keyLocation validation during auto submission.
+                    </p>
+                  </div>
 
-                <Box>
                   <Button
                     type="submit"
-                    variant="contained"
-                    startIcon={<AddIcon />}
                     disabled={createPending}
-                    sx={{ borderRadius: "11px", fontWeight: 800, textTransform: "none" }}
+                    className="h-11 px-8 font-bold tracking-tight shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    {createPending ? "Adding…" : "Add Website"}
+                    {createPending ? <Spinner className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
+                    Add Website
                   </Button>
-                </Box>
-              </Stack>
-            </AccordionDetails>
+                </form>
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
         </Card>
 
         {(gscConnected || gscLoading || gscSites.length > 0 || processLogs.length > 0) && (
-          <Card sx={{ borderRadius: "18px", border: "1px solid", borderColor: "divider", boxShadow: "none", overflow: "hidden" }}>
-            <Accordion
-              expanded={gscPanelExpanded}
-              onChange={(_, expanded) => setGscPanelExpanded(expanded)}
-              disableGutters
-              elevation={0}
-              sx={{ "&:before": { display: "none" }, bgcolor: "transparent" }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreRoundedIcon />}
-                sx={{ px: { xs: 2.25, md: 3 }, py: 1.2 }}
-              >
-                <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={1.25}>
-                  <Box>
-                    <Typography variant="h6" fontWeight={900}>Google Search Console Properties</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Select properties to import. URL-prefix and domain properties are both supported.
-                    </Typography>
-                  </Box>
-                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 700, alignSelf: "center" }}>
-                    {selectableSites.length} importable
-                  </Typography>
-                </Stack>
-              </AccordionSummary>
-              <AccordionDetails sx={{ px: { xs: 2.25, md: 3 }, pb: { xs: 2.25, md: 3 }, pt: 0 }}>
-                <Stack spacing={2}>
-                  <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={1.25}>
-                  <Stack direction="row" spacing={1}>
-                    <Button
-                      variant="outlined"
-                      onClick={() => void loadGscSites()}
-                      disabled={gscLoading || gscImporting}
-                      startIcon={gscLoading ? <CircularProgress size={14} /> : <RefreshIcon />}
-                      sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
-                    >
-                      Reload List
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={() => void importSelectedGscSites()}
-                      disabled={gscImporting || gscSelection.size === 0}
-                      startIcon={<CheckCircleOutlineIcon />}
-                      sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
-                    >
-                      {gscImporting ? "Importing…" : `Add Selected (${gscSelection.size})`}
-                    </Button>
-                  </Stack>
-                </Stack>
+          <Card className="overflow-hidden border-border/50 shadow-sm">
+            <Accordion value={(gscPanelExpanded ? "gsc" : undefined) as any} onValueChange={(val: any) => setGscPanelExpanded(val === "gsc")}>
+              <AccordionItem value="gsc" className="border-none">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]>div>svg]:rotate-180">
+                  <div className="flex w-full items-center justify-between text-left">
+                    <div className="space-y-1">
+                      <h3 className="text-lg font-bold tracking-tight">Google Search Console Properties</h3>
+                      <p className="text-sm font-medium text-muted-foreground">
+                        Select properties to import. URL-prefix and domain properties are both supported.
+                      </p>
+                    </div>
+                    <div className="mr-4 text-xs font-bold text-muted-foreground/60">
+                      {selectableSites.length} importable
+                    </div>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-6 pt-2">
+                  <div className="space-y-6">
+                    <div className="flex flex-wrap gap-3">
+                      <Button
+                        variant="outline"
+                        onClick={() => void loadGscSites()}
+                        disabled={gscLoading || gscImporting}
+                        className="h-9 font-bold tracking-tight"
+                      >
+                        {gscLoading ? <Spinner className="mr-2 h-4 w-4" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+                        Reload List
+                      </Button>
+                      <Button
+                        onClick={() => void importSelectedGscSites()}
+                        disabled={gscImporting || gscSelection.size === 0}
+                        className="h-9 font-bold tracking-tight"
+                      >
+                        {gscImporting ? <Spinner className="mr-2 h-4 w-4" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
+                        {gscImporting ? "Importing…" : `Add Selected (${gscSelection.size})`}
+                      </Button>
+                    </div>
 
-                {gscLoading ? (
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <CircularProgress size={18} />
-                    <Typography variant="body2" color="text.secondary">Fetching properties from GSC…</Typography>
-                  </Stack>
-                ) : null}
+                    {gscLoading && (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground animate-pulse">
+                        <Spinner className="h-4 w-4" />
+                        Fetching properties from GSC…
+                      </div>
+                    )}
 
-                {!gscLoading && gscSites.length > 0 ? (
-                  <Stack spacing={1}>
-                    {gscSites.map((site) => {
-                      const disabled = !site.supported || site.alreadyImported;
-                      const checked = gscSelection.has(site.propertyUrl);
-                      const helper = site.alreadyImported
-                        ? "Already imported"
-                        : site.supported
-                        ? site.permissionLevel
-                        : "Property format unsupported";
+                    {!gscLoading && gscSites.length > 0 && (
+                      <div className="grid gap-3">
+                        {gscSites.map((site) => {
+                          const disabled = !site.supported || site.alreadyImported;
+                          const checked = gscSelection.has(site.propertyUrl);
+                          const helper = site.alreadyImported
+                            ? "Already imported"
+                            : site.supported
+                            ? site.permissionLevel
+                            : "Property format unsupported";
 
-                      return (
-                        <Box
-                          key={site.propertyUrl}
-                          sx={{
-                            border: "1px solid",
-                            borderColor: "divider",
-                            borderRadius: "10px",
-                            px: 1.5,
-                            py: 1,
-                          }}
-                        >
-                          <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={1}>
-                            <FormControlLabel
-                              control={
+                          return (
+                            <div
+                              key={site.propertyUrl}
+                              className={cn(
+                                "flex items-center justify-between rounded-xl border p-4 transition-colors",
+                                disabled ? "bg-muted/30 opacity-60" : "hover:border-primary/30 hover:bg-primary/5"
+                              )}
+                            >
+                              <div className="flex items-start gap-3">
                                 <Checkbox
+                                  id={`gsc-${site.propertyUrl}`}
                                   checked={checked}
                                   disabled={disabled}
-                                  onChange={(event) => {
+                                  onCheckedChange={(checked) => {
                                     setGscSelection((prev) => {
                                       const next = new Set(prev);
-                                      if (event.target.checked) {
+                                      if (checked) {
                                         next.add(site.propertyUrl);
                                       } else {
                                         next.delete(site.propertyUrl);
@@ -506,147 +558,165 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                                       return next;
                                     });
                                   }}
+                                  className="mt-1"
                                 />
-                              }
-                              label={
-                                <Stack spacing={0.25}>
-                                  <Typography variant="body2" fontWeight={700} sx={{ wordBreak: "break-all" }}>
+                                <div className="grid gap-1">
+                                  <label
+                                    htmlFor={`gsc-${site.propertyUrl}`}
+                                    className="text-sm font-bold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 break-all"
+                                  >
                                     {site.propertyUrl}
-                                  </Typography>
-                                  {site.normalizedUrl ? (
-                                    <Typography variant="caption" color="text.secondary" sx={{ wordBreak: "break-all" }}>
+                                  </label>
+                                  {site.normalizedUrl && (
+                                    <p className="text-xs text-muted-foreground break-all">
                                       Will add as: {site.normalizedUrl}
-                                    </Typography>
-                                  ) : null}
-                                </Stack>
-                              }
-                            />
-                            <Chip
-                              size="small"
-                              label={helper}
-                              color={site.alreadyImported ? "default" : site.supported ? "primary" : "warning"}
-                              sx={{ borderRadius: "8px", fontWeight: 700, alignSelf: "flex-start" }}
-                            />
-                          </Stack>
-                        </Box>
-                      );
-                    })}
-                    {selectableSites.length === 0 ? (
-                      <Alert severity="info">No importable new properties were found.</Alert>
-                    ) : null}
-                  </Stack>
-                ) : null}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                              <Badge
+                                variant={site.alreadyImported ? "secondary" : site.supported ? "default" : "outline"}
+                                className="ml-4 shrink-0 font-bold uppercase tracking-wider text-[10px]"
+                              >
+                                {helper}
+                              </Badge>
+                            </div>
+                          );
+                        })}
+                        {selectableSites.length === 0 && (
+                          <Alert variant="default" className="bg-muted/50 border-none">
+                            <AlertCircle className="h-4 w-4 text-primary" />
+                            <AlertDescription className="font-medium">No importable new properties were found.</AlertDescription>
+                          </Alert>
+                        )}
+                      </div>
+                    )}
 
-                {processLogs.length > 0 ? (
-                  <Box sx={{ border: "1px dashed", borderColor: "divider", borderRadius: "10px", p: 1.5 }}>
-                    <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 1 }}>
-                      Import Process Logs
-                    </Typography>
-                    <Stack spacing={0.5}>
-                      {processLogs.map((entry) => (
-                        <Typography key={entry} variant="caption" color="text.secondary" sx={{ fontFamily: "monospace" }}>
-                          {entry}
-                        </Typography>
-                      ))}
-                    </Stack>
-                  </Box>
-                ) : null}
-                </Stack>
-              </AccordionDetails>
+                    {processLogs.length > 0 && (
+                      <div className="rounded-xl border border-dashed p-4 bg-muted/20">
+                        <h4 className="text-sm font-bold mb-3 flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          Import Process Logs
+                        </h4>
+                        <div className="space-y-1.5 font-mono text-[11px] leading-relaxed text-muted-foreground">
+                          {processLogs.map((entry, i) => (
+                            <div key={i} className="flex gap-2">
+                              <span className="opacity-30">[{i + 1}]</span>
+                              {entry}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
             </Accordion>
           </Card>
         )}
 
-        <Stack direction={{ xs: "column", md: "row" }} spacing={1.5} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }}>
-          <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-            {initialSites.length} total • {gscConnectedCount} connected to GSC • {credentialsCompleteCount} ready for submission
-          </Typography>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <p className="text-sm font-medium text-muted-foreground">
+            <span className="font-bold text-foreground">{initialSites.length}</span> total • <span className="font-bold text-foreground">{gscConnectedCount}</span> connected to GSC • <span className="font-bold text-foreground">{credentialsCompleteCount}</span> ready for submission
+          </p>
 
-          <TextField
-            value={siteSearchQuery}
-            onChange={(event) => setSiteSearchQuery(event.target.value)}
-            size="small"
-            placeholder="Search websites"
-            InputProps={{ startAdornment: <SearchRoundedIcon sx={{ fontSize: 18, mr: 1, color: "text.secondary" }} /> }}
-            sx={{ width: { xs: "100%", md: 280 } }}
-          />
-        </Stack>
+          <div className="relative w-full md:w-80 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
+            <Input
+              value={siteSearchQuery}
+              onChange={(event) => setSiteSearchQuery(event.target.value)}
+              placeholder="Search websites..."
+              className="pl-10 h-10 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary/20"
+            />
+          </div>
+        </div>
 
-        <Stack spacing={2}>
+        <div className="grid gap-4">
           {initialSites.length === 0 ? (
-            <Card sx={{ borderRadius: "18px", border: "1px dashed", borderColor: "divider", boxShadow: "none" }}>
-              <CardContent sx={{ py: 7, textAlign: "center" }}>
-                <PublicIcon sx={{ fontSize: 44, opacity: 0.2, mb: 1 }} />
-                <Typography variant="h6" fontWeight={900}>
-                  No websites yet
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
+            <Card className="border-dashed py-16 bg-muted/10">
+              <CardContent className="flex flex-col items-center justify-center text-center">
+                <div className="h-16 w-16 rounded-full bg-primary/5 flex items-center justify-center mb-4">
+                  <Globe className="h-8 w-8 text-primary/30" />
+                </div>
+                <h3 className="text-xl font-bold tracking-tight mb-2">No websites yet</h3>
+                <p className="text-muted-foreground max-w-xs mx-auto">
                   Add your first website to start syncing sitemap URLs and tracking submissions.
-                </Typography>
+                </p>
               </CardContent>
             </Card>
           ) : filteredSites.length === 0 ? (
-            <Card sx={{ borderRadius: "18px", border: "1px dashed", borderColor: "divider", boxShadow: "none" }}>
-              <CardContent sx={{ py: 5, textAlign: "center" }}>
-                <Typography variant="h6" fontWeight={900}>
-                  No matching websites
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Try a different search term.
-                </Typography>
+            <Card className="border-dashed py-12 bg-muted/10">
+              <CardContent className="flex flex-col items-center justify-center text-center">
+                <h3 className="text-lg font-bold tracking-tight mb-1">No matching websites</h3>
+                <p className="text-muted-foreground">Try a different search term.</p>
               </CardContent>
             </Card>
           ) : (
             filteredSites.map((site) => (
-              <Card
-                key={site.id}
-                sx={{
-                  borderRadius: "14px",
-                  border: "1px solid",
-                  borderColor: "divider",
-                  boxShadow: "none",
-                  bgcolor: "background.paper",
-                }}
-              >
-                <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
-                  <Stack spacing={1.25}>
-                    <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={1.25}>
-                      <Box>
-                        <Typography variant="subtitle1" fontWeight={900} sx={{ wordBreak: "break-all" }}>
-                          {site.url}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ wordBreak: "break-all", mt: 0.25 }}>
-                          Sitemap: {site.sitemapUrl || "Not configured"}
-                        </Typography>
-                      </Box>
-                    </Stack>
+              <Card key={site.id} className="group border-border/50 shadow-sm transition-all hover:shadow-md hover:border-primary/20 overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="p-6">
+                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
+                      <div className="space-y-1.5 flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-lg font-bold tracking-tight break-all">
+                            {site.url}
+                          </h4>
+                          {site.gscConnected && (
+                            <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-none font-bold text-[10px] uppercase h-5 px-1.5">
+                              GSC
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium truncate">
+                          <Globe className="h-3.5 w-3.5 shrink-0" />
+                          <span>Sitemap:</span>
+                          <span className="text-primary/80 truncate">{site.sitemapUrl || "Not configured"}</span>
+                        </div>
+                      </div>
 
-                    <Typography variant="body2" color="text.secondary">
-                      {site.gscConnected ? "GSC connected" : "GSC not connected"} • {site.indexNowKey && site.bingApiKey ? "Submission keys ready" : "Submission keys missing"} • Last sync: {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString() : "Never"}
-                    </Typography>
+                      <div className="flex items-center gap-3 text-[11px] font-bold text-muted-foreground/60 shrink-0 uppercase tracking-wider">
+                        <div className="flex items-center gap-1.5">
+                          <div className={cn("h-1.5 w-1.5 rounded-full", site.indexNowKey && site.bingApiKey ? "bg-emerald-500" : "bg-amber-500")} />
+                          {site.indexNowKey && site.bingApiKey ? "Keys Ready" : "Keys Missing"}
+                        </div>
+                        <Separator orientation="vertical" className="h-3" />
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="h-3.5 w-3.5" />
+                          Synced {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleDateString() : "Never"}
+                        </div>
+                      </div>
+                    </div>
 
-                    <Divider sx={{ borderColor: "divider" }} />
+                    <Separator className="bg-primary/5 mb-6" />
 
-                    <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                      <Box component="form" action={syncAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <form action={syncAction} className="w-full sm:w-auto">
                         <input type="hidden" name="websiteId" value={site.id} />
-                        <Button type="submit" variant="contained" startIcon={<RefreshIcon />} disabled={syncPending} fullWidth sx={{ borderRadius: "9px", textTransform: "none", fontWeight: 700 }}>
+                        <Button 
+                          type="submit" 
+                          variant="secondary"
+                          disabled={syncPending} 
+                          className="w-full sm:w-auto h-9 font-bold px-4 bg-primary/10 text-primary hover:bg-primary/20 border-none"
+                        >
+                          {syncPending ? <Spinner className="mr-2 h-4 w-4" /> : <RefreshCw className="mr-2 h-4 w-4" />}
                           Sync Sitemap
                         </Button>
-                      </Box>
+                      </form>
 
                       <Button
-                        component={Link}
-                        href={`/sites/url?siteId=${site.id}`}
-                        variant="outlined"
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                        asChild
+                        variant="outline"
+                        className="w-full sm:w-auto h-9 font-bold px-4 border-primary/20 hover:bg-primary/5 hover:text-primary"
                       >
-                        URLs & Submit
+                        <Link href={`/sites/url?siteId=${site.id}`}>
+                          <ExternalLink className="mr-2 h-4 w-4" />
+                          URLs & Submit
+                        </Link>
                       </Button>
 
                       <Button
-                        variant="outlined"
-                        startIcon={<AccessTimeRoundedIcon />}
+                        variant="outline"
                         onClick={() => {
                           if (cronSiteId === site.id) {
                             setCronSiteId(null);
@@ -655,165 +725,160 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                           setCronSiteId(site.id);
                           void loadCronJobs(site.id);
                         }}
-                        sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                        className={cn(
+                          "w-full sm:w-auto h-9 font-bold px-4 transition-all",
+                          cronSiteId === site.id ? "bg-primary text-primary-foreground border-primary" : "border-primary/20 hover:bg-primary/5 hover:text-primary"
+                        )}
                       >
+                        <Clock className="mr-2 h-4 w-4" />
                         {cronSiteId === site.id ? "Hide Auto Submit" : "Auto Submit"}
                       </Button>
 
                       <Button
-                        variant="text"
+                        variant="ghost"
                         onClick={() => setMoreActionsSiteId((prev) => (prev === site.id ? null : site.id))}
-                        sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none", fontWeight: 700 }}
+                        className={cn(
+                          "w-full sm:w-auto h-9 font-bold text-muted-foreground flex-1 sm:flex-initial",
+                          moreActionsSiteId === site.id && "bg-muted"
+                        )}
                       >
-                        {moreActionsSiteId === site.id ? "Hide more" : "More actions"}
+                        {moreActionsSiteId === site.id ? <X className="mr-2 h-4 w-4" /> : <MoreVertical className="mr-2 h-4 w-4" />}
+                        {moreActionsSiteId === site.id ? "Hide Actions" : "More"}
                       </Button>
-                    </Stack>
+                    </div>
+                  </div>
 
-                    <Collapse in={moreActionsSiteId === site.id} unmountOnExit>
-                      <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                  <Collapsible open={moreActionsSiteId === site.id}>
+                    <CollapsibleContent className="border-t bg-muted/30">
+                      <div className="p-4 flex flex-wrap gap-2">
                         {site.gscConnected && (
-                          <Box component="form" action={refreshAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
+                          <form action={refreshAction} className="w-full sm:w-auto">
                             <input type="hidden" name="websiteId" value={site.id} />
-                            <Button type="submit" variant="outlined" startIcon={<RefreshIcon />} disabled={refreshPending} fullWidth sx={{ borderRadius: "9px", textTransform: "none", fontWeight: 700 }}>
+                            <Button 
+                              type="submit" 
+                              variant="outline" 
+                              disabled={refreshPending} 
+                              className="w-full sm:w-auto h-9 font-bold text-xs bg-background"
+                            >
+                              {refreshPending ? <Spinner className="mr-2 h-3.5 w-3.5" /> : <RefreshCw className="mr-2 h-3.5 w-3.5" />}
                               Refresh GSC
                             </Button>
-                          </Box>
+                          </form>
                         )}
 
                         <Button
-                          component={Link}
-                          href={`/sites/${site.id}/audit`}
-                          variant="outlined"
-                          startIcon={<AssessmentOutlinedIcon />}
-                          sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                          asChild
+                          variant="outline"
+                          className="w-full sm:w-auto h-9 font-bold text-xs bg-background"
                         >
-                          View Audit
+                          <Link href={`/sites/${site.id}/audit`}>
+                            <BarChart3 className="mr-2 h-3.5 w-3.5 text-blue-500" />
+                            View Audit
+                          </Link>
                         </Button>
 
                         <Button
-                          variant="outlined"
-                          startIcon={<EditOutlinedIcon />}
+                          variant="outline"
                           onClick={() => setEditingSiteId((prev) => (prev === site.id ? null : site.id))}
-                          sx={{ width: { xs: "100%", sm: "auto" }, borderRadius: "9px", textTransform: "none", fontWeight: 700 }}
+                          className={cn(
+                            "w-full sm:w-auto h-9 font-bold text-xs bg-background",
+                            editingSiteId === site.id && "ring-2 ring-primary ring-inset"
+                          )}
                         >
+                          <Edit className="mr-2 h-3.5 w-3.5 text-amber-500" />
                           {editingSiteId === site.id ? "Close Edit" : "Edit Indexing"}
                         </Button>
 
-                        <Button
-                          component="a"
-                          href={buildBingIndexNowPortalUrl(site.url)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          variant="text"
-                          sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none", fontWeight: 700 }}
-                        >
-                          Open Bing IndexNow
-                        </Button>
+                        <div className="flex-1 min-w-[200px]" />
 
-                        <Button
-                          component="a"
-                          href={buildGoogleSearchConsolePropertyUrl(site.url)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          variant="text"
-                          sx={{ width: { xs: "100%", sm: "auto" }, textTransform: "none", fontWeight: 700 }}
-                        >
-                          Open in GSC
-                        </Button>
-
-                        <Box component="form" action={deleteAction} sx={{ width: { xs: "100%", sm: "auto" } }}>
-                          <input type="hidden" name="websiteId" value={site.id} />
-                          <Button type="submit" color="error" variant="text" startIcon={<DeleteOutlineIcon />} disabled={deletePending} fullWidth sx={{ textTransform: "none", fontWeight: 700 }}>
-                            Remove
-                          </Button>
-                        </Box>
-                      </Stack>
-                    </Collapse>
-
-                    <Collapse in={cronSiteId === site.id} unmountOnExit>
-                      <Box sx={{ mt: 0.5 }}>
-                        {cronErrorBySite[site.id] ? <Alert severity="error" sx={{ mb: 1.25 }}>{cronErrorBySite[site.id]}</Alert> : null}
-                        {cronLoadingBySite[site.id] ? (
-                          <Stack direction="row" spacing={1} alignItems="center" sx={{ py: 1.5 }}>
-                            <CircularProgress size={18} />
-                            <Typography variant="body2" color="text.secondary">Loading schedules...</Typography>
-                          </Stack>
-                        ) : (
-                          <CronJobManager
-                            websiteId={site.id}
-                            websiteUrl={site.url}
-                            cronJobs={cronJobsBySite[site.id] ?? []}
-                            onRefresh={() => {
-                              void loadCronJobs(site.id);
-                            }}
-                          />
-                        )}
-                      </Box>
-                    </Collapse>
-
-                    <Collapse in={editingSiteId === site.id} unmountOnExit>
-                      <Box
-                        component="form"
-                        action={updateKeysAction}
-                        sx={{
-                          mt: 1,
-                          p: 1.75,
-                          border: "1px solid",
-                          borderColor: "divider",
-                          borderRadius: "12px",
-                          bgcolor: "background.default",
-                        }}
-                      >
-                        <input type="hidden" name="websiteId" value={site.id} />
-                        <Stack spacing={1.5}>
-                          <Typography variant="subtitle2" fontWeight={800}>
-                            Indexing Credentials
-                          </Typography>
-                          <Stack direction={{ xs: "column", md: "row" }} spacing={1.5}>
-                            <TextField
-                              name="bingApiKey"
-                              label="Bing API key"
-                              defaultValue={site.bingApiKey ?? ""}
-                              placeholder="Used with SubmitUrlbatch endpoint"
-                              fullWidth
-                            />
-                            <TextField
-                              name="indexNowKey"
-                              label="IndexNow key"
-                              defaultValue={site.indexNowKey ?? ""}
-                              placeholder="Key in your key .txt file"
-                              fullWidth
-                            />
-                          </Stack>
-                          <TextField
-                            name="indexNowKeyLocationUrl"
-                            label="IndexNow key text URL"
-                            type="url"
-                            defaultValue={getIndexNowKeyLocationUrl(site)}
-                            placeholder="https://example.com/your-key.txt"
-                            helperText="Example: https://yourdomain.com/your-indexnow-key.txt"
-                            fullWidth
-                          />
-                          <Box>
+                        <div className="flex gap-2 w-full sm:w-auto items-center">
+                          <form action={deleteAction}>
+                            <input type="hidden" name="websiteId" value={site.id} />
                             <Button
                               type="submit"
-                              variant="contained"
-                              disabled={updateKeysPending}
-                              sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
+                              variant="ghost"
+                              disabled={deletePending}
+                              className="w-full sm:w-auto h-9 font-bold text-xs text-destructive hover:bg-destructive/10"
                             >
-                              {updateKeysPending ? "Saving..." : "Save Credentials"}
+                              {deletePending ? <Spinner className="mr-2 h-3.5 w-3.5" /> : <Trash2 className="mr-2 h-3.5 w-3.5" />}
+                              Delete Site
                             </Button>
-                          </Box>
-                        </Stack>
-                      </Box>
-                    </Collapse>
-                  </Stack>
+                          </form>
+                        </div>
+                      </div>
+
+                      <Collapsible open={editingSiteId === site.id}>
+                        <CollapsibleContent className="border-t bg-card p-6">
+                          <form action={updateKeysAction} className="space-y-6 max-w-2xl">
+                            <input type="hidden" name="websiteId" value={site.id} />
+                            <div className="grid gap-6 md:grid-cols-2">
+                              <div className="space-y-2">
+                                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Sitemap URL</Label>
+                                <Input
+                                  name="sitemapUrl"
+                                  type="url"
+                                  defaultValue={site.sitemapUrl || ""}
+                                  className="h-10 bg-muted/20"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">IndexNow Key</Label>
+                                <Input
+                                  name="indexNowKey"
+                                  defaultValue={site.indexNowKey || ""}
+                                  className="h-10 bg-muted/20"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Bing API Key</Label>
+                                <Input
+                                  name="bingApiKey"
+                                  defaultValue={site.bingApiKey || ""}
+                                  className="h-10 bg-muted/20"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Key Location URL</Label>
+                                <Input
+                                  name="indexNowKeyLocationUrl"
+                                  type="url"
+                                  defaultValue={getIndexNowKeyLocationUrl(site)}
+                                  className="h-10 bg-muted/20"
+                                />
+                              </div>
+                            </div>
+                            <Button 
+                              type="submit" 
+                              disabled={updateKeysPending}
+                              className="h-10 px-6 font-bold tracking-tight"
+                            >
+                              {updateKeysPending ? <Spinner className="mr-2 h-4 w-4" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
+                              Save Changes
+                            </Button>
+                          </form>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </CollapsibleContent>
+                  </Collapsible>
+
+                  <Collapsible open={cronSiteId === site.id}>
+                    <CollapsibleContent className="border-t border-primary/10 bg-primary/5 p-6">
+                      <CronJobManager
+                        siteId={site.id}
+                        siteUrl={site.url}
+                        initialJobs={cronJobsBySite[site.id] || []}
+                        isLoading={cronLoadingBySite[site.id]}
+                        error={cronErrorBySite[site.id]}
+                        onRefresh={() => void loadCronJobs(site.id)}
+                      />
+                    </CollapsibleContent>
+                  </Collapsible>
                 </CardContent>
               </Card>
             ))
           )}
-        </Stack>
-      </Stack>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 }

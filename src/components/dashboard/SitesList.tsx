@@ -1,6 +1,5 @@
 "use client";
 
-import { Box, Stack } from "@/components/ui/mui";
 import SiteCard from "@/components/dashboard/SiteCard";
 import { Website } from "@/components/dashboard/types";
 
@@ -11,12 +10,12 @@ interface SitesListProps {
 
 export default function SitesList({ sites, onSync }: SitesListProps) {
   return (
-    <Stack spacing={3}>
+    <div className="space-y-4">
       {sites.map((site) => (
-        <Box key={site.id}>
+        <div key={site.id}>
           <SiteCard site={site} onSync={onSync} />
-        </Box>
+        </div>
       ))}
-    </Stack>
+    </div>
   );
 }

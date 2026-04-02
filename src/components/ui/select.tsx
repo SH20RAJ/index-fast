@@ -7,7 +7,20 @@ import { cn } from "@/lib/utils"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { UnfoldMoreIcon, Tick02Icon, ArrowUp01Icon, ArrowDown01Icon } from "@hugeicons/core-free-icons"
 
-const Select = SelectPrimitive.Root
+function Select({ 
+  onValueChange, 
+  ...props 
+}: Omit<SelectPrimitive.Root.Props<string>, "onValueChange"> & { 
+  onValueChange?: (value: string) => void 
+}) {
+  return (
+    <SelectPrimitive.Root 
+      data-slot="select" 
+      {...props} 
+      onValueChange={(val) => onValueChange?.(val ?? "")} 
+    />
+  )
+}
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (
@@ -29,16 +42,21 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   )
 }
 
+import { Slot } from "@radix-ui/react-slot"
+
 function SelectTrigger({
   className,
   size = "default",
   children,
+  asChild = false,
   ...props
 }: SelectPrimitive.Trigger.Props & {
   size?: "sm" | "default"
+  asChild?: boolean
 }) {
+  const Comp = (asChild ? Slot : SelectPrimitive.Trigger) as any
   return (
-    <SelectPrimitive.Trigger
+    <Comp
       data-slot="select-trigger"
       data-size={size}
       className={cn(
@@ -48,12 +66,14 @@ function SelectTrigger({
       {...props}
     >
       {children}
-      <SelectPrimitive.Icon
-        render={
-          <HugeiconsIcon icon={UnfoldMoreIcon} strokeWidth={2} className="pointer-events-none size-3.5 text-muted-foreground" />
-        }
-      />
-    </SelectPrimitive.Trigger>
+      {!asChild && (
+        <SelectPrimitive.Icon
+          render={
+            <HugeiconsIcon icon={UnfoldMoreIcon} strokeWidth={2} className="pointer-events-none size-3.5 text-muted-foreground" />
+          }
+        />
+      )}
+    </Comp>
   )
 }
 

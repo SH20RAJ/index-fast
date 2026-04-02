@@ -2,27 +2,47 @@
 
 import { useState } from "react";
 import {
-  Box,
-  Button,
   Card,
   CardContent,
-  Chip,
-  CircularProgress,
-  FormControlLabel,
-  MenuItem,
-  Stack,
-  Switch,
-  TextField,
-  Typography,
-  Alert,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
-  DialogTitle,
   DialogContent,
-  DialogActions,
-} from "@/components/ui/mui";
-import { AddIcon } from "@/components/icons/mui-icons";
-import { DeleteOutlineIcon } from "@/components/icons/mui-icons";
-import { AccessTimeIcon } from "@/components/icons/mui-icons";
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { 
+  Plus, 
+  Trash2, 
+  Clock, 
+  Calendar, 
+  Settings2, 
+  Zap, 
+  AlertCircle,
+  Loader2,
+  CheckCircle2,
+  XCircle,
+  Activity
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export interface CronJob {
   id: string;
@@ -38,16 +58,20 @@ export interface CronJob {
 }
 
 interface CronJobManagerProps {
-  websiteId: string;
-  websiteUrl: string;
-  cronJobs: CronJob[];
+  siteId: string;
+  siteUrl: string;
+  initialJobs: CronJob[];
+  isLoading?: boolean;
+  error?: string | null;
   onRefresh: () => void;
 }
 
 export default function CronJobManager({
-  websiteId,
-  websiteUrl,
-  cronJobs,
+  siteId,
+  siteUrl,
+  initialJobs,
+  isLoading,
+  error: loadError,
   onRefresh,
 }: CronJobManagerProps) {
   const [openDialog, setOpenDialog] = useState(false);
@@ -55,15 +79,13 @@ export default function CronJobManager({
   const [engine, setEngine] = useState<"indexnow" | "bing" | "google">("indexnow");
   const [sourceMode, setSourceMode] = useState<"sitemap" | "inventory">("sitemap");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
 
   async function handleCreateCronJob() {
-    setError(null);
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/websites/${websiteId}/cron-jobs`, {
+      const response = await fetch(`/api/websites/${siteId}/cron-jobs`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ frequency, engine, sourceMode }),
@@ -77,19 +99,18 @@ export default function CronJobManager({
 
       setOpenDialog(false);
       onRefresh();
+      toast.success("Schedule created successfully");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create cron job");
+      toast.error(err instanceof Error ? err.message : "Failed to create cron job");
     } finally {
       setLoading(false);
     }
   }
 
   async function handleToggleCronJob(cronJobId: string, enabled: boolean) {
-    setError(null);
-
     try {
       const response = await fetch(
-        `/api/websites/${websiteId}/cron-jobs/${cronJobId}`,
+        `/api/websites/${siteId}/cron-jobs/${cronJobId}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -104,18 +125,18 @@ export default function CronJobManager({
       }
 
       onRefresh();
+      toast.success(enabled ? "Schedule deactivated" : "Schedule activated");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update cron job");
+      toast.error(err instanceof Error ? err.message : "Failed to update cron job");
     }
   }
 
   async function handleDeleteCronJob(cronJobId: string) {
     setDeleting(cronJobId);
-    setError(null);
 
     try {
       const response = await fetch(
-        `/api/websites/${websiteId}/cron-jobs/${cronJobId}`,
+        `/api/websites/${siteId}/cron-jobs/${cronJobId}`,
         { method: "DELETE" }
       );
 
@@ -126,8 +147,9 @@ export default function CronJobManager({
       }
 
       onRefresh();
+      toast.success("Schedule deleted");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete cron job");
+      toast.error(err instanceof Error ? err.message : "Failed to delete cron job");
     } finally {
       setDeleting(null);
     }
@@ -140,193 +162,200 @@ export default function CronJobManager({
     const diff = date.getTime() - now.getTime();
 
     if (diff < 0) return "Overdue";
-    if (diff < 60000) return "In < 1 minute";
-    if (diff < 3600000) return `In ${Math.floor(diff / 60000)} minutes`;
-    if (diff < 86400000) return `In ${Math.floor(diff / 3600000)} hours`;
+    if (diff < 60000) return "In < 1 min";
+    if (diff < 3600000) return `In ${Math.floor(diff / 60000)}m`;
+    if (diff < 86400000) return `In ${Math.floor(diff / 3600000)}h`;
     return date.toLocaleDateString();
   };
 
   const formatLastRun = (lastRunAt: string | null) => {
     if (!lastRunAt) return "Never";
     const date = new Date(lastRunAt);
-    return date.toLocaleString();
+    return date.toLocaleString([], { dateStyle: 'short', timeStyle: 'short' });
   };
 
   return (
-    <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
-      <CardContent>
-        <Stack spacing={2}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Stack>
-              <Typography variant="h6" fontWeight={900}>
-                Auto-Submit Schedule
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Set up recurring submissions to IndexNow, Bing, or Google
-              </Typography>
-            </Stack>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => setOpenDialog(true)}
-              sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
-            >
-              Add Schedule
+    <Card className="border-border/40 bg-card/30 backdrop-blur-sm overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
+        <div className="space-y-1">
+          <CardTitle className="text-xl font-black tracking-tight flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-primary" /> Auto-Submit Schedule
+          </CardTitle>
+          <CardDescription className="text-xs font-medium">
+            Setup recurring submissions to IndexNow, Bing, or Google.
+          </CardDescription>
+        </div>
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <DialogTrigger asChild>
+            <Button className="gap-2 font-bold shadow-lg shadow-primary/20">
+              <Plus className="h-4 w-4" /> Add Schedule
             </Button>
-          </Stack>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-black tracking-tighter">New Schedule</DialogTitle>
+              <DialogDescription className="font-medium">
+                Automate indexing for <span className="text-primary">{siteUrl}</span>
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-6 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="frequency" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Frequency</Label>
+                <Select value={frequency} onValueChange={(v: any) => setFrequency(v)}>
+                  <SelectTrigger className="bg-muted/30 border-border/40 h-11">
+                    <SelectValue placeholder="Select frequency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hourly">Hourly</SelectItem>
+                    <SelectItem value="daily">Daily</SelectItem>
+                    <SelectItem value="weekly">Weekly</SelectItem>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="engine" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Search Engine</Label>
+                <Select value={engine} onValueChange={(v: any) => setEngine(v)}>
+                  <SelectTrigger className="bg-muted/30 border-border/40 h-11">
+                    <SelectValue placeholder="Select engine" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="indexnow">IndexNow (Multi-engine)</SelectItem>
+                    <SelectItem value="bing">Bing Webmaster</SelectItem>
+                    <SelectItem value="google">Google Search Console</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="source" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Submission Source</Label>
+                <Select value={sourceMode} onValueChange={(v: any) => setSourceMode(v)}>
+                  <SelectTrigger className="bg-muted/30 border-border/40 h-11">
+                    <SelectValue placeholder="Select source" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sitemap">Sitemap URLs</SelectItem>
+                    <SelectItem value="inventory">Detected Inventory</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter className="pt-2">
+              <Button onClick={() => setOpenDialog(false)} variant="ghost" className="font-bold">Cancel</Button>
+              <Button onClick={handleCreateCronJob} disabled={loading} className="gap-2 font-black px-8">
+                {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+                Create Schedule
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </CardHeader>
+      <CardContent className="space-y-4 pt-0">
+        {isLoading ? (
+          <div className="py-12 flex flex-col items-center justify-center gap-4 text-muted-foreground">
+            <Loader2 className="h-8 w-8 animate-spin opacity-20" />
+            <p className="text-xs font-medium">Loading schedules...</p>
+          </div>
+        ) : loadError ? (
+          <div className="py-12 flex flex-col items-center justify-center gap-4 text-destructive/60">
+            <AlertCircle className="h-8 w-8 opacity-20" />
+            <p className="text-xs font-medium">{loadError}</p>
+          </div>
+        ) : initialJobs.length === 0 ? (
+          <div className="p-12 text-center border-2 border-dashed border-border/40 rounded-3xl bg-muted/10 space-y-4">
+            <div className="h-16 w-16 rounded-full bg-muted/20 flex items-center justify-center mx-auto">
+              <Clock className="h-8 w-8 text-muted-foreground opacity-30" />
+            </div>
+            <div className="space-y-1">
+              <p className="font-black tracking-tight">No active schedules</p>
+              <p className="text-xs text-muted-foreground max-w-[240px] mx-auto">
+                Create your first automated task to keep your site perpetually indexed.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid gap-3">
+            {initialJobs.map((cron) => (
+              <div
+                key={cron.id}
+                className={cn(
+                  "flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border border-border/40 bg-background/40 transition-all hover:bg-background/60 group",
+                  !cron.enabled && "opacity-60"
+                )}
+              >
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="font-black uppercase text-[10px] bg-primary/5 text-primary border-primary/20">
+                      {cron.frequency}
+                    </Badge>
+                    <Badge variant="outline" className={cn(
+                      "font-black uppercase text-[10px] border-none px-2",
+                      cron.engine === "indexnow" ? "bg-emerald-500/10 text-emerald-600" :
+                      cron.engine === "bing" ? "bg-blue-500/10 text-blue-600" :
+                      "bg-amber-500/10 text-amber-600"
+                    )}>
+                      {cron.engine}
+                    </Badge>
+                    <Badge variant="secondary" className="font-black uppercase text-[10px] bg-muted/50 border-none">
+                      {cron.sourceMode}
+                    </Badge>
+                    <div className="flex items-center gap-1.5 ml-2">
+                      <Activity className={cn("h-3 w-3", cron.enabled ? "text-emerald-500" : "text-muted-foreground")} />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                        {cron.enabled ? "Active" : "Paused"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground opacity-70">
+                    <span className="flex items-center gap-1"><History className="h-3 w-3" /> Last: {formatLastRun(cron.lastRunAt)}</span>
+                    <span className="flex items-center gap-1"><Zap className="h-3 w-3" /> Next: {formatNextRun(cron.nextRunAt)}</span>
+                  </div>
+                </div>
 
-          {error && <Alert severity="error">{error}</Alert>}
-
-          {cronJobs.length === 0 ? (
-            <Box
-              sx={{
-                p: 2,
-                textAlign: "center",
-                bgcolor: "background.default",
-                borderRadius: "10px",
-              }}
-            >
-              <AccessTimeIcon sx={{ fontSize: 40, color: "text.secondary", mb: 1 }} />
-              <Typography variant="body2" color="text.secondary">
-                No schedules yet. Create one to automate submissions.
-              </Typography>
-            </Box>
-          ) : (
-            <Stack spacing={1}>
-              {cronJobs.map((cronJob) => (
-                <Card
-                  key={cronJob.id}
-                  variant="outlined"
-                  sx={{ borderRadius: "10px", "&:hover": { bgcolor: "action.hover" } }}
-                >
-                  <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
-                    <Stack
-                      direction={{ xs: "column", md: "row" }}
-                      justifyContent="space-between"
-                      alignItems={{ xs: "flex-start", md: "center" }}
-                      spacing={1}
-                    >
-                      <Stack spacing={0.5} sx={{ flex: 1 }}>
-                        <Stack direction="row" spacing={1} flexWrap="wrap">
-                          <Chip
-                            label={`${cronJob.frequency.charAt(0).toUpperCase() + cronJob.frequency.slice(1)}`}
-                            size="small"
-                            variant="outlined"
-                            sx={{ fontWeight: 700 }}
-                          />
-                          <Chip
-                            label={cronJob.engine.toUpperCase()}
-                            size="small"
-                            color={
-                              cronJob.engine === "indexnow"
-                                ? "primary"
-                                : cronJob.engine === "bing"
-                                  ? "info"
-                                  : "default"
-                            }
-                            sx={{ fontWeight: 700 }}
-                          />
-                          <Chip
-                            label={cronJob.sourceMode === "sitemap" ? "Sitemap" : "Inventory"}
-                            size="small"
-                            variant="outlined"
-                            sx={{ fontWeight: 700 }}
-                          />
-                        </Stack>
-                        <Typography variant="caption" color="text.secondary">
-                          Last run: {formatLastRun(cronJob.lastRunAt)} · Next run: {formatNextRun(cronJob.nextRunAt)}
-                        </Typography>
-                      </Stack>
-
-                      <Stack direction="row" spacing={0.75} alignItems="center">
-                        <FormControlLabel
-                          control={
-                            <Switch
-                              checked={cronJob.enabled}
-                              onChange={() => handleToggleCronJob(cronJob.id, cronJob.enabled)}
-                            />
-                          }
-                          label={cronJob.enabled ? "Active" : "Inactive"}
-                          sx={{ whiteSpace: "nowrap" }}
-                        />
-                        <Button
-                          size="small"
-                          variant="outlined"
-                          color="error"
-                          startIcon={<DeleteOutlineIcon />}
-                          onClick={() => handleDeleteCronJob(cronJob.id)}
-                          disabled={deleting === cronJob.id}
-                          sx={{ borderRadius: "8px", textTransform: "none", fontWeight: 700 }}
-                        >
-                          {deleting === cronJob.id ? <CircularProgress size={16} /> : "Delete"}
-                        </Button>
-                      </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              ))}
-            </Stack>
-          )}
-        </Stack>
+                <div className="flex items-center gap-4 mt-4 sm:mt-0">
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      checked={cron.enabled}
+                      onCheckedChange={() => handleToggleCronJob(cron.id, cron.enabled)}
+                      className="data-[state=checked]:bg-emerald-500"
+                    />
+                  </div>
+                  <div className="h-8 w-px bg-border/40 mx-1" />
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => handleDeleteCronJob(cron.id)}
+                    disabled={deleting === cron.id}
+                    className="h-9 w-9 rounded-xl text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                  >
+                    {deleting === cron.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </CardContent>
-
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ fontWeight: 900 }}>Create Auto-Submit Schedule</DialogTitle>
-        <DialogContent sx={{ pt: 2, pb: 1 }}>
-          <Stack spacing={2}>
-            <Typography variant="body2" color="text.secondary">
-              Website: {websiteUrl}
-            </Typography>
-
-            <TextField
-              select
-              label="Frequency"
-              value={frequency}
-              onChange={(e) => setFrequency(e.target.value as any)}
-              fullWidth
-            >
-              <MenuItem value="hourly">Hourly</MenuItem>
-              <MenuItem value="daily">Daily</MenuItem>
-              <MenuItem value="weekly">Weekly</MenuItem>
-              <MenuItem value="monthly">Monthly</MenuItem>
-            </TextField>
-
-            <TextField
-              select
-              label="Search Engine"
-              value={engine}
-              onChange={(e) => setEngine(e.target.value as any)}
-              fullWidth
-            >
-              <MenuItem value="indexnow">IndexNow</MenuItem>
-              <MenuItem value="bing">Bing Webmaster</MenuItem>
-              <MenuItem value="google">Google Search Console</MenuItem>
-            </TextField>
-
-            <TextField
-              select
-              label="Source"
-              value={sourceMode}
-              onChange={(e) => setSourceMode(e.target.value as any)}
-              fullWidth
-            >
-              <MenuItem value="sitemap">Sitemap URLs</MenuItem>
-              <MenuItem value="inventory">Detected Inventory</MenuItem>
-            </TextField>
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ p: 2, pt: 1 }}>
-          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-          <Button
-            variant="contained"
-            onClick={() => handleCreateCronJob()}
-            disabled={loading}
-            sx={{ borderRadius: "8px", textTransform: "none", fontWeight: 800 }}
-          >
-            {loading ? <CircularProgress size={18} /> : "Create Schedule"}
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Card>
+  );
+}
+
+function History(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+      <path d="M12 7v5l4 2" />
+    </svg>
   );
 }

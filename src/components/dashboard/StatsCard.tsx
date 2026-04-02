@@ -1,5 +1,4 @@
-import { Box, Card, CardContent, Stack, Typography } from "@/components/ui/mui";
-import { alpha } from "@/lib/color";
+import { cn } from "@/lib/utils";
 
 interface StatsCardProps {
   title: string;
@@ -12,59 +11,33 @@ interface StatsCardProps {
 
 export default function StatsCard({ title, value, icon, color, trend, trendType }: StatsCardProps) {
   return (
-    <Card
-      sx={{
-        borderRadius: "18px",
-        border: "1px solid",
-        borderColor: "divider",
-        boxShadow: "none",
-        bgcolor: "background.paper",
-      }}
-    >
-      <CardContent sx={{ p: 3 }}>
-        <Stack spacing={2}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Box
-              sx={{
-                width: 48,
-                height: 48,
-                borderRadius: "14px",
-                bgcolor: alpha(color, 0.1),
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: color,
-              }}
-            >
-              {icon}
-            </Box>
-            {trend && (
-              <Box
-                sx={{
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: "9999px",
-                  bgcolor: trendType === "up" ? alpha("#10B981", 0.1) : alpha("#EF4444", 0.1),
-                  color: trendType === "up" ? "#059669" : "#DC2626",
-                  fontSize: "0.75rem",
-                  fontWeight: 700,
-                }}
-              >
-                {trend}
-              </Box>
-            )}
-          </Stack>
-
-          <Stack spacing={0.5}>
-            <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              {title}
-            </Typography>
-            <Typography variant="h4" fontWeight={900} color="text.primary">
-              {value}
-            </Typography>
-          </Stack>
-        </Stack>
-      </CardContent>
-    </Card>
+    <div className="rounded-xl border border-border bg-card p-5 shadow-sm transition-all hover:shadow-md">
+      <div className="flex items-center justify-between">
+        <div 
+          className="flex h-12 w-12 items-center justify-center rounded-lg"
+          style={{ backgroundColor: `${color}15`, color: color }}
+        >
+          {icon}
+        </div>
+        {trend && (
+          <div className={cn(
+            "rounded-full px-2.5 py-0.5 text-xs font-bold",
+            trendType === "up" 
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" 
+              : "bg-red-500/10 text-red-600 dark:text-red-400"
+          )}>
+            {trend}
+          </div>
+        )}
+      </div>
+      <div className="mt-4 space-y-1">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
+          {title}
+        </p>
+        <h3 className="text-2xl font-extrabold tracking-tight">
+          {value}
+        </h3>
+      </div>
+    </div>
   );
 }

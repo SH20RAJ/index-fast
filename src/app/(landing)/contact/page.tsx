@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { Box } from "@/components/ui/mui";
 import Navbar from "@/components/landing/Navbar";
 import ContactForm from "@/components/landing/ContactForm";
 import Footer from "@/components/landing/Footer";
@@ -14,12 +13,12 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <Box sx={{ position: "relative", minHeight: "100vh", bgcolor: "background.default" }}>
+    <div className="relative min-h-screen bg-background flex flex-col">
       <Navbar />
-      <Box component="main" sx={{ py: 8, px: 2, mt: 4 }}>
+      <main className="flex-1 py-12 px-6 mt-8">
         <ContactForm />
-      </Box>
+      </main>
       <Footer />
-    </Box>
+    </div>
   );
 }

@@ -1,31 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1600px]">
-        <DashboardSidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
-
-        <main className="flex min-h-screen flex-1 flex-col">
-          <div className="sticky top-0 z-30 border-b border-border/70 bg-background/95 px-4 py-3 backdrop-blur md:hidden">
-            <div className="flex items-center justify-between">
-              <div className="text-sm font-semibold">IndexFast Dashboard</div>
-              <Button size="icon" variant="outline" onClick={() => setMobileOpen(true)} aria-label="Open menu">
-                <Menu className="h-4 w-4" />
-              </Button>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-background/50">
+        <DashboardSidebar />
+        <SidebarInset>
+          <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-border/50 bg-background/95 px-4 backdrop-blur-md md:px-6">
+            <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground" />
+            <div className="h-4 w-px bg-border/50 mx-2 hidden sm:block" />
+            <div className="text-sm font-semibold tracking-tight">IndexFast Dashboard</div>
+          </header>
+          <main className="flex-1 overflow-x-hidden p-6 md:p-8">
+            <div className="mx-auto max-w-6xl w-full space-y-8">
+              {children}
             </div>
-          </div>
-
-          <div className="flex-1 px-4 py-4 sm:px-6 md:px-8 md:py-6">{children}</div>
-        </main>
+          </main>
+        </SidebarInset>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }

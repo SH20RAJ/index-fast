@@ -1,19 +1,34 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  CircularProgress,
-  MenuItem,
-  Stack,
-  TextField,
-  Typography,
-} from "@/components/ui/mui";
+import { cn } from "@/lib/utils";
+import { 
+  Alert, 
+  AlertDescription, 
+  AlertTitle 
+} from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { 
+  Card, 
+  CardContent 
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { 
+  Loader2, 
+  Briefcase, 
+  Globe, 
+  Zap, 
+  CheckCircle2, 
+  AlertCircle,
+  Calendar
+} from "lucide-react";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";
@@ -76,95 +91,113 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
 
   if (sites.length === 0) {
     return (
-      <Box sx={{ pt: 2, pb: 8 }}>
-        <Stack spacing={3}>
-          <PageHeader
-            title="Auto Submit Jobs"
-            description="Create recurring indexing schedules for your websites."
-          />
-          <Card sx={{ borderRadius: "16px", border: "1px dashed", borderColor: "divider", boxShadow: "none" }}>
-            <CardContent sx={{ py: 7, textAlign: "center" }}>
-              <Typography variant="h6" fontWeight={900}>No websites found</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+      <div className="space-y-6 pb-16">
+        <PageHeader
+          title="Auto Submit Jobs"
+          description="Create recurring indexing schedules for your websites."
+        />
+        <Card className="border-dashed border-2 bg-muted/20">
+          <CardContent className="flex flex-col items-center justify-center py-16 text-center space-y-4">
+            <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
+              <Calendar className="h-8 w-8 text-muted-foreground/40" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-xl font-black tracking-tighter">No websites found</h3>
+              <p className="text-sm font-medium text-muted-foreground max-w-xs mx-auto">
                 Add a website first, then come back here to automate submissions.
-              </Typography>
-              <Button component={Link} href="/sites" variant="contained" sx={{ textTransform: "none", borderRadius: "10px", fontWeight: 800 }}>
-                Go to Websites
-              </Button>
-            </CardContent>
-          </Card>
-        </Stack>
-      </Box>
+              </p>
+            </div>
+            <Button asChild className="font-black rounded-xl shadow-lg shadow-primary/10">
+              <Link href="/sites">Go to Websites</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Box sx={{ pt: 2, pb: 8 }}>
-      <Stack spacing={3}>
-        <PageHeader
-          title="Auto Submit Jobs"
-          description="Schedule recurring submissions to IndexNow/Bing and monitor automation state."
-          action={
-            <TextField
-              select
-              size="small"
-              value={siteId}
-              onChange={(event) => setSiteId(event.target.value)}
-              sx={{ minWidth: 320 }}
-            >
-              {sites.map((site) => (
-                <MenuItem key={site.id} value={site.id}>{site.url}</MenuItem>
-              ))}
-            </TextField>
-          }
+    <div className="space-y-8 pb-16">
+      <PageHeader
+        title="Auto Submit Jobs"
+        description="Schedule recurring submissions to IndexNow/Bing and monitor automation state."
+        action={
+          <div className="w-full sm:w-[320px]">
+            <Select value={siteId} onValueChange={setSiteId}>
+              <SelectTrigger className="h-11 bg-card/30 backdrop-blur-sm border-border/40 font-bold rounded-xl ring-offset-background transition-all focus:ring-2 focus:ring-primary/20">
+                <SelectValue placeholder="Select a website" />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl border-border/40 font-bold">
+                {sites.map((site) => (
+                  <SelectItem key={site.id} value={site.id} className="focus:bg-primary/5 focus:text-primary rounded-lg transition-colors">
+                    {site.url}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        }
+      />
+
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle className="font-bold">Error</AlertTitle>
+          <AlertDescription className="font-medium">{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {selectedSite && (
+        <Card className="border-border/40 bg-card/30 backdrop-blur-sm shadow-xl shadow-primary/5 rounded-[24px] overflow-hidden">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
+              <div className="space-y-1">
+                <h4 className="text-sm font-black tracking-tighter flex items-center gap-2">
+                  <Globe className="h-3.5 w-3.5 text-primary" />
+                  {selectedSite.url}
+                </h4>
+                <p className="text-[11px] font-medium text-muted-foreground/60 break-all">
+                  Sitemap: {selectedSite.sitemapUrl || "Not configured"}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary" className="h-7 px-3 text-[10px] font-black uppercase tracking-widest bg-muted border-none">
+                  Jobs: {jobs.length}
+                </Badge>
+                <Badge 
+                  variant="default" 
+                  className={cn(
+                    "h-7 px-3 text-[10px] font-black uppercase tracking-widest border-none",
+                    jobs.some(j => j.enabled) ? "bg-emerald-500/10 text-emerald-600" : "bg-muted text-muted-foreground/60"
+                  )}
+                >
+                  Active: {jobs.filter((job) => job.enabled).length}
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {loading && (
+        <div className="flex items-center gap-3 p-4 bg-muted/20 rounded-2xl border border-border/10">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            Fetching schedules...
+          </p>
+        </div>
+      )}
+
+      {selectedSite && !loading && (
+        <CronJobManager
+          siteId={selectedSite.id}
+          siteUrl={selectedSite.url}
+          initialJobs={jobs}
+          isLoading={loading}
+          onRefresh={() => void loadJobs(selectedSite.id)}
         />
-
-        {error ? <Alert severity="error">{error}</Alert> : null}
-
-        {selectedSite ? (
-          <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
-            <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
-              <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" spacing={1}>
-                <Box>
-                  <Typography variant="subtitle1" fontWeight={900} sx={{ wordBreak: "break-all" }}>
-                    {selectedSite.url}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ wordBreak: "break-all" }}>
-                    Sitemap: {selectedSite.sitemapUrl || "Not configured"}
-                  </Typography>
-                </Box>
-                <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" alignItems="flex-start">
-                  <Chip label={`Jobs: ${jobs.length}`} size="small" sx={{ borderRadius: "8px", fontWeight: 700 }} />
-                  <Chip
-                    label={`Active: ${jobs.filter((job) => job.enabled).length}`}
-                    size="small"
-                    color={jobs.some((job) => job.enabled) ? "success" : "default"}
-                    sx={{ borderRadius: "8px", fontWeight: 700 }}
-                  />
-                </Stack>
-              </Stack>
-            </CardContent>
-          </Card>
-        ) : null}
-
-        {loading ? (
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <CircularProgress size={18} />
-            <Typography variant="body2" color="text.secondary">Loading jobs...</Typography>
-          </Stack>
-        ) : null}
-
-        {selectedSite && !loading ? (
-          <CronJobManager
-            websiteId={selectedSite.id}
-            websiteUrl={selectedSite.url}
-            cronJobs={jobs}
-            onRefresh={() => {
-              void loadJobs(selectedSite.id);
-            }}
-          />
-        ) : null}
-      </Stack>
-    </Box>
+      )}
+    </div>
   );
 }

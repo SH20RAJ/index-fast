@@ -1,31 +1,34 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useMemo } from "react";
 import {
-  Box,
-  Typography,
-  Stack,
-  Grid,
   Card,
   CardContent,
-  Chip,
-  Button,
-  TextField,
-  InputAdornment,
-  alpha,
-  Link as MuiLink,
-  useTheme,
-} from "@/components/ui/mui";
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { 
+  Search, 
+  ExternalLink, 
+  TrendingUp, 
+  Zap, 
+  Globe, 
+  BookOpen, 
+  Wrench, 
+  ShieldCheck,
+  ArrowRight,
+  Sparkles,
+  LayoutGrid,
+  Filter,
+  CheckCircle2
+} from "lucide-react";
 import Link from "next/link";
-import { SearchIcon } from "@/components/icons/mui-icons";
-import { LaunchIcon } from "@/components/icons/mui-icons";
-import { TrendingUpIcon } from "@/components/icons/mui-icons";
-import { BoltIcon } from "@/components/icons/mui-icons";
-import { PublicIcon } from "@/components/icons/mui-icons";
-import { MenuBookRoundedIcon } from "@/components/icons/mui-icons";
-import { HandymanRoundedIcon } from "@/components/icons/mui-icons";
-import { HealthAndSafetyRoundedIcon } from "@/components/icons/mui-icons";
 import PageHeader from "@/components/dashboard/PageHeader";
-import { addUtmParams } from "@/lib/utils";
+import { addUtmParams, cn } from "@/lib/utils";
 
 type DirectoryItem = {
   name: string;
@@ -420,7 +423,7 @@ const problemPlaybooks = [
     title: "Pages not indexed",
     signal: "URLs discovered but not indexed or delayed for days.",
     action: "Run indexability + sitemap checks, then push priority URLs via IndexNow/Bing batch.",
-    href: "/sites/url",
+    href: "/sites",
     cta: "Open URL Manager",
   },
   {
@@ -444,37 +447,28 @@ const hubLinks = [
     title: "SEO Blogs & Playbooks",
     description: "Learn proven methods, checklists, and practical SEO workflows.",
     href: "/blogs",
-    icon: <MenuBookRoundedIcon fontSize="small" />,
+    icon: BookOpen,
   },
   {
     title: "Free SEO Tools",
     description: "Run technical checks and generators across crawl, metadata, and authority.",
     href: "/tools",
-    icon: <HandymanRoundedIcon fontSize="small" />,
+    icon: Wrench,
   },
   {
     title: "Website Problem Scanner",
     description: "Track issues by site and move directly to fixes from dashboard workflows.",
     href: "/sites",
-    icon: <HealthAndSafetyRoundedIcon fontSize="small" />,
+    icon: ShieldCheck,
   },
 ];
 
 export default function ToolboxView() {
-  const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<"All" | DirectoryItem["category"]>("All");
+  const [activeCategory, setActiveCategory] = useState<string>("All");
 
-  const categories: Array<"All" | DirectoryItem["category"]> = [
-    "All",
-    "Launch",
-    "Community",
-    "Directory",
-    "Tech Stack",
-  ];
+  const categories = ["All", "Launch", "Community", "Directory", "Tech Stack"];
 
-  // Helper function to get UTM-enhanced URL
   const getTrackingUrl = (platform: DirectoryItem) => {
     return addUtmParams(
       platform.url,
@@ -485,455 +479,244 @@ export default function ToolboxView() {
     );
   };
 
-  const filtered = directories.filter((d) => {
-    const matchesSearch =
-      d.name.toLowerCase().includes(search.toLowerCase()) ||
-      d.category.toLowerCase().includes(search.toLowerCase()) ||
-      d.description.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = category === "All" || d.category === category;
-    return matchesSearch && matchesCategory;
-  });
+  const filtered = useMemo(() => {
+    return directories.filter((d) => {
+      const matchesSearch =
+        d.name.toLowerCase().includes(search.toLowerCase()) ||
+        d.category.toLowerCase().includes(search.toLowerCase()) ||
+        d.description.toLowerCase().includes(search.toLowerCase());
+      const matchesCategory = activeCategory === "All" || d.category === activeCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [search, activeCategory]);
 
-  const grouped = filtered.reduce<Record<DirectoryItem["category"], DirectoryItem[]>>(
-    (acc, item) => {
-      acc[item.category].push(item);
-      return acc;
-    },
-    { Launch: [], Community: [], Directory: [], "Tech Stack": [] }
-  );
+  const grouped = useMemo(() => {
+    const fresh: Record<string, DirectoryItem[]> = { Launch: [], Community: [], Directory: [], "Tech Stack": [] };
+    filtered.forEach((item) => {
+      if (fresh[item.category]) {
+        fresh[item.category].push(item);
+      }
+    });
+    return fresh;
+  }, [filtered]);
 
-  const highImpact = directories.filter((d) => d.impact === "High" || d.impact === "Very High").length;
-  const easyWins = directories.filter((d) => d.difficulty === "Easy").length;
-
-  const categoryTone: Record<DirectoryItem["category"], string> = {
-    Launch: theme.palette.primary.main,
-    Community: theme.palette.secondary.main,
-    Directory: "#F59E0B",
-    "Tech Stack": "#0EA5E9",
-  };
+  const stats = useMemo(() => {
+    return {
+      total: directories.length,
+      highImpact: directories.filter((d) => d.impact === "High" || d.impact === "Very High").length,
+      easyWins: directories.filter((d) => d.difficulty === "Easy").length,
+    };
+  }, []);
 
   return (
-    <Box sx={{ pt: 2, pb: 8 }}>
-      <Stack spacing={3.5}>
-        <PageHeader
-          title="SEO Toolbox"
-          description="Find launch channels plus the best SEO and analytics stack to monitor indexing, visibility, and growth."
-        />
+    <div className="space-y-8 pb-12 pt-4">
+      <PageHeader
+        title="SEO Toolbox"
+        description="Find launch channels plus the best SEO and analytics stack to monitor indexing, visibility, and growth."
+      />
 
-        <Grid container spacing={2}>
-          {hubLinks.map((entry) => (
-            <Grid key={entry.title} size={{ xs: 12, md: 4 }}>
-              <Card
-                sx={{
-                  borderRadius: "18px",
-                  border: "1px solid",
-                  borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
-                  boxShadow: "none",
-                  height: "100%",
-                }}
-              >
-                <CardContent sx={{ p: 2.25, height: "100%" }}>
-                  <Stack spacing={1.25} sx={{ height: "100%" }}>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <Box
-                        sx={{
-                          width: 28,
-                          height: 28,
-                          borderRadius: "8px",
-                          display: "grid",
-                          placeItems: "center",
-                          bgcolor: alpha(theme.palette.primary.main, isDark ? 0.28 : 0.14),
-                          color: "primary.main",
-                        }}
-                      >
-                        {entry.icon}
-                      </Box>
-                      <Typography variant="subtitle1" fontWeight={800}>
-                        {entry.title}
-                      </Typography>
-                    </Stack>
-                    <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1 }}>
-                      {entry.description}
-                    </Typography>
-                    <Button
-                      component={Link}
-                      href={entry.href}
-                      variant="outlined"
-                      sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 700, alignSelf: "flex-start" }}
-                    >
-                      Open
-                    </Button>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-<Grid container spacing={2}>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Card
-              sx={{
-                borderRadius: "18px",
-                border: "1px solid",
-                borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
-                boxShadow: "none",
-              }}
-            >
-              <CardContent sx={{ p: 2.5 }}>
-                <Stack direction="row" spacing={1.5} alignItems="center">
-                  <PublicIcon sx={{ color: "primary.main" }} />
-                  <Box>
-                    <Typography variant="h5" fontWeight={900}>
-                      {directories.length}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Total platforms
-                    </Typography>
-                  </Box>
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Card
-              sx={{
-                borderRadius: "18px",
-                border: "1px solid",
-                borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
-                boxShadow: "none",
-              }}
-            >
-              <CardContent sx={{ p: 2.5 }}>
-                <Stack direction="row" spacing={1.5} alignItems="center">
-                  <TrendingUpIcon sx={{ color: "secondary.main" }} />
-                  <Box>
-                    <Typography variant="h5" fontWeight={900}>
-                      {highImpact}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      High-impact options
-                    </Typography>
-                  </Box>
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Card
-              sx={{
-                borderRadius: "18px",
-                border: "1px solid",
-                borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
-                boxShadow: "none",
-              }}
-            >
-              <CardContent sx={{ p: 2.5 }}>
-                <Stack direction="row" spacing={1.5} alignItems="center">
-                  <BoltIcon sx={{ color: "warning.main" }} />
-                  <Box>
-                    <Typography variant="h5" fontWeight={900}>
-                      {easyWins}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Easy wins first
-                    </Typography>
-                  </Box>
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-        
-
-        
-
-        <Card
-          sx={{
-            borderRadius: "22px",
-            border: "1px solid",
-            borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
-            boxShadow: "none",
-          }}
-        >
-          <CardContent sx={{ p: 2.5 }}>
-            <Stack spacing={2}>
-              <TextField
-                fullWidth
-                placeholder="Search by platform, category, or use case…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon sx={{ color: "text.secondary" }} />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "14px",
-                    bgcolor: alpha(theme.palette.background.paper, isDark ? 0.7 : 0.95),
-                    "& fieldset": {
-                      borderColor: alpha(theme.palette.divider, isDark ? 0.8 : 1),
-                    },
-                    "&:hover fieldset": {
-                      borderColor: alpha(theme.palette.primary.main, 0.45),
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: theme.palette.primary.main,
-                    },
-                  },
-                }}
-              />
-
-              <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                {categories.map((item) => (
-                  <Chip
-                    key={item}
-                    label={item}
-                    clickable
-                    onClick={() => setCategory(item)}
-                    sx={{
-                      borderRadius: "10px",
-                      fontWeight: 700,
-                      px: 0.5,
-                      bgcolor:
-                        category === item
-                          ? alpha(theme.palette.primary.main, isDark ? 0.32 : 0.16)
-                          : alpha(theme.palette.text.primary, isDark ? 0.14 : 0.06),
-                      color: category === item ? "text.primary" : "text.secondary",
-                      "&:hover": {
-                        bgcolor:
-                          category === item
-                            ? alpha(theme.palette.primary.main, isDark ? 0.4 : 0.22)
-                            : alpha(theme.palette.text.primary, isDark ? 0.2 : 0.1),
-                      },
-                    }}
-                  />
-                ))}
-              </Stack>
-            </Stack>
-          </CardContent>
-        </Card>
-
-        {filtered.length === 0 ? (
-          <Card sx={{ borderRadius: "20px", border: "1px dashed", borderColor: "divider", boxShadow: "none" }}>
-            <CardContent sx={{ p: 4 }}>
-              <Typography variant="h6" fontWeight={800} gutterBottom>
-                No matches found
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Try a broader keyword or switch back to All categories.
-              </Typography>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {hubLinks.map((entry) => (
+          <Card key={entry.title} className="border-border/40 bg-card/50 shadow-sm transition-all hover:bg-card/80 group">
+            <CardContent className="p-5 flex flex-col h-full">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <entry.icon className="h-5 w-5" />
+                </div>
+                <CardTitle className="text-base font-black tracking-tight">{entry.title}</CardTitle>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed flex-grow mb-4">
+                {entry.description}
+              </p>
+              <Button asChild variant="outline" className="w-fit gap-2 font-bold bg-background/50 border-border/40 hover:bg-primary/5 hover:text-primary hover:border-primary/20">
+                <Link href={entry.href}>
+                  Explore <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
             </CardContent>
           </Card>
-        ) : (
-          <Stack spacing={3}>
-            {(Object.keys(grouped) as DirectoryItem["category"][])
-              .filter((group) => grouped[group].length > 0)
-              .map((group) => (
-                <Box key={group}>
-                  <Stack direction="row" alignItems="center" spacing={1.25} sx={{ mb: 1.5 }}>
-                    <Chip
-                      label={group}
-                      size="small"
-                      sx={{
-                        borderRadius: "8px",
-                        bgcolor: alpha(categoryTone[group], 0.12),
-                        color: categoryTone[group],
-                        fontWeight: 800,
-                      }}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      {grouped[group].length} platform{grouped[group].length > 1 ? "s" : ""}
-                    </Typography>
-                  </Stack>
+        ))}
+      </div>
 
-                  <Grid container spacing={2}>
-                    {grouped[group].map((item) => (
-                      <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item.name}>
-                        <Card
-                          sx={{
-                            height: "100%",
-                            borderRadius: "16px",
-                            border: "1px solid",
-                            borderColor: "divider",
-                            boxShadow: "none",
-                            "&:hover": {
-                              borderColor: alpha(theme.palette.primary.main, isDark ? 0.4 : 0.3),
-                            },
-                          }}
-                        >
-                          <CardContent sx={{ p: 2.25, display: "flex", flexDirection: "column", height: "100%" }}>
-                            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
-                              <Typography variant="h6" fontWeight={800} sx={{ lineHeight: 1.25 }}>
-                                {item.name}
-                              </Typography>
-                              <MuiLink
-                                href={getTrackingUrl(item)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                color="inherit"
-                                aria-label={`Open ${item.name}`}
-                              >
-                                <LaunchIcon sx={{ fontSize: 18, opacity: 0.55, "&:hover": { opacity: 1 } }} />
-                              </MuiLink>
-                            </Stack>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {[
+          { label: "Platforms", value: stats.total, icon: Globe, color: "text-blue-500" },
+          { label: "High Impact", value: stats.highImpact, icon: TrendingUp, color: "text-emerald-500" },
+          { label: "Easy Wins", value: stats.easyWins, icon: Zap, color: "text-amber-500" },
+        ].map((stat) => (
+          <Card key={stat.label} className="border-border/40 bg-card/40">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1">{stat.label}</p>
+                <p className="text-2xl font-black">{stat.value}</p>
+              </div>
+              <div className={cn("h-8 w-8 rounded-lg bg-background border border-border/20 flex items-center justify-center shadow-xs shrink-0", stat.color)}>
+                <stat.icon className="h-4 w-4" />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, flexGrow: 1 }}>
-                              {item.description}
-                            </Typography>
+      <Card className="border-border/40 bg-card/30 backdrop-blur-sm overflow-hidden sticky top-14 z-20 shadow-lg">
+        <CardContent className="p-4 space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by platform, category, or use case…"
+              className="pl-10 h-11 bg-background/50 border-border/40 focus-visible:ring-primary/20 transition-all font-medium"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2 pt-1">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={cn(
+                  "px-4 py-1.5 rounded-full text-xs font-bold tracking-tight transition-all",
+                  activeCategory === cat
+                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105"
+                    : "bg-background/80 text-muted-foreground border border-border/40 hover:border-border/80 hover:bg-background"
+                )}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-                            <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mb: 1.5 }}>
-                              <Chip
-                                label={`Impact: ${item.impact}`}
-                                size="small"
-                                sx={{
-                                  borderRadius: "8px",
-                                  fontWeight: 700,
-                                  bgcolor: alpha(theme.palette.text.primary, isDark ? 0.14 : 0.06),
-                                  color: "text.secondary",
-                                }}
-                              />
-                              <Chip
-                                label={`Difficulty: ${item.difficulty}`}
-                                size="small"
-                                sx={{
-                                  borderRadius: "8px",
-                                  fontWeight: 700,
-                                  bgcolor: alpha(theme.palette.text.primary, isDark ? 0.14 : 0.06),
-                                  color: "text.secondary",
-                                }}
-                              />
-                            </Stack>
+      {filtered.length === 0 ? (
+        <Card className="border-dashed border-2 border-border/40 bg-transparent py-20">
+          <CardContent className="flex flex-col items-center text-center">
+            <div className="h-20 w-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">
+              <Search className="h-10 w-10 text-muted-foreground opacity-50" />
+            </div>
+            <h3 className="text-2xl font-black tracking-tight mb-2">No matches found</h3>
+            <p className="text-muted-foreground max-w-sm">
+              Try a broader keyword or switch back to "All" categories to see what we have.
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-12">
+          {(Object.keys(grouped) as string[])
+            .filter((cat) => grouped[cat].length > 0)
+            .map((cat) => (
+              <div key={cat} className="space-y-4">
+                <div className="flex items-center gap-3 ml-1">
+                  <div className="h-6 w-1 bg-primary rounded-full" />
+                  <h2 className="text-xl font-black tracking-tight flex items-center gap-2">
+                    {cat}
+                    <Badge variant="outline" className="rounded-md font-black border-primary/20 text-primary bg-primary/5">
+                      {grouped[cat].length}
+                    </Badge>
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {grouped[cat].map((item) => (
+                    <Card 
+                      key={item.name} 
+                      className="border-border/40 bg-card/40 transition-all hover:bg-card/70 hover:border-primary/20 group relative overflow-hidden"
+                    >
+                      <CardContent className="p-5 flex flex-col h-full">
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="text-lg font-black tracking-tight group-hover:text-primary transition-colors leading-tight pr-8">
+                            {item.name}
+                          </h3>
+                          <Link
+                            href={getTrackingUrl(item)}
+                            target="_blank"
+                            className="absolute top-4 right-4 p-2 rounded-lg bg-background/50 border border-border/20 text-muted-foreground hover:text-primary hover:border-primary/30 transition-all hover:scale-110"
+                            aria-label={`Open ${item.name}`}
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </Link>
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed flex-grow mb-6">
+                          {item.description}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-auto">
+                          <Badge variant="secondary" className="px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter bg-background/80 border border-border/10">
+                            Impact: {item.impact}
+                          </Badge>
+                          <Badge variant="secondary" className="px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter bg-background/80 border border-border/10">
+                            Difficulty: {item.difficulty}
+                          </Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
+        </div>
+      )}
 
-                            <Button
-                              variant="contained"
-                              component="a"
-                              href={getTrackingUrl(item)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              endIcon={<LaunchIcon />}
-                              sx={{ borderRadius: "11px", textTransform: "none", fontWeight: 800 }}
-                            >
-                              Open Platform
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Box>
-              ))}
-          </Stack>
-        )}
-
-        <Card
-          sx={{
-            borderRadius: "22px",
-            border: "1px solid",
-            borderColor: alpha(theme.palette.divider, isDark ? 0.75 : 1),
-            background: alpha(theme.palette.background.paper, isDark ? 0.9 : 1),
-            color: "text.primary",
-            boxShadow: "none",
-          }}
-        >
-          <CardContent sx={{ p: { xs: 2.5, md: 3.5 } }}>
-            <Stack direction={{ xs: "column", md: "row" }} spacing={2} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }}>
-              <Box>
-                <Typography variant="h5" fontWeight={900} sx={{ mb: 0.75 }}>
-                  Want this as a weekly action plan?
-                </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary", maxWidth: 680 }}>
-                  Upgrade to auto-track launches, monitor backlink gains, and get a prioritized outreach checklist each week.
-                </Typography>
-              </Box>
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={1.25} sx={{ width: { xs: "100%", md: "auto" } }}>
-                <Button href="/dashboard" variant="contained" sx={{ borderRadius: "10px", fontWeight: 800, textTransform: "none" }}>
-                  Open Dashboard
-                </Button>
-                <Button
-                  href="/#pricing"
-                  variant="outlined"
-                  sx={{
-                    borderRadius: "10px",
-                    fontWeight: 800,
-                    textTransform: "none",
-                    color: "text.primary",
-                    borderColor: alpha(theme.palette.divider, isDark ? 0.9 : 1),
-                    "&:hover": {
-                      borderColor: alpha(theme.palette.primary.main, 0.55),
-                      bgcolor: alpha(theme.palette.primary.main, isDark ? 0.14 : 0.08),
-                    },
-                  }}
-                >
-                  View Plans
-                </Button>
-              </Stack>
-            </Stack>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-12">
+        <Card className="border-border/40 bg-card/20 overflow-hidden">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-primary" /> Methods We Teach
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-2">
+            {seoMethods.map((method) => (
+              <div key={method} className="flex items-start gap-3 p-3 rounded-xl bg-background/40 border border-border/10">
+                <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <CheckCircle2 className="h-3 w-3 text-primary" />
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed font-medium">{method}</p>
+              </div>
+            ))}
           </CardContent>
         </Card>
 
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, lg: 6 }}>
-            <Card
-              sx={{
-                borderRadius: "18px",
-                border: "1px solid",
-                borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
-                boxShadow: "none",
-                height: "100%",
-              }}
-            >
-              <CardContent sx={{ p: 2.5 }}>
-                <Stack spacing={1.25}>
-                  <Typography variant="h6" fontWeight={900}>Methods We Teach</Typography>
-                  {seoMethods.map((method) => (
-                    <Stack key={method} direction="row" spacing={1} alignItems="flex-start">
-                      <Box sx={{ mt: 0.7, width: 6, height: 6, borderRadius: "999px", bgcolor: "primary.main" }} />
-                      <Typography variant="body2" color="text.secondary">{method}</Typography>
-                    </Stack>
-                  ))}
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={{ xs: 12, lg: 6 }}>
-            <Card
-              sx={{
-                borderRadius: "18px",
-                border: "1px solid",
-                borderColor: alpha(theme.palette.divider, isDark ? 0.65 : 1),
-                boxShadow: "none",
-                height: "100%",
-              }}
-            >
-              <CardContent sx={{ p: 2.5 }}>
-                <Stack spacing={1.25}>
-                  <Typography variant="h6" fontWeight={900}>Problem to Improvement Playbooks</Typography>
-                  {problemPlaybooks.map((playbook) => (
-                    <Box key={playbook.title} sx={{ p: 1.25, borderRadius: "10px", bgcolor: alpha(theme.palette.text.primary, isDark ? 0.08 : 0.04) }}>
-                      <Stack spacing={0.6}>
-                        <Typography variant="subtitle2" fontWeight={800}>{playbook.title}</Typography>
-                        <Typography variant="caption" color="text.secondary">Signal: {playbook.signal}</Typography>
-                        <Typography variant="caption" color="text.secondary">Fix: {playbook.action}</Typography>
-                        <Button
-                          component={Link}
-                          href={playbook.href}
-                          size="small"
-                          sx={{ alignSelf: "flex-start", textTransform: "none", fontWeight: 700, px: 0 }}
-                        >
-                          {playbook.cta}
-                        </Button>
-                      </Stack>
-                    </Box>
-                  ))}
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Stack>
-    </Box>
+        <Card className="border-border/40 bg-card/20 overflow-hidden">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-emerald-500" /> Playbooks & Fixes
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 pt-2">
+            {problemPlaybooks.map((playbook) => (
+              <div key={playbook.title} className="p-4 rounded-xl bg-background/40 border border-border/10 group/item hover:bg-background/60 transition-colors">
+                <h4 className="text-sm font-black tracking-tight mb-1 group-hover/item:text-primary transition-colors">{playbook.title}</h4>
+                <p className="text-xs text-muted-foreground mb-3 opacity-70">Fix: {playbook.action}</p>
+                <Button asChild size="sm" variant="ghost" className="h-8 px-0 hover:bg-transparent text-primary hover:text-primary/80 font-bold group">
+                  <Link href={playbook.href}>
+                    {playbook.cta} <ArrowRight className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="border-none bg-primary/5 p-8 rounded-[2rem] relative overflow-hidden group mt-12">
+        <div className="absolute -top-24 -right-24 h-64 w-64 bg-primary/10 rounded-full blur-[80px] transition-transform group-hover:scale-150 duration-1000" />
+        <div className="absolute -bottom-24 -left-24 h-64 w-64 bg-emerald-500/5 rounded-full blur-[80px] transition-transform group-hover:scale-150 duration-1000" />
+        
+        <CardContent className="p-0 flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+          <div className="space-y-4 text-center md:text-left">
+            <Badge className="bg-primary/20 text-primary hover:bg-primary/20 border-none font-black px-4 py-1 rounded-full uppercase tracking-widest text-[10px]">
+              <Sparkles className="h-3 w-3 mr-2" /> Premium Strategy
+            </Badge>
+            <h3 className="text-3xl font-black tracking-tighter sm:text-4xl">Need a custom SEO strategy?</h3>
+            <p className="text-muted-foreground max-w-lg mx-auto md:mx-0 leading-relaxed font-medium">
+              Upgrade to our advanced dashboards for cluster mapping, internal link automation, and deep competitive intelligence.
+            </p>
+          </div>
+          <Button asChild size="lg" className="h-14 px-8 rounded-2xl font-black shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all bg-primary hover:bg-primary/90 text-primary-foreground group">
+            <Link href="/blogs">
+              Read Guides <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

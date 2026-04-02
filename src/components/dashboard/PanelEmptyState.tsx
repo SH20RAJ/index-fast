@@ -1,9 +1,9 @@
-import { Stack, Typography } from "@/components/ui/mui";
+import { cn } from "@/lib/utils";
 
 interface PanelEmptyStateProps {
   icon: React.ReactNode;
   message: string;
-  height?: number;
+  height?: number | string;
 }
 
 export default function PanelEmptyState({
@@ -12,14 +12,16 @@ export default function PanelEmptyState({
   height = 300,
 }: PanelEmptyStateProps) {
   return (
-    <Stack
-      spacing={2}
-      alignItems="center"
-      justifyContent="center"
-      sx={{ height, color: "text.secondary" }}
+    <div 
+      className="flex flex-col items-center justify-center gap-3 text-muted-foreground"
+      style={{ height: typeof height === 'number' ? `${height}px` : height }}
     >
-      {icon}
-      <Typography variant="body2">{message}</Typography>
-    </Stack>
+      <div className="text-muted-foreground/50">
+        {icon}
+      </div>
+      <p className="text-sm font-medium tracking-tight">
+        {message}
+      </p>
+    </div>
   );
 }

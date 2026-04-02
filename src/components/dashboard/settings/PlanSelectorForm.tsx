@@ -1,10 +1,15 @@
 "use client";
 
 import { useActionState } from "react";
-import { Alert, Box, Button, Card, CardContent, Chip, Stack, Typography, alpha } from "@/components/ui/mui";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { PLAN_DEFINITIONS, PlanId } from "@/lib/billing/plans";
 import { updateSubscriptionPlanAction } from "@/app/(dashboard)/actions";
 import { defaultActionState } from "@/app/(dashboard)/action-state";
+import { CheckCircle2, Sparkles, Loader2, AlertCircle, Zap, ShieldCheck, Activity } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface PlanSelectorFormProps {
   currentPlanId: PlanId;
@@ -14,67 +19,100 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
   const [state, formAction, pending] = useActionState(updateSubscriptionPlanAction, defaultActionState);
 
   return (
-    <Stack spacing={1.5}>
+    <div className="space-y-4">
       {Object.values(PLAN_DEFINITIONS).map((plan) => {
         const isCurrent = currentPlanId === plan.id;
         return (
           <Card
             key={plan.id}
-            sx={{
-              borderRadius: "14px",
-              border: "1px solid",
-              borderColor: isCurrent ? alpha("#0F766E", 0.45) : "divider",
-              bgcolor: isCurrent ? alpha("#0F766E", 0.05) : "background.paper",
-              boxShadow: "none",
-            }}
+            className={cn(
+              "relative overflow-hidden transition-all duration-300 border-border/40 bg-card/30 backdrop-blur-sm",
+              isCurrent 
+                ? "ring-2 ring-primary border-primary/20 bg-primary/5 shadow-xl shadow-primary/5" 
+                : "hover:border-primary/20 hover:bg-card/50"
+            )}
           >
-            <CardContent sx={{ p: 2 }}>
-              <Stack spacing={1.25}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={1}>
-                  <Box>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 900 }}>
-                      {plan.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {plan.tagline}
-                    </Typography>
-                  </Box>
-                  <Chip
-                    label={isCurrent ? "Current" : `$${plan.priceMonthly}/month`}
-                    sx={{ borderRadius: "999px", fontWeight: 800 }}
-                    color={isCurrent ? "success" : "default"}
-                  />
-                </Stack>
+            <CardContent className="p-5">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="space-y-4 flex-1">
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "flex h-10 w-10 items-center justify-center rounded-xl",
+                      isCurrent ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "bg-muted text-muted-foreground"
+                    )}>
+                      {plan.id === "free" ? <Activity className="h-5 w-5" /> : plan.id === "pro" ? <Zap className="h-5 w-5 fill-current" /> : <ShieldCheck className="h-5 w-5" />}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-base font-black tracking-tighter leading-none">{plan.name}</h4>
+                        {isCurrent && (
+                          <Badge variant="secondary" className="h-5 px-1.5 text-[9px] font-black uppercase tracking-widest bg-primary text-primary-foreground border-none">
+                            Current
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-xs font-medium text-muted-foreground mt-1 opacity-70">
+                        {plan.tagline}
+                      </p>
+                    </div>
+                  </div>
 
-                <Typography variant="body2" color="text.secondary">
-                  {plan.websiteLimit} sites · {plan.submissionLimitMonthly.toLocaleString()} submissions/month · {plan.features.includes("Universal pinging") ? "Includes ping network" : "No ping network"}
-                </Typography>
-                {plan.trialDays && (
-                  <Typography variant="caption" sx={{ color: "#0F766E", fontWeight: 800 }}>
-                    ✨ Includes {plan.trialDays}-day free trial
-                  </Typography>
-                )}
+                  <div className="flex flex-wrap gap-x-6 gap-y-2 text-[11px] font-black uppercase tracking-wider text-muted-foreground/60">
+                    <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3 text-emerald-500" /> {plan.websiteLimit} sites</span>
+                    <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3 text-emerald-500" /> {plan.submissionLimitMonthly.toLocaleString()} submissions</span>
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2 className={cn("h-3 w-3", plan.features.includes("Universal pinging") ? "text-emerald-500" : "text-muted-foreground/30")} /> 
+                      Ping Network
+                    </span>
+                  </div>
 
-                <Box component="form" action={formAction}>
-                  <input type="hidden" name="plan" value={plan.id} />
-                  <Button
-                    type="submit"
-                    variant={isCurrent ? "outlined" : "contained"}
-                    disabled={pending || isCurrent}
-                    sx={{ borderRadius: "10px", textTransform: "none", fontWeight: 800 }}
-                  >
-                    {isCurrent ? "Active plan" : pending ? "Updating…" : plan.ctaLabel}
-                  </Button>
-                </Box>
-              </Stack>
+                  {plan.trialDays && (
+                    <div className="flex items-center gap-2 text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full w-fit">
+                      <Sparkles className="h-3 w-3" />
+                      {plan.trialDays} DAY FREE TRIAL
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col items-center md:items-end gap-3 min-w-[140px]">
+                  <div className="text-center md:text-right">
+                    <span className="text-2xl font-black tracking-tighter leading-none">
+                      {plan.priceMonthly === 0 ? "Free" : `$${plan.priceMonthly}`}
+                    </span>
+                    {plan.priceMonthly > 0 && <span className="text-[10px] font-bold text-muted-foreground ml-1">/mo</span>}
+                  </div>
+                  
+                  <form action={formAction} className="w-full">
+                    <input type="hidden" name="plan" value={plan.id} />
+                    <Button
+                      type="submit"
+                      variant={isCurrent ? "outline" : "default"}
+                      disabled={pending || isCurrent}
+                      className={cn(
+                        "w-full h-10 font-bold uppercase tracking-tighter text-[11px] rounded-xl transition-all active:scale-95 shadow-sm",
+                        isCurrent && "border-primary/20 text-primary opacity-100 hover:bg-transparent"
+                      )}
+                    >
+                      {isCurrent ? "Active Plan" : pending ? <Loader2 className="h-4 w-4 animate-spin" /> : plan.ctaLabel}
+                    </Button>
+                  </form>
+                </div>
+              </div>
             </CardContent>
+            {isCurrent && (
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
+            )}
           </Card>
         );
       })}
 
-      {state.status !== "idle" ? (
-        <Alert severity={state.status === "success" ? "success" : "error"}>{state.message}</Alert>
-      ) : null}
-    </Stack>
+      {state.status !== "idle" && (
+        <Alert variant={state.status === "success" ? "default" : "destructive"} className={state.status === "success" ? "border-emerald-500/50 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400" : "mt-6"}>
+          {state.status === "success" ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4" />}
+          <AlertTitle className="font-bold capitalize">{state.status}</AlertTitle>
+          <AlertDescription className="font-medium">{state.message}</AlertDescription>
+        </Alert>
+      )}
+    </div>
   );
 }

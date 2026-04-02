@@ -1,10 +1,11 @@
-import { Box, Stack, Typography } from "@/components/ui/mui";
+import { cn } from "@/lib/utils";
 
 interface DashboardPanelProps {
   title: string;
   minHeight?: number;
   flex?: number;
   children: React.ReactNode;
+  className?: string;
 }
 
 export default function DashboardPanel({
@@ -12,23 +13,22 @@ export default function DashboardPanel({
   minHeight = 400,
   flex,
   children,
+  className,
 }: DashboardPanelProps) {
   return (
-    <Box
-      sx={{
-        flex,
-        p: 4,
-        bgcolor: "white",
-        borderRadius: "32px",
-        border: "1px solid",
-        borderColor: "rgba(0,0,0,0.05)",
-        minHeight,
-      }}
+    <div
+      style={{ minHeight, flex }}
+      className={cn(
+        "p-6 md:p-8 bg-card/30 backdrop-blur-sm rounded-[32px] border border-border/40 shadow-sm transition-all hover:shadow-md",
+        className
+      )}
     >
-      <Typography variant="h6" fontWeight={800} sx={{ mb: 3 }}>
+      <h2 className="text-xl font-black tracking-tighter mb-6 text-foreground/90 uppercase tracking-widest text-[12px] opacity-60">
         {title}
-      </Typography>
-      {children}
-    </Box>
+      </h2>
+      <div className="relative">
+        {children}
+      </div>
+    </div>
   );
 }

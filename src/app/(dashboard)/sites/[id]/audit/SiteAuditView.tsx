@@ -1,9 +1,12 @@
 "use client";
+
 import React from "react";
-import { Box, Stack, Typography } from "@/components/ui/mui";
+import { cn } from "@/lib/utils";
 import PageHeader from "@/components/dashboard/PageHeader";
 import AuditPanel from "@/components/dashboard/AuditPanel";
 import type { AuditIssue } from "@/components/dashboard/AuditPanel";
+import { AlertCircle, Globe } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface SiteAuditViewProps {
   id: string;
@@ -32,27 +35,31 @@ export default function SiteAuditView({ id, initialSite }: SiteAuditViewProps) {
 
   if (!site) {
     return (
-      <Box sx={{ py: 12, textAlign: "center" }}>
-        <Typography variant="h6" color="text.secondary">Website not found.</Typography>
-      </Box>
+      <div className="flex flex-col items-center justify-center py-24 text-center space-y-4">
+        <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
+          <AlertCircle className="h-8 w-8 text-muted-foreground/40" />
+        </div>
+        <h3 className="text-xl font-black tracking-tighter">Website not found</h3>
+        <p className="text-sm font-medium text-muted-foreground max-w-xs mx-auto">
+          The requested site identifier does not exist in our repository.
+        </p>
+      </div>
     );
   }
 
   return (
-    <Box sx={{ pt: 2, pb: 8 }}>
-      <Stack spacing={4}>
-        <PageHeader
-          title="AI SEO Audit"
-          description={`Analyzing SEO health for ${getHostname(site.url)}`}
-        />
+    <div className="space-y-8 pb-16">
+      <PageHeader
+        title="AI SEO Audit"
+        description={`Analyzing SEO health for ${getHostname(site.url)}`}
+      />
 
-        <Box sx={{ maxWidth: "800px", mx: "auto", width: "100%" }}>
-          <AuditPanel 
-            websiteId={id} 
-            initialResult={site.siteHealth}
-          />
-        </Box>
-      </Stack>
-    </Box>
+      <div className="max-w-4xl mx-auto w-full">
+        <AuditPanel 
+          websiteId={id} 
+          initialResult={site.siteHealth}
+        />
+      </div>
+    </div>
   );
 }

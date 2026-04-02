@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { Box } from "@/components/ui/mui";
 import Navbar from "@/components/landing/Navbar";
 import Pricing from "@/components/landing/Pricing";
 import Footer from "@/components/landing/Footer";
@@ -14,12 +13,12 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", flexDirection: "column" }}>
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
-      <Box component="main" sx={{ flex: 1 }}>
+      <main className="flex-1">
         <Pricing />
-      </Box>
+      </main>
       <Footer />
-    </Box>
+    </div>
   );
 }

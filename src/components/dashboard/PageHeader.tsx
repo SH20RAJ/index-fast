@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@/components/ui/mui";
+import { cn } from "@/lib/utils";
 
 interface PageHeaderProps {
   title: string;
@@ -8,21 +8,20 @@ interface PageHeaderProps {
 
 export default function PageHeader({ title, description, action }: PageHeaderProps) {
   return (
-    <Stack
-      direction={{ xs: "column", sm: "row" }}
-      justifyContent="space-between"
-      alignItems={{ xs: "flex-start", sm: "flex-end" }}
-      spacing={{ xs: 2, sm: 0 }}
-    >
-      <Box>
-        <Typography variant="h3" fontWeight={900} color="text.primary" sx={{ mb: 1, fontSize: { xs: "2rem", sm: "2.4rem", md: "3rem" } }}>
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="space-y-1.5">
+        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
           {title}
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
+        </h1>
+        <p className="text-muted-foreground text-sm sm:text-base max-w-[600px]">
           {description}
-        </Typography>
-      </Box>
-      {action ? <Box sx={{ width: { xs: "100%", sm: "auto" } }}>{action}</Box> : null}
-    </Stack>
+        </p>
+      </div>
+      {action && (
+        <div className="w-full sm:w-auto">
+          {action}
+        </div>
+      )}
+    </div>
   );
 }
