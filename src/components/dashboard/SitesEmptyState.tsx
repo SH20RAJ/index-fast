@@ -1,8 +1,8 @@
 "use client";
 
-import { Box, Button, Stack, Typography } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import PublicIcon from "@mui/icons-material/Public";
+import { Box, Button, Stack, Typography } from "@/components/ui/mui";
+import { AddIcon } from "@/components/icons/mui-icons";
+import { PublicIcon } from "@/components/icons/mui-icons";
 import Link from "next/link";
 
 export default function SitesEmptyState() {

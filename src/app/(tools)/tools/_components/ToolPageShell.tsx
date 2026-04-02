@@ -7,7 +7,7 @@ import {
   Grid2 as Grid,
   Stack,
   Typography,
-} from "@mui/material";
+} from "@/components/ui/mui";
 import ToolCta from "./ToolCta";
 
 interface ToolPageShellProps {

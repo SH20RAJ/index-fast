@@ -19,10 +19,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
+} from "@/components/ui/mui";
+import { AddIcon } from "@/components/icons/mui-icons";
+import { DeleteOutlineIcon } from "@/components/icons/mui-icons";
+import { AccessTimeIcon } from "@/components/icons/mui-icons";
 
 export interface CronJob {
   id: string;

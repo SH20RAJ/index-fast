@@ -4,6 +4,7 @@ import { StackProvider, StackTheme } from "@stackframe/stack";
 import { stackClientApp } from "@/stack/client";
 import ThemeRegistry from "@/components/ThemeRegistry";
 import PwaRegister from "@/components/pwa/PwaRegister";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -181,7 +182,9 @@ export default function RootLayout({
         <PwaRegister />
         <StackProvider app={stackClientApp}>
           <StackTheme theme={stackTheme}>
-            <ThemeRegistry>{children}</ThemeRegistry>
+            <ThemeRegistry>
+              <TooltipProvider>{children}</TooltipProvider>
+            </ThemeRegistry>
           </StackTheme>
         </StackProvider>
         <Script

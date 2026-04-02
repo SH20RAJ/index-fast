@@ -13,7 +13,7 @@ import {
   Stack,
   TextField,
   Typography,
-} from "@mui/material";
+} from "@/components/ui/mui";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";

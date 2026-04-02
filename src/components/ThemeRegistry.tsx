@@ -1,11 +1,8 @@
 "use client";
 
-import { ThemeProvider } from "@mui/material/styles";
-import type { PaletteMode } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import React, { createContext, useContext, useMemo } from "react";
-import { createDesignTheme } from "@/lib/design-system";
+
+type PaletteMode = "light" | "dark";
 
 const STORAGE_KEY = "indexfast-color-mode";
 
@@ -48,6 +45,11 @@ export default function ThemeRegistry({ children }: { children: React.ReactNode 
     window.localStorage.setItem(STORAGE_KEY, mode);
   }, [mode]);
 
+  React.useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle("dark", mode === "dark");
+  }, [mode]);
+
   const colorMode = useMemo(
     () => ({
       mode,
@@ -56,16 +58,7 @@ export default function ThemeRegistry({ children }: { children: React.ReactNode 
     [mode]
   );
 
-  const theme = useMemo(() => createDesignTheme(mode), [mode]);
-
   return (
-    <AppRouterCacheProvider options={{ key: "mui" }}>
-      <ColorModeContext.Provider value={colorMode}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {children}
-        </ThemeProvider>
-      </ColorModeContext.Provider>
-    </AppRouterCacheProvider>
+    <ColorModeContext.Provider value={colorMode}>{children}</ColorModeContext.Provider>
   );
 }

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { AppBar, Box, Container, IconButton, Stack, Toolbar, Typography, alpha, useTheme } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
-import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
+import { AppBar, Box, Container, IconButton, Stack, Toolbar, Typography, alpha, useTheme } from "@/components/ui/mui";
+import { MenuIcon } from "@/components/icons/mui-icons";
+import { LightModeRoundedIcon } from "@/components/icons/mui-icons";
+import { DarkModeRoundedIcon } from "@/components/icons/mui-icons";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { useColorMode } from "@/components/ThemeRegistry";
 

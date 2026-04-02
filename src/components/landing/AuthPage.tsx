@@ -10,13 +10,13 @@ import {
   Stack,
   Typography,
   alpha,
-} from "@mui/material";
-import LockRoundedIcon from "@mui/icons-material/LockRounded";
-import RocketLaunchRoundedIcon from "@mui/icons-material/RocketLaunchRounded";
-import ShieldRoundedIcon from "@mui/icons-material/ShieldRounded";
-import QueryStatsRoundedIcon from "@mui/icons-material/QueryStatsRounded";
-import AutoGraphRoundedIcon from "@mui/icons-material/AutoGraphRounded";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+} from "@/components/ui/mui";
+import { LockRoundedIcon } from "@/components/icons/mui-icons";
+import { RocketLaunchRoundedIcon } from "@/components/icons/mui-icons";
+import { ShieldRoundedIcon } from "@/components/icons/mui-icons";
+import { QueryStatsRoundedIcon } from "@/components/icons/mui-icons";
+import { AutoGraphRoundedIcon } from "@/components/icons/mui-icons";
+import { CheckCircleRoundedIcon } from "@/components/icons/mui-icons";
 import { useStackApp } from "@stackframe/stack";
 
 type AuthMode = "sign-in" | "sign-up";

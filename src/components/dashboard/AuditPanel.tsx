@@ -12,13 +12,13 @@ import {
   alpha,
   Divider,
   Chip,
-} from "@mui/material";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import RefreshIcon from "@mui/icons-material/Refresh";
+} from "@/components/ui/mui";
+import { ContentCopyIcon } from "@/components/icons/mui-icons";
+import { WarningAmberIcon } from "@/components/icons/mui-icons";
+import { ErrorOutlineIcon } from "@/components/icons/mui-icons";
+import { InfoOutlinedIcon } from "@/components/icons/mui-icons";
+import { CheckCircleIcon } from "@/components/icons/mui-icons";
+import { RefreshIcon } from "@/components/icons/mui-icons";
 
 export interface AuditIssue {
   type: "error" | "warning" | "info";

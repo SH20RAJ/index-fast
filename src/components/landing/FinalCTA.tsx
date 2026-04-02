@@ -1,127 +1,35 @@
 "use client";
 
-import React from "react";
-import {
-  Box,
-  Container,
-  Typography,
-  Button,
-  Stack,
-  alpha,
-  useTheme,
-} from "@mui/material";
 import { useStackApp } from "@stackframe/stack";
+import { Button } from "@/components/ui/button";
 
 export default function FinalCTA() {
   const stack = useStackApp();
-  const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
 
   return (
-    <Box id="cta" sx={{ py: { xs: 10, md: 16 }, bgcolor: "background.default" }}>
-      <Container maxWidth="lg">
-        <Box
-          sx={{
-            bgcolor: isDark ? "background.paper" : "black",
-            borderRadius: "16px",
-            p: { xs: 6, md: 10 },
-            textAlign: "center",
-            border: `1px solid ${isDark ? theme.palette.divider : "rgba(255,255,255,0.1)"}`,
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          {/* Subtle background decoration */}
-          <Box
-            sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 70%)",
-              pointerEvents: "none",
-            }}
-          />
-
-          <Stack spacing={5} alignItems="center" sx={{ position: "relative" }}>
-            <Stack spacing={2}>
-              <Typography 
-                variant="h2" 
-                sx={{ 
-                  fontWeight: 900, 
-                  color: "white", 
-                  letterSpacing: "-0.04em",
-                  fontSize: { xs: "2.5rem", md: "3.5rem" }
-                }}
-              >
-                Ready to index your content?
-              </Typography>
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  color: "rgba(255,255,255,0.6)", 
-                  maxWidth: "600px", 
-                  mx: "auto", 
-                  fontSize: "1.2rem",
-                  lineHeight: 1.6
-                }}
-              >
-                Stop waiting for search engines to find your pages. Get discovered instantly with the world's most reliable indexing system.
-              </Typography>
-            </Stack>
-
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-              <Button
-                variant="contained"
-                size="large"
-                onClick={() => stack.redirectToSignUp()}
-                sx={{
-                  py: 2,
-                  px: 5,
-                  fontSize: "1rem",
-                  bgcolor: "white",
-                  color: "black",
-                  fontWeight: 800,
-                  borderRadius: "8px",
-                  textTransform: "none",
-                  "&:hover": { 
-                    bgcolor: "rgba(255,255,255,0.9)",
-                  },
-                }}
-              >
+    <section id="cta" className="py-14 sm:py-20">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-foreground px-6 py-12 text-center text-background sm:px-12">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_0%,rgba(255,255,255,0.22),transparent_45%)]" />
+          <div className="relative space-y-5">
+            <h2 className="text-3xl font-black tracking-tight sm:text-5xl">Ready to index your content?</h2>
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-background/75 sm:text-lg">
+              Stop waiting for search engines to find your pages. Get discovered faster with a reliable indexing workflow.
+            </p>
+            <div className="flex flex-col justify-center gap-3 sm:flex-row">
+              <Button variant="secondary" size="lg" onClick={() => stack.redirectToSignUp()}>
                 Get Started Free
               </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                component="a"
-                href="/pricing"
-                sx={{
-                  py: 2,
-                  px: 5,
-                  fontSize: "1rem",
-                  borderColor: "rgba(255,255,255,0.2)",
-                  color: "white",
-                  fontWeight: 800,
-                  borderRadius: "8px",
-                  textTransform: "none",
-                  "&:hover": { 
-                    borderColor: "white", 
-                    bgcolor: "rgba(255,255,255,0.05)" 
-                  },
-                }}
-              >
-                View Pricing
+              <Button variant="outline" size="lg" asChild className="border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background">
+                <a href="/pricing">View Pricing</a>
               </Button>
-            </Stack>
-
-            <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.4)", fontWeight: 600, letterSpacing: "0.02em" }}>
-              NO CREDIT CARD REQUIRED • SETUP IN 2 MINUTES • CANCEL ANYTIME
-            </Typography>
-          </Stack>
-        </Box>
-      </Container>
-    </Box>
+            </div>
+            <p className="text-xs font-medium tracking-[0.14em] text-background/60 uppercase">
+              No card required • Setup in minutes • Cancel anytime
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }

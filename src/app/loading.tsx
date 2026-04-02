@@ -1,7 +1,7 @@
 "use client";
 
-import { Box, CircularProgress, Typography, Stack, alpha } from "@mui/material";
-import BoltIcon from "@mui/icons-material/Bolt";
+import { Box, CircularProgress, Typography, Stack, alpha } from "@/components/ui/mui";
+import { BoltIcon } from "@/components/icons/mui-icons";
 
 export default function Loading() {
   return (

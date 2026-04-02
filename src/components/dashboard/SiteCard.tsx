@@ -10,13 +10,13 @@ import {
   Stack,
   Tooltip,
   Typography,
-} from "@mui/material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import PublicIcon from "@mui/icons-material/Public";
-import BoltIcon from "@mui/icons-material/Bolt";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import SearchIcon from "@mui/icons-material/Search";
-import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+} from "@/components/ui/mui";
+import { DeleteOutlineIcon } from "@/components/icons/mui-icons";
+import { PublicIcon } from "@/components/icons/mui-icons";
+import { BoltIcon } from "@/components/icons/mui-icons";
+import { RefreshIcon } from "@/components/icons/mui-icons";
+import { SearchIcon } from "@/components/icons/mui-icons";
+import { AssessmentOutlinedIcon } from "@/components/icons/mui-icons";
 import Link from "next/link";
 import { Website } from "@/components/dashboard/types";
 

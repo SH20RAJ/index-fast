@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@/components/ui/mui";
 
 interface DashboardPanelProps {
   title: string;

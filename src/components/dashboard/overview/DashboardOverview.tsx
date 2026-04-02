@@ -10,14 +10,14 @@ import {
   Stack,
   Typography,
   alpha,
-} from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import AutoGraphIcon from "@mui/icons-material/AutoGraph";
-import BoltIcon from "@mui/icons-material/Bolt";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
-import HubIcon from "@mui/icons-material/Hub";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+} from "@/components/ui/mui";
+import { AddCircleOutlineIcon } from "@/components/icons/mui-icons";
+import { AutoGraphIcon } from "@/components/icons/mui-icons";
+import { BoltIcon } from "@/components/icons/mui-icons";
+import { CalendarMonthIcon } from "@/components/icons/mui-icons";
+import { DoneAllIcon } from "@/components/icons/mui-icons";
+import { HubIcon } from "@/components/icons/mui-icons";
+import { OpenInNewIcon } from "@/components/icons/mui-icons";
 import type { DashboardData } from "@/app/(dashboard)/actions";
 
 interface DashboardOverviewProps {

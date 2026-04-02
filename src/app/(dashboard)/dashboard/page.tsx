@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box } from "@/components/ui/mui";
 import { redirect } from "next/navigation";
 import DashboardOverview from "@/components/dashboard/overview/DashboardOverview";
 import { loadDashboardData } from "@/app/(dashboard)/actions";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { Alert, Box, Button, Card, CardContent, Chip, Stack, Typography, alpha } from "@mui/material";
+import { Alert, Box, Button, Card, CardContent, Chip, Stack, Typography, alpha } from "@/components/ui/mui";
 import { PLAN_DEFINITIONS, PlanId } from "@/lib/billing/plans";
 import { updateSubscriptionPlanAction } from "@/app/(dashboard)/actions";
 import { defaultActionState } from "@/app/(dashboard)/action-state";

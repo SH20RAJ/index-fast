@@ -13,10 +13,10 @@ import {
   Typography,
   alpha,
   Grid,
-} from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import HistoryIcon from "@mui/icons-material/History";
+} from "@/components/ui/mui";
+import { CheckCircleIcon } from "@/components/icons/mui-icons";
+import { ErrorOutlineIcon } from "@/components/icons/mui-icons";
+import { HistoryIcon } from "@/components/icons/mui-icons";
 import PageHeader from "@/components/dashboard/PageHeader";
 
 type SubmissionRow = {

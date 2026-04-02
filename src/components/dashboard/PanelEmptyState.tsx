@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@/components/ui/mui";
 
 interface PanelEmptyStateProps {
   icon: React.ReactNode;

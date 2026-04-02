@@ -1,34 +1,15 @@
 "use client";
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  Typography,
-  Button,
-  Container,
-  Stack,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemText,
-  Divider,
-  IconButton,
-  alpha,
-  useTheme,
-} from "@mui/material";
-import { useUser } from "@stackframe/stack";
-import Link from "next/link";
-import BoltIcon from "@mui/icons-material/Bolt";
-import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
-import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
-import { useColorMode } from "@/components/ThemeRegistry";
 import { useState } from "react";
+import Link from "next/link";
+import { useUser } from "@stackframe/stack";
+import { Bolt, Menu, Moon, Sun, X } from "lucide-react";
+import { useColorMode } from "@/components/ThemeRegistry";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 
 export default function Navbar() {
   const user = useUser();
-  const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { mode, toggleColorMode } = useColorMode();
 
@@ -39,257 +20,88 @@ export default function Navbar() {
   ];
 
   return (
-    <AppBar
-      position="sticky"
-      sx={{
-        top: 0,
-        bgcolor: mode === "dark" ? "background.default" : "white",
-        backdropFilter: "blur(14px)",
-        boxShadow: "none",
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        zIndex: (theme) => theme.zIndex.appBar,
-        transition: "all 0.2s ease",
-      }}
-    >
-      <Container maxWidth="lg">
-        <Toolbar
-          disableGutters
-          sx={{
-            justifyContent: "space-between",
-            height: 72,
-          }}
-        >
-          {/* Logo */}
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={1.25}
-            component={Link}
-            href="/"
-            sx={{
-              textDecoration: "none",
-              color: "inherit",
-              "& svg": { color: "primary.main" },
-              transition: "opacity 0.2s",
-              "&:hover": { opacity: 0.8 },
-            }}
-          >
-            <Box
-              sx={{
-                width: 32,
-                height: 32,
-                borderRadius: "8px",
-                bgcolor: "primary.main",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <BoltIcon sx={{ color: "white", fontSize: 18 }} />
-            </Box>
-            <Typography
-              variant="h6"
-              sx={{
-                fontSize: "1.1rem",
-                fontWeight: 900,
-                color: "text.primary",
-                letterSpacing: "-0.02em",
-                display: { xs: "none", sm: "block" }
-              }}
-            >
-              IndexFast
-            </Typography>
-          </Stack>
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl">
+      <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="group inline-flex items-center gap-2.5">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Bolt className="h-4 w-4" />
+          </span>
+          <span className="text-base font-black tracking-tight">IndexFast</span>
+        </Link>
 
-          {/* Center Links */}
-          <Stack
-            direction="row"
-            spacing={0.5}
-            sx={{
-              display: { xs: "none", md: "flex" },
-              position: "absolute",
-              left: "50%",
-              transform: "translateX(-50%)"
-            }}
-          >
-            {primaryLinks.map((item) => (
-              <Button
-                key={item.label}
-                variant="text"
-                component={Link}
-                href={item.href}
-                sx={{
-                  borderRadius: "8px",
-                  color: "text.secondary",
-                  fontSize: "0.9rem",
-                  fontWeight: 600,
-                  px: 2,
-                  "&:hover": {
-                    bgcolor: alpha(theme.palette.text.primary, 0.04),
-                    color: "text.primary",
-                  },
-                }}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </Stack>
-
-          {/* Right Actions */}
-          <Stack direction="row" spacing={1.5} alignItems="center">
-            <IconButton
-              aria-label="Toggle dark mode"
-              onClick={toggleColorMode}
-              size="small"
-              sx={{
-                width: 38,
-                height: 38,
-                border: `1px solid ${theme.palette.divider}`,
-                borderRadius: "8px",
-                color: mode === "dark" ? "secondary.main" : "text.secondary",
-              }}
-            >
-              {mode === "dark" ? (
-                <LightModeRoundedIcon sx={{ fontSize: 18 }} />
-              ) : (
-                <DarkModeRoundedIcon sx={{ fontSize: 18 }} />
-              )}
-            </IconButton>
-
-            {user ? (
-              <Button
-                variant="contained"
-                component={Link}
-                href="/dashboard"
-                sx={{
-                  display: { xs: "none", sm: "inline-flex" },
-                  bgcolor: "primary.main",
-                  color: "white",
-                  fontWeight: 700,
-                }}
-              >
-                Dashboard
-              </Button>
-            ) : (
-              <>
-                <Button
-                  component={Link}
-                  href="/sign-in"
-                  sx={{
-                    color: "text.primary",
-                    fontWeight: 700,
-                    fontSize: "0.875rem",
-                    display: { xs: "none", sm: "inline-flex" },
-                    px: 2,
-                  }}
-                >
-                  Sign In
-                </Button>
-                <Button
-                  variant="contained"
-                  component={Link}
-                  href="/sign-up"
-                  sx={{
-                    bgcolor: "primary.main",
-                    color: mode === "dark" ? "black" : "white",
-                    fontWeight: 800,
-                    fontSize: "0.875rem",
-                    px: 2.5,
-                  }}
-                >
-                  Get Started
-                </Button>
-              </>
-            )}
-
-            <IconButton
-              aria-label="Open menu"
-              onClick={() => setMobileOpen(true)}
-              sx={{ display: { xs: "inline-flex", md: "none" } }}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Stack>
-        </Toolbar>
-      </Container>
-
-      <Drawer
-        anchor="right"
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        sx={{
-          display: { xs: "block", md: "none" },
-          "& .MuiDrawer-paper": {
-            width: "100%",
-            maxWidth: 320,
-            p: 3,
-            bgcolor: "background.paper",
-          },
-        }}
-      >
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 4 }}>
-          <Typography variant="h6" fontWeight={900}>
-            Navigation
-          </Typography>
-          <IconButton onClick={() => setMobileOpen(false)} aria-label="Close menu">
-            <CloseIcon />
-          </IconButton>
-        </Stack>
-
-        <List sx={{ p: 0 }}>
+        <div className="hidden items-center gap-1 rounded-xl border border-border/70 bg-card/60 p-1 md:flex">
           {primaryLinks.map((item) => (
-            <ListItemButton
-              key={item.label}
-              component={Link}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              sx={{ borderRadius: "8px", mb: 0.5 }}
-            >
-              <ListItemText
-                primary={item.label}
-                primaryTypographyProps={{ fontWeight: 700, fontSize: "1.1rem" }}
-              />
-            </ListItemButton>
+            <Button key={item.label} variant="ghost" asChild className="h-8 px-3 text-sm text-muted-foreground hover:text-foreground">
+              <Link href={item.href}>{item.label}</Link>
+            </Button>
           ))}
-        </List>
+        </div>
 
-        <Box sx={{ mt: "auto", pt: 4 }}>
-          <Divider sx={{ mb: 3 }} />
-          <Stack spacing={1.5}>
-            {user ? (
-              <Button
-                variant="contained"
-                fullWidth
-                component={Link}
-                href="/dashboard"
-                onClick={() => setMobileOpen(false)}
-              >
-                Dashboard
+        <div className="hidden items-center gap-2 md:flex">
+          <Button variant="outline" size="icon" onClick={toggleColorMode} aria-label="Toggle dark mode">
+            {mode === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+          {user ? (
+            <Button asChild>
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link href="/sign-in">Sign In</Link>
               </Button>
-            ) : (
-              <>
-                <Button
-                  component={Link}
-                  href="/sign-in"
-                  variant="outlined"
-                  fullWidth
-                  sx={{ color: "text.primary", borderColor: "divider" }}
-                >
-                  Sign In
+              <Button asChild>
+                <Link href="/sign-up">Get Started</Link>
+              </Button>
+            </>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2 md:hidden">
+          <Button variant="outline" size="icon" onClick={toggleColorMode} aria-label="Toggle dark mode">
+            {mode === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger render={<Button variant="outline" size="icon" aria-label="Open menu" />}>
+              <Menu className="h-4 w-4" />
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[88vw] max-w-sm">
+              <SheetHeader>
+                <SheetTitle className="flex items-center gap-2 text-left">
+                  <Bolt className="h-4 w-4" /> IndexFast
+                </SheetTitle>
+              </SheetHeader>
+              <div className="mt-6 grid gap-2">
+                {primaryLinks.map((item) => (
+                  <Button key={item.label} variant="ghost" asChild className="justify-start" onClick={() => setMobileOpen(false)}>
+                    <Link href={item.href}>{item.label}</Link>
+                  </Button>
+                ))}
+              </div>
+              <Separator className="my-6" />
+              <div className="grid gap-2">
+                {user ? (
+                  <Button asChild onClick={() => setMobileOpen(false)}>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="outline" asChild onClick={() => setMobileOpen(false)}>
+                      <Link href="/sign-in">Sign In</Link>
+                    </Button>
+                    <Button asChild onClick={() => setMobileOpen(false)}>
+                      <Link href="/sign-up">Get Started</Link>
+                    </Button>
+                  </>
+                )}
+                <Button variant="ghost" className="justify-start" onClick={() => setMobileOpen(false)}>
+                  <X className="mr-2 h-4 w-4" /> Close
                 </Button>
-                <Button
-                  component={Link}
-                  href="/sign-up"
-                  variant="contained"
-                  fullWidth
-                >
-                  Get Started
-                </Button>
-              </>
-            )}
-          </Stack>
-        </Box>
-      </Drawer>
-    </AppBar>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </nav>
+    </header>
   );
 }

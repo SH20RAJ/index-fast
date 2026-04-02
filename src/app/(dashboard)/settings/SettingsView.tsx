@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Chip, Grid, Stack, Typography, alpha } from "@mui/material";
+import { Box, Button, Card, CardContent, Chip, Grid, Stack, Typography, alpha } from "@/components/ui/mui";
 import type { User } from "@/lib/db/schema";
 import type { PlanId } from "@/lib/billing/plans";
 import PageHeader from "@/components/dashboard/PageHeader";
