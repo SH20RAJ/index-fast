@@ -31,6 +31,12 @@ function ratio(used: number, limit: number) {
   return Math.min(100, Math.round((used / limit) * 100));
 }
 
+function formatNumber(num: number) {
+  if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+  return num.toString();
+}
+
 export default function DashboardOverview({ data }: DashboardOverviewProps) {
   const websiteRatio = ratio(data.usage.websitesUsed, data.usage.websitesLimit);
   const submissionRatio = ratio(data.usage.submissionsUsed, data.usage.submissionsLimit);
@@ -41,13 +47,22 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
         sx={{
           borderRadius: "20px",
           border: "1px solid",
-          borderColor: "divider",
-          background: "linear-gradient(120deg, rgba(15,23,42,0.94) 0%, rgba(30,41,59,0.92) 100%)",
+          borderColor: alpha("#1E293B", 0.1),
+          background: "linear-gradient(135deg, #0F172A 0%, #1E293B 100%)",
           color: "#F8FAFC",
-          boxShadow: "none",
+          boxShadow: "0 10px 30px -10px rgba(15,23,42,0.5)",
+          position: "relative",
+          overflow: "hidden",
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            top: 0, right: 0, bottom: 0, left: 0,
+            background: "radial-gradient(circle at top right, rgba(14,165,233,0.15), transparent 60%)",
+            pointerEvents: "none",
+          }
         }}
       >
-        <CardContent sx={{ p: { xs: 2.5, md: 3.5 } }}>
+        <CardContent sx={{ p: { xs: 3, md: 4 } }}>
           <Stack spacing={2.25}>
             <Stack direction={{ xs: "column", md: "row" }} spacing={2} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }}>
               <Box>
@@ -99,14 +114,30 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
 
             <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
               <Chip
-                icon={<BoltIcon sx={{ color: "#0F172A !important" }} />}
+                icon={<BoltIcon sx={{ color: "inherit !important", fontSize: "1rem" }} />}
                 label={`${data.plan.name} plan`}
-                sx={{ bgcolor: "#FDE68A", color: "#0F172A", fontWeight: 800 }}
+                sx={{
+                  bgcolor: alpha("#FDE68A", 1),
+                  color: "#0F172A",
+                  fontWeight: 900,
+                  fontSize: "0.75rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  height: 28,
+                }}
               />
               <Chip
-                icon={<CalendarMonthIcon sx={{ color: "#0F172A !important" }} />}
+                icon={<CalendarMonthIcon sx={{ color: "inherit !important", fontSize: "1rem" }} />}
                 label={`$${data.plan.priceMonthly}/month`}
-                sx={{ bgcolor: "#FEF3C7", color: "#0F172A", fontWeight: 800 }}
+                sx={{
+                  bgcolor: alpha("#FEF3C7", 0.9),
+                  color: "#0F172A",
+                  fontWeight: 900,
+                  fontSize: "0.75rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  height: 28,
+                }}
               />
             </Stack>
           </Stack>
@@ -115,24 +146,26 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
 
       <Grid container spacing={2}>
         {[
-          { label: "Sites in Workspace", value: data.websitesCount, icon: <HubIcon />, color: "#0EA5E9" },
-          { label: "Submissions This Month", value: data.submissionsThisMonth, icon: <AutoGraphIcon />, color: "#475569" },
-          { label: "Successful This Month", value: data.successfulThisMonth, icon: <DoneAllIcon />, color: "#0F766E" },
-          { label: "Plan Capacity", value: `${data.usage.websitesLimit} sites`, icon: <BoltIcon />, color: "#334155" },
+          { label: "Active Websites", value: formatNumber(data.websitesCount), icon: <HubIcon />, color: "#0EA5E9" },
+          { label: "Submissions (MTD)", value: formatNumber(data.submissionsThisMonth), icon: <AutoGraphIcon />, color: "#6366F1" },
+          { label: "Successful (MTD)", value: formatNumber(data.successfulThisMonth), icon: <DoneAllIcon />, color: "#10B981" },
+          { label: "Plan Capacity", value: `${formatNumber(data.usage.websitesLimit)} sites`, icon: <BoltIcon />, color: "#F59E0B" },
         ].map((metric) => (
           <Grid key={metric.label} size={{ xs: 12, sm: 6, lg: 3 }}>
-            <Card sx={{ borderRadius: "14px", border: "1px solid", borderColor: "divider", boxShadow: "none" }}>
-              <CardContent sx={{ p: 2.25 }}>
-                <Stack spacing={1.25}>
-                  <Avatar sx={{ width: 36, height: 36, bgcolor: alpha(metric.color, 0.16), color: metric.color }}>
+            <Card sx={{ borderRadius: "16px", border: "1px solid", borderColor: "divider", boxShadow: "none", transition: "all 0.2s", "&:hover": { borderColor: metric.color, bgcolor: alpha(metric.color, 0.02) } }}>
+              <CardContent sx={{ p: 2.5 }}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Avatar sx={{ width: 44, height: 44, bgcolor: alpha(metric.color, 0.1), color: metric.color, borderRadius: "12px" }}>
                     {metric.icon}
                   </Avatar>
-                  <Typography variant="h5" sx={{ fontWeight: 900 }}>
-                    {metric.value}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {metric.label}
-                  </Typography>
+                  <Box>
+                    <Typography variant="h5" sx={{ fontWeight: 900, mb: 0.1 }}>
+                      {metric.value}
+                    </Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 700, color: "text.secondary", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      {metric.label}
+                    </Typography>
+                  </Box>
                 </Stack>
               </CardContent>
             </Card>
@@ -150,39 +183,39 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
                 </Typography>
 
                 <Box>
-                  <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.75 }}>
-                    <Typography variant="body2" color="text.secondary">Websites</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 800 }}>
-                      {data.usage.websitesUsed} / {data.usage.websitesLimit}
+                  <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 700 }}>Websites</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: "text.secondary" }}>
+                      {data.usage.websitesUsed} <Box component="span" sx={{ opacity: 0.5, fontWeight: 500 }}>/</Box> {formatNumber(data.usage.websitesLimit)}
                     </Typography>
                   </Stack>
                   <LinearProgress
                     variant="determinate"
                     value={websiteRatio}
                     sx={{
-                      height: 9,
-                      borderRadius: "999px",
-                      bgcolor: alpha("#0F766E", 0.12),
-                      "& .MuiLinearProgress-bar": { bgcolor: "#0F766E" },
+                      height: 8,
+                      borderRadius: "4px",
+                      bgcolor: alpha("#0EA5E9", 0.1),
+                      "& .MuiLinearProgress-bar": { bgcolor: "#0EA5E9", borderRadius: "4px" },
                     }}
                   />
                 </Box>
-
+ 
                 <Box>
-                  <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.75 }}>
-                    <Typography variant="body2" color="text.secondary">Monthly submissions</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 800 }}>
-                      {data.usage.submissionsUsed} / {data.usage.submissionsLimit}
+                  <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 700 }}>Monthly submissions</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 800, color: "text.secondary" }}>
+                      {formatNumber(data.usage.submissionsUsed)} <Box component="span" sx={{ opacity: 0.5, fontWeight: 500 }}>/</Box> {formatNumber(data.usage.submissionsLimit)}
                     </Typography>
                   </Stack>
                   <LinearProgress
                     variant="determinate"
                     value={submissionRatio}
                     sx={{
-                      height: 9,
-                      borderRadius: "999px",
-                      bgcolor: alpha("#B45309", 0.14),
-                      "& .MuiLinearProgress-bar": { bgcolor: "#B45309" },
+                      height: 8,
+                      borderRadius: "4px",
+                      bgcolor: alpha("#6366F1", 0.1),
+                      "& .MuiLinearProgress-bar": { bgcolor: "#6366F1", borderRadius: "4px" },
                     }}
                   />
                 </Box>
@@ -214,7 +247,19 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
                 </Stack>
 
                 {data.recentSubmissions.length === 0 ? (
-                  <Typography color="text.secondary">No submissions yet. Run your first sync to start the timeline.</Typography>
+                  <Box sx={{
+                    py: 6,
+                    textAlign: "center",
+                    bgcolor: alpha("#0EA5E9", 0.03),
+                    borderRadius: "12px",
+                    border: "1px dashed",
+                    borderColor: alpha("#0EA5E9", 0.2),
+                  }}>
+                    <AutoGraphIcon sx={{ fontSize: 40, color: alpha("#0EA5E9", 0.3), mb: 1.5 }} />
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary", px: 4 }}>
+                      No submissions yet. Add a website and run your first sync to start the timeline.
+                    </Typography>
+                  </Box>
                 ) : (
                   <Stack spacing={1}>
                     {data.recentSubmissions.map((entry) => (
@@ -267,7 +312,19 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
               Highest Activity Sites
             </Typography>
             {data.topSites.length === 0 ? (
-              <Typography color="text.secondary">No sites yet. Add your first website to populate this leaderboard.</Typography>
+              <Box sx={{
+                py: 5,
+                textAlign: "center",
+                bgcolor: alpha("#6366F1", 0.03),
+                borderRadius: "12px",
+                border: "1px dashed",
+                borderColor: alpha("#6366F1", 0.2),
+              }}>
+                <HubIcon sx={{ fontSize: 36, color: alpha("#6366F1", 0.3), mb: 1.5 }} />
+                <Typography variant="body2" sx={{ fontWeight: 600, color: "text.secondary" }}>
+                  No active sites yet.
+                </Typography>
+              </Box>
             ) : (
               <Stack spacing={1}>
                 {data.topSites.map((site) => (

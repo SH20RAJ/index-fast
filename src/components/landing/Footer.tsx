@@ -85,9 +85,6 @@ export default function Footer() {
                 <Link href="/contact" style={{ textDecoration: "none" }}>
                   <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500, "&:hover": { color: "primary.main" } }}>Contact Us</Typography>
                 </Link>
-                <Link href="https://twitter.com/indexfast" style={{ textDecoration: "none" }}>
-                  <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500, "&:hover": { color: "primary.main" } }}>Twitter / X</Typography>
-                </Link>
               </Stack>
             </Stack>
           </Stack>
