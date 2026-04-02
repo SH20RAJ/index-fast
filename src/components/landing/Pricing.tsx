@@ -140,7 +140,12 @@ export default function Pricing() {
                       </Typography>
                       <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 600 }}>/mo</Typography>
                     </Stack>
-                    <Typography variant="body2" sx={{ color: "text.secondary", mt: 1, lineHeight: 1.5 }}>
+                    {p.trialDays && (
+                      <Typography variant="caption" sx={{ color: "primary.main", fontWeight: 800, mt: 0.5 }}>
+                        Includes {p.trialDays}-day free trial
+                      </Typography>
+                    )}
+                    <Typography variant="body2" sx={{ color: "text.secondary", mt: p.trialDays ? 1 : 1.5, lineHeight: 1.5 }}>
                       {p.tagline}
                     </Typography>
                   </Stack>

@@ -49,6 +49,11 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
                 <Typography variant="body2" color="text.secondary">
                   {plan.websiteLimit} sites · {plan.submissionLimitMonthly.toLocaleString()} submissions/month · {plan.features.includes("Universal pinging") ? "Includes ping network" : "No ping network"}
                 </Typography>
+                {plan.trialDays && (
+                  <Typography variant="caption" sx={{ color: "#0F766E", fontWeight: 800 }}>
+                    ✨ Includes {plan.trialDays}-day free trial
+                  </Typography>
+                )}
 
                 <Box component="form" action={formAction}>
                   <input type="hidden" name="plan" value={plan.id} />

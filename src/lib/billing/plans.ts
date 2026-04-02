@@ -13,6 +13,7 @@ export interface PlanDefinition {
   features: string[];
   ctaLabel: string;
   popular?: boolean;
+  trialDays?: number;
 }
 
 export const PLAN_DEFINITIONS: Record<PlanId, PlanDefinition> = {
@@ -40,6 +41,7 @@ export const PLAN_DEFINITIONS: Record<PlanId, PlanDefinition> = {
     name: "Pro",
     tagline: "For growth teams scaling traffic and AI reach.",
     priceMonthly: 49,
+    trialDays: 7,
     websiteLimit: 120, // Effectively "Unlimited" (or used as numeric check)
     submissionLimitDaily: 50000,
     submissionLimitMonthly: 1000000, // Unlimited URLs interpreted as high limit
