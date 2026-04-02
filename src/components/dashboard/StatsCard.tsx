@@ -1,4 +1,5 @@
-import { Box, Card, CardContent, Stack, Typography, alpha } from "@/components/ui/mui";
+import { Box, Card, CardContent, Stack, Typography } from "@/components/ui/mui";
+import { alpha } from "@/lib/color";
 
 interface StatsCardProps {
   title: string;

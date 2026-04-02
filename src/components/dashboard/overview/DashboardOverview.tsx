@@ -9,8 +9,8 @@ import {
   LinearProgress,
   Stack,
   Typography,
-  alpha,
 } from "@/components/ui/mui";
+import { alpha } from "@/lib/color";
 import { AddCircleOutlineIcon } from "@/components/icons/mui-icons";
 import { AutoGraphIcon } from "@/components/icons/mui-icons";
 import { BoltIcon } from "@/components/icons/mui-icons";

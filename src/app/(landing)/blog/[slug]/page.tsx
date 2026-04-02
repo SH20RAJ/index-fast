@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Divider,
-  Grid2 as Grid,
-  Stack,
-  Typography,
-} from "@/components/ui/mui";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { BLOG_POSTS, getBlogPostBySlug } from "@/lib/blog-catalog";
@@ -99,238 +92,92 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "white", display: "flex", flexDirection: "column" }}>
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
-      <Box component="main" sx={{ py: { xs: 8, md: 10 }, flex: 1 }}>
-        <Container maxWidth="md">
-          <Stack spacing={4}>
-            {/* Header */}
-            <Stack spacing={2.5}>
-              <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
-                <Box
-                  sx={{
-                    px: 1.5,
-                    py: 0.5,
-                    bgcolor: "#F9FAFB",
-                    border: "1px solid #E5E7EB",
-                    borderRadius: "6px",
-                    fontSize: "0.75rem",
-                    fontWeight: 600,
-                  }}
-                >
-                  {post.primaryKeyword}
-                </Box>
-                <Box
-                  sx={{
-                    px: 1.5,
-                    py: 0.5,
-                    border: "1px solid #E5E7EB",
-                    borderRadius: "6px",
-                    fontSize: "0.75rem",
-                    fontWeight: 500,
-                    color: "text.secondary",
-                  }}
-                >
-                  {post.readingMinutes} min read
-                </Box>
-              </Stack>
+      <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
+        <div className="space-y-4">
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="secondary" className="text-[11px] uppercase">{post.primaryKeyword}</Badge>
+            <Badge variant="outline" className="text-[11px]">{post.readingMinutes} min read</Badge>
+          </div>
 
-              <Typography
-                variant="h2"
-                sx={{
-                  fontWeight: 800,
-                  letterSpacing: "-0.04em",
-                  lineHeight: 1.1,
-                }}
-              >
-                {post.title}
-              </Typography>
+          <h1 className="text-4xl font-black tracking-tight sm:text-5xl">{post.title}</h1>
+          <p className="text-sm text-muted-foreground">By {post.author} • {post.publishedAt}</p>
+          <Separator />
+          <p className="text-xl leading-relaxed">{post.hero}</p>
 
-              <Typography variant="body2" sx={{ color: "text.secondary", fontWeight: 500 }}>
-                By {post.author} · {post.publishedAt}
-              </Typography>
-            </Stack>
+          {post.sections.map((section) => (
+            <section key={section.heading} className="space-y-3 pt-4">
+              <h2 className="text-2xl font-bold tracking-tight">{section.heading}</h2>
+              {section.paragraphs.map((paragraph, index) => (
+                <p key={`${section.heading}-${index}`} className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  {paragraph}
+                </p>
+              ))}
+              {section.bullets ? (
+                <ul className="list-disc space-y-2 pl-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  {section.bullets.map((bullet) => (
+                    <li key={bullet}>{bullet}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </section>
+          ))}
 
-            <Divider sx={{ borderColor: "#E5E7EB" }} />
+          <section className="space-y-4 pt-6">
+            <h2 className="text-2xl font-bold tracking-tight">Frequently asked questions</h2>
+            <div className="divide-y divide-border rounded-xl border border-border/70 bg-card/70">
+              {post.faqs.map((faq) => (
+                <div key={faq.question} className="space-y-2 p-4">
+                  <h3 className="font-semibold">{faq.question}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
-            {/* Hero Text */}
-            <Typography
-              variant="body1"
-              sx={{
-                fontSize: "1.25rem",
-                lineHeight: 1.6,
-                color: "text.primary",
-                fontWeight: 500,
-              }}
-            >
-              {post.hero}
-            </Typography>
+          <Card className="my-6 border-border/70 bg-card/70">
+            <CardContent className="space-y-3 p-5">
+              <h3 className="text-xl font-bold tracking-tight">Want this as a repeatable workflow?</h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Use IndexFast to run these indexing patterns automatically: monitor sitemaps, submit new URLs, and track discovery progress from one dashboard.
+              </p>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <Button asChild>
+                  <Link href="/sign-up">Get Started Free</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href="/">See platform overview</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* Sections */}
-            {post.sections.map((section) => (
-              <Stack key={section.heading} spacing={2}>
-                <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em", mt: 2 }}>
-                  {section.heading}
-                </Typography>
-                {section.paragraphs.map((paragraph, index) => (
-                  <Typography
-                    key={`${section.heading}-${index}`}
-                    variant="body1"
-                    sx={{
-                      lineHeight: 1.8,
-                      color: "text.secondary",
-                      fontSize: "1.125rem",
-                    }}
-                  >
-                    {paragraph}
-                  </Typography>
-                ))}
-                {section.bullets ? (
-                  <Box component="ul" sx={{ pl: 3, my: 1 }}>
-                    {section.bullets.map((bullet) => (
-                      <Box component="li" key={bullet} sx={{ mb: 1.5 }}>
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            lineHeight: 1.7,
-                            color: "text.secondary",
-                            fontSize: "1.125rem",
-                          }}
-                        >
-                          {bullet}
-                        </Typography>
-                      </Box>
-                    ))}
-                  </Box>
-                ) : null}
-              </Stack>
-            ))}
+          <section className="space-y-3 pt-2">
+            <h2 className="text-xl font-bold tracking-tight">Related guides</h2>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {relatedPosts.map((related) => (
+                <Link key={related.slug} href={`/blog/${related.slug}`}>
+                  <Card className="h-full border-border/70 bg-card/70 transition-colors hover:border-primary/40">
+                    <CardContent className="p-4">
+                      <p className="text-sm font-semibold leading-snug">{related.title}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </section>
 
-            {/* FAQ */}
-            <Stack spacing={3} sx={{ pt: 4, pb: 2 }}>
-              <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
-                Frequently asked questions
-              </Typography>
-              <Stack spacing={0}>
-                {post.faqs.map((faq) => (
-                  <Box key={faq.question} sx={{ py: 3, borderBottom: "1px solid #E5E7EB" }}>
-                    <Stack spacing={1.5}>
-                      <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: "-0.01em" }}>
-                        {faq.question}
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          color: "text.secondary",
-                          lineHeight: 1.7,
-                          fontSize: "1.05rem",
-                        }}
-                      >
-                        {faq.answer}
-                      </Typography>
-                    </Stack>
-                  </Box>
-                ))}
-              </Stack>
-            </Stack>
-
-            {/* CTA */}
-            <Box
-              sx={{
-                p: 5,
-                border: "1px solid #E5E7EB",
-                borderRadius: "16px",
-                bgcolor: "#F9FAFB",
-                my: 4,
-              }}
-            >
-              <Stack spacing={2.5}>
-                <Typography variant="h5" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
-                  Want this as a repeatable workflow?
-                </Typography>
-                <Typography variant="body1" sx={{ color: "text.secondary", lineHeight: 1.6 }}>
-                  Use IndexFast to run these indexing patterns automatically: monitor sitemaps, submit new URLs, and
-                  track discovery progress from one dashboard.
-                </Typography>
-                <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-                  <Link href="/sign-up" style={{ textDecoration: "none" }}>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        px: 3,
-                        py: 1.2,
-                        borderRadius: "8px",
-                      }}
-                    >
-                      Get Started Free
-                    </Button>
-                  </Link>
-                  <Link href="/" style={{ textDecoration: "none" }}>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        px: 3,
-                        py: 1.2,
-                        borderRadius: "8px",
-                        borderColor: "#E5E7EB",
-                        color: "text.primary",
-                        "&:hover": { borderColor: "#7C3AED", bgcolor: "transparent" },
-                      }}
-                    >
-                      See platform overview
-                    </Button>
-                  </Link>
-                </Stack>
-              </Stack>
-            </Box>
-
-            {/* Related */}
-            <Stack spacing={3} sx={{ pt: 2 }}>
-              <Typography variant="h5" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
-                Related guides
-              </Typography>
-              <Grid container spacing={3}>
-                {relatedPosts.map((related) => (
-                  <Grid key={related.slug} size={{ xs: 12, sm: 4 }}>
-                    <Link href={`/blog/${related.slug}`} style={{ textDecoration: "none" }}>
-                      <Card
-                        sx={{
-                          height: "100%",
-                          border: "1px solid #E5E7EB",
-                          boxShadow: "none",
-                          borderRadius: "12px",
-                          transition: "border-color 0.2s ease",
-                          "&:hover": { borderColor: "#7C3AED" },
-                        }}
-                      >
-                        <CardContent sx={{ p: 2.5 }}>
-                          <Stack spacing={1}>
-                            <Typography variant="subtitle1" sx={{ fontWeight: 800, lineHeight: 1.3 }}>
-                              {related.title}
-                            </Typography>
-                          </Stack>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  </Grid>
-                ))}
-              </Grid>
-            </Stack>
-
-            <Box sx={{ pt: 4 }}>
-              <Link href="/blog" style={{ textDecoration: "none" }}>
-                <Button sx={{ color: "text.secondary", fontWeight: 600 }}>← Back to blog index</Button>
-              </Link>
-            </Box>
-          </Stack>
-        </Container>
-      </Box>
+          <div className="pt-4">
+            <Button variant="ghost" asChild>
+              <Link href="/blog">Back to all posts</Link>
+            </Button>
+          </div>
+        </div>
+      </main>
       <Footer />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
-    </Box>
+    </div>
   );
 }

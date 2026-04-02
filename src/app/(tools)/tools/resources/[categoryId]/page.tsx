@@ -10,8 +10,8 @@ import {
   Divider,
   Stack,
   Typography,
-  alpha,
 } from "@/components/ui/mui";
+import { alpha } from "@/lib/color";
 import {
   EXTERNAL_RESOURCE_CATEGORIES,
   getExternalResourceCategoryById,

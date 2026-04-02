@@ -61,7 +61,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={nativeButton ? (props.type ?? "button") : undefined}
         {...props}
-      />
+      >
+        {children}
+      </Comp>
     )
   },
 )

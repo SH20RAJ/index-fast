@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Container, Typography, Card, Stack, alpha } from "@/components/ui/mui";
+import { Box, Container, Typography, Card, Stack } from "@/components/ui/mui";
+import { alpha } from "@/lib/color";
 import { CheckCircleOutlineIcon } from "@/components/icons/mui-icons";
 
 export default function StatusView() {

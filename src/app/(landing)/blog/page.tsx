@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Box,
-  Card,
-  CardContent,
-  Container,
-  Grid2 as Grid,
-  Stack,
-  Typography,
-} from "@/components/ui/mui";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { BLOG_POSTS } from "@/lib/blog-catalog";
@@ -62,127 +55,43 @@ const blogCollectionJsonLd = {
 
 export default function BlogIndexPage() {
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "white", display: "flex", flexDirection: "column" }}>
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
-      <Box component="main" sx={{ py: { xs: 8, md: 10 }, flex: 1 }}>
-        <Container maxWidth="lg">
-          <Stack spacing={2.5} sx={{ mb: 7 }}>
-            <Typography
-              variant="overline"
-              sx={{
-                color: "text.secondary",
-                fontWeight: 700,
-                letterSpacing: "0.1em",
-                fontSize: "0.75rem",
-              }}
-            >
-              Editorial Hub
-            </Typography>
-            <Typography
-              variant="h2"
-              sx={{
-                maxWidth: 920,
-                fontWeight: 800,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.1,
-              }}
-            >
-              SEO playbooks for indexing and conversion-led growth
-            </Typography>
-            <Typography
-              variant="h6"
-              sx={{
-                maxWidth: 800,
-                color: "text.secondary",
-                fontWeight: 400,
-                lineHeight: 1.6,
-              }}
-            >
-              Frameworks and operating models for teams shipping content weekly.
-            </Typography>
-          </Stack>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <div className="mb-8 space-y-3 sm:mb-10">
+          <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Editorial Hub</p>
+          <h1 className="max-w-4xl text-4xl font-black tracking-tight sm:text-5xl">
+            SEO playbooks for indexing and conversion-led growth
+          </h1>
+          <p className="max-w-3xl text-lg text-muted-foreground">
+            Frameworks and operating models for teams shipping content weekly.
+          </p>
+        </div>
 
-          <Grid container spacing={3}>
-            {BLOG_POSTS.map((post) => (
-              <Grid key={post.slug} size={{ xs: 12, md: 6 }}>
-                <Link href={`/blog/${post.slug}`} style={{ textDecoration: "none", display: "block", height: "100%" }}>
-                  <Card
-                    sx={{
-                      height: "100%",
-                      border: "1px solid #E5E7EB",
-                      boxShadow: "none",
-                      borderRadius: "12px",
-                      transition: "border-color 0.2s ease",
-                      "&:hover": {
-                        borderColor: "#7C3AED",
-                      },
-                    }}
-                  >
-                    <CardContent sx={{ p: 4 }}>
-                      <Stack spacing={2}>
-                        <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap" }}>
-                          <Box
-                            sx={{
-                              px: 1.5,
-                              py: 0.5,
-                              bgcolor: "#F9FAFB",
-                              border: "1px solid #E5E7EB",
-                              borderRadius: "6px",
-                              fontSize: "0.75rem",
-                              fontWeight: 600,
-                              color: "text.primary",
-                            }}
-                          >
-                            {post.primaryKeyword}
-                          </Box>
-                          <Box
-                            sx={{
-                              px: 1.5,
-                              py: 0.5,
-                              bgcolor: "transparent",
-                              border: "1px solid #E5E7EB",
-                              borderRadius: "6px",
-                              fontSize: "0.75rem",
-                              fontWeight: 500,
-                              color: "text.secondary",
-                            }}
-                          >
-                            {post.readingMinutes} min read
-                          </Box>
-                        </Stack>
-                        <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
-                          {post.title}
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            color: "text.secondary",
-                            lineHeight: 1.6,
-                            display: "-webkit-box",
-                            WebkitLineClamp: 3,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                          }}
-                        >
-                          {post.description}
-                        </Typography>
-                        <Typography variant="caption" sx={{ color: "text.disabled", fontWeight: 500 }}>
-                          Published {post.publishedAt}
-                        </Typography>
-                      </Stack>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+        <div className="grid gap-4 md:grid-cols-2">
+          {BLOG_POSTS.map((post) => (
+            <Link key={post.slug} href={`/blog/${post.slug}`} className="block h-full">
+              <Card className="h-full border-border/70 bg-card/70 transition-colors hover:border-primary/40">
+                <CardContent className="space-y-3 p-5 sm:p-6">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="text-[11px] uppercase">
+                      {post.primaryKeyword}
+                    </Badge>
+                    <Badge variant="outline" className="text-[11px]">
+                      {post.readingMinutes} min read
+                    </Badge>
+                  </div>
+                  <h2 className="text-2xl font-bold tracking-tight">{post.title}</h2>
+                  <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{post.description}</p>
+                  <p className="text-xs text-muted-foreground">Published {post.publishedAt}</p>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </main>
       <Footer />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogCollectionJsonLd) }}
-      />
-    </Box>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogCollectionJsonLd) }} />
+    </div>
   );
 }
