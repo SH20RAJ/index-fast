@@ -37,20 +37,24 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="group inline-flex items-center gap-2.5">
-          <Image src="/logo.png" alt="IndexFast logo" width={32} height={32} className="h-8 w-8 rounded-lg object-cover" />
-          <span className="text-base font-black tracking-tight">IndexFast</span>
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/60">
+      <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="group inline-flex items-center gap-2.5 transition-transform hover:scale-105">
+          <Image src="/logo.png" alt="IndexFast logo" width={32} height={32} className="h-8 w-8 rounded-lg object-cover shadow-sm" />
+          <span className="text-base font-bold tracking-tight text-foreground">IndexFast</span>
         </Link>
 
-        <div className="hidden items-center gap-1 rounded-xl border border-border/70 bg-card/60 p-1 md:flex">
+        <div className="hidden items-center gap-1.5 md:flex">
           {primaryLinks.map((item) => (
             <Button
               key={item.label}
               variant="ghost"
               asChild
-              className={`h-8 px-3 text-sm ${isActiveLink(item.href) ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              className={`h-9 px-4 text-sm font-medium transition-all ${
+                isActiveLink(item.href)
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              }`}
             >
               <Link href={item.href}>{item.label}</Link>
             </Button>
@@ -58,19 +62,29 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Button variant="outline" size="icon" onClick={toggleColorMode} aria-label="Toggle dark mode">
-            {mode === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleColorMode}
+            aria-label="Toggle dark mode"
+            className="h-9 w-9"
+          >
+            {mode === "dark" ? (
+              <Sun className="h-4 w-4 transition-transform hover:rotate-90" />
+            ) : (
+              <Moon className="h-4 w-4 transition-transform hover:-rotate-12" />
+            )}
           </Button>
           {user ? (
-            <Button asChild>
+            <Button className="h-9 font-semibold shadow-md">
               <Link href="/dashboard">Dashboard</Link>
             </Button>
           ) : (
             <>
-              <Button variant="ghost" asChild>
+              <Button variant="ghost" asChild className="h-9 px-4 font-medium">
                 <Link href="/sign-in">Sign In</Link>
               </Button>
-              <Button asChild>
+              <Button className="h-9 px-4 font-semibold shadow-md">
                 <Link href="/sign-up">Get Started</Link>
               </Button>
             </>
@@ -78,19 +92,36 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
-          <Button variant="outline" size="icon" onClick={toggleColorMode} aria-label="Toggle dark mode">
-            {mode === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleColorMode}
+            aria-label="Toggle dark mode"
+            className="h-9 w-9"
+          >
+            {mode === "dark" ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
           </Button>
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Open menu">
+              <Button variant="outline" size="icon" aria-label="Open menu" className="h-9 w-9">
                 <Menu className="h-4 w-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[88vw] max-w-sm">
-              <SheetHeader>
+            <SheetContent side="right" className="w-[85vw] max-w-sm border-l border-border/50">
+              <SheetHeader className="border-b border-border/50 pb-4">
                 <SheetTitle className="flex items-center gap-2 text-left">
-                  <Image src="/logo.png" alt="IndexFast logo" width={16} height={16} className="h-4 w-4 rounded object-cover" /> IndexFast
+                  <Image
+                    src="/logo.png"
+                    alt="IndexFast logo"
+                    width={20}
+                    height={20}
+                    className="h-5 w-5 rounded object-cover"
+                  />
+                  <span className="text-lg font-bold">IndexFast</span>
                 </SheetTitle>
               </SheetHeader>
               <div className="mt-6 grid gap-2">
@@ -99,17 +130,21 @@ export default function Navbar() {
                     key={item.label}
                     variant="ghost"
                     asChild
-                    className={`justify-start ${isActiveLink(item.href) ? "bg-muted text-foreground" : "text-muted-foreground"}`}
+                    className={`justify-start px-4 text-base ${
+                      isActiveLink(item.href)
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground"
+                    }`}
                     onClick={() => setMobileOpen(false)}
                   >
                     <Link href={item.href}>{item.label}</Link>
                   </Button>
                 ))}
               </div>
-              <Separator className="my-6" />
+              <Separator className="my-4" />
               <div className="grid gap-2">
                 {user ? (
-                  <Button asChild onClick={() => setMobileOpen(false)}>
+                  <Button asChild onClick={() => setMobileOpen(false)} className="font-semibold">
                     <Link href="/dashboard">Dashboard</Link>
                   </Button>
                 ) : (
@@ -117,14 +152,11 @@ export default function Navbar() {
                     <Button variant="outline" asChild onClick={() => setMobileOpen(false)}>
                       <Link href="/sign-in">Sign In</Link>
                     </Button>
-                    <Button asChild onClick={() => setMobileOpen(false)}>
+                    <Button asChild onClick={() => setMobileOpen(false)} className="font-semibold">
                       <Link href="/sign-up">Get Started</Link>
                     </Button>
                   </>
                 )}
-                <Button variant="ghost" className="justify-start" onClick={() => setMobileOpen(false)}>
-                  <X className="mr-2 h-4 w-4" /> Close
-                </Button>
               </div>
             </SheetContent>
           </Sheet>
