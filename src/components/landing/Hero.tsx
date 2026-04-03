@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ArrowRight, Sparkles, TrendingUp, Zap, CheckCircle } from "lucide-react";
+import { ArrowRight, Sparkles, Database, Zap, CheckCircle } from "lucide-react";
 import { useStackApp } from "@stackframe/stack";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,8 +14,8 @@ const socialProof = [
 
 const benefits = [
   { icon: Zap, text: "Index 4x faster" },
-  { icon: TrendingUp, text: "Track rankings" },
-  { icon: CheckCircle, text: "100% automated" },
+  { icon: Database, text: "Sitemap auto-sync" },
+  { icon: CheckCircle, text: "Bing + IndexNow automation" },
 ];
 
 const feedItems = [
