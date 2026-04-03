@@ -14,8 +14,8 @@ const socialProof = [
 
 const benefits = [
   { icon: Zap, text: "Index 4x faster" },
-  { icon: Database, text: "Sitemap auto-sync" },
-  { icon: CheckCircle, text: "Bing + IndexNow automation" },
+  { icon: Database, text: "IndexNow + Pinging + Archiving" },
+  { icon: CheckCircle, text: "SEO + GEO automation" },
 ];
 
 const feedItems = [
