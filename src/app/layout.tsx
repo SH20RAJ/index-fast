@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.net";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
 const siteName = "IndexFast";
 
 export const metadata: Metadata = {

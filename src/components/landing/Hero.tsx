@@ -18,6 +18,13 @@ const benefits = [
   { icon: CheckCircle, text: "SEO + GEO automation" },
 ];
 
+const toolboxIncludes = [
+  "AI visibility diagnostics",
+  "Technical SEO audit checks",
+  "IndexNow key validator",
+  "Sitemap health analyzer",
+];
+
 const feedItems = [
   { domain: "example.com", status: "✓ Indexed", time: "14 mins ago", engine: "Google" },
   { domain: "blog.site.io", status: "✓ Indexed", time: "28 mins ago", engine: "Bing" },
@@ -83,8 +90,20 @@ export default function Hero() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button variant="outline" size="lg" className="font-semibold" asChild>
-                <Link href="/blog">See it in action</Link>
+                <Link href="/toolbox">Get Free Access</Link>
               </Button>
+            </div>
+
+            <div className="rounded-lg border border-border/70 bg-card/50 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Inside Free Toolbox</p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {toolboxIncludes.map((item) => (
+                  <p key={item} className="inline-flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    {item}
+                  </p>
+                ))}
+              </div>
             </div>
 
             {/* Social Proof Metrics */}

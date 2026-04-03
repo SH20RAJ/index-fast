@@ -11,7 +11,7 @@ interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.net";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
 
 export function generateStaticParams() {
   return BLOG_POSTS.map((post) => ({ slug: post.slug }));

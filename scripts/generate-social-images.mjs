@@ -62,7 +62,7 @@ async function generate() {
     brand: "IndexFast",
     headline: "Automated SEO Indexing",
     subline: "Submit URLs to IndexNow and Bing, monitor sitemap changes, and accelerate discovery.",
-    footer: "indexfast.net",
+    footer: "indexfast.co",
   });
 
   await sharp(Buffer.from(twitterSvg)).png({ quality: 95 }).toFile(path.join(APP_DIR, "twitter-image.png"));

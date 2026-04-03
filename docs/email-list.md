@@ -115,7 +115,7 @@ Takes 2 minutes to connect your first site.
 Best,
 Shaswat
 Founder, IndexFast
-https://indexfast.co
+https://www.indexfast.co
 ```
 
 ### Template B: For Influencers (Partnership)

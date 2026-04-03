@@ -59,7 +59,7 @@ To ensure zero Flash of Unstyled Content (FOUC) and optimal performance:
 export const metadata = {
   title: 'IndexFast | Automated SEO Indexing',
   description: 'Submit your URLs to Google, Bing, and IndexNow instantly.',
-  metadataBase: new URL('https://indexfast.net'),
+  metadataBase: new URL('https://www.indexfast.co'),
   alternates: {
     canonical: '/',
   },

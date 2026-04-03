@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { BLOG_POSTS } from "@/lib/blog-catalog";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.net";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
 
 export const metadata: Metadata = {
   title: "SEO & GEO Blog",
