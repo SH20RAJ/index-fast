@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bolt } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -9,9 +9,7 @@ export default function Footer() {
       <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-[1.2fr_1fr] lg:px-8">
         <div className="space-y-3">
           <div className="inline-flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Bolt className="h-4 w-4" />
-            </span>
+            <Image src="/logo.png" alt="IndexFast logo" width={32} height={32} className="h-8 w-8 rounded-lg object-cover" />
             <span className="text-base font-black tracking-tight">IndexFast</span>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-muted-foreground">

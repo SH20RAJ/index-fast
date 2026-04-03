@@ -2,7 +2,6 @@
 
 import { Box, CircularProgress, Typography, Stack } from "@/components/ui/mui";
 import { alpha } from "@/lib/color";
-import { BoltIcon } from "@/components/icons/mui-icons";
 
 export default function Loading() {
   return (
@@ -23,15 +22,15 @@ export default function Loading() {
             width: 64,
             height: 64,
             borderRadius: "16px",
-            bgcolor: "primary.main",
+            bgcolor: "background.paper",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 10px 30px rgba(124, 58, 237, 0.2)",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.12)",
             position: "relative"
           }}
         >
-          <BoltIcon sx={{ color: "white", fontSize: 32 }} />
+          <Box component="img" src="/logo.png" alt="IndexFast logo" sx={{ width: 38, height: 38, borderRadius: "10px", objectFit: "cover" }} />
           {/* Pulsing ring around the logo */}
           <Box
             sx={{

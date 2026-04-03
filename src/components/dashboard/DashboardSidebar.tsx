@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useStackApp, useUser } from "@stackframe/stack";
 import { useColorMode } from "@/components/ThemeRegistry";
 import {
   Activity,
-  Bolt,
   Globe,
   LayoutDashboard,
   Settings,
@@ -101,9 +101,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
     <div className="flex h-full flex-col bg-background">
       <div className="border-b border-border px-4 py-4">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Bolt className="h-4.5 w-4.5" />
-          </div>
+          <Image src="/logo.png" alt="IndexFast logo" width={36} height={36} className="h-9 w-9 rounded-lg object-cover" />
           <div className="flex flex-col">
             <span className="text-sm font-semibold leading-none">IndexFast</span>
             <span className="text-[11px] text-muted-foreground">Dashboard</span>

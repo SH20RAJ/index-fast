@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useUser } from "@stackframe/stack";
-import { Bolt, Menu, Moon, Sun, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import { useColorMode } from "@/components/ThemeRegistry";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -39,9 +40,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="group inline-flex items-center gap-2.5">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Bolt className="h-4 w-4" />
-          </span>
+          <Image src="/logo.png" alt="IndexFast logo" width={32} height={32} className="h-8 w-8 rounded-lg object-cover" />
           <span className="text-base font-black tracking-tight">IndexFast</span>
         </Link>
 
@@ -91,7 +90,7 @@ export default function Navbar() {
             <SheetContent side="right" className="w-[88vw] max-w-sm">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2 text-left">
-                  <Bolt className="h-4 w-4" /> IndexFast
+                  <Image src="/logo.png" alt="IndexFast logo" width={16} height={16} className="h-4 w-4 rounded object-cover" /> IndexFast
                 </SheetTitle>
               </SheetHeader>
               <div className="mt-6 grid gap-2">
