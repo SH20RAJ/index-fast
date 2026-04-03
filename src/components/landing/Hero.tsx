@@ -13,16 +13,16 @@ const socialProof = [
 ];
 
 const benefits = [
-  { icon: Zap, text: "Index 4x faster" },
-  { icon: Database, text: "IndexNow + Pinging + Archiving" },
-  { icon: CheckCircle, text: "SEO + GEO automation" },
+  { icon: Zap, text: "Index 4x faster with IndexNow" },
+  { icon: Database, text: "Auto-submit to Wayback Machine" },
+  { icon: CheckCircle, text: "GEO for AI crawlers (ChatGPT, Perplexity, Claude)" },
 ];
 
 const toolboxIncludes = [
-  "AI visibility diagnostics",
-  "Technical SEO audit checks",
+  "AI visibility diagnostics for ChatGPT & Perplexity",
+  "Generative Engine Optimization (GEO) audits",
   "IndexNow key validator",
-  "Sitemap health analyzer",
+  "Wayback Machine archive submission",
 ];
 
 const feedItems = [

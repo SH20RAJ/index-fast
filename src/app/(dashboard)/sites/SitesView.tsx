@@ -32,6 +32,7 @@ import {
   ChevronRight,
   MoreVertical,
   X,
+  Archive,
 } from "lucide-react";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
@@ -781,6 +782,17 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                           <Link href={`/sites/${site.id}/audit`}>
                             <BarChart3 className="mr-2 h-3.5 w-3.5 text-blue-500" />
                             View Audit
+                          </Link>
+                        </Button>
+
+                        <Button
+                          asChild
+                          variant="outline"
+                          className="w-full sm:w-auto h-9 font-bold text-xs bg-background"
+                        >
+                          <Link href={`/sites/${site.id}/archive`}>
+                            <Archive className="mr-2 h-3.5 w-3.5 text-orange-500" />
+                            Archive Site
                           </Link>
                         </Button>
 
