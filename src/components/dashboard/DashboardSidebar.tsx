@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useStackApp, useUser } from "@stackframe/stack";
 import { useColorMode } from "@/components/ThemeRegistry";
 import {
@@ -93,12 +93,27 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
+  useEffect(() => {
+    const section = navSections.find((group) =>
+      group.items.some((item) => item.children?.some((child) => pathname === child.href || pathname.startsWith(`${child.href}/`)))
+    );
+
+    if (section) {
+      const activeItem = section.items.find((item) =>
+        item.children?.some((child) => pathname === child.href || pathname.startsWith(`${child.href}/`))
+      );
+      if (activeItem) {
+        setOpenSubmenu(activeItem.label);
+      }
+    }
+  }, [pathname]);
+
   const handleNavClick = () => {
     closeSheet?.();
   };
 
   return (
-    <div className="flex h-full flex-col border-r border-white/40 bg-white/75 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
+    <div className="flex h-full min-h-0 flex-col border-r border-white/40 bg-white/75 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
       <div className="border-b border-black/5 px-4 py-4 dark:border-white/10">
         <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/70 px-3 py-2 shadow-sm dark:border-white/10 dark:bg-white/5">
           <Image src="/logo.png" alt="IndexFast logo" width={36} height={36} className="h-9 w-9 rounded-xl object-cover ring-1 ring-black/5" />
@@ -109,7 +124,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 py-5">
+      <div className="flex-1 min-h-0 overflow-y-auto px-3 py-5">
         <nav className="space-y-6">
           {navSections.map((section) => (
             <div key={section.label} className="space-y-2">
@@ -128,20 +143,24 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                         <Link
                           href={item.href || "#"}
                           onClick={handleNavClick}
+                          aria-current={active ? "page" : undefined}
                           className={cn(
-                            "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all",
+                            "group flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all",
                             active
                               ? "bg-slate-950 text-white shadow-sm dark:bg-white dark:text-slate-950"
                               : "text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/8"
                           )}
                         >
-                          <item.icon className="h-4 w-4" />
+                          <item.icon className="h-4 w-4 shrink-0" />
                           <span className="flex-1">{item.label}</span>
+                          {active && <span className="h-2 w-2 rounded-full bg-current/85" />}
                         </Link>
                       ) : (
                         <>
                           <button
+                            type="button"
                             onClick={() => setOpenSubmenu(submenuOpen ? null : item.label)}
+                            aria-expanded={submenuOpen}
                             className={cn(
                               "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm transition-all",
                               active
@@ -149,7 +168,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                                 : "text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/8"
                             )}
                           >
-                            <item.icon className="h-4 w-4" />
+                            <item.icon className="h-4 w-4 shrink-0" />
                             <span className="flex-1">{item.label}</span>
                             <ChevronDown className={cn(
                               "h-4 w-4 transition-transform",
@@ -157,7 +176,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                             )} />
                           </button>
                           {submenuOpen && item.children && (
-                            <div className="ml-4 space-y-1 border-l border-border pl-3 py-1">
+                            <div className="ml-4 space-y-1 border-l border-border/80 pl-3 py-1">
                               {item.children.map((child) => (
                                 <Link
                                   key={child.href}
@@ -186,7 +205,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         </nav>
       </div>
 
-      <div className="border-t border-border p-4 space-y-3">
+      <div className="mt-auto border-t border-border p-4 space-y-3">
         <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/80 p-3 shadow-sm dark:border-white/10 dark:bg-white/5">
           <Avatar className="h-10 w-10 border border-border">
             <AvatarFallback className="bg-muted text-foreground text-xs font-semibold">
@@ -266,7 +285,7 @@ export default function DashboardSidebar() {
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:sticky md:top-0 md:flex md:h-screen w-80 flex-col">
+      <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:h-screen md:w-72 md:flex-col md:overflow-hidden">
         <SidebarContent />
       </aside>
     </>
