@@ -24,8 +24,8 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="relative border-r border-b bg-secondary dark:bg-secondary/30"
         logo={{
-          src: "https://svgl.app/library/nvidia-wordmark-light.svg",
-          alt: "Nvidia Logo",
+          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/google-search-engine.webp",
+          alt: "Google Logo",
         }}
       >
         <PlusIcon
@@ -37,16 +37,16 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="border-b md:border-r"
         logo={{
-          src: "https://svgl.app/library/supabase_wordmark_light.svg",
-          alt: "Supabase Logo",
+          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/bing-search-engine.webp",
+          alt: "Bing Logo",
         }}
       />
 
       <LogoCard
         className="relative border-r border-b md:bg-secondary dark:md:bg-secondary/30"
         logo={{
-          src: "https://svgl.app/library/github_wordmark_light.svg",
-          alt: "GitHub Logo",
+          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/yahoo-search-engine.webp",
+          alt: "Yahoo Logo",
         }}
       >
         <PlusIcon
@@ -62,16 +62,16 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="relative border-b bg-secondary md:bg-background dark:bg-secondary/30 md:dark:bg-background"
         logo={{
-          src: "https://svgl.app/library/openai_wordmark_light.svg",
-          alt: "OpenAI Logo",
+          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/duckduckgo-search-engine.webp",
+          alt: "DuckDuckGo Logo",
         }}
       />
 
       <LogoCard
         className="relative border-r border-b bg-secondary md:border-b-0 md:bg-background dark:bg-secondary/30 md:dark:bg-background"
         logo={{
-          src: "https://svgl.app/library/turso-wordmark-light.svg",
-          alt: "Turso Logo",
+          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/baidu-search-engine.webp",
+          alt: "Baidu Logo",
         }}
       >
         <PlusIcon
@@ -83,24 +83,24 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="border-b bg-background md:border-r md:border-b-0 md:bg-secondary dark:md:bg-secondary/30"
         logo={{
-          src: "https://svgl.app/library/clerk-wordmark-light.svg",
-          alt: "Clerk Logo",
+          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/yandex-search-engine.webp",
+          alt: "Yandex Logo",
         }}
       />
 
       <LogoCard
         className="border-r"
         logo={{
-          src: "https://svgl.app/library/claude-ai-wordmark-icon_light.svg",
-          alt: "Claude AI Logo",
+          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/ask-search-engine.webp",
+          alt: "Ask Logo",
         }}
       />
 
       <LogoCard
         className="bg-secondary dark:bg-secondary/30"
         logo={{
-          src: "https://svgl.app/library/vercel_wordmark.svg",
-          alt: "Vercel Logo",
+          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/ecosia-search-engine.webp",
+          alt: "Ecosia Logo",
         }}
       />
 

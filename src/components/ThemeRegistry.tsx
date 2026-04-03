@@ -35,12 +35,8 @@ export function useColorMode() {
 }
 
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = React.useState<PaletteMode>("light");
+  const [mode, setMode] = React.useState<PaletteMode>(() => resolveInitialMode());
   const mounted = React.useRef(false);
-
-  React.useEffect(() => {
-    setMode(resolveInitialMode());
-  }, []);
 
   React.useEffect(() => {
     // Don't overwrite localStorage on the initial render — wait until the
@@ -54,7 +50,14 @@ export default function ThemeRegistry({ children }: { children: React.ReactNode 
 
   React.useEffect(() => {
     const root = document.documentElement;
-    root.classList.toggle("dark", mode === "dark");
+    const isDark = mode === "dark";
+    root.classList.toggle("dark", isDark);
+    root.setAttribute("data-theme", mode);
+    root.style.colorScheme = mode;
+
+    if (document.body) {
+      document.body.classList.toggle("dark", isDark);
+    }
   }, [mode]);
 
   const colorMode = useMemo(
