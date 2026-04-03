@@ -62,7 +62,7 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="relative border-r border-b md:bg-secondary dark:md:bg-secondary/30"
         logo={{
-          src: "/engines/yahoo.svg",
+          src: "/engines/yahoo.png",
           alt: "Yahoo Logo",
           marketShare: MARKET_SHARE_DATA.yahoo,
         }}
@@ -80,7 +80,7 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="relative border-b bg-secondary md:bg-background dark:bg-secondary/30 md:dark:bg-background"
         logo={{
-          src: "/engines/duckduckgo.svg",
+          src: "/engines/duckduckgo.png",
           alt: "DuckDuckGo Logo",
           marketShare: MARKET_SHARE_DATA.duckduckgo,
         }}
@@ -89,7 +89,7 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="relative border-r border-b bg-secondary md:border-b-0 md:bg-background dark:bg-secondary/30 md:dark:bg-background"
         logo={{
-          src: "/engines/baidu.svg",
+          src: "/engines/baidu.png",
           alt: "Baidu Logo",
           marketShare: MARKET_SHARE_DATA.baidu,
         }}
@@ -103,7 +103,7 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="border-b bg-background md:border-r md:border-b-0 md:bg-secondary dark:md:bg-secondary/30"
         logo={{
-          src: "/engines/yandex.svg",
+          src: "/engines/yandex.png",
           alt: "Yandex Logo",
           marketShare: MARKET_SHARE_DATA.yandex,
         }}
@@ -112,7 +112,7 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="border-r"
         logo={{
-          src: "/engines/ask.svg",
+          src: "/engines/ask.png",
           alt: "Ask Logo",
           marketShare: MARKET_SHARE_DATA.ask,
         }}
@@ -121,7 +121,7 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="bg-secondary dark:bg-secondary/30"
         logo={{
-          src: "/engines/ecosia.svg",
+          src: "/engines/ecosia.png",
           alt: "Ecosia Logo",
           marketShare: MARKET_SHARE_DATA.ecosia,
         }}

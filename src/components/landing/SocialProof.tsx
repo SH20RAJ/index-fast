@@ -11,11 +11,11 @@ const stats = [
   { value: "9m", label: "Median submit-to-log" },
 ];
 
-const tickerItems = [
-  { site: "noteyard.pages.dev", engine: "Bing", ago: "2m ago", status: "success" },
-  { site: "linespedia.com", engine: "IndexNow", ago: "4m ago", status: "success" },
-  { site: "300tools.com", engine: "Bing", ago: "7m ago", status: "success" },
-  { site: "rankflowhq.com", engine: "IndexNow", ago: "10m ago", status: "success" },
+const liveFeedExamples = [
+  { site: "acmeblog.com", engine: "Bing", ago: "2m ago", status: "success" },
+  { site: "docs.novacrm.io", engine: "IndexNow", ago: "4m ago", status: "success" },
+  { site: "shop.orbitlane.co", engine: "Bing", ago: "7m ago", status: "success" },
+  { site: "help.pixelops.app", engine: "IndexNow", ago: "10m ago", status: "success" },
 ];
 
 const caseStudies = [
@@ -78,7 +78,7 @@ export default function SocialProof() {
                 <Badge className="bg-emerald-600 hover:bg-emerald-600">Live</Badge>
               </div>
               <div className="space-y-2">
-                {tickerItems.map((item) => (
+                {liveFeedExamples.map((item) => (
                   <div key={`${item.site}-${item.ago}`} className="flex items-center justify-between rounded-md border border-border/70 p-3">
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold">{item.site}</p>
