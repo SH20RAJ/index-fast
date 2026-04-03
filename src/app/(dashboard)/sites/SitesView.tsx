@@ -461,6 +461,13 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                     <p className="text-[10px] font-medium text-muted-foreground/70">
                       Used for IndexNow keyLocation validation during auto submission.
                     </p>
+                    <p className="text-xs text-muted-foreground">
+                      Need help with Bing API key, IndexNow key, and key location setup?{" "}
+                      <Link href="/blog/bing-api-key-indexnow-key-location-complete-guide" className="inline-flex items-center gap-1 font-medium text-primary hover:underline">
+                        Read the complete guide
+                        <ExternalLink className="h-3 w-3" />
+                      </Link>
+                    </p>
                   </div>
 
                   <Button
@@ -845,6 +852,13 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                                   defaultValue={getIndexNowKeyLocationUrl(site)}
                                   className="h-10 bg-muted/20"
                                 />
+                                <p className="text-xs text-muted-foreground">
+                                  Setup reference:{" "}
+                                  <Link href="/blog/bing-api-key-indexnow-key-location-complete-guide" className="inline-flex items-center gap-1 font-medium text-primary hover:underline">
+                                    Bing + IndexNow full guide
+                                    <ExternalLink className="h-3 w-3" />
+                                  </Link>
+                                </p>
                               </div>
                             </div>
                             <Button 

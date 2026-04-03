@@ -1512,6 +1512,107 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: "bing-api-key-indexnow-key-location-complete-guide",
+    title: "Bing API Key + IndexNow Key Location: Complete Setup Guide (What, Why, When, and How)",
+    description:
+      "Everything you need to configure Bing API key, IndexNow key, and key location URL correctly: what each value means, why it matters, when to use it, and how to set it up safely.",
+    primaryKeyword: "bing api key indexnow key location guide",
+    keywords: [
+      "bing api key indexnow key location guide",
+      "how to set up indexnow key",
+      "indexnow key location url",
+      "bing webmaster api key setup",
+      "indexnow what why when how",
+      "bing and indexnow configuration",
+    ],
+    publishedAt: "2026-04-03",
+    updatedAt: "2026-04-03",
+    readingMinutes: 15,
+    author: "IndexFast Editorial Team",
+    hero:
+      "If indexing setup feels confusing, this guide gives you the full picture in one place. It explains every required value for Bing and IndexNow, why each one exists, when you should use it, and how to configure it without common mistakes.",
+    sections: [
+      {
+        heading: "What these fields mean",
+        paragraphs: [
+          "Bing API key is your authentication credential for Bing Webmaster API access. It allows your indexing workflow to submit URLs to Bing programmatically.",
+          "IndexNow key is a token that proves domain ownership for IndexNow submissions. Search engines use it to verify that the site owner (or an authorized system) is sending URL change signals.",
+          "IndexNow key location URL is the public URL where the key file is hosted, typically a text file at your domain root such as https://example.com/your-key.txt.",
+        ],
+      },
+      {
+        heading: "Why these values matter",
+        paragraphs: [
+          "Without a valid Bing API key, Bing submission attempts can fail due to authorization errors. That means your URLs may rely only on passive discovery instead of proactive signaling.",
+          "Without a valid IndexNow key and accessible key location URL, IndexNow requests can be rejected or treated as untrusted. Trust validation is a core part of the protocol.",
+          "Correct setup improves reliability. Reliable signaling helps search engines detect fresh and updated URLs faster, especially for frequently updated sites.",
+        ],
+      },
+      {
+        heading: "When to use Bing API and IndexNow",
+        paragraphs: [
+          "Use these workflows whenever you publish new pages, significantly update existing pages, or roll out large URL batches that should be discovered quickly.",
+          "For small, low-frequency sites, setup still helps because it reduces uncertainty and gives you better operational control. For high-volume sites, it becomes essential.",
+          "Do not submit trivial cosmetic changes repeatedly. Submit meaningful updates to keep your signal quality high.",
+        ],
+      },
+      {
+        heading: "How to set up step by step",
+        paragraphs: [
+          "Step 1: Generate or retrieve your Bing API key from Bing Webmaster Tools and store it securely.",
+          "Step 2: Create an IndexNow key. Save the key value and host a plain text file named with that key (or mapped to that key) on your domain.",
+          "Step 3: Confirm the key location URL is publicly accessible and returns HTTP 200 with the expected key content.",
+          "Step 4: Add Bing API key, IndexNow key, and key location URL to your website settings in IndexFast.",
+          "Step 5: Run a small manual submission test, then verify logs for success/failed batches and fix any auth or key-location errors.",
+        ],
+        bullets: [
+          "Use HTTPS URLs only",
+          "Keep key file reachable (no auth wall, no redirects loop)",
+          "Match domain/protocol consistently",
+          "Re-test after DNS/CDN or infrastructure changes",
+        ],
+      },
+      {
+        heading: "Common mistakes and fixes",
+        paragraphs: [
+          "Mistake: key location URL points to a page that redirects or returns 404. Fix: host a stable text file with a direct 200 response.",
+          "Mistake: API key copied with extra whitespace or wrong account scope. Fix: re-copy and validate against the correct Bing property.",
+          "Mistake: submitting non-canonical or parameterized URL variants. Fix: submit canonical URLs only.",
+        ],
+      },
+      {
+        heading: "Security and maintenance best practices",
+        paragraphs: [
+          "Treat keys as secrets. Store them in secure systems and restrict access to operational roles.",
+          "Review submission logs weekly. Watch for sudden increases in failed batches, auth errors, or key-location validation failures.",
+          "Rotate and re-validate credentials when team ownership changes or if a credential may have been exposed.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Do I need all three values to use auto submission?",
+        answer:
+          "For best reliability, yes. Bing API key handles Bing auth, while IndexNow key and key location URL handle IndexNow trust validation.",
+      },
+      {
+        question: "Can I use IndexNow without Bing API key?",
+        answer:
+          "Yes, but then only IndexNow-capable pathways are used. You lose direct Bing API submission coverage.",
+      },
+      {
+        question: "How do I know setup is correct?",
+        answer:
+          "Run a manual submission test and verify successful batches in logs with no auth or key-location errors.",
+      },
+      {
+        question: "Where should key location file live?",
+        answer:
+          "On your verified domain, publicly reachable over HTTPS, with a stable URL and HTTP 200 response.",
+      },
+    ],
+  },
 ];
 
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
