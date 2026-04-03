@@ -317,29 +317,6 @@ export default function ToolsHomePage() {
 }
 
 
-export const metadata: Metadata = {
-  title: "Free SEO Tools Directory",
-  description:
-    "Browse a complete free SEO tools directory organized by category: indexing, crawl diagnostics, keyword research, backlinks, domain authority, and metadata optimization.",
-  keywords: [
-    "free seo tools directory",
-    "seo tools for indexing",
-    "keyword research tools free",
-    "backlink checker tools",
-    "domain authority tools",
-    "meta tags tools",
-  ],
-  alternates: {
-    canonical: "/tools",
-  },
-  openGraph: {
-    title: "Free SEO Tools Directory | IndexFast",
-    description: "Find practical SEO tools by category and convert free checks into recurring automation.",
-    url: "/tools",
-    type: "website",
-  },
-};
-
 export default function ToolsHomePage() {
   return (
     <>
