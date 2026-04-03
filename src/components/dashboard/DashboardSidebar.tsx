@@ -98,13 +98,13 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   };
 
   return (
-    <div className="flex h-full flex-col bg-background">
-      <div className="border-b border-border px-4 py-4">
-        <div className="flex items-center gap-2.5">
-          <Image src="/logo.png" alt="IndexFast logo" width={36} height={36} className="h-9 w-9 rounded-lg object-cover" />
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold leading-none">IndexFast</span>
-            <span className="text-[11px] text-muted-foreground">Dashboard</span>
+    <div className="flex h-full flex-col border-r border-white/40 bg-white/75 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
+      <div className="border-b border-black/5 px-4 py-4 dark:border-white/10">
+        <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/70 px-3 py-2 shadow-sm dark:border-white/10 dark:bg-white/5">
+          <Image src="/logo.png" alt="IndexFast logo" width={36} height={36} className="h-9 w-9 rounded-xl object-cover ring-1 ring-black/5" />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <span className="text-sm font-semibold leading-none tracking-tight">IndexFast</span>
+            <span className="text-[11px] text-muted-foreground">Workspace command center</span>
           </div>
         </div>
       </div>
@@ -129,10 +129,10 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                           href={item.href || "#"}
                           onClick={handleNavClick}
                           className={cn(
-                            "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors",
+                            "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all",
                             active
-                              ? "bg-primary text-primary-foreground"
-                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                              ? "bg-slate-950 text-white shadow-sm dark:bg-white dark:text-slate-950"
+                              : "text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/8"
                           )}
                         >
                           <item.icon className="h-4 w-4" />
@@ -143,10 +143,10 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                           <button
                             onClick={() => setOpenSubmenu(submenuOpen ? null : item.label)}
                             className={cn(
-                              "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                              "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm transition-all",
                               active
-                                ? "bg-muted text-foreground"
-                                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                ? "bg-black/5 text-foreground dark:bg-white/8"
+                                : "text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/8"
                             )}
                           >
                             <item.icon className="h-4 w-4" />
@@ -187,7 +187,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
       </div>
 
       <div className="border-t border-border p-4 space-y-3">
-        <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-3">
+        <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/80 p-3 shadow-sm dark:border-white/10 dark:bg-white/5">
           <Avatar className="h-10 w-10 border border-border">
             <AvatarFallback className="bg-muted text-foreground text-xs font-semibold">
               {initials}
@@ -203,7 +203,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
           <Button
             variant="outline"
             size="sm"
-            className="h-9 rounded-md px-2 text-[11px]"
+            className="h-9 rounded-xl border-black/10 bg-white/80 px-2 text-[11px] shadow-sm hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
             asChild
           >
             <Link href="/settings">
@@ -214,7 +214,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
           <Button
             variant="outline"
             size="sm"
-            className="h-9 rounded-md px-2 text-[11px]"
+            className="h-9 rounded-xl border-black/10 bg-white/80 px-2 text-[11px] shadow-sm hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
             onClick={toggleColorMode}
             title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
           >
@@ -228,7 +228,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
           <Button
             variant="outline"
             size="sm"
-            className="h-9 rounded-md px-2 text-[11px] text-destructive hover:bg-destructive/10"
+            className="h-9 rounded-xl border-black/10 bg-white/80 px-2 text-[11px] text-destructive shadow-sm hover:bg-destructive/10 dark:border-white/10 dark:bg-white/5"
             onClick={() => {
               closeSheet?.();
               stack.signOut();
@@ -249,24 +249,24 @@ export default function DashboardSidebar() {
   return (
     <>
       {/* Mobile Menu Button */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-16 px-4 flex items-center border-b border-border/20 bg-background/95 backdrop-blur-sm">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-16 px-4 flex items-center border-b border-black/5 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-lg">
+            <Button variant="ghost" size="icon" className="rounded-xl border border-black/5 bg-white/70 shadow-sm dark:border-white/10 dark:bg-white/5">
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-72 p-0">
+          <SheetContent side="left" className="w-80 p-0">
             <SidebarContent closeSheet={() => setOpen(false)} />
           </SheetContent>
         </Sheet>
         <div className="flex-1 text-center">
-          <h1 className="font-bold">Dashboard</h1>
+          <h1 className="text-sm font-semibold tracking-tight">Dashboard</h1>
         </div>
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:sticky md:top-0 md:flex md:h-screen w-72 flex-col border-r border-border/20 bg-background/50 backdrop-blur-sm">
+      <aside className="hidden md:sticky md:top-0 md:flex md:h-screen w-80 flex-col">
         <SidebarContent />
       </aside>
     </>

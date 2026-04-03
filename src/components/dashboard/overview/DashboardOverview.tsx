@@ -11,6 +11,13 @@ import {
   ExternalLink,
   CheckCircle2,
   AlertCircle,
+  ArrowRight,
+  Sparkles,
+  Activity,
+  Globe,
+  ShieldCheck,
+  Zap,
+  CircleCheck,
 } from "lucide-react";
 import type { DashboardData } from "@/app/(dashboard)/actions";
 
@@ -31,210 +38,352 @@ function formatNumber(num: number) {
   return num.toString();
 }
 
+function formatDate(date: Date | string | null | undefined) {
+  if (!date) return "No activity yet";
+  const value = typeof date === "string" ? new Date(date) : date;
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(value);
+}
+
+function statusTone(rate: number) {
+  if (rate >= 90) return "Excellent";
+  if (rate >= 70) return "Healthy";
+  if (rate >= 40) return "Watch";
+  return "Needs attention";
+}
+
+const quickActions = [
+  {
+    label: "Add website",
+    href: "/sites",
+    icon: Plus,
+    description: "Connect a new property and start tracking submissions.",
+  },
+  {
+    label: "Review submissions",
+    href: "/submissions",
+    icon: Activity,
+    description: "Inspect successes, failures, and recent indexing activity.",
+  },
+  {
+    label: "Update plan",
+    href: "/settings",
+    icon: Settings,
+    description: "Adjust limits, billing, and account preferences.",
+  },
+];
+
+const insightRows = [
+  {
+    label: "Websites in play",
+    icon: Globe,
+  },
+  {
+    label: "Submission health",
+    icon: ShieldCheck,
+  },
+  {
+    label: "Indexing momentum",
+    icon: Zap,
+  },
+];
+
 export default function DashboardOverview({ data }: DashboardOverviewProps) {
   const websiteRatio = ratio(data.usage.websitesUsed, data.usage.websitesLimit);
   const submissionRatio = ratio(data.usage.submissionsUsed, data.usage.submissionsLimit);
   const successRate = data.submissionsThisMonth > 0 ? Math.round((data.successfulThisMonth / data.submissionsThisMonth) * 100) : 0;
+  const planTone = statusTone(successRate);
+
+  const insightValues = [
+    `${formatNumber(data.usage.websitesUsed)} live`,
+    `${successRate}% success`,
+    `${Math.max(0, 100 - submissionRatio)}% headroom`,
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-sm text-muted-foreground">
-            Monitor your indexing activity and manage subscription resources.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button asChild>
-            <Link href="/sites">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Website
-            </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href="/settings">
-              <Settings className="w-4 h-4 mr-2" />
-              Subscription
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      {/* Plan Info */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Plan</p>
-              <p className="text-lg font-semibold">{data.plan.name}</p>
+    <div className="space-y-6 md:space-y-8">
+      <section className="overflow-hidden rounded-[28px] border border-black/5 bg-white/80 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/60">
+        <div className="grid gap-6 p-5 md:grid-cols-[1.35fr_0.9fr] md:p-8">
+          <div className="space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-black/5 bg-black/5 px-3 py-1 text-xs font-medium text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200">
+              <Sparkles className="h-3.5 w-3.5" />
+              {planTone} workspace health
             </div>
-            <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Monthly Cost</p>
-              <p className="text-lg font-semibold">${data.plan.priceMonthly}</p>
-            </div>
-            <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Active Sites</p>
-              <p className="text-lg font-semibold">{data.websitesCount}</p>
-            </div>
-            <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Success Rate</p>
-              <p className="text-lg font-semibold">{successRate}%</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Websites</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{data.usage.websitesUsed}</p>
-            <p className="text-xs text-muted-foreground mt-1">of {formatNumber(data.usage.websitesLimit)}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Submissions This Month</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{formatNumber(data.submissionsThisMonth)}</p>
-            <p className="text-xs text-muted-foreground mt-1">of {formatNumber(data.usage.submissionsLimit)}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Successful</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{formatNumber(data.successfulThisMonth)}</p>
-            <p className="text-xs text-muted-foreground mt-1">{successRate}% success rate</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Plan Capacity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{formatNumber(data.usage.websitesLimit)}</p>
-            <p className="text-xs text-muted-foreground mt-1">max websites</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Resources Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Resources & Quota</CardTitle>
-          <CardDescription>{data.plan.tagline}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <p className="text-sm font-medium">Websites</p>
-              <p className="text-sm text-muted-foreground">
-                {data.usage.websitesUsed} of {formatNumber(data.usage.websitesLimit)}
-              </p>
-            </div>
-            <Progress value={websiteRatio} className="h-2" />
-          </div>
-
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <p className="text-sm font-medium">Monthly Submissions</p>
-              <p className="text-sm text-muted-foreground">
-                {formatNumber(data.usage.submissionsUsed)} of {formatNumber(data.usage.submissionsLimit)}
-              </p>
-            </div>
-            <Progress value={submissionRatio} className="h-2" />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Activity Section */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <div>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Your latest submissions</CardDescription>
-          </div>
-          <Button asChild variant="ghost" size="sm" className="gap-2">
-            <Link href="/submissions">
-              View All <ExternalLink className="w-3 h-3" />
-            </Link>
-          </Button>
-        </CardHeader>
-        <CardContent>
-          {data.recentSubmissions.length === 0 ? (
-            <div className="py-8 text-center text-muted-foreground">
-              <p className="text-sm">No submissions yet</p>
-            </div>
-          ) : (
             <div className="space-y-3">
-              {data.recentSubmissions.map((entry) => (
-                <div key={entry.id} className="flex items-center justify-between p-3 rounded-lg border">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{entry.websiteUrl ?? "Site"}</p>
-                    <p className="text-xs text-muted-foreground truncate">{entry.url}</p>
-                  </div>
-                  <div className="flex items-center gap-2 ml-2">
-                    <Badge variant="outline" className="text-xs">
-                      {entry.engine.toUpperCase()}
-                    </Badge>
-                    {entry.status === "success" ? (
-                      <Badge className="text-xs bg-green-100 text-green-800 hover:bg-green-100">
-                        <CheckCircle2 className="w-3 h-3 mr-1" />
-                        Success
-                      </Badge>
-                    ) : (
-                      <Badge className="text-xs bg-red-100 text-red-800 hover:bg-red-100">
-                        <AlertCircle className="w-3 h-3 mr-1" />
-                        Failed
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              ))}
+              <h1 className="max-w-2xl text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-white">
+                Keep every site moving from discovery to indexing without losing track of the details.
+              </h1>
+              <p className="max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
+                A cleaner command center for websites, submissions, billing, and indexing health.
+                See what is live, what needs attention, and where you still have room to scale.
+              </p>
             </div>
-          )}
-        </CardContent>
-      </Card>
 
-      {/* Top Sites */}
-      <Card>
-        <CardHeader>
-          <CardTitle>High-Traffic Assets</CardTitle>
-          <CardDescription>Your most active properties</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {data.topSites.length === 0 ? (
-            <div className="py-8 text-center text-muted-foreground">
-              <p className="text-sm">No properties tracked yet</p>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild className="rounded-full px-5 shadow-sm">
+                <Link href="/sites">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Website
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="rounded-full border-black/10 bg-white/80 px-5 shadow-sm hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10">
+                <Link href="/submissions">
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Open Activity
+                </Link>
+              </Button>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.topSites.map((site) => (
-                <div key={site.id} className="p-4 rounded-lg border">
-                  <p className="text-sm font-medium truncate mb-1">{site.url}</p>
-                  <p className="text-xs text-muted-foreground mb-3">
-                    Last sync: {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleDateString() : "Pending"}
-                  </p>
-                  <Badge variant="secondary" className="text-xs">
-                    {formatNumber(site.submissions)} submissions
-                  </Badge>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              {insightRows.map((item, index) => {
+                const Icon = item.icon;
+
+                return (
+                  <div
+                    key={item.label}
+                    className="rounded-2xl border border-black/5 bg-white/70 p-3 shadow-sm dark:border-white/10 dark:bg-white/5"
+                    style={{ animationDelay: `${index * 90}ms` }}
+                  >
+                    <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-slate-950 text-white dark:bg-white dark:text-slate-950">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{item.label}</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-950 dark:text-white">{insightValues[index]}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="rounded-[24px] border border-black/5 bg-slate-950 p-5 text-white shadow-[0_16px_50px_rgba(15,23,42,0.3)] dark:border-white/10">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.24em] text-white/60">Plan overview</p>
+                <h2 className="mt-2 text-xl font-semibold tracking-tight">{data.plan.name}</h2>
+                <p className="mt-1 text-sm text-white/70">{data.plan.tagline}</p>
+              </div>
+              <Badge className="rounded-full bg-white/10 text-white hover:bg-white/10">${data.plan.priceMonthly}/mo</Badge>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p className="text-xs text-white/60">Sites used</p>
+                <p className="mt-2 text-2xl font-semibold">{data.websitesCount}</p>
+                <p className="mt-1 text-xs text-white/60">of {formatNumber(data.usage.websitesLimit)}</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p className="text-xs text-white/60">Success rate</p>
+                <p className="mt-2 text-2xl font-semibold">{successRate}%</p>
+                <p className="mt-1 text-xs text-white/60">this month</p>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="flex items-center justify-between text-xs text-white/65">
+                <span>Website capacity</span>
+                <span>{websiteRatio}% full</span>
+              </div>
+              <Progress value={websiteRatio} className="mt-3 h-2 bg-white/10 [&>div]:bg-white" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-3">
+        {quickActions.map((action, index) => {
+          const Icon = action.icon;
+
+          return (
+            <Card key={action.label} className="border-black/5 bg-white/80 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/60" style={{ animationDelay: `${index * 100}ms` }}>
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-3">
+                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-white dark:bg-white dark:text-slate-950">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-slate-950 dark:text-white">{action.label}</p>
+                      <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{action.description}</p>
+                    </div>
+                  </div>
+                  <Button asChild size="icon" variant="ghost" className="h-9 w-9 rounded-full border border-black/5 bg-black/5 dark:border-white/10 dark:bg-white/5">
+                    <Link href={action.href} aria-label={action.label}>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
                 </div>
-              ))}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+        <Card className="border-black/5 bg-white/80 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/60">
+          <CardHeader className="border-b border-black/5 pb-4 dark:border-white/10">
+            <CardTitle className="text-base">Recent activity</CardTitle>
+            <CardDescription>Your latest submissions and response status.</CardDescription>
+          </CardHeader>
+          <CardContent className="p-5">
+            {data.recentSubmissions.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-black/10 bg-black/[0.02] p-8 text-center dark:border-white/10 dark:bg-white/[0.03]">
+                <CircleCheck className="mx-auto h-10 w-10 text-slate-400" />
+                <p className="mt-3 text-sm font-medium text-slate-950 dark:text-white">Nothing submitted yet</p>
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Add a site to start tracking indexing activity here.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {data.recentSubmissions.map((entry, index) => (
+                  <div
+                    key={entry.id}
+                    className="flex flex-col gap-3 rounded-2xl border border-black/5 bg-white p-4 shadow-[0_6px_20px_rgba(15,23,42,0.04)] transition-transform hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/5 md:flex-row md:items-center md:justify-between"
+                    style={{ animationDelay: `${index * 70}ms` }}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="truncate text-sm font-semibold text-slate-950 dark:text-white">{entry.websiteUrl ?? "Site"}</p>
+                        <Badge variant="outline" className="rounded-full border-black/10 text-[11px] uppercase tracking-wide text-slate-600 dark:border-white/10 dark:text-slate-300">
+                          {entry.engine.toUpperCase()}
+                        </Badge>
+                      </div>
+                      <p className="mt-1 truncate text-sm text-slate-600 dark:text-slate-300">{entry.url}</p>
+                      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{formatDate(entry.createdAt)}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {entry.status === "success" ? (
+                        <Badge className="rounded-full bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-300">
+                          <CheckCircle2 className="mr-1 h-3 w-3" />
+                          Success
+                        </Badge>
+                      ) : (
+                        <Badge className="rounded-full bg-rose-500/10 text-rose-700 hover:bg-rose-500/10 dark:text-rose-300">
+                          <AlertCircle className="mr-1 h-3 w-3" />
+                          Failed
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-black/5 bg-white/80 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/60">
+          <CardHeader className="border-b border-black/5 pb-4 dark:border-white/10">
+            <CardTitle className="text-base">Usage at a glance</CardTitle>
+            <CardDescription>Know what is left before you hit the limit.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-5 p-5">
+            <div>
+              <div className="mb-2 flex items-center justify-between text-sm">
+                <span className="font-medium text-slate-700 dark:text-slate-200">Websites</span>
+                <span className="text-slate-500 dark:text-slate-400">{data.usage.websitesUsed} / {formatNumber(data.usage.websitesLimit)}</span>
+              </div>
+              <Progress value={websiteRatio} className="h-2 bg-black/5 dark:bg-white/10" />
             </div>
-          )}
-        </CardContent>
-      </Card>
+
+            <div>
+              <div className="mb-2 flex items-center justify-between text-sm">
+                <span className="font-medium text-slate-700 dark:text-slate-200">Submissions this month</span>
+                <span className="text-slate-500 dark:text-slate-400">{formatNumber(data.submissionsThisMonth)} / {formatNumber(data.usage.submissionsLimit)}</span>
+              </div>
+              <Progress value={submissionRatio} className="h-2 bg-black/5 dark:bg-white/10" />
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-black/5 bg-black/[0.02] p-4 dark:border-white/10 dark:bg-white/[0.03]">
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Plan</p>
+                <p className="mt-2 text-base font-semibold text-slate-950 dark:text-white">{data.plan.name}</p>
+              </div>
+              <div className="rounded-2xl border border-black/5 bg-black/[0.02] p-4 dark:border-white/10 dark:bg-white/[0.03]">
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Monthly cost</p>
+                <p className="mt-2 text-base font-semibold text-slate-950 dark:text-white">${data.plan.priceMonthly}</p>
+              </div>
+            </div>
+
+            <Button asChild variant="outline" className="w-full rounded-full border-black/10 bg-white/80 shadow-sm hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10">
+              <Link href="/settings">
+                View billing & limits
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+        <Card className="border-black/5 bg-white/80 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/60">
+          <CardHeader className="border-b border-black/5 pb-4 dark:border-white/10">
+            <CardTitle className="text-base">High-traffic assets</CardTitle>
+            <CardDescription>Your most active properties, sorted by submission volume.</CardDescription>
+          </CardHeader>
+          <CardContent className="p-5">
+            {data.topSites.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-black/10 bg-black/[0.02] p-8 text-center dark:border-white/10 dark:bg-white/[0.03]">
+                <Globe className="mx-auto h-10 w-10 text-slate-400" />
+                <p className="mt-3 text-sm font-medium text-slate-950 dark:text-white">No properties tracked yet</p>
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Add your first site to see activity patterns here.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {data.topSites.map((site, index) => (
+                  <div key={site.id} className="rounded-2xl border border-black/5 bg-white p-4 shadow-[0_6px_20px_rgba(15,23,42,0.04)] dark:border-white/10 dark:bg-white/5" style={{ animationDelay: `${index * 70}ms` }}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold text-slate-950 dark:text-white">{site.url}</p>
+                        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Last sync {formatDate(site.lastSyncAt)}</p>
+                      </div>
+                      <Badge variant="secondary" className="rounded-full bg-black/5 text-xs text-slate-700 hover:bg-black/5 dark:bg-white/10 dark:text-slate-200">
+                        {formatNumber(site.submissions)} submissions
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-black/5 bg-slate-950 text-white shadow-[0_20px_60px_rgba(15,23,42,0.24)] dark:border-white/10">
+          <CardHeader className="border-b border-white/10 pb-4">
+            <CardTitle className="text-base">What to do next</CardTitle>
+            <CardDescription className="text-white/65">A tighter checklist for the next pass through the dashboard.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 p-5">
+            {[
+              {
+                title: data.websitesCount === 0 ? "Connect your first website" : "Review recent submissions",
+                body: data.websitesCount === 0 ? "The dashboard becomes much more useful once a site is connected." : "Check the latest activity for any failed or pending indexing attempts.",
+              },
+              {
+                title: websiteRatio > 80 ? "Watch your website limit" : "You still have room to grow",
+                body: websiteRatio > 80 ? "You are close to the plan cap. Consider upgrading before adding more sites." : "There is healthy capacity left in your current plan.",
+              },
+              {
+                title: successRate < 70 ? "Investigate failed submissions" : "Keep the current flow moving",
+                body: successRate < 70 ? "A few failures can usually be traced from the activity feed." : "Your success rate is solid enough to keep scaling with the same setup.",
+              },
+            ].map((item, index) => (
+              <div key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-4" style={{ animationDelay: `${index * 90}ms` }}>
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 rounded-full bg-white/10 p-2">
+                    <CircleCheck className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold">{item.title}</p>
+                    <p className="mt-1 text-sm leading-6 text-white/70">{item.body}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 }

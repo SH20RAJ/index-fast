@@ -47,7 +47,7 @@ const TIER_STYLES: Record<string, string> = {
   "limited-free": "bg-amber-500/10 text-amber-600 border-amber-500/20",
 };
 
-export default function ToolsHomePage() {
+export  function ToolsHomePage() {
   return (
     <>
       <section className="relative overflow-hidden border-b border-border/70">
@@ -317,7 +317,7 @@ export default function ToolsHomePage() {
 }
 
 
-export default function ToolsHomePage() {
+export  function ToolsHomePage2() {
   return (
     <>
       <section className="relative overflow-hidden border-b border-border/70">
@@ -455,3 +455,6 @@ export default function ToolsHomePage() {
     </>
   );
 }
+
+
+export default ToolsHomePage;

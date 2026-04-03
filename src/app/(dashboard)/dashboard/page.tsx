@@ -11,9 +11,5 @@ export default async function DashboardPage() {
 
   const data = await loadDashboardData();
 
-  return (
-    <div className="pt-1 pb-8">
-      <DashboardOverview data={data} />
-    </div>
-  );
+  return <DashboardOverview data={data} />;
 }
