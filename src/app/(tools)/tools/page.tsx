@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import ToolCta from "./_components/ToolCta";
+import ExternalResourcesSection from "./_components/ExternalResourcesSection";
 import { SEO_TOOLS, TOOL_CATEGORIES, getToolsByCategory } from "@/lib/tools-catalog";
 
 export const metadata: Metadata = {
@@ -32,7 +33,8 @@ export const metadata: Metadata = {
 
 export default function ToolsHomePage() {
   return (
-    <section className="relative overflow-hidden border-b border-border/70">
+    <>
+      <section className="relative overflow-hidden border-b border-border/70">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-secondary/60 blur-3xl" />
         <div className="absolute left-1/4 top-1/3 h-64 w-64 rounded-full bg-muted/70 blur-3xl" />
@@ -153,6 +155,8 @@ export default function ToolsHomePage() {
           />
         </div>
       </div>
-    </section>
+      </section>
+      <ExternalResourcesSection />
+    </>
   );
 }
