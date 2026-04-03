@@ -1,4 +1,4 @@
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Logo = {
@@ -6,26 +6,42 @@ type Logo = {
   alt: string;
   width?: number;
   height?: number;
+  marketShare?: number;
 };
 
 type LogoCloudProps = React.ComponentProps<"div">;
 
+// Live market share data from Statcounter (March 2026)
+// Source: https://gs.statcounter.com/search-engine-market-share
+const MARKET_SHARE_DATA: Record<string, number> = {
+  google: 89.85,
+  bing: 5.13,
+  yahoo: 1.48,
+  duckduckgo: 0.75,
+  baidu: 0.53,
+  yandex: 1.3,
+  ask: 0.51,
+  ecosia: 0.45,
+};
+
 export function LogoCloud({ className, ...props }: LogoCloudProps) {
   return (
-    <div
-      className={cn(
-        "relative grid grid-cols-2 border-x md:grid-cols-4",
-        className
-      )}
-      {...props}
-    >
+    <div className="space-y-4">
+      <div
+        className={cn(
+          "relative grid grid-cols-2 border-x md:grid-cols-4",
+          className
+        )}
+        {...props}
+      >
       <div className="-translate-x-1/2 -top-px pointer-events-none absolute left-1/2 w-screen border-t" />
 
       <LogoCard
         className="relative border-r border-b bg-secondary dark:bg-secondary/30"
         logo={{
-          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/google-search-engine.webp",
+          src: "/engines/google-wordmark.svg",
           alt: "Google Logo",
+          marketShare: MARKET_SHARE_DATA.google,
         }}
       >
         <PlusIcon
@@ -37,16 +53,18 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="border-b md:border-r"
         logo={{
-          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/bing-search-engine.webp",
+          src: "/engines/bing.svg",
           alt: "Bing Logo",
+          marketShare: MARKET_SHARE_DATA.bing,
         }}
       />
 
       <LogoCard
         className="relative border-r border-b md:bg-secondary dark:md:bg-secondary/30"
         logo={{
-          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/yahoo-search-engine.webp",
+          src: "/engines/yahoo.svg",
           alt: "Yahoo Logo",
+          marketShare: MARKET_SHARE_DATA.yahoo,
         }}
       >
         <PlusIcon
@@ -62,16 +80,18 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="relative border-b bg-secondary md:bg-background dark:bg-secondary/30 md:dark:bg-background"
         logo={{
-          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/duckduckgo-search-engine.webp",
+          src: "/engines/duckduckgo.svg",
           alt: "DuckDuckGo Logo",
+          marketShare: MARKET_SHARE_DATA.duckduckgo,
         }}
       />
 
       <LogoCard
         className="relative border-r border-b bg-secondary md:border-b-0 md:bg-background dark:bg-secondary/30 md:dark:bg-background"
         logo={{
-          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/baidu-search-engine.webp",
+          src: "/engines/baidu.svg",
           alt: "Baidu Logo",
+          marketShare: MARKET_SHARE_DATA.baidu,
         }}
       >
         <PlusIcon
@@ -83,28 +103,47 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="border-b bg-background md:border-r md:border-b-0 md:bg-secondary dark:md:bg-secondary/30"
         logo={{
-          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/yandex-search-engine.webp",
+          src: "/engines/yandex.svg",
           alt: "Yandex Logo",
+          marketShare: MARKET_SHARE_DATA.yandex,
         }}
       />
 
       <LogoCard
         className="border-r"
         logo={{
-          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/ask-search-engine.webp",
+          src: "/engines/ask.svg",
           alt: "Ask Logo",
+          marketShare: MARKET_SHARE_DATA.ask,
         }}
       />
 
       <LogoCard
         className="bg-secondary dark:bg-secondary/30"
         logo={{
-          src: "https://www.reliablesoft.net/wp-content/uploads/2023/10/ecosia-search-engine.webp",
+          src: "/engines/ecosia.svg",
           alt: "Ecosia Logo",
+          marketShare: MARKET_SHARE_DATA.ecosia,
         }}
       />
 
       <div className="-translate-x-1/2 -bottom-px pointer-events-none absolute left-1/2 w-screen border-b" />
+      </div>
+
+      {/* Statcounter Attribution */}
+      <div className="flex items-center justify-center gap-2 border-t pt-3 text-xs text-muted-foreground">
+        <span>Market share data from</span>
+        <a
+          href="https://gs.statcounter.com/search-engine-market-share"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 font-medium hover:text-foreground transition-colors"
+        >
+          Statcounter
+          <ExternalLink className="h-3 w-3" />
+        </a>
+        <span>• March 2026</span>
+      </div>
     </div>
   );
 }
@@ -117,18 +156,23 @@ function LogoCard({ logo, className, children, ...props }: LogoCardProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center bg-background px-4 py-8 md:p-8",
+        "group relative flex flex-col items-center justify-center bg-background px-4 py-8 md:p-8 transition-all hover:bg-secondary/50",
         className
       )}
       {...props}
     >
       <img
         alt={logo.alt}
-        className="pointer-events-none h-4 select-none md:h-5 dark:brightness-0 dark:invert"
+        className="pointer-events-none h-4 select-none object-contain md:h-5"
         height={logo.height || "auto"}
         src={logo.src}
         width={logo.width || "auto"}
       />
+      {logo.marketShare && (
+        <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+          {logo.marketShare}%
+        </div>
+      )}
       {children}
     </div>
   );

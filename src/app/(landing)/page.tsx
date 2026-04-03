@@ -8,6 +8,7 @@ import Pricing from "@/components/landing/Pricing";
 import FAQ from "@/components/landing/FAQ";
 import FinalCTA from "@/components/landing/FinalCTA";
 import ChatBot from "@/components/landing/ChatBot";
+import SocialProof from "@/components/landing/SocialProof";
 import { LogoCloud } from "@/components/ui/logo-cloud-2";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function LandingPage() {
   return (
     <>
       <Hero />
+      <SocialProof />
       <HowItWorks />
       <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="space-y-3 pb-6">
