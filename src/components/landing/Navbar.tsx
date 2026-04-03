@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useUser } from "@stackframe/stack";
 import { Bolt, Menu, Moon, Sun, X } from "lucide-react";
 import { useColorMode } from "@/components/ThemeRegistry";
@@ -10,14 +11,29 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Navbar() {
   const user = useUser();
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { mode, toggleColorMode } = useColorMode();
 
   const primaryLinks = [
+    { label: "Home", href: "/" },
     { label: "Tools", href: "/tools" },
     { label: "Blog", href: "/blog" },
     { label: "Pricing", href: "/#pricing" },
   ];
+
+  function isActiveLink(href: string) {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    if (href.startsWith("/tools")) {
+      return pathname.startsWith("/tools");
+    }
+    if (href.startsWith("/blog")) {
+      return pathname.startsWith("/blog");
+    }
+    return false;
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl">
@@ -31,7 +47,12 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-1 rounded-xl border border-border/70 bg-card/60 p-1 md:flex">
           {primaryLinks.map((item) => (
-            <Button key={item.label} variant="ghost" asChild className="h-8 px-3 text-sm text-muted-foreground hover:text-foreground">
+            <Button
+              key={item.label}
+              variant="ghost"
+              asChild
+              className={`h-8 px-3 text-sm ${isActiveLink(item.href) ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+            >
               <Link href={item.href}>{item.label}</Link>
             </Button>
           ))}
@@ -75,7 +96,13 @@ export default function Navbar() {
               </SheetHeader>
               <div className="mt-6 grid gap-2">
                 {primaryLinks.map((item) => (
-                  <Button key={item.label} variant="ghost" asChild className="justify-start" onClick={() => setMobileOpen(false)}>
+                  <Button
+                    key={item.label}
+                    variant="ghost"
+                    asChild
+                    className={`justify-start ${isActiveLink(item.href) ? "bg-muted text-foreground" : "text-muted-foreground"}`}
+                    onClick={() => setMobileOpen(false)}
+                  >
                     <Link href={item.href}>{item.label}</Link>
                   </Button>
                 ))}

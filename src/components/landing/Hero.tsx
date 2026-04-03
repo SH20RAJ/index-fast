@@ -110,7 +110,7 @@ export default function Hero() {
                   </div>
                   <div className="flex h-2 w-2 items-center justify-center">
                     <span className="absolute inline-flex h-2.5 w-2.5 rounded-full bg-destructive opacity-75 animate-pulse"></span>
-                    <span className="relative inline-block h-2.5 w-2.5 rounded-full bg-destructive"></span>
+                    <span className="relative inline-block h-2.5 w-2.5 rounded-full bg-success"></span>
                   </div>
                 </div>
 

@@ -11,6 +11,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 const plans = Object.values(PLAN_DEFINITIONS);
+const countFormatter = new Intl.NumberFormat("en-US");
+
+function getPlanFeatureLines(plan: (typeof plans)[number]) {
+  const limitLines = [
+    `${countFormatter.format(plan.submissionLimitMonthly)} URL submissions/month`,
+    `${countFormatter.format(plan.submissionLimitDaily)} URL submissions/day`,
+    plan.cronLimit === 1 ? "1 cron job" : `${countFormatter.format(plan.cronLimit)} cron jobs`,
+    plan.allowHourly ? "Hourly scheduling" : "Daily scheduling",
+    plan.websiteLimit >= 1000
+      ? "High-volume website support"
+      : `Up to ${countFormatter.format(plan.websiteLimit)} websites`,
+  ];
+
+  const extraLines = plan.features.filter((feature) => !/(unlimited urls?|urls submissions?|cron job)/i.test(feature));
+  return [...limitLines, ...extraLines];
+}
 
 export default function Pricing() {
   const stack = useStackApp();
@@ -19,7 +35,7 @@ export default function Pricing() {
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   async function startCheckout(planName: string) {
-    if (planName === "Starter") {
+    if (planName === "Free") {
       if (user) {
         window.location.href = "/dashboard";
       } else {
@@ -90,7 +106,7 @@ export default function Pricing() {
                 </div>
 
                 <div className="flex-1 space-y-2">
-                  {p.features.map((f, idx) => (
+                  {getPlanFeatureLines(p).map((f, idx) => (
                     <div key={idx} className="flex items-center gap-2">
                       <Check className="h-4 w-4 text-primary" />
                       <span className="text-sm">{f}</span>
