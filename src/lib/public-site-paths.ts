@@ -1,5 +1,6 @@
 import { BLOG_POSTS } from "@/lib/blog-catalog";
 import { EXTERNAL_RESOURCE_CATEGORIES, SEO_TOOLS } from "@/lib/tools-catalog";
+import { SEO_TOOL_SECTIONS } from "@/lib/seo-tool-links";
 
 export function getPublicSitePaths(): string[] {
   const staticPaths = [
@@ -23,6 +24,7 @@ export function getPublicSitePaths(): string[] {
   const resourcePaths = EXTERNAL_RESOURCE_CATEGORIES.map(
     (category) => `/tools/resources/${category.id}`
   );
+  const seoToolPaths = ["/tools/seotools", ...SEO_TOOL_SECTIONS.map((section) => `/tools/seotools/${section.id}`)];
 
-  return Array.from(new Set([...staticPaths, ...blogPaths, ...toolPaths, ...resourcePaths]));
+  return Array.from(new Set([...staticPaths, ...blogPaths, ...toolPaths, ...resourcePaths, ...seoToolPaths]));
 }

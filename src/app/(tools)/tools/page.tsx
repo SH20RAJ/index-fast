@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import ToolCta from "./_components/ToolCta";
+import ToolsExplorer from "./_components/ToolsExplorer";
 import ExternalResourcesSection from "./_components/ExternalResourcesSection";
 import { SEO_TOOLS, TOOL_CATEGORIES, getToolsByCategory } from "@/lib/tools-catalog";
 
@@ -88,6 +89,15 @@ export default function ToolsHomePage() {
               </CardContent>
             </Card>
           </div>
+
+          <ToolsExplorer
+            tools={SEO_TOOLS}
+            categories={TOOL_CATEGORIES}
+            title="Search and sort tools fast"
+            description="Filter by keyword, sort by SEO ratio, and open the fastest tools first. Keep the free directory visible, then unlock the full toolbox after login."
+            ctaHref="/tools/seotools"
+            ctaLabel="Open SEO tools hub"
+          />
 
           <div className="rounded-xl border border-border/70 bg-card/60 p-3 sm:p-4" id="tool-categories">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Jump by category</p>
