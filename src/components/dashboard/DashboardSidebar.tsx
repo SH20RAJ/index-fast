@@ -63,6 +63,7 @@ const navSections = [
         icon: Wrench,
         children: [
           { label: "Overview", href: "/toolbox" },
+          { label: "Universal Ping", href: "/toolbox/ping" },
           { label: "Free Tools", href: "/tools" },
           { label: "Blogs", href: "/blogs" },
         ],
