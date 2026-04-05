@@ -2,29 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
-const faqs = [
-  {
-    q: "How fast is indexing?",
-    a: "URLs typically get crawled and indexed in 4-24 hours. Without automation, this process can take weeks.",
-  },
-  {
-    q: "Is it safe for SEO?",
-    a: "Yes. We use official Bing and IndexNow APIs. This is the recommended way to notify engines.",
-  },
-  {
-    q: "Do I need to be a developer?",
-    a: "No. The dashboard is built for operators and marketers, not only engineers.",
-  },
-  {
-    q: "Can I cancel any time?",
-    a: "Yes. We offer monthly billing with no long contracts. You can cancel directly from your dashboard.",
-  },
-  {
-    q: "What sites are supported?",
-    a: "Any site verified in Search Console, including WordPress, Shopify, and custom builds.",
-  },
-];
+import { LANDING_FAQS } from "@/lib/landing-faq";
 
 export default function FAQ() {
   return (
@@ -41,13 +19,13 @@ export default function FAQ() {
         </div>
 
         <div className="divide-y divide-border rounded-xl border border-border/70 bg-card/70">
-          {faqs.map((faq) => (
-            <details key={faq.q} className="group p-4 sm:p-5">
+          {LANDING_FAQS.map((faq) => (
+            <details key={faq.question} className="group p-4 sm:p-5">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold tracking-tight">
-                {faq.q}
+                {faq.question}
                 <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-open:rotate-180" />
               </summary>
-              <p className="pt-3 text-sm leading-relaxed text-muted-foreground">{faq.a}</p>
+              <p className="pt-3 text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
             </details>
           ))}
         </div>

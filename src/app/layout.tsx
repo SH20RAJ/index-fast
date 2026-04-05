@@ -13,6 +13,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
 const siteName = "IndexFast";
+const siteDescription =
+  "Automated indexing workflows for modern teams. Submit URLs faster to Bing and IndexNow, monitor sitemap changes, and improve organic discovery.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -20,9 +22,14 @@ export const metadata: Metadata = {
     default: "IndexFast | Automated SEO Indexing",
     template: "%s | IndexFast",
   },
-  description:
-    "Automated indexing workflows for modern teams. Submit URLs faster to Bing and IndexNow, monitor sitemap changes, and improve organic discovery.",
+  description: siteDescription,
   applicationName: siteName,
+  referrer: "origin-when-cross-origin",
+  creator: siteName,
+  publisher: siteName,
+  category: "technology",
+  classification: "SEO, indexing automation, SaaS",
+  authors: [{ name: siteName, url: siteUrl }],
   keywords: [
     "SEO indexing",
     "IndexNow",
@@ -33,6 +40,24 @@ export const metadata: Metadata = {
     "SEO tools",
     "generative engine optimization",
   ],
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en-US": "/",
+      en: "/",
+    },
+    types: {
+      "application/opensearchdescription+xml": `${siteUrl}/opensearch.xml`,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.NEXT_PUBLIC_YANDEX_SITE_VERIFICATION,
+    yahoo: process.env.NEXT_PUBLIC_YAHOO_SITE_VERIFICATION,
+    other: {
+      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ?? "",
+    },
+  },
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [
@@ -52,8 +77,8 @@ export const metadata: Metadata = {
     url: "/",
     siteName,
     title: "IndexFast | Automated SEO Indexing",
-    description:
-      "Automated indexing workflows for modern teams. Submit URLs faster to Bing and IndexNow, monitor sitemap changes, and improve organic discovery.",
+    description: siteDescription,
+    locale: "en_US",
     images: [
       {
         url: "/opengraph-image.png",
@@ -66,9 +91,10 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "IndexFast | Automated SEO Indexing",
-    description:
-      "Automated indexing workflows for modern teams. Submit URLs faster to Bing and IndexNow, monitor sitemap changes, and improve organic discovery.",
+    description: siteDescription,
     images: ["/twitter-image.png"],
+    creator: "@indexfast",
+    site: "@indexfast",
   },
   robots: {
     index: true,
@@ -90,6 +116,10 @@ export const metadata: Metadata = {
     email: false,
     address: false,
     telephone: false,
+  },
+  other: {
+    "apple-mobile-web-app-title": siteName,
+    "msapplication-TileColor": "#0b1020",
   },
 };
 
@@ -113,14 +143,27 @@ const websiteJsonLd = {
       "@id": `${siteUrl}/#website`,
       url: siteUrl,
       name: siteName,
+      description: siteDescription,
       publisher: {
         "@id": `${siteUrl}/#organization`,
       },
       potentialAction: {
         "@type": "SearchAction",
-        target: `${siteUrl}/tools`,
+        target: `${siteUrl}/blog?query={search_term_string}`,
         "query-input": "required name=search_term_string",
       },
+    },
+    {
+      "@type": "SiteNavigationElement",
+      name: ["How It Works", "Docs", "Pricing", "Blog", "Tools", "Contact"],
+      url: [
+        `${siteUrl}/how-it-works`,
+        `${siteUrl}/docs`,
+        `${siteUrl}/pricing`,
+        `${siteUrl}/blog`,
+        `${siteUrl}/tools`,
+        `${siteUrl}/contact`,
+      ],
     },
   ],
 };
