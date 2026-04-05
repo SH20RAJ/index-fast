@@ -18,51 +18,65 @@ TEMPLATES = {
     }
 }
 
-PATH_TO_CSV = os.path.abspath("/Users/shaswatraj/Desktop/indexfast/outreach/kimi-list.csv")
+FILES_TO_PROCESS = [
+    {"path": "/Users/shaswatraj/Desktop/indexfast/outreach/kimi-list.csv", "mapping": {"name": "Name", "company": "Company", "email": "Email", "category": "Category"}},
+    {"path": "/Users/shaswatraj/Desktop/indexfast/outreach/grok1.csv", "mapping": {"company": "Company_Name", "name": "Company_Name", "email": "Email", "category": "Notes"}}
+]
 
 def get_category_map(category):
+    if not category: return "owner"
     c = category.lower()
-    if "agency" in c or "digital marketing" in c:
+    if "agency" in c or "digital marketing" in c or "seo" in c:
         return "agency"
-    if "founder" in c or "director" in c or "manager" in c:
+    if "founder" in c or "director" in c or "manager" in c or "consultant" in c:
         return "founder"
     return "owner"
 
 def parse_name(name, company):
-    if not name or name == company or "SEO" in name or "Agency" in name or "Digital" in name:
+    if not name: return "there"
+    if name == company or any(x in name for x in ["SEO", "Agency", "Digital", "Consulting", "Marketing"]):
         return "there"
     return name.split(" ")[0]
 
 def main():
-    if not os.path.exists(PATH_TO_CSV):
-        print(f"CSV not found at {PATH_TO_CSV}")
-        return
-
     emails_to_send = []
-    with open(PATH_TO_CSV, mode='r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for i, row in enumerate(reader):
-            name = row.get("Name", "")
-            company = row.get("Company", "your site")
-            email = row.get("Email")
-            category_raw = row.get("Category", "")
+    
+    for config in FILES_TO_PROCESS:
+        path = config["path"]
+        mapping = config["mapping"]
+        
+        if not os.path.exists(path):
+            print(f"File not found: {path}")
+            continue
             
-            first_name = parse_name(name, company)
-            category = get_category_map(category_raw)
+        with open(path, mode='r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for i, row in enumerate(reader):
+                name = row.get(mapping.get("name", "Name"), "")
+                company = row.get(mapping.get("company", "Company"), "your site")
+                email = row.get(mapping.get("email", "Email"))
+                category_raw = row.get(mapping.get("category", "Category"), "")
+                
+                if not email: continue
+                
+                first_name = parse_name(name, company)
+                category = get_category_map(category_raw)
 
-            template = TEMPLATES[category]
-            subject = template["subject"].format(company=company)
-            body = template["body"].format(first_name=first_name, company=company)
+                template = TEMPLATES[category]
+                subject = template["subject"].format(company=company)
+                body = template["body"].format(first_name=first_name, company=company)
 
-            emails_to_send.append({
-                "to": email,
-                "subject": subject,
-                "body": body
-            })
+                emails_to_send.append({
+                    "to": email,
+                    "subject": subject,
+                    "body": body,
+                    "source": os.path.basename(path)
+                })
 
-    # Print first 5 for verification
+    # For verification, print first 2 from each source
+    print(f"Total emails processed: {len(emails_to_send)}")
     for i, email_data in enumerate(emails_to_send[:5]):
-        print(f"--- EMAIL {i+1} ---")
+        print(f"--- EMAIL {i+1} (Source: {email_data['source']}) ---")
         print(f"To: {email_data['to']}")
         print(f"Subject: {email_data['subject']}")
         print(f"Body:\n{email_data['body']}\n")
