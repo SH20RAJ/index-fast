@@ -18,6 +18,8 @@ export default function Navbar() {
 
   const primaryLinks = [
     { label: "Home", href: "/" },
+    { label: "How It Works", href: "/how-it-works" },
+    { label: "Docs", href: "/docs" },
     { label: "Tools", href: "/tools" },
     { label: "Blog", href: "/blog" },
     { label: "Pricing", href: "/#pricing" },
@@ -32,6 +34,12 @@ export default function Navbar() {
     }
     if (href.startsWith("/blog")) {
       return pathname.startsWith("/blog");
+    }
+    if (href.startsWith("/how-it-works")) {
+      return pathname.startsWith("/how-it-works");
+    }
+    if (href.startsWith("/docs")) {
+      return pathname.startsWith("/docs");
     }
     return false;
   }

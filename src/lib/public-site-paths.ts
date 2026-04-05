@@ -5,6 +5,8 @@ import { SEO_TOOL_SECTIONS } from "@/lib/seo-tool-links";
 export function getPublicSitePaths(): string[] {
   const staticPaths = [
     "/",
+    "/how-it-works",
+    "/docs",
     "/contact",
     "/privacy",
     "/status",

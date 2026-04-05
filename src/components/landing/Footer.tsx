@@ -22,6 +22,8 @@ export default function Footer() {
             <p className="text-xs font-bold tracking-[0.14em] uppercase text-muted-foreground">Platform</p>
             <div className="grid gap-1 text-muted-foreground">
               <Link href="/" className="hover:text-foreground">Home</Link>
+              <Link href="/how-it-works" className="hover:text-foreground">How It Works</Link>
+              <Link href="/docs" className="hover:text-foreground">Docs</Link>
               <Link href="/pricing" className="hover:text-foreground">Pricing</Link>
               <Link href="/blog" className="hover:text-foreground">Insights</Link>
             </div>
