@@ -72,6 +72,37 @@ const navSections = [
   },
 ];
 
+function SidebarItem({ 
+  item, 
+  active, 
+  onClick 
+}: { 
+  item: typeof navSections[0]["items"][0]; 
+  active: boolean; 
+  onClick?: () => void;
+}) {
+  return (
+    <Button
+      variant={active ? "default" : "ghost"}
+      color={active ? "primary" : "secondary"}
+      asChild
+      className={cn(
+        "w-full justify-start gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
+        active 
+          ? "shadow-md shadow-primary/20" 
+          : "text-muted-foreground hover:text-foreground"
+      )}
+      onClick={onClick}
+    >
+      <Link href={item.href || "#"}>
+        <item.icon className={cn("h-4 w-4 shrink-0", active ? "text-primary-foreground" : "")} />
+        <span className="flex-1 font-medium">{item.label}</span>
+        {active && <span className="h-1.5 w-1.5 rounded-full bg-primary-foreground/90 animate-in fade-in zoom-in duration-300" />}
+      </Link>
+    </Button>
+  );
+}
+
 function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   const pathname = usePathname();
   const user = useUser();
@@ -114,22 +145,31 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col border-r border-white/40 bg-white/75 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
-      <div className="border-b border-black/5 px-4 py-4 dark:border-white/10">
-        <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/70 px-3 py-2 shadow-sm dark:border-white/10 dark:bg-white/5">
-          <Image src="/logo.png" alt="IndexFast logo" width={36} height={36} className="h-9 w-9 rounded-xl object-cover ring-1 ring-black/5" />
+    <div className="flex h-full min-h-0 flex-col border-r border-border/50 bg-background/60 backdrop-blur-3xl dark:bg-background/40">
+      <div className="border-b border-border/50 px-6 py-6">
+        <div className="flex items-center gap-3">
+          <div className="relative group cursor-pointer" onClick={handleNavClick}>
+            <div className="absolute -inset-1.5 bg-gradient-to-tr from-primary/30 to-primary/0 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <Image 
+              src="/logo.png" 
+              alt="IndexFast logo" 
+              width={40} 
+              height={40} 
+              className="relative h-10 w-10 rounded-xl object-cover ring-1 ring-border/50 shadow-lg" 
+            />
+          </div>
           <div className="flex min-w-0 flex-1 flex-col">
-            <span className="text-sm font-semibold leading-none tracking-tight">IndexFast</span>
-            <span className="text-[11px] text-muted-foreground">Workspace command center</span>
+            <span className="text-base font-bold leading-none tracking-tight">IndexFast</span>
+            <span className="text-[11px] text-muted-foreground mt-1 font-medium italic">Workspace Command</span>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto px-3 py-5">
-        <nav className="space-y-6">
+      <div className="flex-1 min-h-0 overflow-y-auto px-3 py-6">
+        <nav className="space-y-8">
           {navSections.map((section) => (
-            <div key={section.label} className="space-y-2">
-              <p className="px-3 text-[11px] font-medium uppercase tracking-wide text-muted-foreground/70">
+            <div key={section.label} className="space-y-3">
+              <p className="px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground/50">
                 {section.label}
               </p>
               <div className="space-y-1">
@@ -141,58 +181,50 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                   return (
                     <div key={item.label}>
                       {!hasChildren ? (
-                        <Link
-                          href={item.href || "#"}
-                          onClick={handleNavClick}
-                          aria-current={active ? "page" : undefined}
-                          className={cn(
-                            "group flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all",
-                            active
-                              ? "bg-slate-950 text-white shadow-sm dark:bg-white dark:text-slate-950"
-                              : "text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/8"
-                          )}
-                        >
-                          <item.icon className="h-4 w-4 shrink-0" />
-                          <span className="flex-1">{item.label}</span>
-                          {active && <span className="h-2 w-2 rounded-full bg-current/85" />}
-                        </Link>
+                        <SidebarItem 
+                          item={item} 
+                          active={active} 
+                          onClick={handleNavClick} 
+                        />
                       ) : (
                         <>
-                          <button
-                            type="button"
+                          <Button
+                            variant={submenuOpen ? "secondary" : "ghost"}
+                            color="secondary"
                             onClick={() => setOpenSubmenu(submenuOpen ? null : item.label)}
-                            aria-expanded={submenuOpen}
                             className={cn(
-                              "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm transition-all",
-                              active
-                                ? "bg-black/5 text-foreground dark:bg-white/8"
-                                : "text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/8"
+                              "w-full justify-start gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
+                              submenuOpen ? "bg-secondary/50 text-foreground" : "text-muted-foreground hover:text-foreground"
                             )}
                           >
                             <item.icon className="h-4 w-4 shrink-0" />
-                            <span className="flex-1">{item.label}</span>
+                            <span className="flex-1 font-medium">{item.label}</span>
                             <ChevronDown className={cn(
-                              "h-4 w-4 transition-transform",
+                              "h-4 w-4 transition-transform duration-300",
                               submenuOpen && "rotate-180"
                             )} />
-                          </button>
+                          </Button>
+                          
                           {submenuOpen && item.children && (
-                            <div className="ml-4 space-y-1 border-l border-border/80 pl-3 py-1">
-                              {item.children.map((child) => (
-                                <Link
-                                  key={child.href}
-                                  href={child.href}
-                                  onClick={handleNavClick}
-                                  className={cn(
-                                    "block rounded-md px-2.5 py-1.5 text-xs transition-colors",
-                                    pathname === child.href
-                                      ? "bg-muted text-foreground"
-                                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                                  )}
-                                >
-                                  {child.label}
-                                </Link>
-                              ))}
+                            <div className="mt-1.5 ml-5.5 space-y-1 border-l-2 border-border/30 pl-4 py-1 animate-in slide-in-from-left-2 duration-300">
+                              {item.children.map((child) => {
+                                const childActive = pathname === child.href;
+                                return (
+                                  <Link
+                                    key={child.href}
+                                    href={child.href}
+                                    onClick={handleNavClick}
+                                    className={cn(
+                                      "block rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200",
+                                      childActive
+                                        ? "bg-primary/10 text-primary"
+                                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                    )}
+                                  >
+                                    {child.label}
+                                  </Link>
+                                );
+                              })}
                             </div>
                           )}
                         </>
@@ -206,56 +238,58 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         </nav>
       </div>
 
-      <div className="mt-auto border-t border-border p-4 space-y-3">
-        <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/80 p-3 shadow-sm dark:border-white/10 dark:bg-white/5">
-          <Avatar className="h-10 w-10 border border-border">
-            <AvatarFallback className="bg-muted text-foreground text-xs font-semibold">
+      <div className="mt-auto border-t border-border/50 p-4 space-y-4 bg-muted/30 backdrop-blur-xl">
+        <div className="flex items-center gap-3 rounded-2xl p-2 transition-colors hover:bg-background/20">
+          <Avatar className="h-10 w-10 border-2 border-primary/20 shadow-sm">
+            <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
               {initials}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium leading-tight">{displayName}</p>
-            <p className="truncate text-[11px] text-muted-foreground">{primaryEmail}</p>
+            <p className="truncate text-sm font-bold leading-tight">{displayName}</p>
+            <p className="truncate text-[10px] text-muted-foreground font-medium">{primaryEmail}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-2">
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
-            className="h-9 rounded-xl border-black/10 bg-white/80 px-2 text-[11px] shadow-sm hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+            color="secondary"
+            className="h-9 rounded-xl px-0 shadow-sm transition-transform active:scale-95"
             asChild
+            title="Settings"
           >
             <Link href="/settings">
-              <Settings className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Settings</span>
+              <Settings className="h-4 w-4" />
             </Link>
           </Button>
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
-            className="h-9 rounded-xl border-black/10 bg-white/80 px-2 text-[11px] shadow-sm hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+            color="secondary"
+            className="h-9 rounded-xl px-0 shadow-sm transition-transform active:scale-95"
             onClick={toggleColorMode}
             title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
           >
             {mode === "dark" ? (
-              <Sun className="h-3.5 w-3.5" />
+              <Sun className="h-4 w-4 text-amber-400" />
             ) : (
-              <Moon className="h-3.5 w-3.5" />
+              <Moon className="h-4 w-4 text-indigo-400" />
             )}
-            <span className="hidden sm:inline">{mode === "dark" ? "Light" : "Dark"}</span>
           </Button>
           <Button
-            variant="outline"
+            variant="secondary"
             size="sm"
-            className="h-9 rounded-xl border-black/10 bg-white/80 px-2 text-[11px] text-destructive shadow-sm hover:bg-destructive/10 dark:border-white/10 dark:bg-white/5"
+            color="danger"
+            className="h-9 rounded-xl px-0 shadow-sm transition-transform active:scale-95"
             onClick={() => {
               closeSheet?.();
               stack.signOut();
             }}
+            title="Logout"
           >
-            <LogOut className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Logout</span>
+            <LogOut className="h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -286,7 +320,7 @@ export default function DashboardSidebar() {
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:h-screen md:w-72 md:flex-col md:overflow-hidden">
+      <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:h-screen md:w-72 md:flex-col md:overflow-hidden z-20">
         <SidebarContent />
       </aside>
     </>

@@ -84,7 +84,7 @@ export default function Navbar() {
             )}
           </Button>
           {user ? (
-            <Button className="h-9 font-semibold shadow-md">
+            <Button asChild className="h-9 font-semibold shadow-md">
               <Link href="/dashboard">Dashboard</Link>
             </Button>
           ) : (
@@ -92,7 +92,7 @@ export default function Navbar() {
               <Button variant="ghost" asChild className="h-9 px-4 font-medium">
                 <Link href="/sign-in">Sign In</Link>
               </Button>
-              <Button className="h-9 px-4 font-semibold shadow-md">
+              <Button asChild className="h-9 px-4 font-semibold shadow-md">
                 <Link href="/sign-up">Get Started</Link>
               </Button>
             </>
