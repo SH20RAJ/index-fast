@@ -103,82 +103,56 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
   }
 
   return (
-    <div className="space-y-8 pb-16">
-      <PageHeader
-        title="Auto Submit Jobs"
-        description="Schedule recurring submissions and monitor automation status."
-        action={
-          <div className="w-full sm:w-[320px]">
-            <Select
-              value={siteId}
-              onChange={(val: any) => setSiteId(val as string)}
-              options={sites.map((site) => ({ label: site.url, value: site.id }))}
-              placeholder="Select a website"
-              selectClassName="h-10 rounded-md border-border bg-background"
-              className="w-full"
-            />
-          </div>
-        }
-      />
-
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle className="font-bold">Error</AlertTitle>
-          <AlertDescription className="font-medium">{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {selectedSite && (
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
-              <div className="space-y-1">
-                <h4 className="flex items-center gap-2 text-sm font-medium tracking-tight">
-                  <Globe className="h-3.5 w-3.5 text-muted-foreground" />
-                  {selectedSite.url}
-                </h4>
-                <p className="break-all text-xs text-muted-foreground">
-                  Sitemap: {selectedSite.sitemapUrl || "Not configured"}
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className="h-7 px-3 text-[10px] uppercase tracking-wide">
-                  Jobs: {jobs.length}
-                </Badge>
-                <Badge 
-                  variant="default" 
-                  className={cn(
-                    "h-7 px-3 text-[10px] uppercase tracking-wide",
-                    jobs.some(j => j.enabled) ? "bg-emerald-500/15 text-emerald-500" : "bg-muted text-muted-foreground"
-                  )}
-                >
-                  Active: {jobs.filter((job) => job.enabled).length}
-                </Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+    <div className="space-y-10 pb-16 max-w-5xl">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <PageHeader
+          title="Automation"
+          description="Schedule recurring submissions and monitor status."
+        />
+        <div className="w-full sm:w-[280px]">
+          <Select
+            value={siteId}
+            onChange={(val: any) => setSiteId(val as string)}
+            options={sites.map((site) => ({ label: site.url, value: site.id }))}
+            placeholder="Select a website"
+            className="w-full h-11"
+          />
+        </div>
+      </div>
 
       {loading && (
-        <div className="flex items-center gap-3 rounded-md border border-border bg-muted/30 p-3">
-          <Loader2 className="h-4 w-4 animate-spin text-primary" />
-          <p className="text-xs text-muted-foreground">
-            Fetching schedules...
-          </p>
+        <div className="flex items-center gap-3 p-4 rounded-3xl bg-zinc-50 dark:bg-white/5 animate-pulse">
+          <Loader2 className="h-4 w-4 animate-spin text-rose-500" />
+          <p className="text-xs text-zinc-500 font-light italic">Orchestrating schedules...</p>
         </div>
       )}
 
       {selectedSite && !loading && (
-        <CronJobManager
-          siteId={selectedSite.id}
-          siteUrl={selectedSite.url}
-          initialJobs={jobs}
-          isLoading={loading}
-          onRefresh={() => void loadJobs(selectedSite.id)}
-        />
+        <div className="space-y-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { label: "Selected Site", value: selectedSite.url.replace(/^https?:\/\//, ""), color: "text-zinc-900 dark:text-zinc-100" },
+              { label: "Total Jobs", value: jobs.length },
+              { label: "Active", value: jobs.filter(j => j.enabled).length, color: jobs.some(j => j.enabled) ? "text-emerald-500" : "text-zinc-400" },
+              { label: "Status", value: jobs.some(j => j.enabled) ? "Running" : "Paused", color: jobs.some(j => j.enabled) ? "text-emerald-500" : "text-zinc-400" },
+            ].map((stat) => (
+              <div key={stat.label} className="space-y-1 px-1">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{stat.label}</p>
+                <p className={cn("text-xl font-light tracking-tight truncate", stat.color)}>{stat.value}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-[32px] overflow-hidden border border-zinc-100 dark:border-white/5 bg-white dark:bg-zinc-900/40 shadow-sm">
+            <CronJobManager
+              siteId={selectedSite.id}
+              siteUrl={selectedSite.url}
+              initialJobs={jobs}
+              isLoading={loading}
+              onRefresh={() => void loadJobs(selectedSite.id)}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

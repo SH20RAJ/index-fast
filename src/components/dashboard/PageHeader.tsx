@@ -6,12 +6,12 @@ interface PageHeaderProps {
 
 export default function PageHeader({ title, description, action }: PageHeaderProps) {
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+        <h1 className="text-3xl font-light tracking-tight text-zinc-900 dark:text-zinc-100">
           {title}
         </h1>
-        <p className="max-w-[640px] text-sm text-muted-foreground sm:text-base">
+        <p className="max-w-[640px] text-sm font-light text-zinc-500 dark:text-zinc-400">
           {description}
         </p>
       </div>

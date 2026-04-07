@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -229,72 +230,49 @@ export default function PingView() {
   }
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-10 pb-16 pt-4 max-w-5xl">
       <PageHeader
         title="Universal Ping"
-        description="Broadcast your new content to 100+ search engines, blog directories, and ping aggregators in one click."
+        description="Broadcast your digital presence across global discovery networks."
       />
 
-      {/* Info banner */}
-      <Alert className="border-blue-500/20 bg-blue-500/5">
-        <Info className="h-4 w-4 text-blue-500" />
-        <AlertTitle className="font-bold text-blue-600">What is a Ping?</AlertTitle>
-        <AlertDescription className="text-sm text-muted-foreground">
-          A <strong>ping</strong> is a small notification telling search engines and directories that your page has new content — triggering faster crawling. This is the <strong>Secondary Discovery Layer</strong> complementing IndexNow &amp; Google API.
-        </AlertDescription>
-      </Alert>
-
       {/* Input form */}
-      <Card className="border-border/40 bg-card/30 backdrop-blur-sm">
-        <CardHeader>
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <Radio className="h-5 w-5" />
-          </div>
-          <CardTitle className="text-xl font-black tracking-tight">Ping Configuration</CardTitle>
-          <CardDescription>Enter the page URL and optional title, then choose your target groups.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                Page URL <span className="text-red-500">*</span>
-              </label>
+      <Card className="rounded-[32px] border-zinc-100 dark:border-white/5 bg-white dark:bg-zinc-900/40 shadow-sm overflow-hidden">
+        <CardContent className="p-8 space-y-10">
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 px-1">Resource URL</Label>
               <Input
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://example.com/new-blog-post"
-                className="h-11 bg-background/50 border-border/40 font-mono text-sm"
+                placeholder="https://example.com/stream"
+                className="h-12 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 px-4 font-mono text-xs"
                 disabled={running}
               />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                Page Title (optional)
-              </label>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 px-1">Resource Title</Label>
               <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="My New Blog Post"
-                className="h-11 bg-background/50 border-border/40"
+                placeholder="The Unseen Stream"
+                className="h-12 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 px-4 text-xs"
                 disabled={running}
               />
             </div>
           </div>
 
           {/* Group selector */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                Target Groups — {totalEndpoints} endpoints selected
-              </label>
-              <div className="flex gap-2">
-                <button onClick={selectAll} className="text-[10px] font-bold text-primary hover:underline">Select All</button>
-                <span className="text-muted-foreground/40">·</span>
-                <button onClick={selectNone} className="text-[10px] font-bold text-muted-foreground hover:underline">None</button>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between px-1">
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Target Networks — {totalEndpoints} Selected</h3>
+              <div className="flex gap-3">
+                <button onClick={selectAll} className="text-[10px] font-bold text-rose-500 uppercase tracking-widest">All</button>
+                <button onClick={selectNone} className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">None</button>
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="grid gap-3">
               {PING_GROUPS.map((group) => {
                 const isSelected = selectedGroups.has(group.id);
                 const isExpanded = expandedGroups.has(group.id);
@@ -302,11 +280,11 @@ export default function PingView() {
                   <div
                     key={group.id}
                     className={cn(
-                      "rounded-xl border transition-all",
-                      isSelected ? "border-primary/30 bg-primary/5" : "border-border/30 bg-background/30"
+                      "rounded-2xl border transition-all",
+                      isSelected ? "border-rose-500/20 bg-rose-500/5" : "border-zinc-100 bg-zinc-50/50 dark:border-white/5 dark:bg-white/[0.02]"
                     )}
                   >
-                    <div className="flex items-center gap-3 p-4">
+                    <div className="flex items-center gap-4 p-4 md:px-6">
                       <Checkbox
                         id={`group-${group.id}`}
                         checked={isSelected}
@@ -315,33 +293,20 @@ export default function PingView() {
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <Globe className={cn("h-4 w-4 shrink-0", group.color)} />
-                          <label
-                            htmlFor={`group-${group.id}`}
-                            className="text-sm font-bold cursor-pointer"
-                          >
-                            {group.label}
-                          </label>
-                          <Badge variant="outline" className="text-[9px] font-black px-1.5 py-0 h-4">
-                            {group.endpoints.length}
-                          </Badge>
+                          <label htmlFor={`group-${group.id}`} className="text-sm font-medium text-zinc-900 dark:text-zinc-100 cursor-pointer">{group.label}</label>
+                          <span className="text-[10px] font-bold text-zinc-400 tabular-nums">{group.endpoints.length}</span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5">{group.description}</p>
+                        <p className="text-xs text-zinc-500 font-light mt-0.5 truncate">{group.description}</p>
                       </div>
-                      <button
-                        onClick={() => toggleExpand(group.id)}
-                        className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
-                      >
+                      <button onClick={() => toggleExpand(group.id)} className="text-zinc-300 hover:text-zinc-500 transition-colors">
                         {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                       </button>
                     </div>
                     {isExpanded && (
-                      <div className="px-4 pb-4 pt-1 border-t border-border/20">
-                        <div className="max-h-40 overflow-y-auto space-y-1">
+                      <div className="px-6 pb-4 pt-0 border-t border-zinc-100 dark:border-white/5">
+                        <div className="max-h-32 overflow-y-auto pt-4 space-y-1">
                           {group.endpoints.map((ep) => (
-                            <p key={ep} className="text-[10px] font-mono text-muted-foreground/70 py-0.5">
-                              {ep}
-                            </p>
+                            <p key={ep} className="text-[9px] font-mono text-zinc-400">{ep}</p>
                           ))}
                         </div>
                       </div>
@@ -352,94 +317,56 @@ export default function PingView() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+          <div className="pt-4 flex flex-col sm:flex-row items-center gap-6">
             <Button
               onClick={handlePing}
               disabled={running || !url.trim() || selectedGroups.size === 0}
-              className="h-12 px-8 font-black rounded-xl gap-2 shadow-lg shadow-primary/10"
+              className="h-14 w-full sm:w-64 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white shadow-xl shadow-zinc-900/10 font-bold uppercase tracking-widest text-xs"
             >
-              {running ? (
-                <><Loader2 className="h-4 w-4 animate-spin" /> Pinging...</>
-              ) : (
-                <><Send className="h-4 w-4" /> Start Universal Ping</>
-              )}
+              {running ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+              {running ? "Broadcasting..." : "Start Broadcast"}
             </Button>
             {done && (
-              <Button variant="outline" onClick={reset} className="h-12 px-6 font-bold rounded-xl gap-2">
-                <RotateCcw className="h-4 w-4" /> Reset
+              <Button variant="ghost" onClick={reset} className="rounded-full px-6 text-xs font-bold uppercase tracking-widest text-zinc-400">
+                Reset
               </Button>
             )}
           </div>
         </CardContent>
       </Card>
 
-      {/* Live progress */}
-      {running && (
-        <Card className="border-border/40 bg-card/30 backdrop-blur-sm">
-          <CardContent className="p-6 space-y-4">
-            <div className="flex items-center gap-3">
-              <Loader2 className="h-4 w-4 animate-spin text-primary" />
-              <span className="text-sm font-bold">Pinging {totalEndpoints} endpoints…</span>
-            </div>
-            <Progress value={progress} className="h-2" />
-            <p className="text-xs text-muted-foreground">{progress}% complete</p>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Results */}
-      {done && results.length > 0 && (
-        <div className="space-y-4">
-          {/* Summary cards */}
-          <div className="grid grid-cols-3 gap-4">
+      {(running || done) && (
+        <div className="space-y-10 animate-in slide-in-from-bottom-4 duration-700">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 px-1">
             {[
-              { label: "Total Pinged", value: results.length, icon: Zap, color: "text-blue-500" },
-              { label: "Success", value: successCount, icon: CheckCircle2, color: "text-emerald-500" },
-              { label: "Failed / Timeout", value: failedCount, icon: AlertCircle, color: "text-red-500" },
+              { label: "Progress", value: `${progress}%` },
+              { label: "Total", value: results.length },
+              { label: "Success", value: successCount, color: "text-emerald-500" },
+              { label: "Failed", value: failedCount, color: "text-rose-500" },
             ].map((s) => (
-              <Card key={s.label} className="border-border/40 bg-card/40">
-                <CardContent className="p-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{s.label}</p>
-                    <p className="text-2xl font-black">{s.value}</p>
-                  </div>
-                  <s.icon className={cn("h-6 w-6", s.color)} />
-                </CardContent>
-              </Card>
+              <div key={s.label} className="space-y-1">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{s.label}</p>
+                <p className={cn("text-2xl font-light tracking-tight", s.color)}>{s.value}</p>
+              </div>
             ))}
           </div>
 
-          {/* Log */}
-          <Card className="border-border/40 bg-card/20">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-black">Ping Results</CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              <div className="max-h-96 overflow-y-auto space-y-1">
+          {done && results.length > 0 && (
+            <div className="bg-white dark:bg-zinc-900/40 rounded-[32px] border border-zinc-100 dark:border-white/5 overflow-hidden">
+              <div className="divide-y divide-zinc-50 dark:divide-white/5 max-h-[400px] overflow-y-auto">
                 {results.map((r, i) => (
-                  <div
-                    key={i}
-                    className={cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-mono border",
-                      r.status === "success"
-                        ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-700"
-                        : "bg-red-500/5 border-red-500/20 text-red-600"
-                    )}
-                  >
-                    {r.status === "success" ? (
-                      <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-500" />
-                    ) : (
-                      <AlertCircle className="h-3 w-3 shrink-0 text-red-500" />
-                    )}
-                    <span className="truncate flex-1">{r.endpoint}</span>
-                    {r.ms !== undefined && (
-                      <span className="text-muted-foreground shrink-0">{r.ms}ms</span>
-                    )}
+                  <div key={i} className="p-4 md:px-8 flex items-center justify-between hover:bg-zinc-50/50 transition-colors">
+                    <p className="text-xs font-mono text-zinc-500 truncate pr-8">{r.endpoint}</p>
+                    <div className={cn(
+                      "h-1.5 w-1.5 rounded-full shrink-0",
+                      r.status === "success" ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" : "bg-rose-500"
+                    )} />
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          )}
         </div>
       )}
     </div>

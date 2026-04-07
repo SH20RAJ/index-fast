@@ -115,234 +115,119 @@ export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-8 pb-12 max-w-5xl">
       <PageHeader
-        title="Submissions"
-        description="Monitor every IndexNow, Bing, and ping submission in one timeline."
+        title="Timeline"
+        description="Every submission and indexing signal, chronicled in real-time."
       />
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Total Submissions", value: totals.all, icon: Database, color: "text-blue-500" },
+          { label: "Total", value: totals.all, icon: Database },
           { label: "Success", value: totals.success, icon: CheckCircle2, color: "text-emerald-500" },
-          { label: "Failed", value: totals.failed, icon: AlertCircle, color: "text-red-500" },
+          { label: "Failed", value: totals.failed, icon: AlertCircle, color: "text-rose-500" },
           { label: "Pending", value: totals.pending, icon: Clock, color: "text-amber-500" },
         ].map((item) => (
-          <Card key={item.label} className="border-border/40 bg-card/50 shadow-sm transition-all hover:bg-card/80">
-            <CardContent className="p-4 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{item.label}</p>
-                <p className="text-2xl font-black mt-1 tracking-tight">{item.value}</p>
-              </div>
-              <div className={cn("p-2 rounded-xl bg-background border border-border/20 shadow-xs", item.color)}>
-                <item.icon className="h-4 w-4" />
-              </div>
-            </CardContent>
-          </Card>
+          <div key={item.label} className="space-y-1 px-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{item.label}</p>
+            <p className={cn("text-3xl font-light tracking-tight text-zinc-900 dark:text-zinc-100", item.color)}>{item.value}</p>
+          </div>
         ))}
       </div>
 
-      {/* Filters */}
-      <Card className="border-border/40 bg-card/30 backdrop-blur-sm">
-        <CardContent className="p-4 flex flex-col sm:flex-row gap-4 items-end">
-          <div className="w-full space-y-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">
-              Status Filter
-            </label>
-            <Select 
-              value={statusFilter} 
-              onChange={handleStatusFilter}
-              options={[
-                { label: "All statuses", value: "all" },
-                { label: "Success", value: "success" },
-                { label: "Failed", value: "failed" },
-                { label: "Pending", value: "pending" },
-              ]}
-              placeholder="All statuses"
-              selectClassName="w-full bg-background/50 border-border/40"
-              className="w-full"
-            />
-          </div>
-          <div className="w-full space-y-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">
-              Engine Filter
-            </label>
-            <Select 
-              value={engineFilter} 
-              onChange={handleEngineFilter}
-              options={[
-                { label: "All engines", value: "all" },
-                { label: "IndexNow", value: "indexnow" },
-                { label: "Bing", value: "bing" },
-                { label: "Google", value: "google" },
-                { label: "Ping-o-Matic", value: "pingomatic" },
-                { label: "Pingler", value: "pingler" },
-              ]}
-              placeholder="All engines"
-              selectClassName="w-full bg-background/50 border-border/40"
-              className="w-full"
-            />
-          </div>
-        </CardContent>
-      </Card>
+      {/* Filters simplified */}
+      <div className="flex flex-wrap gap-3">
+        <div className="w-40">
+          <Select 
+            value={statusFilter} 
+            onChange={handleStatusFilter}
+            options={[
+              { label: "All statuses", value: "all" },
+              { label: "Success", value: "success" },
+              { label: "Failed", value: "failed" },
+              { label: "Pending", value: "pending" },
+            ]}
+            className="w-full h-10"
+          />
+        </div>
+        <div className="w-40">
+          <Select 
+            value={engineFilter} 
+            onChange={handleEngineFilter}
+            options={[
+              { label: "All engines", value: "all" },
+              { label: "IndexNow", value: "indexnow" },
+              { label: "Bing", value: "bing" },
+              { label: "Google", value: "google" },
+              { label: "Ping-o-Matic", value: "pingomatic" },
+              { label: "Pingler", value: "pingler" },
+            ]}
+            className="w-full h-10"
+          />
+        </div>
+      </div>
 
       {/* List */}
       <div className="space-y-4">
         {rows.length === 0 || filtered.length === 0 ? (
-          <Card className="border-dashed border-2 border-border/40 bg-transparent py-16">
-            <CardContent className="flex flex-col items-center justify-center text-center">
-              <div className="h-16 w-16 rounded-full bg-muted/20 flex items-center justify-center mb-4">
-                <History className="h-8 w-8 text-muted-foreground opacity-50" />
-              </div>
-              <h3 className="text-xl font-black tracking-tight mb-1">No submissions found</h3>
-              <p className="max-w-[280px] text-sm text-muted-foreground leading-relaxed">
-                Run a website sync to generate your first submission log.
-              </p>
-            </CardContent>
-          </Card>
+          <div className="py-20 text-center rounded-[32px] bg-zinc-50/50 border-2 border-dashed border-zinc-200 dark:bg-white/[0.02] dark:border-white/5">
+            <History className="mx-auto h-8 w-8 text-zinc-200" />
+            <p className="mt-4 text-sm font-light text-zinc-500">The timeline is currently empty.</p>
+          </div>
         ) : (
-          <>
-            {/* Result count */}
-            <p className="text-xs text-muted-foreground px-0.5">
-              Showing{" "}
-              <span className="font-semibold text-foreground">
-                {(safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, filtered.length)}
-              </span>{" "}
-              of <span className="font-semibold text-foreground">{filtered.length}</span> submissions
-            </p>
-
-            <div className="grid gap-3">
+          <div className="bg-white rounded-[32px] border border-zinc-100 overflow-hidden dark:bg-zinc-900/40 dark:border-white/5 shadow-sm">
+            <div className="divide-y divide-zinc-50 dark:divide-white/5">
               {paginated.map((row) => (
-                <Card
-                  key={row.id}
-                  className={cn(
-                    "border-border/40 bg-card/40 transition-all hover:bg-card/60 hover:border-border/60 group",
-                    row.status === "failed" && "border-red-500/20"
-                  )}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex flex-col gap-4">
-                      <div className="flex items-start justify-between flex-wrap gap-2">
-                        <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Globe className="h-4 w-4 text-primary" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-bold tracking-tight group-hover:text-primary transition-colors truncate max-w-[200px] sm:max-w-md">
-                              {row.websiteUrl}
-                            </p>
-                            <p className="text-[10px] font-medium text-muted-foreground opacity-70 flex items-center gap-1">
-                              {row.createdAt
-                                ? new Date(row.createdAt).toLocaleString()
-                                : "Unknown time"}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge
-                            variant="secondary"
-                            className="px-2 py-0 text-[10px] font-black uppercase tracking-tighter"
-                          >
-                            {row.engine}
-                          </Badge>
-                          {getStatusBadge(row.status)}
-                        </div>
+                <div key={row.id} className="p-5 md:p-6 hover:bg-zinc-50/50 dark:hover:bg-white/[0.02] transition-colors">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <div className="flex items-center gap-3">
+                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{row.websiteUrl}</p>
+                        <Badge variant="secondary" className="bg-zinc-100 text-zinc-500 dark:bg-white/5 dark:text-zinc-400 border-none font-bold text-[9px] uppercase tracking-wider h-5 px-1.5">
+                          {row.engine}
+                        </Badge>
                       </div>
-
-                      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background/40 border border-border/20">
-                        <ArrowUpRight className="h-3 w-3 text-muted-foreground shrink-0" />
-                        <p className="text-xs font-mono text-muted-foreground truncate w-full">
-                          {row.url}
-                        </p>
-                      </div>
-
-                      {row.errorMessage && (
-                        <Alert className="bg-red-500/5 border-red-500/20 p-3">
-                          <AlertDescription className="text-xs text-red-600 font-semibold flex items-center gap-2">
-                            <AlertCircle className="h-3.5 w-3.5" />
-                            {row.errorMessage}
-                          </AlertDescription>
-                        </Alert>
-                      )}
+                      <p className="text-xs text-zinc-400 font-light truncate">{row.url}</p>
                     </div>
-                  </CardContent>
-                </Card>
+                    <div className="flex items-center gap-4 shrink-0">
+                      <span className="text-[10px] text-zinc-400 font-light">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : "Unknown"}</span>
+                      <div className="flex items-center gap-2">
+                        {row.status === "success" ? (
+                          <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" />
+                        ) : row.status === "failed" ? (
+                          <div className="h-2 w-2 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.4)]" />
+                        ) : (
+                          <div className="h-2 w-2 rounded-full bg-amber-500" />
+                        )}
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                          {row.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  {row.errorMessage && (
+                    <div className="mt-3 p-3 bg-rose-500/5 rounded-xl border border-rose-500/10">
+                      <p className="text-xs text-rose-500 font-medium leading-relaxed">
+                        {row.errorMessage}
+                      </p>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-1 pt-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 border-border/40"
-                  onClick={() => setPage(1)}
-                  disabled={safePage === 1}
-                  aria-label="First page"
-                >
-                  <ChevronsLeft className="h-3.5 w-3.5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 border-border/40"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={safePage === 1}
-                  aria-label="Previous page"
-                >
-                  <ChevronLeft className="h-3.5 w-3.5" />
-                </Button>
-
-                {pageNumbers.map((num, idx) => {
-                  const prev = pageNumbers[idx - 1];
-                  const showEllipsis = prev !== undefined && num - prev > 1;
-                  return (
-                    <span key={num} className="flex items-center gap-1">
-                      {showEllipsis && (
-                        <span className="text-xs text-muted-foreground px-1">…</span>
-                      )}
-                      <Button
-                        variant={safePage === num ? "default" : "outline"}
-                        size="icon"
-                        className={cn(
-                          "h-8 w-8 text-xs font-bold border-border/40",
-                          safePage === num && "shadow-sm"
-                        )}
-                        onClick={() => setPage(num)}
-                        aria-label={`Page ${num}`}
-                        aria-current={safePage === num ? "page" : undefined}
-                      >
-                        {num}
-                      </Button>
-                    </span>
-                  );
-                })}
-
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 border-border/40"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={safePage === totalPages}
-                  aria-label="Next page"
-                >
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 border-border/40"
-                  onClick={() => setPage(totalPages)}
-                  disabled={safePage === totalPages}
-                  aria-label="Last page"
-                >
-                  <ChevronsRight className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            )}
-          </>
+          </div>
+        )}
+        
+        {/* Pagination simplified ... */}
+        {totalPages > 1 && (
+          <div className="flex justify-center pt-6 gap-2">
+            <Button variant="ghost" size="sm" className="rounded-full px-4 text-xs font-bold uppercase tracking-widest" onClick={() => setPage(p => Math.max(1, p-1))} disabled={safePage === 1}>Prev</Button>
+            <div className="flex items-center px-4 text-xs font-bold text-zinc-400">
+              {safePage} / {totalPages}
+            </div>
+            <Button variant="ghost" size="sm" className="rounded-full px-4 text-xs font-bold uppercase tracking-widest" onClick={() => setPage(p => Math.min(totalPages, p+1))} disabled={safePage === totalPages}>Next</Button>
+          </div>
         )}
       </div>
     </div>

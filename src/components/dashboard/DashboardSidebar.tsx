@@ -146,33 +146,33 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col border-r border-border/50 bg-background/60 backdrop-blur-3xl dark:bg-background/40">
-      <div className="border-b border-border/50 px-6 py-6">
+      <div className="px-6 py-8">
         <div className="flex items-center gap-3">
           <div className="relative group cursor-pointer" onClick={handleNavClick}>
-            <div className="absolute -inset-1.5 bg-gradient-to-tr from-primary/30 to-primary/0 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute -inset-2 bg-rose-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             <Image 
               src="/logo.png" 
-              alt="IndexFast logo" 
-              width={40} 
-              height={40} 
-              className="relative h-10 w-10 rounded-xl object-cover ring-1 ring-border/50 shadow-lg" 
+              alt="IndexFast" 
+              width={36} 
+              height={36} 
+              className="relative h-9 w-9 rounded-xl object-cover ring-1 ring-border/50 shadow-sm" 
             />
           </div>
           <div className="flex min-w-0 flex-1 flex-col">
-            <span className="text-base font-bold leading-none tracking-tight">IndexFast</span>
-            <span className="text-[11px] text-muted-foreground mt-1 font-medium italic">Workspace</span>
+            <span className="text-sm font-bold leading-none tracking-tight">IndexFast</span>
+            <span className="text-[10px] text-zinc-500 mt-1 font-medium">Console</span>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto px-3 py-6">
-        <nav className="space-y-8">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-2">
+        <nav className="space-y-6">
           {navSections.map((section) => (
-            <div key={section.label} className="space-y-3">
-              <p className="px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground/50">
+            <div key={section.label} className="space-y-1">
+              <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600">
                 {section.label}
               </p>
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {section.items.map((item) => {
                   const hasChildren = Boolean(item.children?.length);
                   const active = item.href ? isActive(item.href) : false;
@@ -189,24 +189,23 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                       ) : (
                         <>
                           <Button
-                            variant={submenuOpen ? "secondary" : "ghost"}
-                            color="secondary"
+                            variant="ghost"
                             onClick={() => setOpenSubmenu(submenuOpen ? null : item.label)}
                             className={cn(
-                              "w-full justify-start gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
-                              submenuOpen ? "bg-secondary/50 text-foreground" : "text-muted-foreground hover:text-foreground"
+                              "w-full justify-start gap-3 rounded-xl px-3 py-2 text-sm transition-all duration-200",
+                              submenuOpen ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800/50 dark:text-zinc-100" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
                             )}
                           >
-                            <item.icon className="h-4 w-4 shrink-0" />
+                            <item.icon className="h-4 w-4 shrink-0 opacity-70" />
                             <span className="flex-1 font-medium">{item.label}</span>
                             <ChevronDown className={cn(
-                              "h-4 w-4 transition-transform duration-300",
+                              "h-3.5 w-3.5 opacity-40 transition-transform duration-300",
                               submenuOpen && "rotate-180"
                             )} />
                           </Button>
                           
                           {submenuOpen && item.children && (
-                            <div className="mt-1.5 ml-5.5 space-y-1 border-l-2 border-border/30 pl-4 py-1 animate-in slide-in-from-left-2 duration-300">
+                            <div className="mt-0.5 ml-4 space-y-0.5 border-l border-zinc-200 dark:border-zinc-800 pl-4 py-1 animate-in slide-in-from-left-2 duration-300">
                               {item.children.map((child) => {
                                 const childActive = pathname === child.href;
                                 return (
@@ -217,8 +216,8 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                                     className={cn(
                                       "block rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200",
                                       childActive
-                                        ? "bg-primary/10 text-primary"
-                                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                        ? "text-rose-500 dark:text-rose-400"
+                                        : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
                                     )}
                                   >
                                     {child.label}

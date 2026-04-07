@@ -15,93 +15,71 @@ interface SettingsViewProps {
 
 export default function SettingsView({ initialSettings, planId }: SettingsViewProps) {
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-10 pb-12 max-w-5xl">
       <PageHeader
-        title="Settings & Billing"
-        description="Control account identity, subscription tier, and monetization limits from one console."
+        title="Settings"
+        description="Manage your identity, billing, and workspace limits."
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Account Email */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Account Email</CardTitle>
-            <CardDescription>
-              Used for billing receipts, quota notices, and incident updates.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AccountEmailForm initialEmail={initialSettings.email} />
-          </CardContent>
-        </Card>
+        <div className="space-y-4 px-1">
+          <div className="space-y-1">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-400">Account</h3>
+            <p className="text-xs text-zinc-500 font-light">Your primary identity for billing and security.</p>
+          </div>
+          <Card className="rounded-[32px] border-zinc-100 dark:border-white/5 bg-white dark:bg-zinc-900/40">
+            <CardContent className="p-6">
+              <AccountEmailForm initialEmail={initialSettings.email} />
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Subscription Snapshot */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Subscription Status</CardTitle>
-            <CardDescription>Your current plan and billing information</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="default" className="text-xs font-semibold">
-                {planId.toUpperCase()}
-              </Badge>
-              <Badge
-                variant="outline"
-                className="text-xs font-semibold"
-              >
-                {initialSettings.subscriptionStatus || "Inactive"}
-              </Badge>
-              <Badge
-                variant={initialSettings.isPro ? "default" : "secondary"}
-                className="text-xs font-semibold"
-              >
-                {initialSettings.isPro ? "Pings Enabled" : "Pings Disabled"}
-              </Badge>
-            </div>
+        <div className="space-y-4 px-1">
+          <div className="space-y-1">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-400">Subscription</h3>
+            <p className="text-xs text-zinc-500 font-light">Status and active entitlements.</p>
+          </div>
+          <Card className="rounded-[32px] border-zinc-100 dark:border-white/5 bg-white dark:bg-zinc-900/40">
+            <CardContent className="p-6 space-y-6">
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary" className="bg-zinc-100 text-zinc-900 dark:bg-white/5 dark:text-zinc-100 border-none font-bold text-[10px] uppercase tracking-widest px-2 py-1">
+                  {planId}
+                </Badge>
+                <Badge variant="outline" className="text-[10px] uppercase tracking-widest px-2 py-1 font-bold border-zinc-200">
+                  {initialSettings.subscriptionStatus || "Inactive"}
+                </Badge>
+              </div>
 
-            <div className="space-y-2 text-sm">
-              <p className="text-muted-foreground">
-                <span className="font-semibold text-foreground">Customer ID:</span>{" "}
-                <code className="bg-muted px-2 py-1 rounded text-xs">
-                  {initialSettings.dodoCustomerId || "Not linked"}
-                </code>
-              </p>
-              <p className="text-muted-foreground">
-                <span className="font-semibold text-foreground">Subscription ID:</span>{" "}
-                <code className="bg-muted px-2 py-1 rounded text-xs">
-                  {initialSettings.dodoSubscriptionId || "Not linked"}
-                </code>
-              </p>
-            </div>
-
-            {initialSettings.dodoCustomerId ? (
-              <form action={openBillingPortalAction}>
-                <Button type="submit" variant="outline" className="w-full">
-                  Open Billing Portal
-                </Button>
-              </form>
-            ) : (
-              <p className="text-xs text-muted-foreground">
-                Billing portal unlocks after your first paid checkout.
-              </p>
-            )}
-          </CardContent>
-        </Card>
+              {initialSettings.dodoCustomerId ? (
+                <form action={openBillingPortalAction}>
+                  <Button type="submit" variant="secondary" className="w-full rounded-full font-bold text-xs uppercase tracking-widest h-11">
+                    Open Billing Portal
+                  </Button>
+                </form>
+              ) : (
+                <p className="text-[10px] text-zinc-400 italic">
+                  Billing portal unlocks after your first paid checkout.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Subscription Plans */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Subscription Plans</CardTitle>
-          <CardDescription>
-            Free plan changes are instant. Paid plans redirect to secure checkout and sync back via webhooks.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <PlanSelectorForm currentPlanId={planId} />
-        </CardContent>
-      </Card>
+      <div className="space-y-4 px-1">
+        <div className="space-y-1">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-400">Change Plan</h3>
+          <p className="text-xs text-zinc-500 font-light">Upgrade or downgrade your indexing capacity.</p>
+        </div>
+        <Card className="rounded-[32px] border-zinc-100 dark:border-white/5 bg-white dark:bg-zinc-900/40">
+          <CardContent className="p-6">
+            <PlanSelectorForm currentPlanId={planId} />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

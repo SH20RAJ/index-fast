@@ -509,214 +509,120 @@ export default function ToolboxView() {
   }, []);
 
   return (
-    <div className="space-y-8 pb-12 pt-4">
+    <div className="space-y-12 pb-16 pt-4 max-w-6xl">
       <PageHeader
-        title="SEO Toolbox"
-        description="Find launch channels plus the best SEO and analytics stack to monitor indexing, visibility, and growth."
+        title="Toolbox"
+        description="The ultimate stack for search visibility and growth."
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {hubLinks.map((entry) => (
-          <Card key={entry.title} className="border-border/40 bg-card/50 shadow-sm transition-all hover:bg-card/80 group">
-            <CardContent className="p-5 flex flex-col h-full">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                  <entry.icon className="h-5 w-5" />
+          <Link key={entry.title} href={entry.href} className="group">
+            <Card className="h-full border-zinc-100 dark:border-white/5 bg-white dark:bg-zinc-900/40 transition-all hover:shadow-xl hover:shadow-black/5 rounded-[32px] overflow-hidden">
+              <CardContent className="p-8 space-y-4">
+                <div className="h-12 w-12 rounded-2xl bg-zinc-50 dark:bg-white/5 flex items-center justify-center text-zinc-400 group-hover:text-rose-500 transition-colors">
+                  <entry.icon className="h-6 w-6" />
                 </div>
-                <CardTitle className="text-base font-black tracking-tight">{entry.title}</CardTitle>
-              </div>
-              <p className="text-sm text-muted-foreground leading-relaxed flex-grow mb-4">
-                {entry.description}
-              </p>
-              <Button asChild variant="outline" className="w-fit gap-2 font-bold bg-background/50 border-border/40 hover:bg-primary/5 hover:text-primary hover:border-primary/20">
-                <Link href={entry.href}>
-                  Explore <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+                <div>
+                  <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">{entry.title}</h3>
+                  <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 font-light leading-relaxed">
+                    {entry.description}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {[
-          { label: "Platforms", value: stats.total, icon: Globe, color: "text-blue-500" },
-          { label: "High Impact", value: stats.highImpact, icon: TrendingUp, color: "text-emerald-500" },
-          { label: "Easy Wins", value: stats.easyWins, icon: Zap, color: "text-amber-500" },
-        ].map((stat) => (
-          <Card key={stat.label} className="border-border/40 bg-card/40">
-            <CardContent className="p-4 flex items-center justify-between">
-              <div>
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none mb-1">{stat.label}</p>
-                <p className="text-2xl font-black">{stat.value}</p>
-              </div>
-              <div className={cn("h-8 w-8 rounded-lg bg-background border border-border/20 flex items-center justify-center shadow-xs shrink-0", stat.color)}>
-                <stat.icon className="h-4 w-4" />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Card className="border-border/40 bg-card/30 backdrop-blur-sm overflow-hidden sticky top-14 z-20 shadow-lg">
-        <CardContent className="p-4 space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <div className="space-y-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-1">
+          <h2 className="text-xl font-light tracking-tight text-zinc-900 dark:text-zinc-100">Growth Directory</h2>
+          <div className="relative w-full md:w-80 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
             <Input
-              placeholder="Search by platform, category, or use case…"
-              className="pl-10 h-11 bg-background/50 border-border/40 focus-visible:ring-primary/20 transition-all font-medium"
+              placeholder="Search platforms..."
+              className="pl-10 h-11 bg-white border-zinc-200 rounded-xl focus-visible:ring-rose-500/20 dark:bg-white/5 dark:border-white/10"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="flex flex-wrap gap-2 pt-1">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={cn(
-                  "px-4 py-1.5 rounded-full text-xs font-bold tracking-tight transition-all",
-                  activeCategory === cat
-                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105"
-                    : "bg-background/80 text-muted-foreground border border-border/40 hover:border-border/80 hover:bg-background"
-                )}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {filtered.length === 0 ? (
-        <Card className="border-dashed border-2 border-border/40 bg-transparent py-20">
-          <CardContent className="flex flex-col items-center text-center">
-            <div className="h-20 w-20 rounded-full bg-muted/20 flex items-center justify-center mb-6">
-              <Search className="h-10 w-10 text-muted-foreground opacity-50" />
-            </div>
-            <h3 className="text-2xl font-black tracking-tight mb-2">No matches found</h3>
-            <p className="text-muted-foreground max-w-sm">
-              Try a broader keyword or switch back to "All" categories to see what we have.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-12">
-          {(Object.keys(grouped) as string[])
-            .filter((cat) => grouped[cat].length > 0)
-            .map((cat) => (
-              <div key={cat} className="space-y-4">
-                <div className="flex items-center gap-3 ml-1">
-                  <div className="h-6 w-1 bg-primary rounded-full" />
-                  <h2 className="text-xl font-black tracking-tight flex items-center gap-2">
-                    {cat}
-                    <Badge variant="outline" className="rounded-md font-black border-primary/20 text-primary bg-primary/5">
-                      {grouped[cat].length}
-                    </Badge>
-                  </h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {grouped[cat].map((item) => (
-                    <Card 
-                      key={item.name} 
-                      className="border-border/40 bg-card/40 transition-all hover:bg-card/70 hover:border-primary/20 group relative overflow-hidden"
-                    >
-                      <CardContent className="p-5 flex flex-col h-full">
-                        <div className="flex items-start justify-between mb-2">
-                          <h3 className="text-lg font-black tracking-tight group-hover:text-primary transition-colors leading-tight pr-8">
-                            {item.name}
-                          </h3>
-                          <Link
-                            href={getTrackingUrl(item)}
-                            target="_blank"
-                            className="absolute top-4 right-4 p-2 rounded-lg bg-background/50 border border-border/20 text-muted-foreground hover:text-primary hover:border-primary/30 transition-all hover:scale-110"
-                            aria-label={`Open ${item.name}`}
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                          </Link>
-                        </div>
-                        <p className="text-sm text-muted-foreground leading-relaxed flex-grow mb-6">
-                          {item.description}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mt-auto">
-                          <Badge variant="secondary" className="px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter bg-background/80 border border-border/10">
-                            Impact: {item.impact}
-                          </Badge>
-                          <Badge variant="secondary" className="px-2 py-0.5 text-[10px] font-black uppercase tracking-tighter bg-background/80 border border-border/10">
-                            Difficulty: {item.difficulty}
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            ))}
         </div>
-      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-12">
-        <Card className="border-border/40 bg-card/20 overflow-hidden">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-primary" /> Methods We Teach
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 pt-2">
-            {seoMethods.map((method) => (
-              <div key={method} className="flex items-start gap-3 p-3 rounded-xl bg-background/40 border border-border/10">
-                <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <CheckCircle2 className="h-3 w-3 text-primary" />
+        <div className="flex flex-wrap gap-2 px-1">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={cn(
+                "px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all",
+                activeCategory === cat
+                  ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-lg"
+                  : "bg-zinc-100 text-zinc-500 dark:bg-white/5 dark:text-zinc-400 hover:bg-zinc-200"
+              )}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map((item) => (
+            <Card 
+              key={item.name} 
+              className="group relative rounded-[32px] border-zinc-100 dark:border-white/5 bg-white dark:bg-zinc-900/40 transition-all hover:shadow-xl hover:shadow-black/5"
+            >
+              <CardContent className="p-8 flex flex-col h-full space-y-4">
+                <div className="flex items-start justify-between">
+                  <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 pr-8 tracking-tight">{item.name}</h3>
+                  <a href={getTrackingUrl(item)} target="_blank" className="text-zinc-300 hover:text-rose-500 transition-colors">
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed font-medium">{method}</p>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        <Card className="border-border/40 bg-card/20 overflow-hidden">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-black tracking-tight flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-emerald-500" /> Playbooks & Fixes
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 pt-2">
-            {problemPlaybooks.map((playbook) => (
-              <div key={playbook.title} className="p-4 rounded-xl bg-background/40 border border-border/10 group/item hover:bg-background/60 transition-colors">
-                <h4 className="text-sm font-black tracking-tight mb-1 group-hover/item:text-primary transition-colors">{playbook.title}</h4>
-                <p className="text-xs text-muted-foreground mb-3 opacity-70">Fix: {playbook.action}</p>
-                <Button asChild size="sm" variant="ghost" className="h-8 px-0 hover:bg-transparent text-primary hover:text-primary/80 font-bold group">
-                  <Link href={playbook.href}>
-                    {playbook.cta} <ArrowRight className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </Button>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 font-light leading-relaxed flex-grow">
+                  {item.description}
+                </p>
+                <div className="flex gap-3 pt-2">
+                  <Badge variant="secondary" className="bg-zinc-50 text-zinc-400 dark:bg-white/5 border-none text-[9px] font-bold uppercase tracking-widest">
+                    {item.impact}
+                  </Badge>
+                  <Badge variant="secondary" className="bg-zinc-50 text-zinc-400 dark:bg-white/5 border-none text-[9px] font-bold uppercase tracking-widest">
+                    {item.difficulty}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
-      <Card className="border-none bg-primary/5 p-8 rounded-[2rem] relative overflow-hidden group mt-12">
-        <div className="absolute -top-24 -right-24 h-64 w-64 bg-primary/10 rounded-full blur-[80px] transition-transform group-hover:scale-150 duration-1000" />
-        <div className="absolute -bottom-24 -left-24 h-64 w-64 bg-emerald-500/5 rounded-full blur-[80px] transition-transform group-hover:scale-150 duration-1000" />
-        
-        <CardContent className="p-0 flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-          <div className="space-y-4 text-center md:text-left">
-            <Badge className="bg-primary/20 text-primary hover:bg-primary/20 border-none font-black px-4 py-1 rounded-full uppercase tracking-widest text-[10px]">
-              <Sparkles className="h-3 w-3 mr-2" /> Premium Strategy
-            </Badge>
-            <h3 className="text-3xl font-black tracking-tighter sm:text-4xl">Need a custom SEO strategy?</h3>
-            <p className="text-muted-foreground max-w-lg mx-auto md:mx-0 leading-relaxed font-medium">
-              Upgrade to our advanced dashboards for cluster mapping, internal link automation, and deep competitive intelligence.
-            </p>
+      <section className="pt-12 grid gap-12 lg:grid-cols-2">
+        <div className="space-y-6">
+          <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-zinc-400 px-1">Digital Methods</h3>
+          <div className="space-y-4">
+            {seoMethods.map((method) => (
+              <div key={method} className="flex items-start gap-4 p-6 rounded-[24px] bg-zinc-50/50 dark:bg-white/[0.02] border border-zinc-100 dark:border-white/5">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500 mt-0.5" />
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 font-light leading-relaxed">{method}</p>
+              </div>
+            ))}
           </div>
-          <Button asChild size="lg" className="h-14 px-8 rounded-2xl font-black shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all bg-primary hover:bg-primary/90 text-primary-foreground group">
-            <Link href="/blogs">
-              Read Guides <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
+        </div>
+
+        <div className="space-y-6">
+          <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-zinc-400 px-1">Problem Playbooks</h3>
+          <div className="grid gap-4">
+            {problemPlaybooks.map((playbook) => (
+              <Link key={playbook.title} href={playbook.href} className="group">
+                <div className="p-6 rounded-[24px] bg-white dark:bg-zinc-900/40 border border-zinc-100 dark:border-white/5 transition-all group-hover:shadow-lg group-hover:shadow-black/5">
+                  <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-rose-500 transition-colors">{playbook.title}</h4>
+                  <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 font-light leading-relaxed">{playbook.action}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
