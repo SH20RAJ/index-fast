@@ -7,6 +7,10 @@ import { KeyRound, Sparkles, Zap, Globe, ShieldCheck } from "lucide-react";
 export default function Hero() {
   const stack = useStackApp();
 
+  const redirect = () => {
+    window.location.href = "/dashboard";
+  }
+
   return (
     <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden bg-zinc-950 text-zinc-50 pt-20">
       {/* Subtle Romantic Gradient Background */}
@@ -45,7 +49,8 @@ export default function Hero() {
           <Button
               size="lg"
               className="group relative h-16 overflow-hidden rounded-full bg-zinc-100 px-12 text-lg text-zinc-950 transition-all hover:scale-105 hover:bg-white hover:shadow-[0_0_40px_rgba(244,63,94,0.2)]"
-              onClick={() => stack.redirectToSignUp()}
+              // redirect to /dashboard
+              onClick={() => redirect() }
             >
               <div className="relative z-10 flex items-center gap-3 font-medium">
                 <KeyRound className="h-5 w-5 transition-transform group-hover:rotate-12" />
