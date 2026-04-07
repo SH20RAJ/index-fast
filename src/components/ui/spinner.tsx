@@ -1,9 +1,9 @@
 "use client";
 
-import { Loader, type LoaderProps } from "rizzui/loader";
+import { Loader, type LoaderTypes } from "rizzui/loader";
 import { cn } from "@/lib/utils";
 
-const Spinner = ({ className, ...props }: LoaderProps) => {
+const Spinner = ({ className, ...props }: LoaderTypes) => {
   return (
     <Loader
       variant="spinner"

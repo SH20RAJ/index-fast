@@ -5,7 +5,14 @@ import { Select as RizzSelect, type SelectProps as RizzSelectProps } from "rizzu
 import { cn } from "@/lib/utils";
 
 // The main Select component from RizzUI
-const Select = RizzSelect;
+const Select = ({ onValueChange, onChange, ...props }: any) => {
+  const handleChange = (value: any) => {
+    // RizzUI Select's onChange passes the value (or the full option object depending on usage)
+    onChange?.(value);
+    onValueChange?.(value);
+  };
+  return <RizzSelect onChange={handleChange} {...props} />;
+};
 
 // Shim components to prevent immediate breakage in existing code
 // These will eventually be removed as we migrate to the single-component RizzUI pattern

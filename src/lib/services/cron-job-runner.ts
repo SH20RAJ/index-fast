@@ -4,6 +4,7 @@ import { cronJobs, submissions, urlInventory, websites } from "@/lib/db/schema";
 import { parseSitemap } from "@/lib/utils/sitemap-parser";
 import { submitToBingBatch } from "@/lib/api/bing";
 import { submitToIndexNow } from "@/lib/api/indexnow";
+import { pingGoogleSitemap } from "@/lib/google";
 
 const INDEXNOW_BATCH_SIZE = 1000;
 const INVENTORY_SOURCE_LIMIT = 1000;
@@ -182,8 +183,21 @@ export async function processDueCronJobs(maxJobs = 20) {
             errorMessage: res.success ? undefined : res.error,
           });
         });
+      } else if (engine === "google") {
+        if (!row.sitemapUrl) {
+          throw new Error("Google indexing requires a sitemap URL for automated pings.");
+        }
+
+        const res = await pingGoogleSitemap(row.sitemapUrl);
+        submissionRows.push({
+          websiteId: row.websiteId,
+          url: `Cron Google Sitemap Ping`,
+          engine,
+          status: res.success ? "success" : "failed",
+          errorMessage: res.success ? undefined : res.error,
+        });
       } else {
-        throw new Error("Google cron submission is not implemented yet.");
+        throw new Error(`Engine ${engine} is not supported for automated cron jobs yet.`);
       }
 
       if (submissionRows.length > 0) {

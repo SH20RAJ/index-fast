@@ -160,7 +160,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
           </div>
           <div className="flex min-w-0 flex-1 flex-col">
             <span className="text-base font-bold leading-none tracking-tight">IndexFast</span>
-            <span className="text-[11px] text-muted-foreground mt-1 font-medium italic">Workspace Command</span>
+            <span className="text-[11px] text-muted-foreground mt-1 font-medium italic">Workspace</span>
           </div>
         </div>
       </div>

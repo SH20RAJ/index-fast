@@ -135,7 +135,7 @@ const Pricing2 = ({
                   </ul>
                 </CardContent>
                 <CardFooter className="mt-auto">
-                  <Button className="w-full" render={<a href={plan.button.url} target="_blank" />} nativeButton={false}>{plan.button.text}<ArrowRight className="ml-2 size-4" /></Button>
+                  <Button className="w-full" asChild><a href={plan.button.url} target="_blank">{plan.button.text}<ArrowRight className="ml-2 size-4" /></a></Button>
                 </CardFooter>
               </Card>
             ))}
