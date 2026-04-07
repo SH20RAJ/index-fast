@@ -6,13 +6,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,12 +57,12 @@ export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
   }, [rows, statusFilter, engineFilter]);
 
   // Reset to page 1 when a filter changes
-  const handleStatusFilter = (v: string) => {
-    setStatusFilter(v);
+  const handleStatusFilter = (v: string | number | any) => {
+    setStatusFilter(String(v));
     setPage(1);
   };
-  const handleEngineFilter = (v: string) => {
-    setEngineFilter(v);
+  const handleEngineFilter = (v: string | number | any) => {
+    setEngineFilter(String(v));
     setPage(1);
   };
 
@@ -156,35 +150,39 @@ export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">
               Status Filter
             </label>
-            <Select value={statusFilter} onValueChange={handleStatusFilter}>
-              <SelectTrigger className="w-full bg-background/50 border-border/40">
-                <SelectValue placeholder="All statuses" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All statuses</SelectItem>
-                <SelectItem value="success">Success</SelectItem>
-                <SelectItem value="failed">Failed</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-              </SelectContent>
-            </Select>
+            <Select 
+              value={statusFilter} 
+              onChange={handleStatusFilter}
+              options={[
+                { label: "All statuses", value: "all" },
+                { label: "Success", value: "success" },
+                { label: "Failed", value: "failed" },
+                { label: "Pending", value: "pending" },
+              ]}
+              placeholder="All statuses"
+              selectClassName="w-full bg-background/50 border-border/40"
+              className="w-full"
+            />
           </div>
           <div className="w-full space-y-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground ml-1">
               Engine Filter
             </label>
-            <Select value={engineFilter} onValueChange={handleEngineFilter}>
-              <SelectTrigger className="w-full bg-background/50 border-border/40">
-                <SelectValue placeholder="All engines" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All engines</SelectItem>
-                <SelectItem value="indexnow">IndexNow</SelectItem>
-                <SelectItem value="bing">Bing</SelectItem>
-                <SelectItem value="google">Google</SelectItem>
-                <SelectItem value="pingomatic">Ping-o-Matic</SelectItem>
-                <SelectItem value="pingler">Pingler</SelectItem>
-              </SelectContent>
-            </Select>
+            <Select 
+              value={engineFilter} 
+              onChange={handleEngineFilter}
+              options={[
+                { label: "All engines", value: "all" },
+                { label: "IndexNow", value: "indexnow" },
+                { label: "Bing", value: "bing" },
+                { label: "Google", value: "google" },
+                { label: "Ping-o-Matic", value: "pingomatic" },
+                { label: "Pingler", value: "pingler" },
+              ]}
+              placeholder="All engines"
+              selectClassName="w-full bg-background/50 border-border/40"
+              className="w-full"
+            />
           </div>
         </CardContent>
       </Card>

@@ -13,13 +13,7 @@ import {
   CardContent 
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
+import { Select } from "@/components/ui/select";
 import { Loader2, Globe, AlertCircle, Calendar } from "lucide-react";
 import Link from "next/link";
 import PageHeader from "@/components/dashboard/PageHeader";
@@ -115,18 +109,14 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
         description="Schedule recurring submissions and monitor automation status."
         action={
           <div className="w-full sm:w-[320px]">
-            <Select value={siteId} onValueChange={setSiteId}>
-              <SelectTrigger className="h-10 rounded-md border-border bg-background">
-                <SelectValue placeholder="Select a website" />
-              </SelectTrigger>
-              <SelectContent>
-                {sites.map((site) => (
-                  <SelectItem key={site.id} value={site.id}>
-                    {site.url}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Select
+              value={siteId}
+              onChange={(val) => setSiteId(val as string)}
+              options={sites.map((site) => ({ label: site.url, value: site.id }))}
+              placeholder="Select a website"
+              selectClassName="h-10 rounded-md border-border bg-background"
+              className="w-full"
+            />
           </div>
         }
       />

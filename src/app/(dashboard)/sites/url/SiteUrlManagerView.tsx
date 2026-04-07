@@ -20,10 +20,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { 
   Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
 } from "@/components/ui/select";
 import { 
   Tabs, 
@@ -392,18 +388,14 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
           </p>
         </div>
         <div className="w-full sm:w-[320px]">
-          <Select value={siteId} onValueChange={setSiteId}>
-            <SelectTrigger className="h-10 rounded-md border-border bg-background">
-              <SelectValue placeholder="Select a website" />
-            </SelectTrigger>
-            <SelectContent>
-              {sites.map((site) => (
-                <SelectItem key={site.id} value={site.id}>
-                  {site.url}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Select
+            value={siteId}
+            onChange={(val) => setSiteId(val as string)}
+            options={sites.map((site) => ({ label: site.url, value: site.id }))}
+            placeholder="Select a website"
+            selectClassName="h-10 rounded-md border-border bg-background"
+            className="w-full"
+          />
         </div>
       </div>
 

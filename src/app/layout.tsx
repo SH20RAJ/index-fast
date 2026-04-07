@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "/opengraph-image.png",
+        url: "/logo/og2.png",
         width: 1200,
         height: 630,
         alt: "IndexFast automated SEO indexing platform preview",
@@ -92,7 +92,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "IndexFast | Automated SEO Indexing",
     description: siteDescription,
-    images: ["/twitter-image.png"],
+    images: ["/og-marketing.png"],
     creator: "@indexfast",
     site: "@indexfast",
   },
