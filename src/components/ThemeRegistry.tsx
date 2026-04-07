@@ -14,7 +14,7 @@ interface ColorModeContextValue {
 const ColorModeContext = createContext<ColorModeContextValue | null>(null);
 
 function resolveInitialMode(): PaletteMode {
-  if (typeof window === "undefined") return "light";
+  if (typeof window === "undefined") return "dark";
 
   const savedMode = window.localStorage.getItem(STORAGE_KEY);
   if (savedMode === "light" || savedMode === "dark") {

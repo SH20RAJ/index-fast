@@ -120,7 +120,7 @@ export default function ToolsExplorer({
 
           <Select
             value={sortMode}
-            onChange={(value) => setSortMode(value as SortMode)}
+            onChange={(value: any) => setSortMode(value as SortMode)}
             options={[
               { label: "Recommended", value: "recommended" },
               { label: "SEO ratio", value: "seoRatio" },

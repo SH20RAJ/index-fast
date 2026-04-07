@@ -390,7 +390,7 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
         <div className="w-full sm:w-[320px]">
           <Select
             value={siteId}
-            onChange={(val) => setSiteId(val as string)}
+            onChange={(val: any) => setSiteId(val as string)}
             options={sites.map((site) => ({ label: site.url, value: site.id }))}
             placeholder="Select a website"
             selectClassName="h-10 rounded-md border-border bg-background"
