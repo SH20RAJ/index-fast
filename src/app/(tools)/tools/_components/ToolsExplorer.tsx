@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import type { ToolDefinition, ToolCategory } from "@/lib/tools-catalog";
 import { getToolSignals } from "@/lib/tool-signals";
@@ -118,20 +118,21 @@ export default function ToolsExplorer({
             />
           </label>
 
-          <Select value={sortMode} onValueChange={(value) => setSortMode(value as SortMode)}>
-            <SelectTrigger className="w-full">
-              <Filter className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Sort" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="recommended">Recommended</SelectItem>
-              <SelectItem value="seoRatio">SEO ratio</SelectItem>
-              <SelectItem value="priority">Priority</SelectItem>
-              <SelectItem value="easy">Easy first</SelectItem>
-              <SelectItem value="fast">Fast first</SelectItem>
-              <SelectItem value="name">A to Z</SelectItem>
-            </SelectContent>
-          </Select>
+          <Select
+            value={sortMode}
+            onChange={(value) => setSortMode(value as SortMode)}
+            options={[
+              { label: "Recommended", value: "recommended" },
+              { label: "SEO ratio", value: "seoRatio" },
+              { label: "Priority", value: "priority" },
+              { label: "Easy first", value: "easy" },
+              { label: "Fast first", value: "fast" },
+              { label: "A to Z", value: "name" },
+            ]}
+            prefix={<Filter className="h-4 w-4" />}
+            className="w-full"
+            selectClassName="h-10"
+          />
 
           <div className="flex flex-wrap gap-2 md:justify-end">
             <Button

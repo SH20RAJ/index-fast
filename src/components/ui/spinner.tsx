@@ -1,13 +1,17 @@
-import { cn } from "@/lib/utils"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { Loading03Icon } from "@hugeicons/core-free-icons"
+"use client";
 
-type SpinnerProps = Omit<React.ComponentProps<typeof HugeiconsIcon>, "icon">
+import { Loader, type LoaderProps } from "rizzui/loader";
+import { cn } from "@/lib/utils";
 
-function Spinner({ className, ...props }: SpinnerProps) {
+const Spinner = ({ className, ...props }: LoaderProps) => {
   return (
-    <HugeiconsIcon icon={Loading03Icon} strokeWidth={2} role="status" aria-label="Loading" className={cn("size-4 animate-spin", className)} {...props} />
-  )
-}
+    <Loader
+      variant="spinner"
+      className={cn("h-4 w-4 animate-spin", className)}
+      {...props}
+    />
+  );
+};
 
-export { Spinner }
+export { Spinner };
+export { Loader };

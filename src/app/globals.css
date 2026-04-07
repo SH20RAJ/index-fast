@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@tailwindcss/forms";
+@source "../node_modules/rizzui/dist";
 
 @custom-variant dark (&:is(.dark *));
 
