@@ -408,6 +408,30 @@ const directories: DirectoryItem[] = [
     impact: "High",
     description: "Core Web Vitals diagnostics linked to search performance and UX outcomes.",
   },
+  {
+    name: "Brave Search Submission",
+    url: "https://search.brave.com/submit-url",
+    category: "Tech Stack",
+    difficulty: "Easy",
+    impact: "Medium",
+    description: "Submit your site directly to Brave Search for faster discovery and indexing.",
+  },
+  {
+    name: "SubmitExpress",
+    url: "https://www.submitexpress.com/free-tools/free-website-submission/",
+    category: "Directory",
+    difficulty: "Easy",
+    impact: "Low",
+    description: "A free submission tool to notify multiple search engines and directories about your site.",
+  },
+  {
+    name: "Free Search Engine Submission (LowestHosting)",
+    url: "https://www.lowesthosting.com/sesubmit/",
+    category: "Directory",
+    difficulty: "Easy",
+    impact: "Medium",
+    description: "Submit your website to over 140 search engines including Google, Bing, and Yahoo simultaneously.",
+  },
 ];
 
 const seoMethods = [

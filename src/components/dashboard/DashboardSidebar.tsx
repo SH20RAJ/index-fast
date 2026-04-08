@@ -64,6 +64,7 @@ const navSections = [
         children: [
           { label: "Overview", href: "/toolbox" },
           { label: "Universal Ping", href: "/toolbox/ping" },
+          { label: "SubmitExpress", href: "/toolbox/submitexpress" },
           { label: "Free Tools", href: "/tools" },
           { label: "Blogs", href: "/blogs" },
         ],
