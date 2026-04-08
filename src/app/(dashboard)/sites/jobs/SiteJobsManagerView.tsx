@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select } from "@/components/ui/select";
 import { Loader2, Globe, AlertCircle, Calendar } from "lucide-react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";
 
@@ -35,6 +36,8 @@ interface SiteJobsResponse {
 }
 
 export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsManagerViewProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [siteId, setSiteId] = useState<string>(initialSiteId ?? "");
   const [jobs, setJobs] = useState<CronJob[]>([]);
   const [loading, setLoading] = useState(false);
@@ -75,6 +78,16 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
     void loadJobs(siteId);
   }, [siteId]);
 
+  const handleSiteChange = (newId: string) => {
+    if (!newId) return;
+    setSiteId(newId);
+    
+    // Update URL query parameter
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("siteId", newId);
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
   if (sites.length === 0) {
     return (
       <div className="space-y-6 pb-16">
@@ -112,7 +125,7 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
         <div className="w-full sm:w-[280px]">
           <Select
             value={siteId}
-            onChange={(val: any) => setSiteId(val as string)}
+            onChange={(val: any) => handleSiteChange(typeof val === "object" && val !== null ? val.value : (val as string))}
             options={sites.map((site) => ({ label: site.url, value: site.id }))}
             placeholder="Select a website"
             className="w-full h-11"
@@ -125,6 +138,16 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
           <Loader2 className="h-4 w-4 animate-spin text-rose-500" />
           <p className="text-xs text-zinc-500 font-light italic">Orchestrating schedules...</p>
         </div>
+      )}
+
+      {error && (
+        <Alert variant="destructive" className="rounded-3xl border-rose-500/20 bg-rose-500/5">
+          <AlertCircle className="h-4 w-4 text-rose-500" />
+          <AlertTitle className="text-sm font-bold uppercase tracking-widest text-rose-500">Automation Interrupted</AlertTitle>
+          <AlertDescription className="text-xs font-light text-rose-600/80 italic">
+            {error}
+          </AlertDescription>
+        </Alert>
       )}
 
       {selectedSite && !loading && (

@@ -48,6 +48,7 @@ import {
   ListFilter
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   buildBingIndexNowPortalUrl,
   buildGoogleSearchConsolePropertyUrl,
@@ -129,6 +130,8 @@ interface SubmitResponse {
 }
 
 export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlManagerViewProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [siteId, setSiteId] = useState<string>(initialSiteId ?? "");
   const [loading, setLoading] = useState(false);
   const [payload, setPayload] = useState<SiteUrlsPayload | null>(null);
@@ -205,6 +208,16 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
         setLoading(false);
       });
   }, [siteId]);
+
+  const handleSiteChange = (newId: string) => {
+    if (!newId) return;
+    setSiteId(newId);
+    
+    // Update URL query parameter
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("siteId", newId);
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
 
   const statsMap = useMemo(() => {
     const map = new Map<string, { total: number; success: number; failed: number }>();
@@ -388,7 +401,7 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
         <div className="w-full sm:w-[280px]">
           <Select
             value={siteId}
-            onChange={(val: any) => setSiteId(val as string)}
+            onChange={(val: any) => handleSiteChange(typeof val === "object" && val !== null ? val.value : (val as string))}
             options={sites.map((site) => ({ label: site.url, value: site.id }))}
             placeholder="Select a website"
             className="w-full h-11"
@@ -401,6 +414,16 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
           <Loader2 className="h-4 w-4 animate-spin text-rose-500" />
           <p className="text-xs text-zinc-500 font-light italic">Gathering digital signals...</p>
         </div>
+      )}
+
+      {error && (
+        <Alert variant="destructive" className="rounded-3xl border-rose-500/20 bg-rose-500/5">
+          <AlertCircle className="h-4 w-4 text-rose-500" />
+          <AlertTitle className="text-sm font-bold uppercase tracking-widest text-rose-500">Signal Interrupted</AlertTitle>
+          <AlertDescription className="text-xs font-light text-rose-600/80 italic">
+            {error}
+          </AlertDescription>
+        </Alert>
       )}
 
       {payload && (
