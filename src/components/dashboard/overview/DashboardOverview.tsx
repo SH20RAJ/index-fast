@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { 
   Plus,
   Settings,
@@ -15,7 +14,6 @@ import {
   Globe,
   Layers,
   Shield,
-  Zap,
   Gauge,
   CalendarClock,
   BarChart3,
@@ -212,7 +210,7 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
       </section>
 
       <section className="grid gap-6 md:grid-cols-3">
-        {quickActions.map((action, index) => {
+        {quickActions.map((action) => {
           const Icon = action.icon;
           return (
             <Link key={action.label} href={action.href} className="group">

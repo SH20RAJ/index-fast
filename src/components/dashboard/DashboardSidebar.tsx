@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ComponentType } from "react";
 import { useStackApp, useUser } from "@stackframe/stack";
 import { useColorMode } from "@/components/ThemeRegistry";
 import {
@@ -23,15 +23,42 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-const navSections = [
+interface NavChildItem {
+  label: string;
+  href: string;
+}
+
+interface NavItem {
+  label: string;
+  href: string;
+  icon: ComponentType<{ className?: string }>;
+  children?: NavChildItem[];
+}
+
+interface NavSection {
+  label: string;
+  items: NavItem[];
+}
+
+const navSections: NavSection[] = [
   {
-    label: "Workspace",
+    label: "Control",
     items: [
       {
         label: "Dashboard",
         href: "/dashboard",
         icon: LayoutDashboard,
       },
+      {
+        label: "Submissions",
+        href: "/submissions",
+        icon: Activity,
+      },
+    ],
+  },
+  {
+    label: "Sites",
+    items: [
       {
         label: "Websites",
         href: "/sites",
@@ -45,17 +72,7 @@ const navSections = [
     ],
   },
   {
-    label: "Monitor",
-    items: [
-      {
-        label: "Submissions",
-        href: "/submissions",
-        icon: Activity,
-      },
-    ],
-  },
-  {
-    label: "Tools",
+    label: "Growth",
     items: [
       {
         label: "Toolbox",
@@ -78,7 +95,7 @@ function SidebarItem({
   active, 
   onClick 
 }: { 
-  item: typeof navSections[0]["items"][0]; 
+  item: NavItem;
   active: boolean; 
   onClick?: () => void;
 }) {
@@ -125,15 +142,16 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   );
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const isChildActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   useEffect(() => {
     const section = navSections.find((group) =>
-      group.items.some((item) => item.children?.some((child) => pathname === child.href || pathname.startsWith(`${child.href}/`)))
+      group.items.some((item) => item.children?.some((child) => isChildActive(child.href)))
     );
 
     if (section) {
       const activeItem = section.items.find((item) =>
-        item.children?.some((child) => pathname === child.href || pathname.startsWith(`${child.href}/`))
+        item.children?.some((child) => isChildActive(child.href))
       );
       if (activeItem) {
         setOpenSubmenu(activeItem.label);
@@ -161,8 +179,11 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
           </div>
           <div className="flex min-w-0 flex-1 flex-col">
             <span className="text-sm font-bold leading-none tracking-tight">IndexFast</span>
-            <span className="text-[10px] text-zinc-500 mt-1 font-medium">Console</span>
+            <span className="text-[10px] text-zinc-500 mt-1 font-medium">Operations Console</span>
           </div>
+          <Button asChild size="sm" className="h-8 rounded-lg px-2.5 text-xs">
+            <Link href="/sites">+ Site</Link>
+          </Button>
         </div>
       </div>
 
@@ -176,7 +197,9 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
               <div className="space-y-0.5">
                 {section.items.map((item) => {
                   const hasChildren = Boolean(item.children?.length);
-                  const active = item.href ? isActive(item.href) : false;
+                  const active = item.href
+                    ? isActive(item.href) || Boolean(item.children?.some((child) => isChildActive(child.href)))
+                    : false;
                   const submenuOpen = openSubmenu === item.label;
 
                   return (
@@ -208,7 +231,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                           {submenuOpen && item.children && (
                             <div className="mt-0.5 ml-4 space-y-0.5 border-l border-zinc-200 dark:border-zinc-800 pl-4 py-1 animate-in slide-in-from-left-2 duration-300">
                               {item.children.map((child) => {
-                                const childActive = pathname === child.href;
+                                const childActive = isChildActive(child.href);
                                 return (
                                   <Link
                                     key={child.href}
