@@ -55,7 +55,7 @@ const navSections: NavSection[] = [
       },
       {
         label: "Insights",
-        href: "/dashboard/insights",
+        href: "/insights",
         icon: LineChart,
       },
     ],
@@ -70,7 +70,7 @@ const navSections: NavSection[] = [
       },
       {
         label: "Sitemaps",
-        href: "/dashboard/sitemaps",
+        href: "/sitemaps",
         icon: Box,
       },
     ]
@@ -208,20 +208,17 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         {websites.length > 0 && (
           <div className="mt-6">
             <Select
-              value={selectedSite?.id || ""}
-              onChange={(value: string) => {
-                const site = websites.find(w => w.id === value);
+              value={selectedSite ? { label: selectedSite.url.replace(/^https?:\/\//, ''), value: selectedSite.id } : null}
+              onChange={(val: any) => {
+                const site = websites.find(w => w.id === (val?.value || val));
                 setSelectedSite(site || null);
-                if (pathname.includes('/sites/')) {
-                  // if they change while on a specific site's page, we let them stay or bounce them?
-                  // staying is fine for now
-                }
               }}
               options={websites.map(w => ({
                 label: w.url.replace(/^https?:\/\//, ''),
                 value: w.id
               }))}
               className="w-full text-sm font-semibold rounded-xl bg-zinc-50 border-zinc-200 dark:bg-white/5 dark:border-white/10"
+              displayValue={(selected: any) => selected?.label || selected?.value || ""}
               placeholder="Select Website..."
             />
           </div>

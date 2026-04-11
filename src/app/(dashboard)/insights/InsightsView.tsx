@@ -48,7 +48,14 @@ export default function InsightsView() {
       if (res.status === "error") {
         setError(res.message || "Failed to load insights.");
       } else if (res.data) {
-        setData(res.data);
+        const mappedData: GscRow[] = res.data.map(row => ({
+          keys: row.keys ?? [],
+          clicks: row.clicks ?? 0,
+          impressions: row.impressions ?? 0,
+          ctr: row.ctr ?? 0,
+          position: row.position ?? 0,
+        }));
+        setData(mappedData);
       }
       
       setLoading(false);
