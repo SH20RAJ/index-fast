@@ -25,6 +25,8 @@ import {
 import PageHeader from "@/components/dashboard/PageHeader";
 import { cn } from "@/lib/utils";
 
+import { useSiteContext } from "@/components/dashboard/SiteContext";
+
 type SubmissionRow = {
   id: string;
   url: string;
@@ -43,18 +45,24 @@ interface SubmissionsViewProps {
 const PAGE_SIZE = 20;
 
 export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
+  const { selectedSite } = useSiteContext();
   const [rows] = useState<SubmissionRow[]>(initialRows);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [engineFilter, setEngineFilter] = useState<string>("all");
   const [page, setPage] = useState(1);
 
+  const siteFilteredRows = useMemo(() => {
+    if (!selectedSite) return [];
+    return rows.filter((r) => r.websiteId === selectedSite.id);
+  }, [rows, selectedSite]);
+
   const filtered = useMemo(() => {
-    return rows.filter((row) => {
+    return siteFilteredRows.filter((row) => {
       const statusOk = statusFilter === "all" || row.status === statusFilter;
       const engineOk = engineFilter === "all" || row.engine === engineFilter;
       return statusOk && engineOk;
     });
-  }, [rows, statusFilter, engineFilter]);
+  }, [siteFilteredRows, statusFilter, engineFilter]);
 
   // Reset to page 1 when a filter changes
   const handleStatusFilter = (v: string | number | any) => {
@@ -72,12 +80,12 @@ export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
 
   const totals = useMemo(
     () => ({
-      all: rows.length,
-      success: rows.filter((r) => r.status === "success").length,
-      failed: rows.filter((r) => r.status === "failed").length,
-      pending: rows.filter((r) => r.status === "pending").length,
+      all: siteFilteredRows.length,
+      success: siteFilteredRows.filter((r) => r.status === "success").length,
+      failed: siteFilteredRows.filter((r) => r.status === "failed").length,
+      pending: siteFilteredRows.filter((r) => r.status === "pending").length,
     }),
-    [rows]
+    [siteFilteredRows]
   );
 
   // Page number list: always include 1, totalPages, and current ±2

@@ -650,3 +650,103 @@ export async function refreshGscMetadataAction(_: ActionState, formData: FormDat
     };
   }
 }
+
+export async function getSitemapStatsAction(websiteId: string) {
+  try {
+    const user = await getAuthedUser();
+
+    if (!websiteId) {
+      return { status: "error", message: "Missing website id." };
+    }
+
+    const [website] = await db
+      .select()
+      .from(websites)
+      .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+
+    if (!website) {
+      return { status: "error", message: "Website not found." };
+    }
+
+    const [{ discovered }] = await db
+      .select({ discovered: count() })
+      .from(submissions)
+      .where(eq(submissions.websiteId, websiteId));
+
+    const siteHealth = (website.siteHealth as any) || {};
+
+    return {
+      status: "success",
+      data: {
+        sitemapUrl: website.sitemapUrl,
+        discoveredSitemaps: siteHealth?.gsc?.discoveredSitemaps || [],
+        totalFetched: discovered || 0,
+      }
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message: error instanceof Error ? error.message : "Failed to load sitemap stats.",
+    };
+  }
+}
+
+export async function getSiteInsightsAction(websiteId: string) {
+  try {
+    const user = await getAuthedUser();
+
+    if (!websiteId) {
+      return { status: "error", message: "Missing website id." };
+    }
+
+    const [website] = await db
+      .select()
+      .from(websites)
+      .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+
+    if (!website) {
+      return { status: "error", message: "Website not found." };
+    }
+
+    if (!website.gscConnected) {
+      return { status: "error", message: "Connect Google Search Console first." };
+    }
+
+    const connectedAccounts = await user.listConnectedAccounts();
+    const googleAccount = connectedAccounts.find((account) => account.provider === "google");
+
+    if (!googleAccount) {
+      return { status: "error", message: "Google account not connected." };
+    }
+
+    const tokenResult = await googleAccount.getAccessToken({ scopes: [GSC_READONLY_SCOPE] });
+
+    if (tokenResult.status !== "ok" || !tokenResult.data.accessToken) {
+      return { status: "error", message: "Could not retrieve access token." };
+    }
+
+    const { getSearchAnalytics } = await import("@/lib/api/google");
+    const siteUrl = website.url;
+    
+    // Fallback: If site was a sc-domain it should technically be handled by normalizing early, 
+    // but the original GSC siteUrl might be needed. Let's try website.url first.
+    let rows;
+    try {
+      rows = await getSearchAnalytics(tokenResult.data.accessToken, siteUrl, 28);
+    } catch (e: any) {
+      // If the URL fails, sometimes GSC expects sc-domain
+      const domainUrl = `sc-domain:${siteUrl.replace(/^https?:\/\//, '')}`;
+      rows = await getSearchAnalytics(tokenResult.data.accessToken, domainUrl, 28);
+    }
+
+    return {
+      status: "success",
+      data: rows,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message: error instanceof Error ? error.message : "Failed to load insights.",
+    };
+  }
+}

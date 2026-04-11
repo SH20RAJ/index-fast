@@ -71,6 +71,30 @@ export async function listSearchConsoleSitemaps(accessToken: string, siteUrl: st
   }
 }
 
+export async function getSearchAnalytics(accessToken: string, siteUrl: string, daysBack: number = 28) {
+  const searchconsole = createSearchConsoleClient(accessToken);
+  
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(endDate.getDate() - daysBack);
+  
+  try {
+    const response = await searchconsole.searchanalytics.query({
+      siteUrl,
+      requestBody: {
+        startDate: startDate.toISOString().split('T')[0],
+        endDate: endDate.toISOString().split('T')[0],
+        dimensions: ['date'],
+      }
+    });
+    
+    return response.data.rows || [];
+  } catch (error) {
+    console.error("Error querying GSC analytics:", error);
+    throw error;
+  }
+}
+
 /**
  * Pings Google Search Console to notify of sitemap changes.
  * Note: This is legacy but still functional.

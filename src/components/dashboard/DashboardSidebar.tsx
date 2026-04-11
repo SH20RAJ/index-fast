@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useSiteContext } from "@/components/dashboard/SiteContext";
+import { Select } from "@/components/ui/select";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import { useStackApp, useUser } from "@stackframe/stack";
@@ -17,6 +19,8 @@ import {
   Moon,
   Sun,
   ChevronDown,
+  Box,
+  LineChart,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -50,14 +54,29 @@ const navSections: NavSection[] = [
         icon: LayoutDashboard,
       },
       {
-        label: "Submissions",
-        href: "/submissions",
-        icon: Activity,
+        label: "Insights",
+        href: "/dashboard/insights",
+        icon: LineChart,
       },
     ],
   },
   {
-    label: "Sites",
+    label: "Site Details",
+    items: [
+      {
+        label: "Submissions",
+        href: "/submissions",
+        icon: Activity,
+      },
+      {
+        label: "Sitemaps",
+        href: "/dashboard/sitemaps",
+        icon: Box,
+      },
+    ]
+  },
+  {
+    label: "Management",
     items: [
       {
         label: "Websites",
@@ -127,6 +146,8 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   const stack = useStackApp();
   const { mode, toggleColorMode } = useColorMode();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  
+  const { websites, selectedSite, setSelectedSite } = useSiteContext();
 
   const displayName = user?.displayName?.trim() || "User";
   const primaryEmail = user?.primaryEmail || "No email";
@@ -165,7 +186,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col border-r border-border/50 bg-background/60 backdrop-blur-3xl dark:bg-background/40">
-      <div className="px-6 py-8">
+      <div className="px-6 py-6 pb-4">
         <div className="flex items-center gap-3">
           <div className="relative group cursor-pointer" onClick={handleNavClick}>
             <div className="absolute -inset-2 bg-rose-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -181,10 +202,30 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
             <span className="text-sm font-bold leading-none tracking-tight">IndexFast</span>
             <span className="text-[10px] text-zinc-500 mt-1 font-medium">Operations Console</span>
           </div>
-          <Button asChild size="sm" className="h-8 rounded-lg px-2.5 text-xs">
-            <Link href="/sites">+ Site</Link>
-          </Button>
         </div>
+
+        {/* Global Site Selector */}
+        {websites.length > 0 && (
+          <div className="mt-6">
+            <Select
+              value={selectedSite?.id || ""}
+              onChange={(value: string) => {
+                const site = websites.find(w => w.id === value);
+                setSelectedSite(site || null);
+                if (pathname.includes('/sites/')) {
+                  // if they change while on a specific site's page, we let them stay or bounce them?
+                  // staying is fine for now
+                }
+              }}
+              options={websites.map(w => ({
+                label: w.url.replace(/^https?:\/\//, ''),
+                value: w.id
+              }))}
+              className="w-full text-sm font-semibold rounded-xl bg-zinc-50 border-zinc-200 dark:bg-white/5 dark:border-white/10"
+              placeholder="Select Website..."
+            />
+          </div>
+        )}
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto px-4 py-2">
