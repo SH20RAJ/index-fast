@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { Suspense } from "react";
+
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await stackServerApp.getUser();
   if (!user) {
@@ -37,5 +39,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
     .from(websites)
     .where(eq(websites.userId, user.id));
 
-  return <DashboardShell initialWebsites={userWebsites}>{children}</DashboardShell>;
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+      <DashboardShell initialWebsites={userWebsites}>{children}</DashboardShell>
+    </Suspense>
+  );
 }
