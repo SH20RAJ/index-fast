@@ -55,7 +55,7 @@ const navSections: NavSection[] = [
       },
       {
         label: "Insights",
-        href: "/insights",
+        href: "/dashboard/insights",
         icon: LineChart,
       },
     ],
@@ -70,7 +70,7 @@ const navSections: NavSection[] = [
       },
       {
         label: "Sitemaps",
-        href: "/sitemaps",
+        href: "/dashboard/sitemaps",
         icon: Box,
       },
     ]
