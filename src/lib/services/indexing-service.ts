@@ -91,9 +91,13 @@ async function triggerSubmissions(website: Website, urls: string[], isPro: boole
   // IndexNow
   if (website.indexNowKey) {
     const res = await submitToIndexNow(host, website.indexNowKey, urls, indexNowKeyLocationUrl);
+    
+    const urlString = urls.join(", ");
+    const truncatedUrl = urlString.length > 500 ? urlString.substring(0, 497) + "..." : urlString;
+
     submissionsToLog.push({
       websiteId: website.id,
-      url: urls.join(", "),
+      url: truncatedUrl,
       engine: "indexnow" as const,
       status: res.success ? ("success" as const) : ("failed" as const),
       errorMessage: res.error,

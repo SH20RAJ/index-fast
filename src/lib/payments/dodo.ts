@@ -50,11 +50,11 @@ export function getDodoApiKey(): string {
   return key;
 }
 
-export function getDodoWebhookSecret(): string {
+export function getDodoWebhookSecret(): string | null {
   const env = normalizeEnvironment();
   const secret = process.env.DODO_WEBHOOK_SECRET ?? ENV_TO_WEBHOOK_SECRET[env];
   if (!secret) {
-    throw new Error(`Missing Dodo webhook secret for ${env} (NODE_ENV=${process.env.NODE_ENV ?? "undefined"}).`);
+    return null;
   }
   return secret;
 }

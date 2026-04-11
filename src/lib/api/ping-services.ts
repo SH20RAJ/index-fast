@@ -2,6 +2,19 @@
  * Universal Ping Services (Ping-o-Matic & Pingler)
  */
 
+function escapeXml(unsafe: string): string {
+  return unsafe.replace(/[<>&'"]/g, function (c) {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case "'": return '&apos;';
+      case '"': return '&quot;';
+      default: return c;
+    }
+  });
+}
+
 export async function pingService(
   service: "pingomatic" | "pingler",
   blogName: string,
@@ -17,15 +30,15 @@ export async function pingService(
 
   if (service === "pingomatic") {
     // Using the XML-RPC endpoint for Ping-o-Matic
-    endpoint = "http://rpc.pingomatic.com/";
+    endpoint = "https://rpc.pingomatic.com/";
     method = "POST";
     headers["Content-Type"] = "text/xml";
     body = `<?xml version="1.0"?>
 <methodCall>
   <methodName>weblogUpdates.ping</methodName>
   <params>
-    <param><value>${blogName}</value></param>
-    <param><value>${blogUrl}</value></param>
+    <param><value>${escapeXml(blogName)}</value></param>
+    <param><value>${escapeXml(blogUrl)}</value></param>
   </params>
 </methodCall>`;
   } else if (service === "pingler") {
@@ -33,9 +46,15 @@ export async function pingService(
     if (!apiKey) {
       return { success: false, error: "Pingler API Key is required", service };
     }
-    endpoint = `http://api.pingler.com/?act=add&key=${apiKey}&title=${encodeURIComponent(
-      blogName
-    )}&url=${encodeURIComponent(blogUrl)}`;
+    endpoint = "https://api.pingler.com/";
+    method = "POST";
+    headers["Content-Type"] = "application/x-www-form-urlencoded";
+    body = new URLSearchParams({
+      act: "add",
+      key: apiKey,
+      title: blogName,
+      url: blogUrl
+    }).toString();
   }
 
   try {

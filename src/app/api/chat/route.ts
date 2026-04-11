@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 
 interface Message {
-  role: "user" | "assistant";
+  role: "system" | "user" | "assistant";
   content: string;
 }
 
