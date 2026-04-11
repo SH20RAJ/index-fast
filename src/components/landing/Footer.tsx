@@ -25,7 +25,8 @@ export default function Footer() {
               <Link href="/how-it-works" className="hover:text-foreground">How It Works</Link>
               <Link href="/docs" className="hover:text-foreground">Docs</Link>
               <Link href="/pricing" className="hover:text-foreground">Pricing</Link>
-              <Link href="/blog" className="hover:text-foreground">Insights</Link>
+              <Link href="/blog" className="hover:text-foreground">Blog</Link>
+              <Link href="/tools" className="hover:text-foreground">Tools</Link>
             </div>
           </div>
           <div className="space-y-2">

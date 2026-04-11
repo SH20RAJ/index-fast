@@ -19,9 +19,9 @@ export default function Navbar() {
   const primaryLinks = [
     { label: "Home", href: "/" },
     { label: "How It Works", href: "/how-it-works" },
-    { label: "Docs", href: "/docs" },
-    { label: "Tools", href: "/tools" },
-    { label: "Blog", href: "/blog" },
+    // { label: "Docs", href: "/docs" },
+    // { label: "Tools", href: "/tools" },
+    // { label: "Blog", href: "/blog" },
     { label: "Pricing", href: "/#pricing" },
   ];
 
