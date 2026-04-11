@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, lte } from "drizzle-orm";
+import { and, asc, desc, eq, lte, inArray, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { cronJobs, submissions, urlInventory, websites } from "@/lib/db/schema";
 import { parseSitemap } from "@/lib/utils/sitemap-parser";
@@ -67,7 +67,10 @@ async function getUrlsForSource(websiteId: string, sourceMode: string, sitemapUr
       .select({ url: urlInventory.url })
       .from(urlInventory)
       .where(eq(urlInventory.websiteId, websiteId))
-      .orderBy(desc(urlInventory.lastDetectedAt))
+      .orderBy(
+        sql`${urlInventory.lastSubmittedAt} ASC NULLS FIRST`,
+        desc(urlInventory.lastDetectedAt)
+      )
       .limit(INVENTORY_SOURCE_LIMIT);
     return normalizeHttpUrls(rows.map((row) => row.url));
   }
@@ -107,141 +110,160 @@ export async function processDueCronJobs(maxJobs = 20) {
   let skipped = 0;
   let failed = 0;
 
-  for (const row of dueRows) {
-    if (!row.nextRunAt) {
-      skipped += 1;
-      continue;
-    }
+  await Promise.all(
+    dueRows.map(async (row) => {
+      if (!row.nextRunAt) {
+        skipped += 1;
+        return;
+      }
 
-    // Claim the job to avoid duplicate runs in concurrent workers.
-    const claimUntil = new Date(Date.now() + CLAIM_HOLD_MS);
-    const claim = await db
-      .update(cronJobs)
-      .set({ nextRunAt: claimUntil, updatedAt: now })
-      .where(
-        and(
-          eq(cronJobs.id, row.jobId),
-          eq(cronJobs.enabled, true),
-          eq(cronJobs.nextRunAt, row.nextRunAt)
+      // Claim the job to avoid duplicate runs in concurrent workers.
+      const claimUntil = new Date(Date.now() + CLAIM_HOLD_MS);
+      const claim = await db
+        .update(cronJobs)
+        .set({ nextRunAt: claimUntil, updatedAt: now })
+        .where(
+          and(
+            eq(cronJobs.id, row.jobId),
+            eq(cronJobs.enabled, true),
+            eq(cronJobs.nextRunAt, row.nextRunAt)
+          )
         )
-      )
-      .returning({ id: cronJobs.id });
+        .returning({ id: cronJobs.id });
 
-    if (claim.length === 0) {
-      skipped += 1;
-      continue;
-    }
-
-    try {
-      const urls = await getUrlsForSource(row.websiteId, row.sourceMode, row.sitemapUrl);
-
-      if (urls.length === 0) {
-        throw new Error("No eligible URLs found for this cron source.");
+      if (claim.length === 0) {
+        skipped += 1;
+        return;
       }
 
-      const engine = row.engine as SupportedEngine;
-      const submissionRows: Array<{
-        websiteId: string;
-        url: string;
-        engine: SupportedEngine;
-        status: "success" | "failed";
-        errorMessage?: string;
-      }> = [];
+      try {
+        const urls = await getUrlsForSource(row.websiteId, row.sourceMode, row.sitemapUrl);
 
-      if (engine === "indexnow") {
-        if (!row.indexNowKey) {
-          throw new Error("IndexNow key not configured for this website.");
+        if (urls.length === 0) {
+          throw new Error("No eligible URLs found for this cron source.");
         }
 
-        const host = new URL(row.websiteUrl).hostname;
-        const indexNowKeyLocation = resolveIndexNowKeyLocation(row.siteHealth);
-        const batches = splitIntoBatches(urls, INDEXNOW_BATCH_SIZE);
+        const engine = row.engine as SupportedEngine;
+        const submissionRows: Array<{
+          websiteId: string;
+          url: string;
+          engine: SupportedEngine;
+          status: "success" | "failed";
+          errorMessage?: string;
+        }> = [];
 
-        for (let i = 0; i < batches.length; i += 1) {
-          const batch = batches[i];
-          const res = await submitToIndexNow(host, row.indexNowKey, batch, indexNowKeyLocation);
+        if (engine === "indexnow") {
+          if (!row.indexNowKey) {
+            throw new Error("IndexNow key not configured for this website.");
+          }
+
+          const host = new URL(row.websiteUrl).hostname;
+          const indexNowKeyLocation = resolveIndexNowKeyLocation(row.siteHealth);
+          const batches = splitIntoBatches(urls, INDEXNOW_BATCH_SIZE);
+
+          for (let i = 0; i < batches.length; i += 1) {
+            const batch = batches[i];
+            const res = await submitToIndexNow(host, row.indexNowKey, batch, indexNowKeyLocation);
+            submissionRows.push({
+              websiteId: row.websiteId,
+              url: `Cron IndexNow batch ${i + 1} (${batch.length} URLs)`,
+              engine,
+              status: res.success ? "success" : "failed",
+              errorMessage: res.success ? undefined : res.error,
+            });
+          }
+        } else if (engine === "bing") {
+          if (!row.bingApiKey) {
+            throw new Error("Bing API key not configured for this website.");
+          }
+
+          const results = await submitToBingBatch(row.websiteUrl, urls, row.bingApiKey);
+          results.forEach((res, idx) => {
+            submissionRows.push({
+              websiteId: row.websiteId,
+              url: `Cron Bing batch ${idx + 1}`,
+              engine,
+              status: res.success ? "success" : "failed",
+              errorMessage: res.success ? undefined : res.error,
+            });
+          });
+        } else if (engine === "google") {
+          if (!row.sitemapUrl) {
+            throw new Error("Google indexing requires a sitemap URL for automated pings.");
+          }
+
+          const res = await pingGoogleSitemap(row.sitemapUrl);
           submissionRows.push({
             websiteId: row.websiteId,
-            url: `Cron IndexNow batch ${i + 1} (${batch.length} URLs)`,
+            url: `Cron Google Sitemap Ping`,
             engine,
             status: res.success ? "success" : "failed",
             errorMessage: res.success ? undefined : res.error,
           });
-        }
-      } else if (engine === "bing") {
-        if (!row.bingApiKey) {
-          throw new Error("Bing API key not configured for this website.");
+        } else {
+          throw new Error(`Engine ${engine} is not supported for automated cron jobs yet.`);
         }
 
-        const results = await submitToBingBatch(row.websiteUrl, urls, row.bingApiKey);
-        results.forEach((res, idx) => {
-          submissionRows.push({
-            websiteId: row.websiteId,
-            url: `Cron Bing batch ${idx + 1}`,
-            engine,
-            status: res.success ? "success" : "failed",
-            errorMessage: res.success ? undefined : res.error,
-          });
-        });
-      } else if (engine === "google") {
-        if (!row.sitemapUrl) {
-          throw new Error("Google indexing requires a sitemap URL for automated pings.");
+        if (submissionRows.length > 0) {
+          await db.insert(submissions).values(submissionRows);
         }
 
-        const res = await pingGoogleSitemap(row.sitemapUrl);
-        submissionRows.push({
+        // Update URL inventory if source was inventory to mark as submitted
+        if (row.sourceMode === "inventory" && urls.length > 0) {
+          // URLs are unique, update lastSubmittedAt for these URLs
+          const batches = splitIntoBatches(urls, 100);
+          for (const batch of batches) {
+            await db
+              .update(urlInventory)
+              .set({ lastSubmittedAt: new Date() })
+              .where(
+                and(
+                  eq(urlInventory.websiteId, row.websiteId),
+                  inArray(urlInventory.url, batch)
+                )
+              );
+          }
+        }
+
+        await db
+          .update(websites)
+          .set({ lastSyncAt: new Date() })
+          .where(eq(websites.id, row.websiteId));
+
+        await db
+          .update(cronJobs)
+          .set({
+            lastRunAt: new Date(),
+            nextRunAt: calculateNextRunFromFrequency(row.frequency),
+            updatedAt: new Date(),
+          })
+          .where(eq(cronJobs.id, row.jobId));
+
+        processed += 1;
+      } catch (error) {
+        failed += 1;
+
+        const message = error instanceof Error ? error.message : "Unknown cron execution error";
+
+        await db.insert(submissions).values({
           websiteId: row.websiteId,
-          url: `Cron Google Sitemap Ping`,
-          engine,
-          status: res.success ? "success" : "failed",
-          errorMessage: res.success ? undefined : res.error,
+          url: `Cron job ${row.jobId}`,
+          engine: row.engine as SupportedEngine,
+          status: "failed",
+          errorMessage: message,
         });
-      } else {
-        throw new Error(`Engine ${engine} is not supported for automated cron jobs yet.`);
+
+        await db
+          .update(cronJobs)
+          .set({
+            lastRunAt: new Date(),
+            nextRunAt: calculateNextRunFromFrequency(row.frequency),
+            updatedAt: new Date(),
+          })
+          .where(eq(cronJobs.id, row.jobId));
       }
-
-      if (submissionRows.length > 0) {
-        await db.insert(submissions).values(submissionRows);
-      }
-
-      await db
-        .update(websites)
-        .set({ lastSyncAt: new Date() })
-        .where(eq(websites.id, row.websiteId));
-
-      await db
-        .update(cronJobs)
-        .set({
-          lastRunAt: new Date(),
-          nextRunAt: calculateNextRunFromFrequency(row.frequency),
-          updatedAt: new Date(),
-        })
-        .where(eq(cronJobs.id, row.jobId));
-
-      processed += 1;
-    } catch (error) {
-      failed += 1;
-
-      const message = error instanceof Error ? error.message : "Unknown cron execution error";
-
-      await db.insert(submissions).values({
-        websiteId: row.websiteId,
-        url: `Cron job ${row.jobId}`,
-        engine: row.engine as SupportedEngine,
-        status: "failed",
-        errorMessage: message,
-      });
-
-      await db
-        .update(cronJobs)
-        .set({
-          lastRunAt: new Date(),
-          nextRunAt: calculateNextRunFromFrequency(row.frequency),
-          updatedAt: new Date(),
-        })
-        .where(eq(cronJobs.id, row.jobId));
-    }
-  }
+    })
+  );
 
   return {
     scanned: dueRows.length,
