@@ -78,6 +78,8 @@ const slideInRight = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" as const } }
 };
 
+import { CronTerminal, ApiSubmission, PingRadar } from "./WorkflowVisuals";
+
 export default function HowItWorksContent() {
   return (
     <section className="relative isolate overflow-hidden border-b border-border/70 py-12 sm:py-16 lg:py-20">
@@ -91,28 +93,27 @@ export default function HowItWorksContent() {
           className="space-y-5"
         >
           <motion.div variants={itemVariants}>
-            <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase shadow-sm">
-              Workflow Breakdown
+            <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase shadow-sm border-primary/20 text-primary">
+              Infrastructure Breakdown
             </Badge>
           </motion.div>
           <motion.h1 
             variants={itemVariants}
             className="max-w-4xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-400"
           >
-            How IndexFast works from publish to index.
+            A high-performance indexing engine.
           </motion.h1>
           <motion.p variants={itemVariants} className="max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            IndexFast is built as a practical indexing pipeline, not a vanity dashboard. Connect once, detect fresh URLs,
-            submit in batches, and use status feedback to improve indexing consistency.
+            IndexFast isn't just a dashboard—it's a production-grade indexing pipeline that automates discovery, injection, and multi-engine propagation.
           </motion.p>
           <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-3 pt-4">
-            <Button asChild size="lg" className="font-semibold rounded-full shadow-lg shadow-primary/20">
+            <Button asChild size="lg" className="h-14 font-black rounded-2xl shadow-xl shadow-primary/10 tracking-wide uppercase text-xs">
               <Link href="/sign-up">
-                Start free <ArrowRight className="ml-2 h-4 w-4" />
+                Start Accelerating <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="font-medium rounded-full bg-background/50 backdrop-blur-sm">
-              <Link href="/docs">Read full docs</Link>
+            <Button asChild variant="outline" size="lg" className="h-14 font-bold rounded-2xl bg-background/50 backdrop-blur-sm tracking-wide uppercase text-xs">
+              <Link href="/docs">View Documentation</Link>
             </Button>
           </motion.div>
         </motion.header>
@@ -125,30 +126,52 @@ export default function HowItWorksContent() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="grid gap-6 md:gap-8 max-w-3xl"
+            className="grid gap-12 md:gap-20"
           >
             {pipeline.map((step, idx) => {
               const Icon = step.icon;
               return (
-                <motion.div key={step.id} variants={itemVariants} className="relative pl-0 md:pl-20 group">
-                  {/* Custom animated connector */}
-                  <div className="absolute left-[calc(2rem-5px)] top-8 hidden md:flex h-3 w-3 rounded-full bg-primary/40 group-hover:bg-primary transition-colors duration-300 shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
-                  
-                  <Card className="border-border/70 bg-card/85 backdrop-blur-md shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:-translate-y-1">
-                    <CardHeader className="space-y-3 pb-4">
-                      <p className="text-[10px] font-black tracking-[0.2em] text-primary/80">STEP {step.id}</p>
-                      <CardTitle className="flex items-center gap-3 text-xl font-bold tracking-tight">
-                        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-gradient-to-br from-background to-muted/50 shadow-sm group-hover:scale-110 transition-transform duration-300">
-                          <Icon className="h-5 w-5 text-foreground/80" />
-                        </span>
-                        {step.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-0 text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
-                      {step.description}
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                <div key={step.id} className="grid md:grid-cols-2 gap-8 items-center lg:gap-16">
+                  <motion.div variants={itemVariants} className="relative pl-0 md:pl-20 group order-2 md:order-1">
+                    {/* Custom animated connector */}
+                    <div className="absolute left-[calc(2rem-5px)] top-8 hidden md:flex h-3 w-3 rounded-full bg-primary/40 group-hover:bg-primary transition-colors duration-300 shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+                    
+                    <Card className="border-beam border-border/70 bg-card/85 backdrop-blur-md shadow-sm transition-all duration-300 premium-card h-full">
+                      <CardHeader className="space-y-3 pb-4">
+                        <p className="text-[10px] font-black tracking-[0.2em] text-primary/80 uppercase">PHASE {step.id}</p>
+                        <CardTitle className="flex items-center gap-3 text-xl font-bold tracking-tight">
+                          <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-gradient-to-br from-background to-muted/50 shadow-sm">
+                            <Icon className="h-5 w-5 text-foreground/80 group-hover:text-primary transition-colors duration-300" />
+                          </span>
+                          {step.title}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="pt-0 text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
+                        {step.description}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+
+                  <motion.div 
+                    variants={idx % 2 === 0 ? slideInRight : slideInLeft} 
+                    className="flex justify-center order-1 md:order-2"
+                  >
+                    {idx === 0 && (
+                      <div className="w-full flex justify-center py-4">
+                        <div className="p-1 bg-gradient-to-br from-primary/20 to-transparent rounded-2xl">
+                          <div className="px-6 py-4 bg-background/80 rounded-xl backdrop-blur-lg border border-border/50 font-mono text-[11px] text-zinc-400">
+                            ID: PRO-2987-X <br/>
+                            STATUS: ACTIVE <br/>
+                            DOMAIN: VERIFIED
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {idx === 1 && <CronTerminal />}
+                    {idx === 2 && <ApiSubmission />}
+                    {idx === 3 && <PingRadar />}
+                  </motion.div>
+                </div>
               );
             })}
           </motion.section>
@@ -161,10 +184,10 @@ export default function HowItWorksContent() {
           className="grid gap-6 lg:grid-cols-2"
         >
           <motion.div variants={slideInLeft}>
-            <Card className="h-full border-border/70 bg-background/85 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-500">
+            <Card className="h-full border-beam border-border/70 bg-background/85 backdrop-blur-md shadow-sm transition-all duration-500 premium-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl font-bold tracking-tight">
-                  <span className="p-2 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400">
+                  <span className="p-2 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400 group-hover:bg-teal-500/20 transition-colors">
                     <Clock3 className="h-5 w-5" />
                   </span>
                   Who this is for
@@ -188,10 +211,10 @@ export default function HowItWorksContent() {
           </motion.div>
 
           <motion.div variants={slideInRight}>
-            <Card className="h-full border-border/70 bg-background/85 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-500">
+            <Card className="h-full border-beam border-border/70 bg-background/85 backdrop-blur-md shadow-sm transition-all duration-500 premium-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl font-bold tracking-tight">
-                  <span className="p-2 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                  <span className="p-2 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 transition-colors">
                     <CheckCircle2 className="h-5 w-5" />
                   </span>
                   What you get

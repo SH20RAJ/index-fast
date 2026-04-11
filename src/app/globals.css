@@ -108,6 +108,61 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground shrink-0;
+  }
+}
+
+@layer utilities {
+  .border-beam {
+    position: relative;
+    z-index: 0;
+  }
+
+  .border-beam::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    background: conic-gradient(
+      from var(--beam-angle, 0deg),
+      transparent 0deg,
+      transparent 90deg,
+      var(--primary) 180deg,
+      transparent 270deg,
+      transparent 360deg
+    );
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .border-beam:hover::before {
+    opacity: 1;
+    animation: beam-spin 3s linear infinite;
+  }
+
+  @keyframes beam-spin {
+    from {
+      --beam-angle: 0deg;
+    }
+    to {
+      --beam-angle: 360deg;
+    }
+  }
+
+  @property --beam-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  .premium-card {
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .premium-card:hover {
+    @apply border-primary/30 ring-1 ring-primary/10 shadow-[0_0_20px_rgba(var(--primary),0.05)];
   }
 }
