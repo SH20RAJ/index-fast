@@ -193,3 +193,7 @@ This will show exactly where users drop.
 If you want, I can implement Step 1 right now and build the first working tool end-to-end with API route + UI + login gate.
  -->
 
+
+---
+
+create apis page on dashboard to submit throgh api and every account wil have 1 api only and also add docs and add api for everything , people can rotate their api 

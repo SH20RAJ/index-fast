@@ -825,3 +825,41 @@ export async function getReaderContent(url: string): Promise<{ status: "success"
     return { status: "error", message: error instanceof Error ? error.message : "An unexpected error occurred." };
   }
 }
+
+export async function getUserApiKey(): Promise<ActionState<string>> {
+  const user = await stackServerApp.getUser();
+  if (!user) return { status: "error", message: "Unauthorized" };
+
+  try {
+    const dbUser = await db.query.users.findFirst({
+      where: eq(users.id, user.id),
+    });
+
+    if (dbUser?.apiKey) {
+      return { status: "success", data: dbUser.apiKey };
+    }
+
+    // Generate first key if not exists
+    const newKey = `idx_${crypto.randomUUID().replace(/-/g, "")}`;
+    await db.update(users).set({ apiKey: newKey }).where(eq(users.id, user.id));
+    
+    return { status: "success", data: newKey };
+  } catch (error) {
+    return { status: "error", message: "Failed to retrieve API key" };
+  }
+}
+
+export async function rotateApiKeyAction(): Promise<ActionState<string>> {
+  const user = await stackServerApp.getUser();
+  if (!user) return { status: "error", message: "Unauthorized" };
+
+  try {
+    const newKey = `idx_${crypto.randomUUID().replace(/-/g, "")}`;
+    await db.update(users).set({ apiKey: newKey }).where(eq(users.id, user.id));
+    
+    revalidatePath("/dashboard/api");
+    return { status: "success", data: newKey, message: "API Key rotated successfully." };
+  } catch (error) {
+    return { status: "error", message: "Failed to rotate API key" };
+  }
+}

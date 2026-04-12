@@ -104,6 +104,7 @@ const navSections: NavSection[] = [
           { label: "AI Content Reader", href: "/dashboard/reader" },
           { label: "SubmitExpress", href: "/toolbox/submitexpress" },
           { label: "Free Tools", href: "/tools" },
+          { label: "API", href: "/dashboard/api" },
           { label: "Blogs", href: "/blogs" },
         ],
       },
@@ -114,11 +115,13 @@ const navSections: NavSection[] = [
 function SidebarItem({ 
   item, 
   active, 
-  onClick 
+  onClick,
+  href
 }: { 
   item: NavItem;
   active: boolean; 
   onClick?: () => void;
+  href?: string;
 }) {
   return (
     <Button
@@ -133,7 +136,7 @@ function SidebarItem({
       )}
       onClick={onClick}
     >
-      <Link href={item.href || "#"}>
+      <Link href={href || item.href || "#"}>
         <item.icon className={cn("h-4 w-4 shrink-0", active ? "text-primary-foreground" : "")} />
         <span className="flex-1 font-medium">{item.label}</span>
         {active && <span className="h-1.5 w-1.5 rounded-full bg-primary-foreground/90 animate-in fade-in zoom-in duration-300" />}
@@ -150,6 +153,18 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   
   const { websites, selectedSite, setSelectedSite } = useSiteContext();
+
+  const getHref = (href: string) => {
+    if (!selectedSite || 
+        href.startsWith('http') || 
+        href.startsWith('/toolbox') || 
+        href.startsWith('/blogs') || 
+        href.startsWith('/tools')) {
+      return href;
+    }
+    const separator = href.includes("?") ? "&" : "?";
+    return `${href}${separator}url=${encodeURIComponent(selectedSite.url)}`;
+  };
 
   const displayName = user?.displayName?.trim() || "User";
   const primaryEmail = user?.primaryEmail || "No email";
@@ -190,7 +205,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
     <div className="flex h-full min-h-0 flex-col border-r border-border/50 bg-background/60 backdrop-blur-3xl dark:bg-background/40">
       <div className="px-6 py-6 pb-4">
         <div className="flex items-center gap-3">
-          <div className="relative group cursor-pointer" onClick={handleNavClick}>
+          <Link href={getHref("/dashboard")} className="relative group cursor-pointer" onClick={handleNavClick}>
             <div className="absolute -inset-2 bg-rose-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             <Image 
               src="/logo.png" 
@@ -199,7 +214,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
               height={36} 
               className="relative h-9 w-9 rounded-xl object-cover ring-1 ring-border/50 shadow-sm" 
             />
-          </div>
+          </Link>
           <div className="flex min-w-0 flex-1 flex-col">
             <span className="text-sm font-bold leading-none tracking-tight">IndexFast</span>
             <span className="text-[10px] text-zinc-500 mt-1 font-medium">Operations Console</span>
@@ -235,7 +250,8 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                         <SidebarItem 
                           item={item} 
                           active={active} 
-                          onClick={handleNavClick} 
+                          onClick={handleNavClick}
+                          href={getHref(item.href)}
                         />
                       ) : (
                         <>
@@ -262,7 +278,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                                 return (
                                   <Link
                                     key={child.href}
-                                    href={child.href}
+                                    href={getHref(child.href)}
                                     onClick={handleNavClick}
                                     className={cn(
                                       "block rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200",
@@ -310,7 +326,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
             asChild
             title="Settings"
           >
-            <Link href="/settings">
+            <Link href={getHref("/settings")}>
               <Settings className="h-4 w-4" />
             </Link>
           </Button>

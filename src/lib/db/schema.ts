@@ -49,6 +49,7 @@ export const users = pgTable("users", {
   dodoSubscriptionId: text("dodo_subscription_id"),
   dodoCustomerId: text("dodo_customer_id"),
   subscriptionStatus: text("subscription_status"), // active, trialing, canceled, etc.
+  apiKey: text("api_key").unique(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

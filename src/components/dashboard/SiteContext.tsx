@@ -45,7 +45,7 @@ export function SiteProvider({
   const [loading, setLoading] = useState(true);
 
   const urlParam = searchParams.get("url");
-  const isToolboxPage = pathname?.startsWith("/toolbox/");
+  const isExcludedPage = pathname?.startsWith("/toolbox/") || pathname?.startsWith("/blogs") || pathname?.startsWith("/tools");
 
   // Sync state FROM URL or localStorage
   useEffect(() => {
@@ -53,7 +53,7 @@ export function SiteProvider({
       let found: WebsiteBasic | undefined;
 
       // 1. Check URL first - Only if NOT a toolbox page (where ?url= is used for tools)
-      if (urlParam && !isToolboxPage) {
+      if (urlParam && !isExcludedPage) {
         const normalizedParam = normalizeUrl(urlParam);
         found = websites.find(w => normalizeUrl(w.url) === normalizedParam || w.id === urlParam);
       }
@@ -96,7 +96,7 @@ export function SiteProvider({
     localStorage.setItem("indexfast_selected_site_id", selectedSite.id);
     
     // ONLY update URL if NOT a toolbox page (to avoid conflict with tool inputs)
-    if (!isToolboxPage) {
+    if (!isExcludedPage) {
       const currentUrlParam = searchParams.get("url");
       if (normalizeUrl(currentUrlParam || "") !== normalizeUrl(selectedSite.url)) {
         const params = new URLSearchParams(searchParams.toString());
@@ -104,7 +104,7 @@ export function SiteProvider({
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
       }
     }
-  }, [selectedSite, pathname, router, searchParams, isToolboxPage]);
+  }, [selectedSite, pathname, router, searchParams, isExcludedPage]);
 
   return (
     <SiteContext.Provider
