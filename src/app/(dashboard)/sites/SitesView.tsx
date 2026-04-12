@@ -46,6 +46,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";
+import { useLogs } from "@/components/dashboard/LogContext";
 import {
   buildBingIndexNowPortalUrl,
   buildGoogleSearchConsolePropertyUrl,
@@ -98,7 +99,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   const [gscSelection, setGscSelection] = useState<Set<string>>(new Set());
   const [gscError, setGscError] = useState<string | null>(null);
   const [gscStatusMessage, setGscStatusMessage] = useState<string | null>(null);
-  const [processLogs, setProcessLogs] = useState<string[]>([]);
+  const { addLog, setIsTerminalOpen } = useLogs();
   const [editingSiteId, setEditingSiteId] = useState<string | null>(null);
   const [moreActionsSiteId, setMoreActionsSiteId] = useState<string | null>(null);
   const [cronSiteId, setCronSiteId] = useState<string | null>(null);
@@ -188,9 +189,9 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     return typeof keyLocationUrl === "string" ? keyLocationUrl : "";
   }
 
-  function logStep(message: string) {
-    const timestamp = new Date().toLocaleTimeString();
-    setProcessLogs((prev) => [`[${timestamp}] ${message}`, ...prev].slice(0, 40));
+  function logStep(message: string, status: "success" | "failed" | "pending" = "pending") {
+    addLog({ url: "GSC Import", engine: "Discovery", status, message });
+    setIsTerminalOpen(true);
   }
 
   async function loadCronJobs(siteId: string) {
@@ -273,7 +274,8 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
       const message = payload.message || "Import complete.";
       setGscStatusMessage(message);
       logStep(
-        `Import completed: ${payload.importedCount ?? 0} added, ${payload.skippedCount ?? 0} skipped.`
+        `Import completed: ${payload.importedCount ?? 0} added, ${payload.skippedCount ?? 0} skipped.`,
+        "success"
       );
 
       await loadGscSites();
@@ -281,7 +283,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     } catch (error) {
       const message = error instanceof Error ? error.message : "Import failed.";
       setGscError(message);
-      logStep(`Import failed: ${message}`);
+      logStep(`Import failed: ${message}`, "failed");
     } finally {
       setGscImporting(false);
     }

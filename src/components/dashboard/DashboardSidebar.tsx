@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useSiteContext } from "@/components/dashboard/SiteContext";
-import { Select } from "@/components/ui/select";
+import WebsiteSwitcher from "@/components/dashboard/WebsiteSwitcher";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import { useStackApp, useUser } from "@stackframe/stack";
@@ -99,6 +99,7 @@ const navSections: NavSection[] = [
         icon: Wrench,
         children: [
           { label: "Overview", href: "/toolbox" },
+          { label: "Sitemap Extractor", href: "/toolbox/sitemap-extractor" },
           { label: "Universal Ping", href: "/toolbox/ping" },
           { label: "SubmitExpress", href: "/toolbox/submitexpress" },
           { label: "Free Tools", href: "/tools" },
@@ -207,24 +208,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         {/* Global Site Selector */}
         {websites.length > 0 && (
           <div className="mt-6">
-            <Select
-              value={selectedSite?.id || ""}
-              onChange={(val: any) => {
-                const site = websites.find(w => w.id === (val?.value || val));
-                setSelectedSite(site || null);
-              }}
-              options={websites.map(w => ({
-                label: w.url.replace(/^https?:\/\//, ''),
-                value: w.id
-              }))}
-              className="w-full text-sm font-semibold rounded-xl bg-zinc-50 border-zinc-200 dark:bg-white/5 dark:border-white/10"
-              dropdownClassName="z-[100] min-w-[200px] shadow-2xl border-border"
-              displayValue={(selected: any) => {
-                const site = websites.find(w => w.id === (selected?.value || selected));
-                return site ? site.url.replace(/^https?:\/\//, '') : "Select Website...";
-              }}
-              placeholder="Select Website..."
-            />
+            <WebsiteSwitcher />
           </div>
         )}
       </div>

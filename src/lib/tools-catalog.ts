@@ -237,6 +237,14 @@ export const SEO_TOOLS: ToolDefinition[] = [
     intentKeywords: ["free sitemap health checker", "xml sitemap validator online", "sitemap broken links checker"],
   },
   {
+    slug: "sitemap-url-extractor",
+    title: "Sitemap to URL Extractor",
+    categoryId: "indexing-crawl",
+    primaryKeyword: "sitemap url extractor free",
+    description: "Extract all unique URLs from XML sitemaps, sitemap indices, and RSS feeds into a clean list.",
+    intentKeywords: ["sitemap url extractor free", "extract urls from sitemap online", "convert sitemap to url list"],
+  },
+  {
     slug: "robots-txt-tester",
     title: "Robots.txt Tester",
     categoryId: "indexing-crawl",
