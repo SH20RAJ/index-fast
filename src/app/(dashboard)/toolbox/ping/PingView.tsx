@@ -181,6 +181,7 @@ export default function PingView() {
   const [done, setDone] = useState(false);
   const [history, setHistory] = useState<PingHistoryItem[]>([]);
   const [parsingSitemap, setParsingSitemap] = useState(false);
+  const [totalPingsInSession, setTotalPingsInSession] = useState(0);
 
   // Pre-fill URL from query params
   useEffect(() => {
@@ -214,18 +215,9 @@ export default function PingView() {
     return list;
   }, [selectedGroups]);
 
-  const totalExpectedPings = useMemo(() => {
-    let urlCount = 0;
-    if (activeTab === "single") urlCount = url.trim() ? 1 : 0;
-    else if (activeTab === "bulk") urlCount = bulkUrls.split("\n").filter(u => u.trim()).length;
-    else if (activeTab === "sitemap") urlCount = results.length > 0 ? new Set(results.map(r => r.resourceUrl)).size : 0; // This logic needs adjustment
-    
-    return urlCount * endpointsToPing.length;
-  }, [activeTab, url, bulkUrls, endpointsToPing, results]);
-
   const successCount = results.filter((r) => r.status === "success").length;
   const failedCount = results.filter((r) => r.status === "failed").length;
-  const progress = results.length > 0 ? Math.round((results.length / (results.length + (done ? 0 : 1))) * 100) : 0; // Placeholder progress
+  const progress = totalPingsInSession > 0 ? Math.round((results.length / totalPingsInSession) * 100) : 0;
 
   function toggleGroup(id: string) {
     setSelectedGroups((prev) => {
@@ -306,13 +298,16 @@ export default function PingView() {
     if (!onlyFailed) {
       setDone(false);
       setResults([]);
+      setTotalPingsInSession(totalCount);
     } else {
       // If retrying, remove the failed ones from current results to avoid duplicates
       setResults(prev => prev.filter(r => r.status !== "failed"));
+      // We don't change totalPingsInSession on retry so progress bar reflects total work
     }
 
     // Process in batches of 20 endpoints per request for real-time feedback
     const BATCH_SIZE = 20;
+    const allResults: PingResult[] = onlyFailed ? [...results.filter(r => r.status !== "failed")] : [];
     
     try {
       for (const resource of resources) {
@@ -328,12 +323,12 @@ export default function PingView() {
           if (!res.ok) {
             const err = await res.json().catch(() => ({ error: "Batch failed" }));
             toast.error(err.error || "A batch of pings failed");
-            // Still continue with other batches
             continue;
           }
 
           const data = await res.json() as { results: PingResult[] };
-          setResults(prev => [...prev, ...data.results]);
+          allResults.push(...data.results);
+          setResults([...allResults]); // Partial updates for UI
         }
       }
       
@@ -344,15 +339,10 @@ export default function PingView() {
           timestamp: Date.now(),
           url: resources[0].url + (resources.length > 1 ? ` (+${resources.length - 1} more)` : ""),
           title: resources[0].title || "Untitled",
-          successCount: results.length > 0 ? results.filter(r => r.status === "success").length : 0, // This will be wrong due to state lag, but will be fixed in next turn or I can calculate it here
-          totalCount: totalCount,
+          successCount: allResults.filter(r => r.status === "success").length,
+          totalCount: allResults.length,
         };
-        // Fix successCount calculation
-        setHistory(prev => {
-          const updated = [...prev];
-          // We'll update the counts in the next useEffect or similar if needed
-          return [newHistoryItem, ...updated];
-        });
+        setHistory(prev => [newHistoryItem, ...prev]);
       }
       toast.success("Broadcast completed");
     } catch (error: any) {
@@ -585,7 +575,7 @@ export default function PingView() {
 
                   <div className="pt-10 flex flex-col sm:flex-row items-center gap-6">
                     <Button
-                      onClick={handlePing}
+                      onClick={() => handlePing(false)}
                       disabled={running || (activeTab === "single" && !url.trim()) || (activeTab === "bulk" && !bulkUrls.trim()) || selectedGroups.size === 0}
                       className="h-16 w-full sm:w-72 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white shadow-2xl shadow-rose-500/10 font-bold uppercase tracking-widest text-[11px] transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
@@ -601,16 +591,28 @@ export default function PingView() {
                         </>
                       )}
                     </Button>
-                    {done && (
-                      <Button 
-                        variant="ghost" 
-                        onClick={reset} 
-                        className="rounded-full px-8 h-16 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-rose-500 hover:bg-rose-50/50"
-                      >
-                        <RotateCcw className="mr-2 h-3.5 w-3.5" />
-                        Reset
-                      </Button>
-                    )}
+                    <div className="flex gap-3 w-full sm:w-auto">
+                      {done && failedCount > 0 && (
+                        <Button 
+                          variant="outline"
+                          onClick={() => handlePing(true)}
+                          disabled={running}
+                          className="rounded-full px-8 h-16 text-[10px] font-bold uppercase tracking-widest text-rose-500 border-rose-500/20 hover:bg-rose-50"
+                        >
+                          <RotateCcw className="mr-2 h-3.5 w-3.5" />
+                          Retry Failed
+                        </Button>
+                      )}
+                      {done && (
+                        <Button 
+                          variant="ghost" 
+                          onClick={reset} 
+                          className="rounded-full px-8 h-16 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-rose-500 hover:bg-rose-50/50"
+                        >
+                          Reset
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </Tabs>
