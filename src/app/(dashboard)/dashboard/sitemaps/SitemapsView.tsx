@@ -5,7 +5,20 @@ import { useSiteContext } from "@/components/dashboard/SiteContext";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { getSitemapStatsAction, fetchSitemapDetailsAction, bulkPingAction } from "@/app/(dashboard)/actions";
-import { Box, Link as LinkIcon, CheckCircle2, RotateCw, ChevronRight, ChevronDown, Send, Globe, Zap, ExternalLink, Selection, MousePointerClick, MoreVertical } from "lucide-react";
+import { 
+  Box, 
+  Link as LinkIcon, 
+  CheckCircle2, 
+  RotateCw, 
+  ChevronRight, 
+  ChevronDown, 
+  Send, 
+  Globe, 
+  Zap, 
+  ExternalLink, 
+  MoreVertical 
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -203,7 +216,7 @@ export default function SitemapsView() {
     <div className="space-y-8 pb-32 max-w-6xl relative">
       <PageHeader
         title="Sitemaps Tracking"
-        description={`Command center for ${selectedSite.url.replace(/^https?:\/\//, '')}`}
+        description={`Command center for ${selectedSite.url.replace(/^https?:\/\//, (url: string) => '')}`}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

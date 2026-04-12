@@ -35,6 +35,7 @@ import {
   Archive,
 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";
 import {
@@ -270,12 +271,73 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     const params = new URLSearchParams(window.location.search);
     const gscStatus = params.get("gsc");
     const gscMessage = params.get("gsc_message");
+    const targetUrl = params.get("url");
+
+    async function handleGscCallback() {
+      if (gscStatus === "connected") {
+        setGscStatusMessage("Google connected. Selecting property...");
+        logStep("Google OAuth completed successfully.");
+        setGscPanelExpanded(true);
+        
+        try {
+          // Fetch sites
+          setGscLoading(true);
+          const response = await fetch("/api/gsc/sites", { cache: "no-store" });
+          const data = (await response.json()) as GscSitesResponse;
+          
+          if (!response.ok) throw new Error(data.error || "Failed to load GSC sites");
+          
+          setGscConnected(true);
+          setGscSites(data.sites || []);
+          logStep(`Loaded ${data.sites?.length ?? 0} properties.`);
+
+          // If we have a target URL, try to auto-import it
+          if (targetUrl) {
+            const normalizedTarget = new URL(targetUrl.startsWith("http") ? targetUrl : `https://${targetUrl}`).origin;
+            const match = data.sites.find(s => 
+              s.propertyUrl === targetUrl || 
+              s.normalizedUrl === normalizedTarget ||
+              s.propertyUrl === `sc-domain:${new URL(normalizedTarget).hostname}`
+            );
+
+            if (match && !match.alreadyImported) {
+              logStep(`Auto-selecting ${match.propertyUrl} for import...`);
+              setGscSelection(new Set([match.propertyUrl]));
+              
+              // We need to wait for state to potentially update or just use the value directly
+              setGscImporting(true);
+              const importRes = await fetch("/api/gsc/import", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ selectedSiteUrls: [match.propertyUrl] }),
+              });
+              
+              const importData = await importRes.json();
+              if (importRes.ok) {
+                toast.success(importData.message || "Site imported successfully!");
+                window.location.href = "/sites"; // Refresh and clear params
+              } else {
+                throw new Error(importData.error || "Auto-import failed");
+              }
+            } else if (match?.alreadyImported) {
+              setGscStatusMessage(`Property ${targetUrl} is already imported.`);
+              toast.info("Site already exists in your list.");
+            } else {
+              setGscStatusMessage(`Google connected. Could not find an exact match for ${targetUrl}. Please select it manually.`);
+            }
+          }
+        } catch (e: any) {
+          setGscError(e.message);
+          logStep(`GSC Callback Error: ${e.message}`);
+        } finally {
+          setGscLoading(false);
+          setGscImporting(false);
+        }
+      }
+    }
 
     if (gscStatus === "connected") {
-      setGscStatusMessage("Google connected. Select the properties you want to import.");
-      logStep("Google OAuth completed successfully.");
-      setGscPanelExpanded(true);
-      void loadGscSites();
+      void handleGscCallback();
     }
 
     if (gscStatus === "error") {
@@ -285,11 +347,14 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     }
 
     if (gscStatus || gscMessage) {
-      params.delete("gsc");
-      params.delete("gsc_message");
-      const nextQuery = params.toString();
-      const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}`;
-      window.history.replaceState({}, "", nextUrl);
+      // We only clear params if we're NOT doing a redirect in the callback handler
+      if (gscStatus !== "connected" || !targetUrl) {
+        params.delete("gsc");
+        params.delete("gsc_message");
+        const nextQuery = params.toString();
+        const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}`;
+        window.history.replaceState({}, "", nextUrl);
+      }
     }
   }, []);
 

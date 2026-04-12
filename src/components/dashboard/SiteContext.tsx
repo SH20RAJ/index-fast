@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { WebsiteBasic } from "./types";
 
 const normalizeUrl = (url: string) => {
   if (!url) return "";
