@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Clock3, Globe2, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { CumulativeCounter, LiveIndexingStream } from "./HeroVisuals";
+import { Highlighter } from "@/components/ui/highlighter";
 
 export default function Hero() {
   return (
@@ -28,11 +29,13 @@ export default function Hero() {
 
             <h1 className="mt-5 text-4xl font-black tracking-tight text-foreground sm:text-6xl lg:text-7xl leading-[1.1]">
               Force search engines <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-indigo-500 to-primary/80">to notice you now.</span>
+              <Highlighter action="highlight" color="rgba(99, 102, 241, 0.2)" iterations={1} isView={true}>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-indigo-500 to-primary/80">to notice you now.</span>
+              </Highlighter>
             </h1>
             
             <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-muted-foreground sm:text-xl">
-              Every hour your content stays unindexed is <span className="text-foreground font-bold underline decoration-primary/30">revenue lost</span>. 
+              Every hour your content stays unindexed is <Highlighter action="underline" color="hsl(var(--primary))" strokeWidth={3} padding={0} isView={true}><span className="text-foreground font-bold underline decoration-primary/30">revenue lost</span></Highlighter>. 
               IndexFast automates sitemap tracking and directly injects your URLs into Bing & IndexNow APIs for instant visibility.
             </p>
 
