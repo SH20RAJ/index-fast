@@ -100,6 +100,7 @@ const navSections: NavSection[] = [
         children: [
           { label: "Overview", href: "/toolbox" },
           { label: "Sitemap Extractor", href: "/toolbox/sitemap-extractor" },
+          { label: "Robots.txt Tester", href: "/toolbox/robots-txt-tester" },
           { label: "Universal Ping", href: "/toolbox/ping" },
           { label: "AI Content Reader", href: "/dashboard/reader" },
           { label: "SubmitExpress", href: "/toolbox/submitexpress" },

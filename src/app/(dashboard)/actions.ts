@@ -3,6 +3,7 @@
 import { and, count, desc, eq, gte, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import crypto from "crypto";
 import { db } from "@/lib/db";
 import { submissions, users, websites } from "@/lib/db/schema";
 import { ensureUserRecord } from "@/lib/db/user-sync";
@@ -826,7 +827,7 @@ export async function getReaderContent(url: string): Promise<{ status: "success"
   }
 }
 
-export async function getUserApiKey(): Promise<ActionState<string>> {
+export async function getUserApiKey(): Promise<{ status: "success" | "error"; data?: string; message?: string }> {
   const user = await stackServerApp.getUser();
   if (!user) return { status: "error", message: "Unauthorized" };
 
@@ -849,7 +850,7 @@ export async function getUserApiKey(): Promise<ActionState<string>> {
   }
 }
 
-export async function rotateApiKeyAction(): Promise<ActionState<string>> {
+export async function rotateApiKeyAction(): Promise<{ status: "success" | "error"; data?: string; message?: string }> {
   const user = await stackServerApp.getUser();
   if (!user) return { status: "error", message: "Unauthorized" };
 

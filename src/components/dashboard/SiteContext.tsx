@@ -84,7 +84,7 @@ export function SiteProvider({
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [websites, urlParam, isToolboxPage]);
+  }, [websites, urlParam, isExcludedPage]);
 
   // Sync state TO URL and localStorage when user changes explicit state
   useEffect(() => {

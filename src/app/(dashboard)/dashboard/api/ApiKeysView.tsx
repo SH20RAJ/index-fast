@@ -98,7 +98,7 @@ console.log(data);`,
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1 group">
                 <Input
-                  type={showKey ? "text" : "password"}
+                  type={(showKey ? "text" : "password") as any}
                   value={apiKey}
                   readOnly
                   className="h-14 rounded-2xl bg-zinc-50 border-zinc-100 font-mono text-sm px-6 pr-24 dark:bg-white/5 dark:border-white/10"
