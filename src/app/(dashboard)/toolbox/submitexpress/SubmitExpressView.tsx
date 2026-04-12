@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,11 +27,20 @@ type SubmissionResult = {
 };
 
 export default function SubmitExpressView() {
+  const searchParams = useSearchParams();
   const [urlsInput, setUrlsInput] = useState("");
   const [running, setRunning] = useState(false);
   const [results, setResults] = useState<SubmissionResult[]>([]);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Pre-fill URL from query params
+  useEffect(() => {
+    const urlParam = searchParams.get("url");
+    if (urlParam) {
+      setUrlsInput(urlParam);
+    }
+  }, [searchParams]);
 
   const urls = useMemo(() => {
     return urlsInput

@@ -45,14 +45,15 @@ export function SiteProvider({
   const [loading, setLoading] = useState(true);
 
   const urlParam = searchParams.get("url");
+  const isToolboxPage = pathname?.startsWith("/toolbox/");
 
   // Sync state FROM URL or localStorage
   useEffect(() => {
     if (websites.length > 0) {
       let found: WebsiteBasic | undefined;
 
-      // 1. Check URL first
-      if (urlParam) {
+      // 1. Check URL first - Only if NOT a toolbox page (where ?url= is used for tools)
+      if (urlParam && !isToolboxPage) {
         const normalizedParam = normalizeUrl(urlParam);
         found = websites.find(w => normalizeUrl(w.url) === normalizedParam || w.id === urlParam);
       }
@@ -82,31 +83,28 @@ export function SiteProvider({
       }
       setLoading(false);
     }
-    // Note: Omit selectedSite from deps to let urlParam drive changes smoothly
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [websites, urlParam]);
+  }, [websites, urlParam, isToolboxPage]);
 
   // Sync state TO URL and localStorage when user changes explicit state
   useEffect(() => {
-    if (selectedSite) {
-      localStorage.setItem("indexfast_selected_site_id", selectedSite.id);
-      
-      // Update URL if the selectedSite doesn't match the current url parameter
-      if (normalizeUrl(urlParam || "") !== normalizeUrl(selectedSite.url)) {
+    if (!selectedSite) {
+      localStorage.removeItem("indexfast_selected_site_id");
+      return;
+    }
+
+    localStorage.setItem("indexfast_selected_site_id", selectedSite.id);
+    
+    // ONLY update URL if NOT a toolbox page (to avoid conflict with tool inputs)
+    if (!isToolboxPage) {
+      const currentUrlParam = searchParams.get("url");
+      if (normalizeUrl(currentUrlParam || "") !== normalizeUrl(selectedSite.url)) {
         const params = new URLSearchParams(searchParams.toString());
         params.set("url", selectedSite.url);
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
       }
-    } else {
-      localStorage.removeItem("indexfast_selected_site_id");
-      
-      if (urlParam) {
-        const params = new URLSearchParams(searchParams.toString());
-        params.delete("url");
-        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-      }
     }
-  }, [selectedSite, pathname, router, searchParams, urlParam]);
+  }, [selectedSite, pathname, router, searchParams, isToolboxPage]);
 
   return (
     <SiteContext.Provider

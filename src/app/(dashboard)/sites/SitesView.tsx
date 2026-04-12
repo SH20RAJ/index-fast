@@ -16,6 +16,14 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { 
   Plus, 
   Globe, 
@@ -100,6 +108,8 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   const [addWebsiteExpanded, setAddWebsiteExpanded] = useState(initialSites.length === 0);
   const [gscPanelExpanded, setGscPanelExpanded] = useState(false);
   const [siteSearchQuery, setSiteSearchQuery] = useState("");
+  const [gscSearchQuery, setGscSearchQuery] = useState("");
+  const [isGscModalOpen, setIsGscModalOpen] = useState(false);
 
   const [createState, createAction, createPending] = useActionState<ActionState, FormData>(
     addWebsiteAction,
@@ -130,6 +140,15 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     () => gscSites.filter((site) => site.supported && !site.alreadyImported),
     [gscSites]
   );
+
+  const filteredGscSites = useMemo(() => {
+    const query = gscSearchQuery.trim().toLowerCase();
+    if (!query) return selectableSites;
+    return selectableSites.filter(site => 
+      site.propertyUrl.toLowerCase().includes(query) || 
+      site.normalizedUrl?.toLowerCase().includes(query)
+    );
+  }, [selectableSites, gscSearchQuery]);
 
   const filteredSites = useMemo(() => {
     const query = siteSearchQuery.trim().toLowerCase();
@@ -209,6 +228,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
       setGscConnected(Boolean(data.connected));
       setGscSites(data.sites || []);
       setGscSelection(new Set());
+      setIsGscModalOpen(true);
       logStep(`Loaded ${data.sites?.length ?? 0} properties from Google Search Console.`);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to load GSC properties.";
@@ -337,7 +357,9 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
     }
 
     if (gscStatus === "connected") {
-      void handleGscCallback();
+      void handleGscCallback().then(() => {
+        setIsGscModalOpen(true);
+      });
     }
 
     if (gscStatus === "error") {
@@ -562,6 +584,107 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
           </div>
         </section>
       </div>
+
+      <Dialog open={isGscModalOpen} onOpenChange={setIsGscModalOpen}>
+        <DialogContent className="max-w-2xl rounded-[32px] p-0 overflow-hidden border-none shadow-2xl">
+          <DialogHeader className="p-8 pb-4 bg-zinc-50 dark:bg-white/[0.02]">
+            <DialogTitle className="text-2xl font-light tracking-tight">Select GSC Properties</DialogTitle>
+            <DialogDescription className="text-zinc-500 font-light mt-1">
+              Choose the websites you want to import into IndexFast. We only show properties you have owner/restricted access to.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="p-8 py-4 space-y-6">
+            <div className="relative group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+              <Input
+                value={gscSearchQuery}
+                onChange={(e) => setGscSearchQuery(e.target.value)}
+                placeholder="Filter properties..."
+                className="pl-10 h-10 bg-zinc-50 border-none rounded-xl focus-visible:ring-rose-500/20 dark:bg-white/5"
+              />
+            </div>
+
+            <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+              {gscLoading ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-3 text-zinc-400">
+                  <Spinner className="h-6 w-6" />
+                  <p className="text-xs font-medium uppercase tracking-widest">Scanning Google properties...</p>
+                </div>
+              ) : filteredGscSites.length === 0 ? (
+                <div className="py-12 text-center text-zinc-500 bg-zinc-50 dark:bg-white/[0.01] rounded-2xl border-2 border-dashed border-zinc-100 dark:border-white/5">
+                  <p className="font-light italic">No importable properties found.</p>
+                </div>
+              ) : (
+                filteredGscSites.map((site) => (
+                  <div 
+                    key={site.propertyUrl} 
+                    className={cn(
+                      "flex items-center gap-4 p-4 rounded-2xl border transition-all cursor-pointer",
+                      gscSelection.has(site.propertyUrl) 
+                        ? "bg-rose-500/5 border-rose-500/20 shadow-sm" 
+                        : "bg-white border-zinc-100 hover:border-zinc-200 dark:bg-zinc-900 dark:border-white/5"
+                    )}
+                    onClick={() => {
+                      setGscSelection(prev => {
+                        const next = new Set(prev);
+                        if (next.has(site.propertyUrl)) next.delete(site.propertyUrl);
+                        else next.add(site.propertyUrl);
+                        return next;
+                      });
+                    }}
+                  >
+                    <Checkbox 
+                      checked={gscSelection.has(site.propertyUrl)} 
+                      onCheckedChange={() => {}} // Handled by div click
+                      className="h-5 w-5 rounded-lg border-zinc-300 dark:border-white/20" 
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold truncate text-zinc-900 dark:text-zinc-100">{site.propertyUrl}</p>
+                      <p className="text-[10px] uppercase font-bold text-zinc-400 tracking-tighter mt-0.5">{site.permissionLevel}</p>
+                    </div>
+                    {site.alreadyImported && (
+                      <Badge variant="outline" className="text-[9px] uppercase font-black opacity-50">Added</Badge>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <DialogFooter className="p-8 pt-4 border-t border-zinc-100 dark:border-white/5 flex flex-col sm:flex-row gap-4 items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-rose-500"
+                onClick={() => setGscSelection(new Set(filteredGscSites.map(s => s.propertyUrl)))}
+              >
+                Select All
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-zinc-600"
+                onClick={() => setGscSelection(new Set())}
+              >
+                Clear
+              </Button>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" className="rounded-full px-6" onClick={() => setIsGscModalOpen(false)}>Cancel</Button>
+              <Button 
+                disabled={gscSelection.size === 0 || gscImporting} 
+                onClick={importSelectedGscSites}
+                className="rounded-full px-8 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white font-bold"
+              >
+                {gscImporting ? <Spinner className="mr-2 h-4 w-4" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+                Import {gscSelection.size > 0 ? `${gscSelection.size} Propery` : "Sites"}
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import PageSpeedView from "./PageSpeedView";
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function PageSpeedPage() {
-  return <PageSpeedView />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PageSpeedView />
+    </Suspense>
+  );
 }

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import SubmitExpressView from "./SubmitExpressView";
 
 export const metadata = {
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function SubmitExpressPage() {
-  return <SubmitExpressView />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SubmitExpressView />
+    </Suspense>
+  );
 }

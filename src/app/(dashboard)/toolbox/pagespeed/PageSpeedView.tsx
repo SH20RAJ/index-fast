@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -111,11 +112,20 @@ const MetricCard = ({ label, value, icon: Icon, description }: { label: string; 
 );
 
 export default function PageSpeedView() {
+  const searchParams = useSearchParams();
   const [url, setUrl] = useState("");
   const [strategy, setStrategy] = useState<"mobile" | "desktop">("mobile");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<PageSpeedResult | null>(null);
+
+  // Pre-fill URL from query params
+  useEffect(() => {
+    const urlParam = searchParams.get("url");
+    if (urlParam) {
+      setUrl(urlParam);
+    }
+  }, [searchParams]);
 
   async function handleAnalyze() {
     if (!url) return;
