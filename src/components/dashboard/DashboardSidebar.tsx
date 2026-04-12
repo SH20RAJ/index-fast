@@ -208,7 +208,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         {websites.length > 0 && (
           <div className="mt-6">
             <Select
-              value={selectedSite ? { label: selectedSite.url.replace(/^https?:\/\//, ''), value: selectedSite.id } : null}
+              value={selectedSite?.id || ""}
               onChange={(val: any) => {
                 const site = websites.find(w => w.id === (val?.value || val));
                 setSelectedSite(site || null);
@@ -218,7 +218,11 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                 value: w.id
               }))}
               className="w-full text-sm font-semibold rounded-xl bg-zinc-50 border-zinc-200 dark:bg-white/5 dark:border-white/10"
-              displayValue={(selected: any) => selected?.label || selected?.value || ""}
+              dropdownClassName="z-[100] min-w-[200px] shadow-2xl border-border"
+              displayValue={(selected: any) => {
+                const site = websites.find(w => w.id === (selected?.value || selected));
+                return site ? site.url.replace(/^https?:\/\//, '') : "Select Website...";
+              }}
               placeholder="Select Website..."
             />
           </div>
@@ -381,7 +385,7 @@ export default function DashboardSidebar() {
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:h-screen md:w-72 md:flex-col md:overflow-hidden z-20">
+      <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:h-screen md:w-72 md:flex-col md:overflow-visible z-20">
         <SidebarContent />
       </aside>
     </>

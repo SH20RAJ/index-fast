@@ -3,6 +3,15 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { WebsiteBasic } from "./types";
+
+const normalizeUrl = (url: string) => {
+  if (!url) return "";
+  return url
+    .replace(/^https?:\/\//, "")
+    .replace(/\/$/, "")
+    .toLowerCase();
+};
 
 export interface WebsiteBasic {
   id: string;
@@ -45,7 +54,8 @@ export function SiteProvider({
 
       // 1. Check URL first
       if (urlParam) {
-        found = websites.find(w => w.url === urlParam || w.id === urlParam);
+        const normalizedParam = normalizeUrl(urlParam);
+        found = websites.find(w => normalizeUrl(w.url) === normalizedParam || w.id === urlParam);
       }
 
       // 2. Fall back to local storage
@@ -83,7 +93,7 @@ export function SiteProvider({
       localStorage.setItem("indexfast_selected_site_id", selectedSite.id);
       
       // Update URL if the selectedSite doesn't match the current url parameter
-      if (urlParam !== selectedSite.url) {
+      if (normalizeUrl(urlParam || "") !== normalizeUrl(selectedSite.url)) {
         const params = new URLSearchParams(searchParams.toString());
         params.set("url", selectedSite.url);
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
