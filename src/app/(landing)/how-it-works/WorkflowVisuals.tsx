@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Terminal, Globe, Send, CheckCircle2 } from "lucide-react";
+import { Terminal, Globe, Send, CheckCircle2, Zap } from "lucide-react";
+import { OrbitingCircles } from "@/components/ui/orbiting-circles";
 
 export const CronTerminal = () => {
   const [logs, setLogs] = useState<string[]>([]);
@@ -203,6 +204,84 @@ export const PingRadar = () => {
           }}
         />
       ))}
+    </div>
+  );
+};
+
+export const EngineEcosystem = () => {
+  return (
+    <div className="relative flex h-[400px] w-full items-center justify-center overflow-hidden rounded-3xl border border-border/50 bg-card/30 backdrop-blur-xl">
+      <span className="pointer-events-none z-20 whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300 bg-clip-text text-center text-7xl font-semibold leading-none text-transparent dark:from-white dark:to-black">
+        <div className="flex flex-col items-center gap-2">
+          <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 shadow-[0_0_20px_rgba(var(--primary),0.1)]">
+            <Zap className="h-10 w-10 text-primary" />
+          </div>
+          <span className="text-[14px] font-black tracking-tighter uppercase text-foreground">Active Hub</span>
+        </div>
+      </span>
+
+      {/* Inner Circles (Direct APIs) */}
+      <OrbitingCircles
+        className="size-[30px] border-none bg-transparent"
+        duration={20}
+        delay={20}
+        radius={80}
+      >
+        <img src="/engines/bing.svg" alt="Bing" className="h-full w-full object-contain" />
+      </OrbitingCircles>
+      <OrbitingCircles
+        className="size-[30px] border-none bg-transparent"
+        duration={20}
+        delay={10}
+        radius={80}
+      >
+        <div className="flex h-full w-full items-center justify-center rounded-full bg-blue-500 text-white font-bold text-[8px]">IndexNow</div>
+      </OrbitingCircles>
+      <OrbitingCircles
+        className="size-[30px] border-none bg-transparent"
+        duration={20}
+        delay={0}
+        radius={80}
+      >
+        <img src="/engines/google-wordmark.svg" alt="Google" className="h-full w-full object-contain" />
+      </OrbitingCircles>
+
+      {/* Outer Circles (Global Engines) */}
+      <OrbitingCircles
+        className="size-[40px] border-none bg-transparent"
+        radius={160}
+        duration={30}
+        reverse
+      >
+        <img src="/engines/duckduckgo.png" alt="DDG" className="h-full w-full object-contain" />
+      </OrbitingCircles>
+      <OrbitingCircles
+        className="size-[40px] border-none bg-transparent"
+        radius={160}
+        duration={30}
+        delay={7.5}
+        reverse
+      >
+        <img src="/engines/yandex.png" alt="Yandex" className="h-full w-full object-contain" />
+      </OrbitingCircles>
+      <OrbitingCircles
+        className="size-[40px] border-none bg-transparent"
+        radius={160}
+        duration={30}
+        delay={15}
+        reverse
+      >
+        <img src="/engines/yahoo.png" alt="Yahoo" className="h-full w-full object-contain" />
+      </OrbitingCircles>
+      <OrbitingCircles
+        className="size-[40px] border-none bg-transparent"
+        radius={160}
+        duration={30}
+        delay={22.5}
+        reverse
+      >
+        <img src="/engines/ecosia.png" alt="Ecosia" className="h-full w-full object-contain" />
+      </OrbitingCircles>
     </div>
   );
 };

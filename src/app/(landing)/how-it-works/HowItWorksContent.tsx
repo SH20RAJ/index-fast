@@ -31,9 +31,9 @@ const pipeline = [
   },
   {
     id: "04",
-    title: "Track status and iterate",
+    title: "Global Engine Propagation",
     description:
-      "Monitor accepted, failed, and pending submissions to prioritize technical fixes and improve index coverage over time.",
+      "Your URLs are broadcasted across a high-speed ecosystem of 120+ global search engines, regional directories, and AI datasets instantly.",
     icon: Gauge,
   },
 ];
@@ -78,7 +78,7 @@ const slideInRight = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" as const } }
 };
 
-import { CronTerminal, ApiSubmission, PingRadar } from "./WorkflowVisuals";
+import { CronTerminal, ApiSubmission, PingRadar, EngineEcosystem } from "./WorkflowVisuals";
 
 export default function HowItWorksContent() {
   return (
@@ -169,7 +169,7 @@ export default function HowItWorksContent() {
                     )}
                     {idx === 1 && <CronTerminal />}
                     {idx === 2 && <ApiSubmission />}
-                    {idx === 3 && <PingRadar />}
+                    {idx === 3 && <EngineEcosystem />}
                   </motion.div>
                 </div>
               );
