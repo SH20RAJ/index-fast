@@ -9,35 +9,62 @@ export interface ArchiveSubmitResult {
 }
 
 /**
- * Submit a URL to archive.org Wayback Machine
+ * Submit a URL to archive.org Wayback Machine using SPN 2.0 API
  * 
  * @param targetUrl - The URL to archive
- * @returns Promise with success status
- * 
- * @example
- * const result = await submitToArchiveOrg("https://example.com");
- * if (result.success) {
- *   console.log("URL archived successfully");
- * }
+ * @returns Promise with success status and potential error
  */
 export async function submitToArchiveOrg(targetUrl: string): Promise<ArchiveSubmitResult> {
   try {
-    const archiveUrl = `https://web.archive.org/save/${encodeURIComponent(targetUrl)}`;
+    const accessKey = process.env.WAYBACK_ACCESS_KEY;
+    const secretKey = process.env.WAYBACK_SECRET_KEY;
     
-    const response = await fetch(archiveUrl, {
-      method: "GET",
-      redirect: "manual", // Don't follow redirects, just get the response code
-      headers: {
-        "User-Agent": "IndexFast/1.0 (+https://indexfast.co)",
-      },
+    // We use SPN 2.0 POST endpoint
+    const endpoint = "https://web.archive.org/save";
+    
+    // Construct form data
+    const formData = new URLSearchParams();
+    formData.append("url", targetUrl);
+    formData.append("capture_all", "1"); // Capture errors and redirects
+    formData.append("skip_first_archive", "1"); // Save even if already exists recently
+    
+    const headers: Record<string, string> = {
+      "User-Agent": "IndexFast/1.0 (+https://indexfast.co)",
+      "Accept": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+
+    // Add S3 Authentication if keys are available
+    if (accessKey && secretKey) {
+      headers["Authorization"] = `LOW ${accessKey}:${secretKey}`;
+    }
+
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers,
+      body: formData.toString(),
+      redirect: "follow",
     });
 
-    // Archive.org returns 2xx status codes for successful submissions
+    // If we requested JSON, check the response
+    if (response.headers.get("content-type")?.includes("application/json")) {
+      const data = await response.json();
+      
+      if (response.ok) {
+        return { success: true };
+      }
+
+      return {
+        success: false,
+        error: data.message || data.error || `Archive.org error: ${response.status}`,
+      };
+    }
+
+    // Fallback for non-JSON responses
     if (response.status >= 200 && response.status < 400) {
       return { success: true };
     }
 
-    // 4xx/5xx errors indicate failure
     return {
       success: false,
       error: `Archive.org returned status ${response.status}`,

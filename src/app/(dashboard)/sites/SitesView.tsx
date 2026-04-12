@@ -106,7 +106,6 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
   const [cronJobsBySite, setCronJobsBySite] = useState<Record<string, CronJob[]>>({});
   const [cronLoadingBySite, setCronLoadingBySite] = useState<Record<string, boolean>>({});
   const [cronErrorBySite, setCronErrorBySite] = useState<Record<string, string | null>>({});
-  const [addWebsiteExpanded, setAddWebsiteExpanded] = useState(initialSites.length === 0);
   const [gscPanelExpanded, setGscPanelExpanded] = useState(false);
   const [siteSearchQuery, setSiteSearchQuery] = useState("");
   const [gscSearchQuery, setGscSearchQuery] = useState("");
@@ -396,93 +395,84 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
         />
 
         <div className="space-y-4">
-          {createState.status !== "idle" && (
-            <Alert variant={createState.status === "error" ? "destructive" : "default"} className="rounded-2xl border-none shadow-sm">
+          {gscError && gscError.toLowerCase().includes("token") && (
+            <Alert variant="destructive" className="rounded-[32px] p-6 border-none shadow-2xl bg-rose-500 text-white dark:bg-rose-600">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+                    <AlertCircle className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <AlertTitle className="text-lg font-bold">Authentication Required</AlertTitle>
+                    <AlertDescription className="text-white/80 font-medium">
+                      Your Google Search Console session has expired. Re-authenticate to resume syncing.
+                    </AlertDescription>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => window.location.href = "/api/gsc/oauth/start?returnTo=/sites"}
+                  className="bg-white text-rose-500 hover:bg-zinc-100 rounded-full px-8 font-black uppercase tracking-widest h-12 shadow-xl"
+                >
+                  <RefreshCw className="mr-2 h-4 w-4" /> Reconnect Google
+                </Button>
+              </div>
+            </Alert>
+          )}
+
+          {createState.status === "error" && (
+            <Alert variant="destructive" className="rounded-2xl border-none shadow-sm">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription className="font-medium">{createState.message}</AlertDescription>
             </Alert>
           )}
-          {/* ... other status alerts simplified ... */}
         </div>
 
-        <section className="space-y-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <h2 className="text-xl font-light tracking-tight text-zinc-900 dark:text-zinc-100">Quick Connect</h2>
-            <div className="relative w-full md:w-80 group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-              <Input
-                value={siteSearchQuery}
-                onChange={(event) => setSiteSearchQuery(event.target.value)}
-                placeholder="Find a website..."
-                className="pl-10 h-10 bg-white border-zinc-200 rounded-xl focus-visible:ring-rose-500/20 dark:bg-white/5 dark:border-white/10"
-              />
-            </div>
+        <section className="space-y-8 py-10">
+          <div className="flex flex-col items-center justify-center text-center space-y-4 max-w-2xl mx-auto">
+             <div className="h-20 w-20 rounded-[32px] bg-rose-500/10 flex items-center justify-center text-rose-500">
+               <Globe className="h-10 w-10" />
+             </div>
+             <h2 className="text-4xl font-black tracking-tight text-zinc-900 dark:text-zinc-100 italic">Ecosystem Connection</h2>
+             <p className="text-zinc-500 font-light italic">Sync your properties directly from Google Search Console for automated indexing and health monitoring.</p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <Card 
-              className={cn(
-                "group relative overflow-hidden border-dashed border-2 transition-all hover:border-rose-500/50 hover:bg-rose-500/5 cursor-pointer rounded-3xl",
-                addWebsiteExpanded ? "border-rose-500 ring-2 ring-rose-500/10" : "border-zinc-200 dark:border-white/10"
-              )}
-              onClick={() => setAddWebsiteExpanded(!addWebsiteExpanded)}
-            >
-              <CardContent className="flex flex-col items-center justify-center py-10 text-center">
-                <div className="mb-4 rounded-2xl bg-zinc-100 p-3 group-hover:bg-rose-500 group-hover:text-white transition-colors dark:bg-white/5">
-                  <Plus className="h-6 w-6" />
-                </div>
-                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">Add Property</h3>
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 font-light px-4">New website or GSC import</p>
-              </CardContent>
-            </Card>
-
+          <div className="flex justify-center max-w-xl mx-auto">
             <Button
               variant="outline"
               onClick={() => {
                 logStep("Opening Google OAuth consent screen...");
                 window.location.href = "/api/gsc/oauth/start?returnTo=/sites";
               }}
-              className="h-full rounded-3xl border-2 border-zinc-200 bg-white py-10 hover:border-rose-500/50 hover:bg-rose-500/5 dark:bg-white/5 dark:border-white/10 flex flex-col gap-4 group"
+              className="w-full group relative overflow-hidden h-32 rounded-[48px] border-2 border-dashed border-rose-500/20 bg-rose-500/[0.02] hover:bg-rose-500/5 hover:border-rose-500/50 transition-all duration-500"
             >
-              <div className="rounded-2xl bg-zinc-100 p-3 group-hover:bg-rose-500 group-hover:text-white transition-colors dark:bg-white/5">
-                <Globe className="h-6 w-6" />
+              <div className="relative z-10 flex flex-col items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+                  <span className="text-lg font-black uppercase tracking-[0.2em] text-zinc-950 dark:text-white">Import GSC Properties</span>
+                </div>
+                <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest">Connect your master console</p>
               </div>
-              <div className="text-center">
-                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">Import GSC</h3>
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 font-light px-4">Sync from Google Console</p>
+              <div className="absolute right-6 bottom-6 opacity-0 group-hover:opacity-10 transition-opacity duration-500">
+                <ChevronRight className="w-12 h-12 text-rose-500" />
               </div>
             </Button>
           </div>
         </section>
 
-        <Collapsible open={addWebsiteExpanded}>
-          <CollapsibleContent className="space-y-4 animate-in slide-in-from-top-4 duration-500">
-            <Card className="rounded-[32px] border-zinc-200 bg-white p-6 shadow-xl shadow-black/5 dark:bg-zinc-900/50 dark:border-white/10">
-              <form action={createAction} className="space-y-8">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 px-1">Domain URL</Label>
-                    <Input id="url" name="url" type="url" placeholder="https://example.com" required className="h-12 rounded-2xl bg-zinc-50 border-none dark:bg-white/5" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 px-1">Sitemap URL</Label>
-                    <Input id="sitemapUrl" name="sitemapUrl" type="url" placeholder="https://example.com/sitemap.xml" className="h-12 rounded-2xl bg-zinc-50 border-none dark:bg-white/5" />
-                  </div>
-                </div>
-                <div className="flex justify-end gap-3 pt-2">
-                  <Button type="button" variant="ghost" className="rounded-full px-6" onClick={() => setAddWebsiteExpanded(false)}>Cancel</Button>
-                  <Button type="submit" disabled={createPending} className="rounded-full px-8 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white">
-                    {createPending ? <Spinner className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
-                    Confirm Site
-                  </Button>
-                </div>
-              </form>
-            </Card>
-          </CollapsibleContent>
-        </Collapsible>
 
-        <section className="space-y-6">
-          <h2 className="text-xl font-light tracking-tight text-zinc-900 dark:text-zinc-100">Your Ecosystem</h2>
+        <section className="space-y-10">
+          <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/5 pb-6">
+            <h2 className="text-2xl font-black italic tracking-tight text-zinc-900 dark:text-zinc-100">Live Inventory</h2>
+            <div className="relative w-full md:w-80 group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+              <Input
+                value={siteSearchQuery}
+                onChange={(event) => setSiteSearchQuery(event.target.value)}
+                placeholder="Filter ecosystem..."
+                className="pl-10 h-10 bg-zinc-50 border-none rounded-xl focus-visible:ring-rose-500/20 dark:bg-white/5"
+              />
+            </div>
+          </div>
           
           <div className="grid gap-4">
             {initialSites.length === 0 ? (
