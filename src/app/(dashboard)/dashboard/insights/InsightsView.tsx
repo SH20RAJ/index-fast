@@ -5,7 +5,9 @@ import { useSiteContext } from "@/components/dashboard/SiteContext";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { getSiteInsightsAction } from "@/app/(dashboard)/actions";
-import { LineChart as LucideLineChart, AlertCircle, RotateCw } from "lucide-react";
+import { useStackApp } from "@stackframe/stack";
+import { Button } from "@/components/ui/button";
+import { LineChart as LucideLineChart, AlertCircle, RotateCw, ShieldCheck } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   LineChart,
@@ -28,6 +30,7 @@ type GscRow = {
 
 export default function InsightsView() {
   const { selectedSite } = useSiteContext();
+  const stack = useStackApp();
   const [data, setData] = useState<GscRow[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -108,9 +111,26 @@ export default function InsightsView() {
       />
 
       {error ? (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+        <Alert variant="destructive" className="rounded-[24px] border-rose-500/20 bg-rose-500/5 py-6">
+          <div className="flex items-center gap-4">
+            <AlertCircle className="h-6 w-6 text-rose-500" />
+            <div className="flex-1">
+              <AlertDescription className="text-sm font-medium text-rose-600 dark:text-rose-400">
+                {error}
+              </AlertDescription>
+            </div>
+            {error.includes("re-authenticate") && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="rounded-xl border-rose-200 bg-white px-4 hover:bg-rose-50 dark:border-rose-900 dark:bg-zinc-900"
+                onClick={() => window.location.href = stack.urls.accountSettings}
+              >
+                <ShieldCheck className="mr-2 h-4 w-4" />
+                Grant Permissions
+              </Button>
+            )}
+          </div>
         </Alert>
       ) : loading ? (
         <div className="flex justify-center p-12">

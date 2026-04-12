@@ -723,7 +723,7 @@ export async function getSiteInsightsAction(websiteId: string) {
     const tokenResult = await googleAccount.getAccessToken({ scopes: [GSC_READONLY_SCOPE] });
 
     if (tokenResult.status !== "ok" || !tokenResult.data.accessToken) {
-      return { status: "error", message: "Could not retrieve access token." };
+      return { status: "error", message: "Google Search Console permissions required. Please re-authenticate." };
     }
 
     const { getSearchAnalytics } = await import("@/lib/api/google");
