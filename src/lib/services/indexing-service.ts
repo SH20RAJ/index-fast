@@ -75,7 +75,7 @@ export async function processWebsiteIndexing(websiteId: string) {
   };
 }
 
-async function triggerSubmissions(website: Website, urls: string[], isPro: boolean) {
+export async function triggerSubmissions(website: Website, urls: string[], isPro: boolean) {
   const host = new URL(website.url).hostname;
   const submissionsToLog = [];
 

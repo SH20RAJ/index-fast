@@ -8,9 +8,10 @@ import { submissions, users, websites } from "@/lib/db/schema";
 import { ensureUserRecord } from "@/lib/db/user-sync";
 import { PLAN_DEFINITIONS, PlanDefinition, PlanId, getPlanDefinition, resolvePlanId } from "@/lib/billing/plans";
 import { stackServerApp } from "@/stack";
-import { processWebsiteIndexing } from "@/lib/services/indexing-service";
+import { processWebsiteIndexing, triggerSubmissions } from "@/lib/services/indexing-service";
 import { GSC_READONLY_SCOPE } from "@/lib/google/constants";
 import { importGscSites } from "@/lib/services/gsc-service";
+import { crawlSitemap } from "@/lib/utils/sitemap-crawler";
 import {
   getMonthlySubmissionUsageCount,
   getSubscriptionSnapshot,
@@ -748,5 +749,46 @@ export async function getSiteInsightsAction(websiteId: string) {
       status: "error",
       message: error instanceof Error ? error.message : "Failed to load insights.",
     };
+  }
+}
+export async function fetchSitemapDetailsAction(url: string) {
+  try {
+    const details = await crawlSitemap(url);
+    return { status: "success", data: details };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to crawl sitemap." };
+  }
+}
+
+export async function bulkPingAction(websiteId: string, urls: string[]) {
+  try {
+    const user = await getAuthedUser();
+    const [website] = await db.select().from(websites).where(eq(websites.id, websiteId));
+    
+    if (!website) return { status: "error", message: "Website not found." };
+    
+    // 1. Unified Submissions (Bing/IndexNow/Universal)
+    // We pass isPro = true for manual bulk pings to give users the full power
+    const results = await triggerSubmissions(website, urls, true);
+    
+    // 2. Wayback Machine Pings (Independent of the main triggerSubmissions for now)
+    const waybackResults = await Promise.all(urls.map(async (url) => {
+      try {
+        const res = await fetch(`https://web.archive.org/save/${url}`, { method: "GET" });
+        return { url, success: res.ok, engine: "wayback" as const };
+      } catch (e) {
+        return { url, success: false, engine: "wayback" as const };
+      }
+    }));
+    
+    return { 
+      status: "success", 
+      data: {
+        submissions: results,
+        wayback: waybackResults
+      }
+    };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Bulk ping failed." };
   }
 }

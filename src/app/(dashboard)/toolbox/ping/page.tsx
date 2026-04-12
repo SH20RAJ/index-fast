@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import PingView from "./PingView";
 
 export const metadata: Metadata = {
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function PingPage() {
-  return <PingView />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PingView />
+    </Suspense>
+  );
 }

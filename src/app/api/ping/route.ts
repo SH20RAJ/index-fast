@@ -48,27 +48,47 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { url, title = "", endpoints } = (await req.json()) as {
-    url: string;
+  const body = (await req.json()) as {
+    url?: string;
     title?: string;
+    resources?: { url: string; title?: string }[];
     endpoints: string[];
   };
 
-  if (!url || !Array.isArray(endpoints) || endpoints.length === 0) {
-    return NextResponse.json({ error: "url and endpoints are required." }, { status: 400 });
+  const { url, title = "", endpoints, resources = [] } = body;
+
+  // Normalize resources: convert single url/title to resources array if needed
+  let normalizedResources = resources;
+  if (url && normalizedResources.length === 0) {
+    normalizedResources = [{ url, title }];
   }
 
-  if (endpoints.length > 120) {
-    return NextResponse.json({ error: "Too many endpoints. Maximum 120 per request." }, { status: 400 });
+  if (normalizedResources.length === 0 || !Array.isArray(endpoints) || endpoints.length === 0) {
+    return NextResponse.json({ error: "resources and endpoints are required." }, { status: 400 });
+  }
+
+  // Safety check: Limit total ping count (resources * endpoints) to prevent excessive load
+  const totalPings = normalizedResources.length * endpoints.length;
+  if (totalPings > 500) {
+    return NextResponse.json({ error: "Too many pings. Total (URLs × Endpoints) must be under 500." }, { status: 400 });
   }
 
   // Fan out with concurrency cap of 10
   const CONCURRENCY = 10;
-  const results: PingResult[] = [];
-  for (let i = 0; i < endpoints.length; i += CONCURRENCY) {
-    const batch = endpoints.slice(i, i + CONCURRENCY);
-    const batchResults = await Promise.all(batch.map((ep) => pingOne(ep, url, title)));
-    results.push(...batchResults);
+  const results: (PingResult & { resourceUrl: string })[] = [];
+
+  // For each resource, ping all endpoints
+  for (const resource of normalizedResources) {
+    for (let i = 0; i < endpoints.length; i += CONCURRENCY) {
+      const batch = endpoints.slice(i, i + CONCURRENCY);
+      const batchResults = await Promise.all(
+        batch.map(async (ep) => {
+          const res = await pingOne(ep, resource.url, resource.title || "");
+          return { ...res, resourceUrl: resource.url };
+        })
+      );
+      results.push(...batchResults);
+    }
   }
 
   return NextResponse.json({ results });
