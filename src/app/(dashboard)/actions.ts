@@ -792,3 +792,36 @@ export async function bulkPingAction(websiteId: string, urls: string[]) {
     return { status: "error", message: error instanceof Error ? error.message : "Bulk ping failed." };
   }
 }
+
+export async function getReaderContent(url: string): Promise<{ status: "success" | "error"; data?: string; message?: string }> {
+  const user = await stackServerApp.getUser();
+  if (!user) {
+    return { status: "error", message: "Unauthorized" };
+  }
+
+  if (!url || !url.startsWith("http")) {
+    return { status: "error", message: "Please provide a valid URL." };
+  }
+
+  try {
+    const response = await fetch(`https://r.jina.ai/${url}`, {
+      headers: {
+        "Authorization": "Bearer jina_7b8e95c236c54cbc90939f5e161ea353CTnN_BZr3bVYU3dx294P2A7HRsiQ",
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return { status: "error", message: errorData.message || `Jina API error: ${response.statusText}` };
+    }
+
+    const data = await response.json();
+    // Jina JSON response usually has 'data' object with 'content'
+    const markdown = data.data?.content || data.content || "No content found.";
+
+    return { status: "success", data: markdown };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "An unexpected error occurred." };
+  }
+}

@@ -101,6 +101,7 @@ const navSections: NavSection[] = [
           { label: "Overview", href: "/toolbox" },
           { label: "Sitemap Extractor", href: "/toolbox/sitemap-extractor" },
           { label: "Universal Ping", href: "/toolbox/ping" },
+          { label: "AI Content Reader", href: "/dashboard/reader" },
           { label: "SubmitExpress", href: "/toolbox/submitexpress" },
           { label: "Free Tools", href: "/tools" },
           { label: "Blogs", href: "/blogs" },
