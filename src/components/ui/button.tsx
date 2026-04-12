@@ -1,33 +1,34 @@
-"use client";
+import { Button as ButtonPrimitive } from "@base-ui/react/button"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { Button as RizzButton, type ButtonProps as RizzButtonProps } from "rizzui/button";
-import { cn } from "@/lib/utils";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-xs/relaxed font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        outline:
+          "border-border hover:bg-input/50 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:bg-input/30",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+        ghost:
+          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+        destructive:
+          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
-        flat: "bg-secondary/50 text-secondary-foreground hover:bg-secondary/80",
-        text: "hover:bg-accent hover:text-accent-foreground",
-        solid: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
-        "icon-sm": "h-8 w-8",
-        "icon-xs": "h-7 w-7",
+        default:
+          "h-7 gap-1 px-2 text-xs/relaxed has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        xs: "h-5 gap-1 rounded-sm px-2 text-[0.625rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-2.5",
+        sm: "h-6 gap-1 px-2 text-xs/relaxed has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+        lg: "h-8 gap-1 px-2.5 text-xs/relaxed has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-4",
+        icon: "size-7 [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-xs": "size-5 rounded-sm [&_svg:not([class*='size-'])]:size-2.5",
+        "icon-sm": "size-6 [&_svg:not([class*='size-'])]:size-3",
+        "icon-lg": "size-8 [&_svg:not([class*='size-'])]:size-4",
       },
     },
     defaultVariants: {
@@ -35,67 +36,21 @@ const buttonVariants = cva(
       size: "default",
     },
   }
-);
+)
 
-// Mapping shadcn variants to RizzUI variants
-const variantMap = {
-  default: "solid",
-  outline: "outline",
-  secondary: "flat",
-  ghost: "text",
-  link: "text",
-  destructive: "solid",
-  flat: "flat",
-  text: "text",
-  solid: "solid",
-} as const;
-
-const colorMap = {
-  default: "primary",
-  destructive: "danger",
-  secondary: "secondary",
-  outline: "primary",
-  ghost: "primary",
-  link: "primary",
-  solid: "primary",
-  flat: "secondary",
-  text: "primary",
-} as const;
-
-const sizeMap = {
-  default: "md",
-  sm: "sm",
-  lg: "lg",
-  icon: "md",
-  "icon-sm": "sm",
-  "icon-xs": "sm",
-} as const;
-
-export interface ButtonProps
-  extends Omit<RizzButtonProps, "variant" | "size">,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
+function Button({
+  className,
+  variant = "default",
+  size = "default",
+  ...props
+}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+  return (
+    <ButtonPrimitive
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  )
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "default", size = "default", color, asChild = false, ...props }, ref) => {
-    const rizzVariant = variantMap[variant as keyof typeof variantMap] || "solid";
-    const rizzColor = color || colorMap[variant as keyof typeof colorMap] || "primary";
-    const rizzSize = sizeMap[size as keyof typeof sizeMap] || "md";
-
-    const Comp = asChild ? Slot : RizzButton;
-
-    return (
-      <Comp
-        ref={ref}
-        {...(asChild ? {} : { variant: rizzVariant as any, size: rizzSize as any, color: rizzColor as any })}
-        className={cn(buttonVariants({ variant, size, className }))}
-        {...props}
-      />
-    );
-  }
-);
-
-Button.displayName = "Button";
-
-export { Button, buttonVariants };
+export { Button, buttonVariants }

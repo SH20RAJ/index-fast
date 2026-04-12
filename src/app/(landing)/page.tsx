@@ -3,7 +3,7 @@ import { LANDING_FAQS } from "@/lib/landing-faq";
 import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Features from "@/components/landing/Features";
-import UpcomingFeatures from "@/components/landing/UpcomingFeatures";
+import BentoFeatures from "@/components/landing/BentoFeatures";
 import FreeTools from "@/components/landing/FreeTools";
 import BlogSection from "@/components/landing/BlogSection";
 import Pricing from "@/components/landing/Pricing";
@@ -158,7 +158,7 @@ export default function LandingPage() {
         <LogoCloud />
       </section>
       <Features />
-      <UpcomingFeatures />
+      <BentoFeatures />
       <FreeTools />
       <BlogSection />
       <Pricing />
