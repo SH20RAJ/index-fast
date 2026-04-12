@@ -1,7 +1,8 @@
-import ToolStaticPage, { createToolMetadata } from "@/components/tools/shared/tool-static-page";
+import RedirectCheckerPageContent from "@/components/tools/redirect-checker/redirect-checker-page";
+import { createToolMetadata } from "@/components/tools/shared/tool-static-page";
 
 export const metadata = createToolMetadata("redirect-checker");
 
 export default function RedirectCheckerPage() {
-  return <ToolStaticPage slug="redirect-checker" />;
+  return <RedirectCheckerPageContent />;
 }

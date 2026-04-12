@@ -3,7 +3,6 @@
 import { and, count, desc, eq, gte, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import crypto from "crypto";
 import { db } from "@/lib/db";
 import { submissions, users, websites } from "@/lib/db/schema";
 import { ensureUserRecord } from "@/lib/db/user-sync";
@@ -841,7 +840,7 @@ export async function getUserApiKey(): Promise<{ status: "success" | "error"; da
     }
 
     // Generate first key if not exists
-    const newKey = `idx_${crypto.randomUUID().replace(/-/g, "")}`;
+    const newKey = `idx_${Math.random().toString(36).substring(2)}${Math.random().toString(36).substring(2)}`;
     await db.update(users).set({ apiKey: newKey }).where(eq(users.id, user.id));
     
     return { status: "success", data: newKey };
@@ -855,7 +854,7 @@ export async function rotateApiKeyAction(): Promise<{ status: "success" | "error
   if (!user) return { status: "error", message: "Unauthorized" };
 
   try {
-    const newKey = `idx_${crypto.randomUUID().replace(/-/g, "")}`;
+    const newKey = `idx_${Math.random().toString(36).substring(2)}${Math.random().toString(36).substring(2)}`;
     await db.update(users).set({ apiKey: newKey }).where(eq(users.id, user.id));
     
     revalidatePath("/dashboard/api");

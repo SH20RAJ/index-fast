@@ -114,6 +114,11 @@ export default function ToolPageShell({
           <Button variant="outline" asChild>
             <Link href="/">View platform</Link>
           </Button>
+          <Button variant="ghost" className="text-rose-500 hover:text-rose-600 hover:bg-rose-50" asChild>
+            <a href="https://www.indexfast.co" target="_blank" rel="noopener noreferrer">
+              Discover all features on indexfast.co
+            </a>
+          </Button>
         </div>
       </div>
     </section>
