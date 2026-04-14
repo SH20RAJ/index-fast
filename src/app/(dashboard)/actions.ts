@@ -25,7 +25,7 @@ export interface DashboardSubmission {
   websiteId: string | null;
   websiteUrl: string | null;
   url: string;
-  engine: "bing" | "indexnow" | "google" | "pingomatic" | "pingler";
+  engine: "bing" | "indexnow" | "google" | "pingomatic" | "pingler" | "yandex" | "baidu" | "naver";
   status: "success" | "failed" | "pending";
   createdAt: Date | null;
 }
@@ -265,6 +265,9 @@ export async function addWebsiteAction(_: ActionState, formData: FormData): Prom
       formData.get("indexNowKeyLocationUrl")?.toString() ?? null,
       "IndexNow key location URL"
     );
+    const yandexToken = String(formData.get("yandexToken") ?? "").trim() || null;
+    const baiduToken = String(formData.get("baiduToken") ?? "").trim() || null;
+    const naverToken = String(formData.get("naverToken") ?? "").trim() || null;
 
     const siteHealth = indexNowKeyLocationUrl
       ? {
@@ -282,6 +285,9 @@ export async function addWebsiteAction(_: ActionState, formData: FormData): Prom
       sitemapUrl,
       indexNowKey,
       bingApiKey,
+      yandexToken,
+      baiduToken,
+      naverToken,
       siteHealth,
     });
 
@@ -310,12 +316,12 @@ export async function updateWebsiteIndexingKeysAction(_: ActionState, formData: 
       .from(websites)
       .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
 
-    if (!website) {
-      return { status: "error", message: "Website not found." };
-    }
-
     const indexNowKey = String(formData.get("indexNowKey") ?? "").trim() || null;
     const bingApiKey = String(formData.get("bingApiKey") ?? "").trim() || null;
+    const yandexToken = String(formData.get("yandexToken") ?? "").trim() || null;
+    const baiduToken = String(formData.get("baiduToken") ?? "").trim() || null;
+    const naverToken = String(formData.get("naverToken") ?? "").trim() || null;
+
     const indexNowKeyLocationUrl = normalizeOptionalAbsoluteUrl(
       formData.get("indexNowKeyLocationUrl")?.toString() ?? null,
       "IndexNow key location URL"
@@ -355,6 +361,9 @@ export async function updateWebsiteIndexingKeysAction(_: ActionState, formData: 
       .set({
         indexNowKey,
         bingApiKey,
+        yandexToken,
+        baiduToken,
+        naverToken,
         siteHealth: Object.keys(nextSiteHealth).length > 0 ? nextSiteHealth : null,
       })
       .where(eq(websites.id, websiteId));

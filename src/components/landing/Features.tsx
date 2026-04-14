@@ -12,7 +12,7 @@ const features = [
   },
   {
     title: "Direct API Injection",
-    desc: "Skip the crawl queue. We push your URLs directly into Bing and IndexNow APIs for near-instant visibility.",
+    desc: "Skip the crawl queue. We push your URLs directly into Bing, IndexNow, Yandex, Baidu, and Naver APIs for global indexing.",
     icon: Bolt,
   },
   {

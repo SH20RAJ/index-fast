@@ -9,6 +9,9 @@ export const submissionEngineEnum = pgEnum("submission_engine", [
   "google",
   "pingomatic",
   "pingler",
+  "yandex",
+  "baidu",
+  "naver",
 ]);
 
 /**
@@ -97,6 +100,9 @@ export const websites = pgTable("websites", {
   sitemapUrl: text("sitemap_url"),
   indexNowKey: text("indexnow_key"),
   bingApiKey: text("bing_api_key"),
+  yandexToken: text("yandex_token"),
+  baiduToken: text("baidu_token"),
+  naverToken: text("naver_token"),
   gscConnected: boolean("gsc_connected").default(false),
   siteHealth: jsonb("site_health"), // Storing errors, warnings from GSC/Audit
   lastSyncAt: timestamp("last_sync_at"),

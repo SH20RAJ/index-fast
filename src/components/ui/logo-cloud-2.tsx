@@ -20,6 +20,7 @@ const MARKET_SHARE_DATA: Record<string, number> = {
   duckduckgo: 0.75,
   baidu: 0.53,
   yandex: 1.3,
+  naver: 0.15, // Added Naver
   ask: 0.51,
   ecosia: 0.45,
 };
@@ -94,6 +95,10 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
           marketShare: MARKET_SHARE_DATA.baidu,
         }}
       >
+        <div className="absolute top-2 left-2 flex items-center gap-1">
+          <Badge className="h-4 px-1 text-[7px] bg-rose-500/10 text-rose-500 border-none uppercase font-black">API</Badge>
+          <Badge className="h-4 px-1 text-[7px] bg-amber-500/10 text-amber-500 border-none uppercase font-black">Beta</Badge>
+        </div>
         <PlusIcon
           className="-right-[12.5px] -bottom-[12.5px] md:-left-[12.5px] absolute z-10 size-6 md:hidden"
           strokeWidth={1}
@@ -101,13 +106,32 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       </LogoCard>
 
       <LogoCard
-        className="border-b bg-background md:border-r md:border-b-0 md:bg-secondary dark:md:bg-secondary/30"
+        className="relative border-b bg-background md:border-r md:border-b-0 md:bg-secondary dark:md:bg-secondary/30"
         logo={{
           src: "/engines/yandex.png",
           alt: "Yandex Logo",
           marketShare: MARKET_SHARE_DATA.yandex,
         }}
-      />
+      >
+        <div className="absolute top-2 left-2 flex items-center gap-1">
+          <Badge className="h-4 px-1 text-[7px] bg-rose-500/10 text-rose-500 border-none uppercase font-black">API</Badge>
+          <Badge className="h-4 px-1 text-[7px] bg-amber-500/10 text-amber-500 border-none uppercase font-black">Beta</Badge>
+        </div>
+      </LogoCard>
+
+      <LogoCard
+        className="relative border-r md:border-r-0"
+        logo={{
+          src: "/engines/naver.png",
+          alt: "Naver Logo",
+          marketShare: MARKET_SHARE_DATA.naver,
+        }}
+      >
+         <div className="absolute top-2 left-2 flex items-center gap-1">
+          <Badge className="h-4 px-1 text-[7px] bg-rose-500/10 text-rose-500 border-none uppercase font-black">API</Badge>
+          <Badge className="h-4 px-1 text-[7px] bg-amber-500/10 text-amber-500 border-none uppercase font-black">Beta</Badge>
+        </div>
+      </LogoCard>
 
       <LogoCard
         className="border-r"

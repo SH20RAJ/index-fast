@@ -5,6 +5,9 @@ import { parseSitemap } from "@/lib/utils/sitemap-parser";
 import { getUrlHash } from "@/lib/utils/hash";
 import { submitToBingBatch } from "@/lib/api/bing";
 import { submitToIndexNow } from "@/lib/api/indexnow";
+import { submitToYandex } from "@/lib/api/yandex";
+import { submitToBaidu } from "@/lib/api/baidu";
+import { submitToNaver } from "@/lib/api/naver";
 import { pingAllUniversal } from "@/lib/api/ping-services";
 import { ensureUserRecord } from "@/lib/db/user-sync";
 
@@ -115,6 +118,42 @@ export async function triggerSubmissions(website: Website, urls: string[], isPro
         status: res.success ? ("success" as const) : ("failed" as const),
         errorMessage: res.error,
       });
+    });
+  }
+
+  // Yandex Webmaster API
+  if (website.yandexToken) {
+    const res = await submitToYandex(website.url, website.yandexToken, urls);
+    submissionsToLog.push({
+      websiteId: website.id,
+      url: urls.slice(0, 3).join(", ") + (urls.length > 3 ? "..." : ""),
+      engine: "yandex" as const,
+      status: res.success ? ("success" as const) : ("failed" as const),
+      errorMessage: "error" in res ? res.error : undefined,
+    });
+  }
+
+  // Baidu Link Submission
+  if (website.baiduToken) {
+    const res = await submitToBaidu(website.url, website.baiduToken, urls);
+    submissionsToLog.push({
+      websiteId: website.id,
+      url: `Batch (${urls.length} URLs)`,
+      engine: "baidu" as const,
+      status: res.success ? ("success" as const) : ("failed" as const),
+      errorMessage: "error" in res ? res.error : undefined,
+    });
+  }
+
+  // Naver Search Advisor
+  if (website.naverToken) {
+    const res = await submitToNaver(website.url, website.naverToken, urls);
+    submissionsToLog.push({
+      websiteId: website.id,
+      url: urls.slice(0, 3).join(", ") + (urls.length > 3 ? "..." : ""),
+      engine: "naver" as const,
+      status: res.success ? ("success" as const) : ("failed" as const),
+      errorMessage: "error" in res ? res.error : undefined,
     });
   }
 

@@ -80,6 +80,9 @@ interface WebsiteRecord {
   sitemapUrl: string | null;
   indexNowKey: string | null;
   bingApiKey: string | null;
+  yandexToken: string | null;
+  baiduToken: string | null;
+  naverToken: string | null;
   siteHealth: unknown;
   gscConnected: boolean | null;
   lastSyncAt: Date | null;
@@ -547,6 +550,37 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                               <div className="space-y-1.5">
                                 <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">IndexNow Key</Label>
                                 <Input name="indexNowKey" defaultValue={site.indexNowKey || ""} className="rounded-xl h-10 border-zinc-100 dark:bg-white/5" />
+                              </div>
+                            </div>
+
+                            <div className="grid gap-4 sm:grid-cols-2 mt-4">
+                              <div className="space-y-1.5">
+                                <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Bing API Key</Label>
+                                <Input name="bingApiKey" defaultValue={site.bingApiKey || ""} className="rounded-xl h-10 border-zinc-100 dark:bg-white/5" />
+                              </div>
+                              <div className="space-y-1.5">
+                                <div className="flex items-center gap-2">
+                                  <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Yandex Token</Label>
+                                  <Badge className="h-4 px-1 text-[8px] bg-rose-500/10 text-rose-500 border-none uppercase font-black">Beta</Badge>
+                                </div>
+                                <Input name="yandexToken" defaultValue={site.yandexToken || ""} className="rounded-xl h-10 border-zinc-100 dark:bg-white/5" placeholder="Yandex OAuth Token..." />
+                              </div>
+                            </div>
+
+                            <div className="grid gap-4 sm:grid-cols-2 mt-4">
+                              <div className="space-y-1.5">
+                                <div className="flex items-center gap-2">
+                                  <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Baidu Token</Label>
+                                  <Badge className="h-4 px-1 text-[8px] bg-rose-500/10 text-rose-500 border-none uppercase font-black">Beta</Badge>
+                                </div>
+                                <Input name="baiduToken" defaultValue={site.baiduToken || ""} className="rounded-xl h-10 border-zinc-100 dark:bg-white/5" placeholder="Baidu Link Submit Token..." />
+                              </div>
+                              <div className="space-y-1.5">
+                                <div className="flex items-center gap-2">
+                                  <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Naver Token</Label>
+                                  <Badge className="h-4 px-1 text-[8px] bg-rose-500/10 text-rose-500 border-none uppercase font-black">Beta</Badge>
+                                </div>
+                                <Input name="naverToken" defaultValue={site.naverToken || ""} className="rounded-xl h-10 border-zinc-100 dark:bg-white/5" placeholder="Naver AccessToken..." />
                               </div>
                             </div>
                             <div className="flex justify-end">
