@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/dashboard/"],
+        disallow: ["/api/", "/dashboard/", "/admin/"],
       },
       {
         userAgent: [
@@ -21,7 +21,7 @@ export default function robots(): MetadataRoute.Robots {
           "anthropic-ai",
         ],
         allow: "/",
-        disallow: ["/api/", "/dashboard/"],
+        disallow: ["/api/", "/dashboard/", "/admin/"],
       },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,

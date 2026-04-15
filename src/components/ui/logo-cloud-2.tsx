@@ -1,5 +1,6 @@
 import { PlusIcon, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 type Logo = {
   src: string;
