@@ -123,7 +123,7 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
       <LogoCard
         className="relative border-r md:border-r-0"
         logo={{
-          src: "/engines/naver.png",
+          src: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Naver_Logotype.svg/1280px-Naver_Logotype.svg.png",
           alt: "Naver Logo",
           marketShare: MARKET_SHARE_DATA.naver,
         }}

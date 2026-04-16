@@ -158,9 +158,6 @@ export default function LandingPage() {
         <LogoCloud />
       </section>
       <Features />
-      <BentoFeatures />
-      <FreeTools />
-      <BlogSection />
       <Pricing />
       <FAQ />
       <FinalCTA />
