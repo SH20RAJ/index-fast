@@ -1,79 +1,93 @@
 "use client";
 
-import HeroSection from "@/components/ui/hero-section-9";
+import { MinimalHero } from "@/components/ui/minimal-hero";
 import { useRouter } from "next/navigation";
 import { Zap, Globe2, BarChart3 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Hero() {
   const router = useRouter();
 
   const heroData = {
+    badge: "Version 4.0 out now — bing & indexnow support",
     title: (
       <>
-        Force search engines <br />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-indigo-500 to-primary/80">
-          to notice you now.
-        </span>
+        Instant indexing <br /> 
+        <span className="text-muted-foreground/40">for global teams.</span>
       </>
     ),
     subtitle:
-      "IndexFast automates sitemap tracking and directly injects your URLs into Bing & IndexNow APIs — so your content ranks faster, not later.",
+      "Stop waiting for Google's mercy. IndexFast automates your technical SEO workflows by directly injecting your high-value URLs into search indices in under 60 seconds.",
     actions: [
       {
-        text: "Accelerate Indexing Now",
+        text: "Accelerate Indexing",
         onClick: () => router.push("/sign-up"),
         variant: "default" as const,
-        className:
-          "rounded-2xl px-8 font-black text-sm uppercase tracking-wide shadow-[0_0_30px_rgba(99,102,241,0.25)]",
       },
       {
-        text: "See The Infrastructure",
+        text: "How It Works",
         onClick: () => router.push("/how-it-works"),
         variant: "outline" as const,
-        className: "rounded-2xl px-6 font-bold text-sm uppercase tracking-wide",
       },
     ],
     stats: [
       {
         value: "120+",
         label: "Search Pings",
-        icon: <Globe2 className="h-5 w-5 text-muted-foreground" />,
+        icon: <Globe2 className="h-4 w-4" />,
       },
       {
         value: "< 60s",
         label: "Avg. Index Time",
-        icon: <Zap className="h-5 w-5 text-muted-foreground" />,
+        icon: <Zap className="h-4 w-4" />,
       },
       {
         value: "10K+",
         label: "URLs Submitted",
-        icon: <BarChart3 className="h-5 w-5 text-muted-foreground" />,
+        icon: <BarChart3 className="h-4 w-4" />,
       },
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=2076&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
     ],
   };
 
   return (
-    <div className="relative border-b border-border/70">
-      {/* Background decorations matching original hero aesthetic */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,hsl(var(--primary)/0.14),transparent_35%),radial-gradient(circle_at_90%_0%,hsl(var(--primary)/0.1),transparent_38%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.35)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.35)_1px,transparent_1px)] bg-[size:34px_34px] [mask-image:linear-gradient(to_bottom,black,transparent_88%)]" />
+    <section className="relative overflow-hidden pt-32 pb-20 sm:pt-48 sm:pb-32">
+      {/* Ultra-Minimal Background */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        {/* Subtle center-top glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-[800px] bg-primary/5 blur-[120px] rounded-full" />
+        {/* Clean minimal grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--primary)/0.03)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary)/0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_top,black,transparent_75%)]" />
       </div>
+
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <HeroSection
+        <MinimalHero
+          badge={heroData.badge}
           title={heroData.title}
           subtitle={heroData.subtitle}
           actions={heroData.actions}
-          stats={heroData.stats}
-          images={heroData.images}
-          className="bg-transparent py-16 sm:py-24"
+          className="mb-16 sm:mb-24"
         />
+
+        {/* Stats Row - Moved below main fold */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8 border-t border-border/40 pt-10"
+        >
+          {heroData.stats.map((stat, index) => (
+            <div key={index} className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/5 text-primary">
+                {stat.icon}
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl font-black tracking-tight">{stat.value}</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">{stat.label}</span>
+              </div>
+            </div>
+          ))}
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
 }
