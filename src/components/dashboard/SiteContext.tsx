@@ -101,7 +101,8 @@ export function SiteProvider({
       if (normalizeUrl(currentUrlParam || "") !== normalizeUrl(selectedSite.url)) {
         const params = new URLSearchParams(searchParams.toString());
         params.set("url", selectedSite.url);
-        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+        const nextUrl = `${pathname}?${params.toString()}`;
+        window.history.replaceState({ ...window.history.state, as: nextUrl, url: nextUrl }, "", nextUrl);
       }
     }
   }, [selectedSite, pathname, router, searchParams, isExcludedPage]);

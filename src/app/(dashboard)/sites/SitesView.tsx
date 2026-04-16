@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useEffect, useMemo, useState } from "react";
+
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -94,7 +94,7 @@ interface SitesViewProps {
   websiteLimit: number;
 }
 
-export default function SitesView({ initialSites, planName, websiteLimit }: SitesViewProps) {
+
   const [gscLoading, setGscLoading] = useState(false);
   const [gscImporting, setGscImporting] = useState(false);
   const [gscConnected, setGscConnected] = useState(false);
@@ -280,8 +280,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
         "success"
       );
 
-      await loadGscSites();
-      window.location.reload();
+
     } catch (error) {
       const message = error instanceof Error ? error.message : "Import failed.";
       setGscError(message);
@@ -338,8 +337,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
               
               const importData = await importRes.json();
               if (importRes.ok) {
-                toast.success(importData.message || "Site imported successfully!");
-                window.location.href = "/sites"; // Refresh and clear params
+
               } else {
                 throw new Error(importData.error || "Auto-import failed");
               }
