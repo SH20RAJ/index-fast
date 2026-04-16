@@ -335,8 +335,8 @@ export function CinematicFooter() {
                    Pricing
                 </MagneticButton>
 
-                <MagneticButton as={Link} href="/docs" className="footer-glass-pill px-8 py-4 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
-                   Docs
+                <MagneticButton as={Link} href="/tools" className="footer-glass-pill px-8 py-4 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
+                   Tools
                 </MagneticButton>
               </div>
 
