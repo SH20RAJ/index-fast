@@ -10,15 +10,9 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 interface AIAssistantCardProps {
@@ -134,16 +128,15 @@ export const AIAssistantCard = ({
 
           {/* Bottom toolbar */}
           <div className="flex items-center justify-between rounded-b-md border-t bg-muted/50 px-3 py-2 dark:bg-muted">
-            <Select defaultValue="indexfast-ai">
-              <SelectTrigger className="h-7 w-[120px] bg-background text-xs">
-                <SelectValue placeholder="Model" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem className="text-xs" value="indexfast-ai">IndexFast AI</SelectItem>
-                <SelectItem className="text-xs" value="gpt-4">GPT-4</SelectItem>
-                <SelectItem className="text-xs" value="gpt-3.5">GPT-3.5</SelectItem>
-              </SelectContent>
-            </Select>
+            <Select
+              defaultValue="indexfast-ai"
+              options={[
+                { label: "IndexFast AI", value: "indexfast-ai" },
+                { label: "GPT-4", value: "gpt-4" },
+                { label: "GPT-3.5", value: "gpt-3.5" },
+              ]}
+              className="w-[130px] h-7 text-xs"
+            />
             <Button type="submit" size="sm" className="h-7 gap-1.5 px-3 text-xs">
               <ZapIcon className="size-3" />
               Send
