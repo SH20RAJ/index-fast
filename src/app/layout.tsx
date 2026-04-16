@@ -6,10 +6,14 @@ import ThemeRegistry from "@/components/ThemeRegistry";
 import PwaRegister from "@/components/pwa/PwaRegister";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const poppins = Poppins({ 
+  subsets: ["latin"], 
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-sans" 
+});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
 const siteName = "IndexFast";
@@ -220,7 +224,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={cn("font-sans", inter.variable)}>
+    <html lang="en" data-scroll-behavior="smooth" className={cn("font-sans", poppins.variable)}>
       <body>
         <PwaRegister />
         <StackProvider app={stackClientApp}>
