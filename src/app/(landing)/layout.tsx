@@ -9,7 +9,7 @@ export default function LandingLayout({
   return (
     <div className="relative min-h-screen bg-background text-foreground flex flex-col">
       <Navbar />
-      <main className="flex-1">
+      <main className="relative z-10 flex-1 bg-background">
         {children}
       </main>
       <Footer />
