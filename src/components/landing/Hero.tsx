@@ -21,7 +21,7 @@ export default function Hero() {
     actions: [
       {
         text: "Accelerate Indexing",
-        onClick: () => router.push("/sign-up"),
+        onClick: () => router.push("/dashboard"),
         variant: "default" as const,
       },
       {
