@@ -58,16 +58,16 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
                   </div>
 
                   <div className="flex flex-wrap gap-x-6 gap-y-2 text-[11px] font-black uppercase tracking-wider text-muted-foreground/60">
-                    <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3 text-emerald-500" /> {plan.websiteLimit} sites</span>
-                    <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3 text-emerald-500" /> {plan.submissionLimitMonthly.toLocaleString()} submissions</span>
+                    <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3 text-pink-500" /> {plan.websiteLimit} sites</span>
+                    <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3 text-pink-500" /> {plan.submissionLimitMonthly.toLocaleString()} submissions</span>
                     <span className="flex items-center gap-1.5">
-                      <CheckCircle2 className={cn("h-3 w-3", plan.features.includes("Universal pinging") ? "text-emerald-500" : "text-muted-foreground/30")} /> 
+                      <CheckCircle2 className={cn("h-3 w-3", plan.features.includes("Universal pinging") ? "text-pink-500" : "text-muted-foreground/30")} /> 
                       Ping Network
                     </span>
                   </div>
 
                   {plan.trialDays && (
-                    <div className="flex items-center gap-2 text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full w-fit">
+                    <div className="flex items-center gap-2 text-[10px] font-black text-pink-600 dark:text-pink-400 bg-pink-500/10 px-2.5 py-1 rounded-full w-fit">
                       <Sparkles className="h-3 w-3" />
                       {plan.trialDays} DAY FREE TRIAL
                     </div>
@@ -107,8 +107,8 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
       })}
 
       {state.status !== "idle" && (
-        <Alert variant={state.status === "success" ? "default" : "destructive"} className={state.status === "success" ? "border-emerald-500/50 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400" : "mt-6"}>
-          {state.status === "success" ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4" />}
+        <Alert variant={state.status === "success" ? "default" : "destructive"} className={state.status === "success" ? "border-pink-500/50 bg-pink-500/5 text-pink-600 dark:text-pink-400" : "mt-6"}>
+          {state.status === "success" ? <CheckCircle2 className="h-4 w-4 text-pink-500" /> : <AlertCircle className="h-4 w-4" />}
           <AlertTitle className="font-bold capitalize">{state.status}</AlertTitle>
           <AlertDescription className="font-medium">{state.message}</AlertDescription>
         </Alert>

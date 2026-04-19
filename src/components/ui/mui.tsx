@@ -197,7 +197,7 @@ export function Chip(props: CompatProps) {
 export function Alert(props: CompatProps & { severity?: "error" | "warning" | "info" | "success" }) {
   const theme = useTheme();
   const { className, severity = "info", children } = props;
-  const tone = severity === "error" ? "border-red-300 bg-red-50 text-red-700" : severity === "warning" ? "border-amber-300 bg-amber-50 text-amber-700" : severity === "success" ? "border-emerald-300 bg-emerald-50 text-emerald-700" : "border-sky-300 bg-sky-50 text-sky-700";
+  const tone = severity === "error" ? "border-red-300 bg-red-50 text-red-700" : severity === "warning" ? "border-amber-300 bg-amber-50 text-amber-700" : severity === "success" ? "border-pink-300 bg-pink-50 text-pink-700" : "border-sky-300 bg-sky-50 text-sky-700";
   return <div className={cn("rounded-md border px-3 py-2 text-sm", tone, className)} style={withStyle(props, theme)} {...cleanProps(props)}>{children}</div>;
 }
 
@@ -212,9 +212,9 @@ export function TextField(props: CompatProps & { onChange?: (event: any) => void
     <textarea className={cn("w-full rounded-md border border-input bg-background px-3 py-2 text-sm", error && "border-red-400")} rows={rows ?? minRows ?? 4} {...cleanProps(rest)} />
   ) : (
     <div className={cn("relative", fullWidth && "w-full")}>
-      {InputProps?.startAdornment ? <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">{InputProps.startAdornment}</span> : null}
+      {InputProps?.startAdornment ? <span className="absolute left-2 top-1/2 -tranzinc-y-1/2 text-muted-foreground">{InputProps.startAdornment}</span> : null}
       <input className={cn("h-10 w-full rounded-md border border-input bg-background px-3 text-sm", InputProps?.startAdornment && "pl-8", error && "border-red-400", className)} {...cleanProps(rest)} />
-      {InputProps?.endAdornment ? <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">{InputProps.endAdornment}</span> : null}
+      {InputProps?.endAdornment ? <span className="absolute right-2 top-1/2 -tranzinc-y-1/2 text-muted-foreground">{InputProps.endAdornment}</span> : null}
     </div>
   );
 

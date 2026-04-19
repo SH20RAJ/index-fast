@@ -60,7 +60,7 @@ export default function AdminAccessForm({ unlockAction }: AdminAccessFormProps) 
                 Real-time aggregates
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
-                <LockKeyhole className="h-3.5 w-3.5 text-emerald-300" />
+                <LockKeyhole className="h-3.5 w-3.5 text-pink-300" />
                 HTTP-only session cookie
               </span>
             </div>
@@ -98,14 +98,14 @@ export default function AdminAccessForm({ unlockAction }: AdminAccessFormProps) 
               <Button
                 type="submit"
                 disabled={isPending}
-                className="h-12 w-full rounded-2xl bg-amber-300 font-semibold text-slate-950 hover:bg-amber-200"
+                className="h-12 w-full rounded-2xl bg-amber-300 font-semibold text-zinc-950 hover:bg-amber-200"
               >
                 {isPending ? "Checking..." : "Unlock Admin"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
 
-            <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-slate-950/40 p-4 text-xs leading-6 text-white/50">
+            <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-zinc-950/40 p-4 text-xs leading-6 text-white/50">
               This panel is intentionally isolated from the public dashboard and disallowed in robots.
             </div>
           </section>

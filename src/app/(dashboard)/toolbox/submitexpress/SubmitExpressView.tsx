@@ -152,7 +152,7 @@ export default function SubmitExpressView() {
             {[
               { label: "Progress", value: `${progress}%` },
               { label: "Total URLs", value: urls.length },
-              { label: "Success", value: successCount, color: "text-emerald-500" },
+              { label: "Success", value: successCount, color: "text-pink-500" },
               { label: "Failed", value: failedCount, color: "text-rose-500" },
             ].map((s) => (
               <div key={s.label} className="space-y-1">
@@ -176,13 +176,13 @@ export default function SubmitExpressView() {
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
                       {r.status === "success" ? (
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                        <CheckCircle2 className="h-4 w-4 text-pink-500" />
                       ) : (
                         <XCircle className="h-4 w-4 text-rose-500" />
                       )}
                       <div className={cn(
                         "h-1.5 w-1.5 rounded-full",
-                        r.status === "success" ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" : "bg-rose-500"
+                        r.status === "success" ? "bg-pink-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" : "bg-rose-500"
                       )} />
                     </div>
                   </div>

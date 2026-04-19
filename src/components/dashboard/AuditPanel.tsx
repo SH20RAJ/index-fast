@@ -107,7 +107,7 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
   const issues = result?.issues ?? [];
 
   const getScoreColor = (s: number) => {
-    if (s >= 80) return "text-emerald-500 border-emerald-500/20";
+    if (s >= 80) return "text-pink-500 border-pink-500/20";
     if (s >= 50) return "text-amber-500 border-amber-500/20";
     return "text-red-500 border-red-500/20";
   };
@@ -148,14 +148,14 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
       {/* Issues List */}
       <div className="space-y-4">
         {issues.length === 0 ? (
-          <Card className="border-emerald-500/10 bg-emerald-500/5 py-12">
+          <Card className="border-pink-500/10 bg-pink-500/5 py-12">
             <CardContent className="flex flex-col items-center justify-center text-center space-y-3">
-              <div className="h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-emerald-500" />
+              <div className="h-12 w-12 rounded-full bg-pink-500/10 flex items-center justify-center">
+                <CheckCircle2 className="h-6 w-6 text-pink-500" />
               </div>
               <div className="space-y-1">
                 <h4 className="font-black tracking-tight">Everything looks great!</h4>
-                <p className="text-xs text-emerald-600/70 font-medium">No critical SEO issues found on this sweep.</p>
+                <p className="text-xs text-pink-600/70 font-medium">No critical SEO issues found on this sweep.</p>
               </div>
             </CardContent>
           </Card>
@@ -168,7 +168,7 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
                     "h-10 w-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm",
                     issue.type === "error" ? "bg-red-500/10 text-red-500" : 
                     issue.type === "warning" ? "bg-amber-500/10 text-amber-500" : 
-                    "bg-blue-500/10 text-blue-500"
+                    "bg-pink-500/10 text-pink-500"
                   )}>
                     {issue.type === "error" ? <AlertCircle className="h-5 w-5" /> : 
                      issue.type === "warning" ? <AlertTriangle className="h-5 w-5" /> : 
@@ -182,7 +182,7 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
                         "font-black text-[10px] uppercase border-none px-2 py-0.5",
                         issue.type === "error" ? "bg-red-500/10 text-red-600" : 
                         issue.type === "warning" ? "bg-amber-500/10 text-amber-600" : 
-                        "bg-blue-500/10 text-blue-600"
+                        "bg-pink-500/10 text-pink-600"
                       )}>
                         {issue.type}
                       </Badge>

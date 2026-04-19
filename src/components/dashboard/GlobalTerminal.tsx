@@ -72,9 +72,9 @@ export default function GlobalTerminal() {
                   >
                     <div className="mt-1 shrink-0">
                       {log.status === "pending" ? (
-                        <Loader2 className="h-3 w-3 animate-spin text-blue-500" />
+                        <Loader2 className="h-3 w-3 animate-spin text-pink-500" />
                       ) : log.status === "success" ? (
-                        <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                        <CheckCircle2 className="h-3 w-3 text-pink-500" />
                       ) : (
                         <XCircle className="h-3 w-3 text-rose-500" />
                       )}

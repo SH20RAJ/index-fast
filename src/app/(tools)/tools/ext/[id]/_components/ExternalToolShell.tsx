@@ -18,8 +18,8 @@ interface Props {
 }
 
 const TIER_STYLES: Record<string, string> = {
-  "free": "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
-  "freemium": "bg-blue-500/10 text-blue-600 border-blue-500/20",
+  "free": "bg-pink-500/10 text-pink-600 border-pink-500/20",
+  "freemium": "bg-pink-500/10 text-pink-600 border-pink-500/20",
   "limited-free": "bg-amber-500/10 text-amber-600 border-amber-500/20",
 };
 

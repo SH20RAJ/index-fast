@@ -141,7 +141,7 @@ export default function RobotsTxtTesterView() {
                         placeholder="https://example.com/robots.txt"
                         className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                       />
-                      <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+                      <Globe className="absolute left-4 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-zinc-400" />
                     </div>
                     <Button 
                       variant="outline"
@@ -176,7 +176,7 @@ export default function RobotsTxtTesterView() {
                       placeholder="*"
                       className="h-12 rounded-xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                     />
-                    <Settings className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+                    <Settings className="absolute left-4 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-zinc-400" />
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -243,7 +243,7 @@ export default function RobotsTxtTesterView() {
                       className={cn(
                         "p-5 rounded-[24px] border transition-all flex items-center justify-between group",
                         r.allowed 
-                          ? "bg-emerald-50/30 dark:bg-emerald-500/[0.02] border-emerald-500/10 hover:border-emerald-500/20" 
+                          ? "bg-pink-50/30 dark:bg-pink-500/[0.02] border-pink-500/10 hover:border-pink-500/20" 
                           : "bg-rose-50/30 dark:bg-rose-500/[0.02] border-rose-500/10 hover:border-rose-500/20"
                       )}
                     >
@@ -251,15 +251,15 @@ export default function RobotsTxtTesterView() {
                         <p className="text-[11px] font-mono text-zinc-900 dark:text-zinc-100 truncate">{r.url}</p>
                         <p className={cn(
                           "text-[9px] font-bold uppercase tracking-widest",
-                          r.allowed ? "text-emerald-500" : "text-rose-500"
+                          r.allowed ? "text-pink-500" : "text-rose-500"
                         )}>
                           {r.reason}
                         </p>
                       </div>
                       <div className="shrink-0">
                         {r.allowed ? (
-                          <div className="h-8 w-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                          <div className="h-8 w-8 rounded-full bg-pink-500/10 flex items-center justify-center">
+                            <CheckCircle2 className="h-4 w-4 text-pink-500" />
                           </div>
                         ) : (
                           <div className="h-8 w-8 rounded-full bg-rose-500/10 flex items-center justify-center">
@@ -275,7 +275,7 @@ export default function RobotsTxtTesterView() {
                   <div className="space-y-4 relative z-10">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Summary</p>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-light tracking-tighter text-emerald-400">
+                      <span className="text-4xl font-light tracking-tighter text-pink-400">
                         {Math.round((results.filter(r => r.allowed).length / results.length) * 100)}%
                       </span>
                       <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">Crawl Accessibility</span>

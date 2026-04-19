@@ -465,7 +465,7 @@ interface SitesViewProps {
           <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/5 pb-6">
             <h2 className="text-2xl font-black italic tracking-tight text-zinc-900 dark:text-zinc-100">Live Inventory</h2>
             <div className="relative w-full md:w-80 group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 h-3.5 w-3.5 text-zinc-400" />
               <Input
                 value={siteSearchQuery}
                 onChange={(event) => setSiteSearchQuery(event.target.value)}
@@ -494,11 +494,11 @@ interface SitesViewProps {
                           <h4 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 truncate tracking-tight">{site.url}</h4>
                           <div className="flex items-center gap-3 text-xs text-zinc-400 font-light">
                             <span className="flex items-center gap-1.5">
-                              {site.gscConnected ? <div className="h-1 w-1 rounded-full bg-emerald-500" /> : <div className="h-1 w-1 rounded-full bg-zinc-300" />}
+                              {site.gscConnected ? <div className="h-1 w-1 rounded-full bg-pink-500" /> : <div className="h-1 w-1 rounded-full bg-zinc-300" />}
                               GSC Sync
                             </span>
                             <span className="flex items-center gap-1.5">
-                              {site.indexNowKey ? <div className="h-1 w-1 rounded-full bg-emerald-500" /> : <div className="h-1 w-1 rounded-full bg-zinc-300" />}
+                              {site.indexNowKey ? <div className="h-1 w-1 rounded-full bg-pink-500" /> : <div className="h-1 w-1 rounded-full bg-zinc-300" />}
                               Keys Ready
                             </span>
                           </div>
@@ -620,7 +620,7 @@ interface SitesViewProps {
 
           <div className="p-8 py-4 space-y-6">
             <div className="relative group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 h-3.5 w-3.5 text-zinc-400" />
               <Input
                 value={gscSearchQuery}
                 onChange={(e) => setGscSearchQuery(e.target.value)}

@@ -267,7 +267,7 @@ export default function CronJobManager({
                   <Switch
                     checked={cron.enabled}
                     onCheckedChange={() => handleToggleCronJob(cron.id, cron.enabled)}
-                    className="data-[state=checked]:bg-emerald-500"
+                    className="data-[state=checked]:bg-pink-500"
                   />
                   <Button
                     size="icon"

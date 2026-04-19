@@ -103,7 +103,7 @@ export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
     switch (status) {
       case "success":
         return (
-          <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 gap-1 font-bold">
+          <Badge variant="outline" className="bg-pink-500/10 text-pink-600 border-pink-500/20 gap-1 font-bold">
             <CheckCircle2 className="h-3 w-3" /> SUCCESS
           </Badge>
         );
@@ -133,7 +133,7 @@ export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: "Total", value: totals.all, icon: Database },
-          { label: "Success", value: totals.success, icon: CheckCircle2, color: "text-emerald-500" },
+          { label: "Success", value: totals.success, icon: CheckCircle2, color: "text-pink-500" },
           { label: "Failed", value: totals.failed, icon: AlertCircle, color: "text-rose-500" },
           { label: "Pending", value: totals.pending, icon: Clock, color: "text-amber-500" },
         ].map((item) => (
@@ -202,7 +202,7 @@ export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
                       <span className="text-[10px] text-zinc-400 font-light">{row.createdAt ? new Date(row.createdAt).toLocaleDateString() : "Unknown"}</span>
                       <div className="flex items-center gap-2">
                         {row.status === "success" ? (
-                          <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" />
+                          <div className="h-2 w-2 rounded-full bg-pink-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" />
                         ) : row.status === "failed" ? (
                           <div className="h-2 w-2 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.4)]" />
                         ) : (

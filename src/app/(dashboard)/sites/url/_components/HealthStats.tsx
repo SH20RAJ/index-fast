@@ -18,7 +18,7 @@ export default function HealthStats({ stats }: HealthStatsProps) {
           <div key={row.engine} className="flex items-center justify-between">
             <span className="text-xs font-medium text-zinc-500 uppercase tracking-wider">{row.engine}</span>
             <div className="flex gap-2">
-              <span className="text-xs font-bold text-emerald-500">{row.success}</span>
+              <span className="text-xs font-bold text-pink-500">{row.success}</span>
               <span className="text-xs font-bold text-rose-500">{row.failed}</span>
             </div>
           </div>

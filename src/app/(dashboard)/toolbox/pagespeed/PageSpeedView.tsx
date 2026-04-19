@@ -62,8 +62,8 @@ type PageSpeedResult = {
 // ── Components ─────────────────────────────────────────────────────
 
 const ScoreRing = ({ score, label, icon: Icon }: { score: number; label: string; icon: any }) => {
-  const colorClass = score >= 90 ? "text-emerald-500" : score >= 50 ? "text-amber-500" : "text-rose-500";
-  const bgClass = score >= 90 ? "bg-emerald-500/10" : score >= 50 ? "bg-amber-500/10" : "bg-rose-500/10";
+  const colorClass = score >= 90 ? "text-pink-500" : score >= 50 ? "text-amber-500" : "text-rose-500";
+  const bgClass = score >= 90 ? "bg-pink-500/10" : score >= 50 ? "bg-amber-500/10" : "bg-rose-500/10";
 
   return (
     <div className="flex flex-col items-center gap-4 text-center">
@@ -218,7 +218,7 @@ export default function PageSpeedView() {
               </label>
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
-                  <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Globe className="absolute left-4 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}

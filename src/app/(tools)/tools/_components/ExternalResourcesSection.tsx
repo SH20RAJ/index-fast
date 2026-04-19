@@ -77,7 +77,7 @@ export default function ExternalResourcesSection() {
                               resource.impact === "Very High"
                                 ? "bg-green-100 text-green-900 hover:bg-green-100"
                                 : resource.impact === "High"
-                                  ? "bg-blue-100 text-blue-900 hover:bg-blue-100"
+                                  ? "bg-pink-100 text-pink-900 hover:bg-pink-100"
                                   : resource.impact === "Medium"
                                     ? "bg-yellow-100 text-yellow-900 hover:bg-yellow-100"
                                     : "bg-gray-100 text-gray-900 hover:bg-gray-100"
@@ -91,7 +91,7 @@ export default function ExternalResourcesSection() {
                       <CardContent>
                         <Button asChild className="w-full justify-center">
                           <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                            Visit <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                            Visit <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:tranzinc-x-0.5" />
                           </a>
                         </Button>
                       </CardContent>

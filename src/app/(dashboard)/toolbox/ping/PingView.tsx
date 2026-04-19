@@ -52,7 +52,7 @@ const PING_GROUPS: PingGroup[] = [
   {
     id: "google-global",
     label: "Google Blog Search (Global)",
-    color: "text-blue-500",
+    color: "text-pink-500",
     description: "Primary + major regional Google blogsearch endpoints for global discovery.",
     endpoints: [
       "http://blogsearch.google.com/ping/RPC2",
@@ -78,7 +78,7 @@ const PING_GROUPS: PingGroup[] = [
   {
     id: "google-regional",
     label: "Google Blog Search (Extended Regional)",
-    color: "text-indigo-500",
+    color: "text-pink-500",
     description: "Additional regional Google endpoints for extended geographic signal coverage.",
     endpoints: [
       "http://blogsearch.google.ae/ping/RPC2",
@@ -119,7 +119,7 @@ const PING_GROUPS: PingGroup[] = [
   {
     id: "aggregators",
     label: "Ping Aggregators",
-    color: "text-emerald-500",
+    color: "text-pink-500",
     description: "Services like Ping-O-Matic that re-broadcast to dozens of directories on your behalf.",
     endpoints: [
       "http://pingomatic.com/",
@@ -430,7 +430,7 @@ export default function PingView() {
                             className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                             disabled={running}
                           />
-                          <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+                          <Globe className="absolute left-4 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-zinc-400" />
                         </div>
                       </div>
                       <div className="space-y-3">
@@ -443,7 +443,7 @@ export default function PingView() {
                             className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 text-xs focus-visible:ring-rose-500/30"
                             disabled={running}
                           />
-                          <Plus className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+                          <Plus className="absolute left-4 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-zinc-400" />
                         </div>
                       </div>
                     </div>
@@ -474,7 +474,7 @@ export default function PingView() {
                             className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                             disabled={running || parsingSitemap}
                           />
-                          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+                          <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-zinc-400" />
                         </div>
                         <Button 
                           onClick={handleSitemapParse}
@@ -497,7 +497,7 @@ export default function PingView() {
                       </h3>
                       <div className="flex gap-4">
                         <button onClick={selectAll} className="text-[10px] font-bold text-rose-500 uppercase tracking-widest hover:underline transition-all">All</button>
-                        <button onClick={() => setSelectedGroups(new Set(["google-global"]))} className="text-[10px] font-bold text-blue-500 uppercase tracking-widest hover:underline transition-all">Google Only</button>
+                        <button onClick={() => setSelectedGroups(new Set(["google-global"]))} className="text-[10px] font-bold text-pink-500 uppercase tracking-widest hover:underline transition-all">Google Only</button>
                         <button onClick={selectNone} className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest hover:underline transition-all">None</button>
                       </div>
                     </div>
@@ -636,7 +636,7 @@ export default function PingView() {
                 <div className="grid grid-cols-2 gap-8">
                   <div className="space-y-1">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Success</p>
-                    <p className="text-4xl font-light tracking-tighter text-emerald-400 tabular-nums">{successCount}</p>
+                    <p className="text-4xl font-light tracking-tighter text-pink-400 tabular-nums">{successCount}</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Failed</p>
@@ -685,11 +685,11 @@ export default function PingView() {
                     <div className="flex items-center gap-3">
                       <div className="flex-1 h-1.5 bg-zinc-100 dark:bg-white/5 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-emerald-500/50" 
+                          className="h-full bg-pink-500/50" 
                           style={{ width: `${(item.successCount / item.totalCount) * 100}%` }} 
                         />
                       </div>
-                      <span className="text-[10px] font-bold tabular-nums text-emerald-500">{item.successCount}/{item.totalCount}</span>
+                      <span className="text-[10px] font-bold tabular-nums text-pink-500">{item.successCount}/{item.totalCount}</span>
                     </div>
                   </div>
                 ))
@@ -771,11 +771,11 @@ export default function PingView() {
                           <div className="flex items-center gap-2">
                             <div className={cn(
                               "h-1.5 w-1.5 rounded-full",
-                              r.status === "success" ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" : "bg-rose-500"
+                              r.status === "success" ? "bg-pink-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" : "bg-rose-500"
                             )} />
                             <span className={cn(
                               "text-[10px] font-bold uppercase tracking-wider",
-                              r.status === "success" ? "text-emerald-500" : "text-rose-500"
+                              r.status === "success" ? "text-pink-500" : "text-rose-500"
                             )}>
                               {r.status}
                             </span>

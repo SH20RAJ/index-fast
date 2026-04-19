@@ -92,9 +92,9 @@ export default function ManualPushCard({
         </Tabs>
 
         {submitResult && (
-          <div className="mt-8 p-6 rounded-[24px] bg-emerald-500/5 border border-emerald-500/10 space-y-2 animate-in zoom-in-95 duration-500">
-            <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest">Broadcast Finished</p>
-            <p className="text-sm text-emerald-700/80 font-light">Successfully pushed {submitResult.totalUrls} signals to the unseen stream.</p>
+          <div className="mt-8 p-6 rounded-[24px] bg-pink-500/5 border border-pink-500/10 space-y-2 animate-in zoom-in-95 duration-500">
+            <p className="text-xs font-bold text-pink-600 uppercase tracking-widest">Broadcast Finished</p>
+            <p className="text-sm text-pink-700/80 font-light">Successfully pushed {submitResult.totalUrls} signals to the unseen stream.</p>
           </div>
         )}
       </CardContent>

@@ -75,7 +75,7 @@ export default function SiteCard({ site, onSync, onOpenGsc, onDeleteSite }: Site
             <div className="hidden lg:flex flex-col items-end gap-1">
               <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">Last Sync</span>
               <div className="flex items-center gap-1.5 text-xs font-bold">
-                <Activity className="h-3 w-3 text-emerald-500" />
+                <Activity className="h-3 w-3 text-pink-500" />
                 {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : "Not synced"}
               </div>
             </div>
@@ -105,7 +105,7 @@ export default function SiteCard({ site, onSync, onOpenGsc, onDeleteSite }: Site
                         variant="ghost"
                         size="icon"
                         asChild
-                        className="h-10 w-10 rounded-xl bg-emerald-500/5 text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all active:scale-95 shadow-sm"
+                        className="h-10 w-10 rounded-xl bg-pink-500/5 text-pink-600 hover:bg-pink-500 hover:text-white transition-all active:scale-95 shadow-sm"
                       >
                         <Link href={`/sites/${site.id}/audit`}>
                           <BarChart3 className="h-4 w-4" />
@@ -122,7 +122,7 @@ export default function SiteCard({ site, onSync, onOpenGsc, onDeleteSite }: Site
                         size="icon"
                         onClick={onOpenGsc ? () => onOpenGsc(site.id) : undefined}
                         disabled={!onOpenGsc}
-                        className="h-10 w-10 rounded-xl bg-blue-500/5 text-blue-600 hover:bg-blue-500 hover:text-white transition-all active:scale-95 shadow-sm"
+                        className="h-10 w-10 rounded-xl bg-pink-500/5 text-pink-600 hover:bg-pink-500 hover:text-white transition-all active:scale-95 shadow-sm"
                       >
                         <Search className="h-4 w-4" />
                       </Button>

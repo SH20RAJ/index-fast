@@ -183,7 +183,7 @@ export default function SitemapsView() {
              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Synced URLs</span>
              <h4 className="text-4xl font-black mt-2">{stats?.totalFetched || 0}</h4>
            </div>
-           <p className="text-[10px] font-medium text-emerald-500 flex items-center gap-1 mt-4">
+           <p className="text-[10px] font-medium text-pink-500 flex items-center gap-1 mt-4">
              <CheckCircle2 className="w-3.5 h-3.5" /> Database Match
            </p>
         </Card>
@@ -251,7 +251,7 @@ export default function SitemapsView() {
             {/* Standard Sitemaps */}
             <div className="space-y-4">
               <div className="flex items-center gap-3 ml-2">
-                <Badge className="bg-blue-500 rounded-lg">Flat</Badge>
+                <Badge className="bg-pink-500 rounded-lg">Flat</Badge>
                 <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-500">URL Manifests</h3>
               </div>
               <div className="grid grid-cols-1 gap-4">
@@ -309,7 +309,7 @@ function SitemapCard({ sitemap, index, toggle, selectedUrls, setSelectedUrls, ha
   return (
     <Card className={cn("rounded-3xl border-zinc-100 transition-all dark:bg-zinc-900/40", sitemap.isExpanded && "ring-1 ring-zinc-900 overflow-hidden")}>
       <div className="p-4 flex flex-col sm:flex-row items-center gap-4">
-        <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center shrink-0", sitemap.isIndex ? "bg-amber-500/10 text-amber-600" : "bg-blue-500/10 text-blue-600")}>
+        <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center shrink-0", sitemap.isIndex ? "bg-amber-500/10 text-amber-600" : "bg-pink-500/10 text-pink-600")}>
           <Globe className="w-5 h-5" />
         </div>
         <div className="min-w-0 flex-1">

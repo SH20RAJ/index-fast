@@ -156,8 +156,8 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
             {[
               { label: "Selected Site", value: selectedSite.url.replace(/^https?:\/\//, ""), color: "text-zinc-900 dark:text-zinc-100" },
               { label: "Total Jobs", value: jobs.length },
-              { label: "Active", value: jobs.filter(j => j.enabled).length, color: jobs.some(j => j.enabled) ? "text-emerald-500" : "text-zinc-400" },
-              { label: "Status", value: jobs.some(j => j.enabled) ? "Running" : "Paused", color: jobs.some(j => j.enabled) ? "text-emerald-500" : "text-zinc-400" },
+              { label: "Active", value: jobs.filter(j => j.enabled).length, color: jobs.some(j => j.enabled) ? "text-pink-500" : "text-zinc-400" },
+              { label: "Status", value: jobs.some(j => j.enabled) ? "Running" : "Paused", color: jobs.some(j => j.enabled) ? "text-pink-500" : "text-zinc-400" },
             ].map((stat) => (
               <div key={stat.label} className="space-y-1 px-1">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{stat.label}</p>

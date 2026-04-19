@@ -75,7 +75,7 @@ export default function UrlPulseList({ inventoryUrls, sitemapUrls, onExport }: U
                 <div className="flex items-center gap-4 min-w-0">
                   <div className={cn(
                     "h-1.5 w-1.5 rounded-full shrink-0",
-                    isIndexed ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" : "bg-zinc-200 dark:bg-zinc-800"
+                    isIndexed ? "bg-pink-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" : "bg-zinc-200 dark:bg-zinc-800"
                   )} />
                   <p className="text-xs font-light text-zinc-500 truncate">{url}</p>
                 </div>

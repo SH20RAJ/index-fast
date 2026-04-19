@@ -299,7 +299,7 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
                     <div className="flex shrink-0 items-center gap-3">
                       <span className="hidden text-xs text-muted-foreground sm:inline">{formatDate(entry.createdAt)}</span>
                       {entry.status === "success" ? (
-                        <span className="h-2 w-2 rounded-full bg-emerald-500" title="Success" />
+                        <span className="h-2 w-2 rounded-full bg-pink-500" title="Success" />
                       ) : (
                         <span className="h-2 w-2 rounded-full bg-destructive" title="Failed or pending" />
                       )}

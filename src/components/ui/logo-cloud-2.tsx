@@ -36,7 +36,7 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
         )}
         {...props}
       >
-      <div className="-translate-x-1/2 -top-px pointer-events-none absolute left-1/2 w-screen border-t" />
+      <div className="-tranzinc-x-1/2 -top-px pointer-events-none absolute left-1/2 w-screen border-t" />
 
       <LogoCard
         className="relative border-r border-b bg-secondary dark:bg-secondary/30"
@@ -152,7 +152,7 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
         }}
       />
 
-      <div className="-translate-x-1/2 -bottom-px pointer-events-none absolute left-1/2 w-screen border-b" />
+      <div className="-tranzinc-x-1/2 -bottom-px pointer-events-none absolute left-1/2 w-screen border-b" />
       </div>
 
       {/* Statcounter Attribution */}

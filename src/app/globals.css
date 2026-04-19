@@ -4,50 +4,50 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Premium Light Mode - Refined Neutrals */
-  --background: oklch(0.99 0.005 260);
-  --foreground: oklch(0.15 0.02 260);
+  /* Premium Light Mode - Blush/Pink */
+  --background: oklch(0.99 0.005 340);
+  --foreground: oklch(0.15 0.02 340);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.02 260);
+  --card-foreground: oklch(0.15 0.02 340);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.02 260);
-  --primary: oklch(0.55 0.22 260); /* Sophisticated Indigo */
-  --primary-foreground: oklch(0.99 0.005 260);
-  --secondary: oklch(0.96 0.01 260);
-  --secondary-foreground: oklch(0.15 0.02 260);
-  --muted: oklch(0.96 0.01 260);
-  --muted-foreground: oklch(0.45 0.02 260);
-  --accent: oklch(0.96 0.01 260);
-  --accent-foreground: oklch(0.15 0.02 260);
+  --popover-foreground: oklch(0.15 0.02 340);
+  --primary: oklch(0.65 0.22 340); /* Vibrant Pink */
+  --primary-foreground: oklch(0.99 0.005 340);
+  --secondary: oklch(0.96 0.02 340);
+  --secondary-foreground: oklch(0.15 0.02 340);
+  --muted: oklch(0.96 0.02 340);
+  --muted-foreground: oklch(0.45 0.02 340);
+  --accent: oklch(0.96 0.02 340);
+  --accent-foreground: oklch(0.15 0.02 340);
   --destructive: oklch(0.6 0.18 25);
-  --destructive-foreground: oklch(0.99 0.005 260);
-  --border: oklch(0.92 0.01 260);
-  --input: oklch(0.92 0.01 260);
-  --ring: oklch(0.55 0.22 260);
+  --destructive-foreground: oklch(0.99 0.005 340);
+  --border: oklch(0.92 0.02 340);
+  --input: oklch(0.92 0.02 340);
+  --ring: oklch(0.65 0.22 340);
   --radius: 0.75rem;
 }
 
 .dark {
-  /* Premium Dark Mode - Deep Midnight */
-  --background: oklch(0.12 0.02 260);
-  --foreground: oklch(0.98 0.01 260);
-  --card: oklch(0.16 0.02 260);
-  --card-foreground: oklch(0.98 0.01 260);
-  --popover: oklch(0.14 0.02 260);
-  --popover-foreground: oklch(0.98 0.01 260);
-  --primary: oklch(0.65 0.24 260); /* Vibrant Indigo */
-  --primary-foreground: oklch(0.99 0.005 260);
-  --secondary: oklch(0.2 0.02 260);
-  --secondary-foreground: oklch(0.98 0.01 260);
-  --muted: oklch(0.2 0.02 260);
-  --muted-foreground: oklch(0.7 0.02 260);
-  --accent: oklch(0.2 0.02 260);
-  --accent-foreground: oklch(0.98 0.01 260);
+  /* Premium Dark Mode - Deep Pink/Midnight */
+  --background: oklch(0.12 0.02 340);
+  --foreground: oklch(0.98 0.01 340);
+  --card: oklch(0.16 0.02 340);
+  --card-foreground: oklch(0.98 0.01 340);
+  --popover: oklch(0.14 0.02 340);
+  --popover-foreground: oklch(0.98 0.01 340);
+  --primary: oklch(0.7 0.24 340); /* Neon Pink */
+  --primary-foreground: oklch(0.1 0.02 340);
+  --secondary: oklch(0.2 0.04 340);
+  --secondary-foreground: oklch(0.98 0.01 340);
+  --muted: oklch(0.2 0.04 340);
+  --muted-foreground: oklch(0.7 0.02 340);
+  --accent: oklch(0.2 0.04 340);
+  --accent-foreground: oklch(0.98 0.01 340);
   --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.99 0.01 260);
-  --border: oklch(0.24 0.02 260);
-  --input: oklch(0.24 0.02 260);
-  --ring: oklch(0.65 0.24 260);
+  --destructive-foreground: oklch(0.99 0.01 340);
+  --border: oklch(0.24 0.04 340);
+  --input: oklch(0.24 0.04 340);
+  --ring: oklch(0.7 0.24 340);
 }
 
 @theme inline {

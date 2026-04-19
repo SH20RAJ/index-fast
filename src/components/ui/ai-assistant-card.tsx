@@ -39,7 +39,7 @@ export const AIAssistantCard = ({
   };
 
   const quickPrompts = [
-    { label: "Submit URLs", icon: <GlobeIcon className="text-blue-500" />, prompt: "How do I submit my URLs for indexing?" },
+    { label: "Submit URLs", icon: <GlobeIcon className="text-pink-500" />, prompt: "How do I submit my URLs for indexing?" },
     { label: "Analyze SEO", icon: <BarChart3 className="text-orange-500" />, prompt: "Analyze the SEO health of my site." },
     { label: "Check Indexing", icon: <SearchCheckIcon className="text-green-500" />, prompt: "Why aren't my pages indexed yet?" },
     { label: "Generate Sitemap", icon: <FileTextIcon className="text-pink-500" />, prompt: "Help me generate a sitemap." },

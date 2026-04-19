@@ -30,7 +30,7 @@ export default function LandingProductPreview({ className }: { className?: strin
             </span>
             <span className="truncate">Submission workspace</span>
           </div>
-          <span className="hidden shrink-0 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 sm:inline">
+          <span className="hidden shrink-0 rounded-full bg-pink-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 sm:inline">
             Live sync
           </span>
         </div>
@@ -69,7 +69,7 @@ export default function LandingProductPreview({ className }: { className?: strin
                   {row.engine}
                 </span>
                 {row.status === "ok" ? (
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" aria-label="Delivered" />
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-pink-500" aria-label="Delivered" />
                 ) : (
                   <span className="shrink-0 rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
                     Queued

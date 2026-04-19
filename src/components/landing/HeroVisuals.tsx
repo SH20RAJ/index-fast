@@ -58,7 +58,7 @@ export const LiveIndexingStream = () => {
   return (
     <div className="flex flex-col gap-2 w-full max-w-[280px]">
       <div className="flex items-center gap-2 mb-1">
-        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        <div className="h-1.5 w-1.5 rounded-full bg-pink-500 animate-pulse" />
         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Live Activity</span>
       </div>
       <div className="relative h-32 overflow-hidden mask-fade-bottom">

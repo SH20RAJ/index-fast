@@ -21,12 +21,12 @@ export default function SummaryStats({
     { 
       label: "IndexNow", 
       value: hasIndexNowKey ? "Active" : "Off", 
-      color: hasIndexNowKey ? "text-emerald-500" : "text-zinc-400" 
+      color: hasIndexNowKey ? "text-pink-500" : "text-zinc-400" 
     },
     { 
       label: "Bing API", 
       value: hasBingApiKey ? "Ready" : "Off", 
-      color: hasBingApiKey ? "text-emerald-500" : "text-zinc-400" 
+      color: hasBingApiKey ? "text-pink-500" : "text-zinc-400" 
     },
   ];
 

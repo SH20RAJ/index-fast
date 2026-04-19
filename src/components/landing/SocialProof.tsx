@@ -75,7 +75,7 @@ export default function SocialProof() {
             <CardContent className="space-y-3 p-5 sm:p-6">
               <div className="flex items-center justify-between">
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Live Submission Feed</p>
-                <Badge className="bg-emerald-600 hover:bg-emerald-600">Live</Badge>
+                <Badge className="bg-pink-600 hover:bg-pink-600">Live</Badge>
               </div>
               <div className="space-y-2">
                 {liveFeedExamples.map((item) => (
@@ -85,7 +85,7 @@ export default function SocialProof() {
                       <p className="text-xs text-muted-foreground">{item.engine}</p>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                      <CheckCircle2 className="h-3.5 w-3.5 text-pink-500" />
                       {item.ago}
                     </div>
                   </div>

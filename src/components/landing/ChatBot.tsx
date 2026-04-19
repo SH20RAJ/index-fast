@@ -116,7 +116,7 @@ export default function ChatBot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 transition-all duration-300 hover:scale-110 flex items-center justify-center group"
+          className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full bg-gradient-to-br from-pink-600 to-pink-700 text-white shadow-lg shadow-pink-600/30 hover:shadow-pink-600/50 transition-all duration-300 hover:scale-110 flex items-center justify-center group"
           aria-label="Open chat"
         >
           <MessageCircle className="h-6 w-6" />
@@ -140,9 +140,9 @@ export default function ChatBot() {
             ) : (
               <>
                 {/* Conversation header */}
-                <div className="flex items-center justify-between border-b border-border/70 p-4 bg-gradient-to-r from-blue-600/10 to-blue-500/10">
+                <div className="flex items-center justify-between border-b border-border/70 p-4 bg-gradient-to-r from-pink-600/10 to-pink-500/10">
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <div className="h-2 w-2 rounded-full bg-pink-500 animate-pulse" />
                     <div>
                       <h3 className="font-semibold text-sm">IndexFast Assistant</h3>
                       <p className="text-xs text-muted-foreground">Always here to help</p>
@@ -167,7 +167,7 @@ export default function ChatBot() {
                       <div
                         className={`max-w-xs px-4 py-2 rounded-lg text-sm leading-relaxed ${
                           message.role === "user"
-                            ? "bg-blue-600 text-white rounded-br-none"
+                            ? "bg-pink-600 text-white rounded-br-none"
                             : "bg-muted text-foreground rounded-bl-none border border-border/50"
                         }`}
                       >
@@ -199,14 +199,14 @@ export default function ChatBot() {
                         }
                       }}
                       placeholder="Ask anything..."
-                      className="flex-1 px-3 py-2 bg-background border border-border/50 rounded-lg text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
+                      className="flex-1 px-3 py-2 bg-background border border-border/50 rounded-lg text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all"
                       disabled={isLoading}
                     />
                     <Button
                       onClick={() => handleSend()}
                       disabled={isLoading || !input.trim()}
                       size="sm"
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      className="bg-pink-600 hover:bg-pink-700 text-white"
                     >
                       <Send className="h-4 w-4" />
                     </Button>

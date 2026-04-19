@@ -109,7 +109,7 @@ export default function ToolsExplorer({
 
         <div className="grid gap-4 rounded-2xl border border-border/70 bg-card/60 p-4 md:grid-cols-[1.4fr_0.7fr_0.9fr] md:items-center">
           <label className="relative block">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -tranzinc-y-1/2 text-muted-foreground" />
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -180,7 +180,7 @@ export default function ToolsExplorer({
                   </div>
                   <Button asChild className="w-full justify-center">
                     <Link href={`/tools/${tool.slug}`}>
-                      Open tool <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                      Open tool <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:tranzinc-x-0.5" />
                     </Link>
                   </Button>
                 </CardContent>

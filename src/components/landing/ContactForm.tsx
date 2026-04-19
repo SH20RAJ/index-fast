@@ -115,8 +115,8 @@ export default function ContactForm() {
       <Card className="border-border/40 bg-card/30 backdrop-blur-xl shadow-2xl shadow-primary/5 rounded-[40px] overflow-hidden">
         <CardContent className="p-8 md:p-12">
           {submitSuccess && (
-            <Alert className="mb-8 border-emerald-500/50 bg-emerald-500/5 text-emerald-600 animate-in fade-in slide-in-from-top-4 duration-500">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+            <Alert className="mb-8 border-pink-500/50 bg-pink-500/5 text-pink-600 animate-in fade-in slide-in-from-top-4 duration-500">
+              <CheckCircle2 className="h-4 w-4 text-pink-500" />
               <AlertTitle className="font-bold tracking-tight">Message Sent!</AlertTitle>
               <AlertDescription className="font-medium opacity-90">
                 We've received your inquiry and will get back to you within 24 hours.
@@ -139,7 +139,7 @@ export default function ContactForm() {
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Name</Label>
                 <div className="relative group">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+                  <User className="absolute left-3.5 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
                   <Input
                     id="name"
                     name="name"
@@ -159,7 +159,7 @@ export default function ContactForm() {
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Email</Label>
                 <div className="relative group">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+                  <Mail className="absolute left-3.5 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
                   <Input
                     id="email"
                     name="email"
@@ -181,7 +181,7 @@ export default function ContactForm() {
             <div className="space-y-2">
               <Label htmlFor="subject" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Subject</Label>
               <div className="relative group">
-                <MessageSquare className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+                <MessageSquare className="absolute left-3.5 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
                 <Input
                   id="subject"
                   name="subject"
@@ -225,7 +225,7 @@ export default function ContactForm() {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <span className="flex items-center gap-2">
-                  Send Message <Send className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  Send Message <Send className="h-4 w-4 group-hover:tranzinc-x-1 group-hover:-tranzinc-y-1 transition-transform" />
                 </span>
               )}
             </Button>

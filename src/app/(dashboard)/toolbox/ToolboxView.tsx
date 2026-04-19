@@ -563,7 +563,7 @@ export default function ToolboxView() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-1">
           <h2 className="text-xl font-light tracking-tight text-zinc-900 dark:text-zinc-100">Growth Directory</h2>
           <div className="relative w-full md:w-80 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+            <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 h-3.5 w-3.5 text-zinc-400" />
             <Input
               placeholder="Search platforms..."
               className="pl-10 h-11 bg-white border-zinc-200 rounded-xl focus-visible:ring-rose-500/20 dark:bg-white/5 dark:border-white/10"
@@ -626,7 +626,7 @@ export default function ToolboxView() {
           <div className="space-y-4">
             {seoMethods.map((method) => (
               <div key={method} className="flex items-start gap-4 p-6 rounded-[24px] bg-zinc-50/50 dark:bg-white/[0.02] border border-zinc-100 dark:border-white/5">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500 mt-0.5" />
+                <CheckCircle2 className="h-4 w-4 text-pink-500 mt-0.5" />
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 font-light leading-relaxed">{method}</p>
               </div>
             ))}

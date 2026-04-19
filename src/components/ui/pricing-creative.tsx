@@ -72,15 +72,15 @@ export function PricingCreative() {
   }
 
   return (
-    <section className="relative flex flex-col items-center py-24 bg-slate-950 overflow-hidden">
+    <section className="relative flex flex-col items-center py-24 bg-zinc-950 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-500/10 rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-[600px] h-[600px] bg-pink-500/10 rounded-full blur-[100px]" />
       </div>
       
       <div className="text-center mb-16 relative z-10 w-full px-4">
         <p className="text-sm uppercase tracking-widest text-pink-400 font-semibold mb-3">Pricing Plans</p>
         <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">Simple, predictable pricing</h2>
-        <p className="text-lg text-slate-300 max-w-2xl mx-auto">Choose the level of indexing execution your properties need. No hidden fees.</p>
+        <p className="text-lg text-zinc-300 max-w-2xl mx-auto">Choose the level of indexing execution your properties need. No hidden fees.</p>
       </div>
 
       <div className="flex flex-col items-center justify-center gap-8 lg:flex-row relative z-10">
@@ -91,7 +91,7 @@ export function PricingCreative() {
                 <motion.div
                   animate={{ y: [10, 6, 10] }}
                   transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                  className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full border border-black/20 bg-[#ff6fb1] px-5 py-1 text-xs font-extrabold text-[#1a1a1a] shadow"
+                  className="absolute -top-6 left-1/2 -tranzinc-x-1/2 rounded-full border border-black/20 bg-[#ff6fb1] px-5 py-1 text-xs font-extrabold text-[#1a1a1a] shadow"
                 >
                   Popular
                 </motion.div>
@@ -108,7 +108,7 @@ export function PricingCreative() {
               <ul className={`mb-6 space-y-2 text-sm ${p.popular ? 'text-gray-900 text-base' : 'text-white/70'}`}>
                 {getPlanFeatureLines(p).map((f, idx) => (
                   <li key={idx} className="flex items-start">
-                    <span className={`mr-2 mt-0.5 ${p.popular ? 'text-emerald-600' : 'text-emerald-400'}`}><Check className="w-4 h-4" /></span>
+                    <span className={`mr-2 mt-0.5 ${p.popular ? 'text-pink-600' : 'text-pink-400'}`}><Check className="w-4 h-4" /></span>
                     <span className="text-left">{f}</span>
                   </li>
                 ))}

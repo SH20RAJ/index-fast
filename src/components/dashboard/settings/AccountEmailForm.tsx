@@ -44,8 +44,8 @@ export default function AccountEmailForm({ initialEmail }: AccountEmailFormProps
       </Button>
 
       {state.status !== "idle" && (
-        <Alert variant={state.status === "success" ? "default" : "destructive"} className={state.status === "success" ? "border-emerald-500/50 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400" : ""}>
-          {state.status === "success" ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4" />}
+        <Alert variant={state.status === "success" ? "default" : "destructive"} className={state.status === "success" ? "border-pink-500/50 bg-pink-500/5 text-pink-600 dark:text-pink-400" : ""}>
+          {state.status === "success" ? <CheckCircle2 className="h-4 w-4 text-pink-500" /> : <AlertCircle className="h-4 w-4" />}
           <AlertTitle className="font-bold capitalize">{state.status}</AlertTitle>
           <AlertDescription className="font-medium">{state.message}</AlertDescription>
         </Alert>

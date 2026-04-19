@@ -24,7 +24,7 @@ export function FloatingPaths({ position }: { position: number }) {
   return (
     <div className="pointer-events-none absolute inset-0 -z-10">
       <svg
-        className="h-full w-full text-slate-950 dark:text-white"
+        className="h-full w-full text-zinc-950 dark:text-white"
         viewBox="0 0 696 316"
         fill="none"
       >
@@ -79,7 +79,7 @@ export default function MinimalHero() {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           Index <br className="hidden sm:block" />
-          <span className="bg-gradient-to-r from-primary via-blue-500 to-primary bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-primary via-pink-500 to-primary bg-clip-text text-transparent">
             instantly.
           </span>
         </motion.h1>

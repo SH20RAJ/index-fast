@@ -107,7 +107,7 @@ console.log(data);`,
                   variant="ghost" 
                   size="sm" 
                   onClick={() => setShowKey(!showKey)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-4 rounded-xl text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-rose-500"
+                  className="absolute right-2 top-1/2 -tranzinc-y-1/2 h-10 px-4 rounded-xl text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-rose-500"
                 >
                   {showKey ? "Hide" : "Reveal"}
                 </Button>
@@ -115,7 +115,7 @@ console.log(data);`,
               
               <div className="flex gap-3">
                 <Button onClick={handleCopy} variant="outline" className="h-14 w-14 rounded-2xl border-zinc-100 dark:border-white/10 shrink-0">
-                  {copied ? <Check className="h-5 w-5 text-emerald-500" /> : <Copy className="h-5 w-5" />}
+                  {copied ? <Check className="h-5 w-5 text-pink-500" /> : <Copy className="h-5 w-5" />}
                 </Button>
                 <Button onClick={handleRotate} disabled={rotating} variant="outline" className="h-14 px-6 rounded-2xl border-zinc-100 dark:border-white/10 font-bold uppercase tracking-widest text-[11px] gap-2">
                   <RefreshCw className={cn("h-4 w-4", rotating && "animate-spin")} />
@@ -126,7 +126,7 @@ console.log(data);`,
 
             <div className="flex items-center gap-6 pt-4 border-t border-zinc-50 dark:border-white/5">
                <div className="flex items-center gap-2">
-                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                 <ShieldCheck className="w-4 h-4 text-pink-500" />
                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">TLS 1.3 Secure</span>
                </div>
                <div className="flex items-center gap-2">

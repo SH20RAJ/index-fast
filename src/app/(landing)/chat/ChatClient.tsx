@@ -179,21 +179,21 @@ export default function ChatClient() {
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-40 w-64 border-r border-border/70 bg-card/50 backdrop-blur transform transition-transform duration-300 lg:relative lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed inset-y-0 left-0 z-40 w-64 border-r border-border/70 bg-card/50 backdrop-blur transform transition-transform duration-300 lg:relative lg:tranzinc-x-0 ${
+          sidebarOpen ? "tranzinc-x-0" : "-tranzinc-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           <div className="p-4 border-b border-border/70">
             <Link href="/" className="font-bold text-lg flex items-center gap-2 hover:opacity-80 transition">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg" />
+              <div className="w-8 h-8 bg-gradient-to-br from-pink-600 to-pink-700 rounded-lg" />
               IndexFast
             </Link>
           </div>
 
           <Button
             onClick={newConversation}
-            className="m-4 w-calc(100% - 32px) bg-blue-600 hover:bg-blue-700 text-white"
+            className="m-4 w-calc(100% - 32px) bg-pink-600 hover:bg-pink-700 text-white"
           >
             <Plus className="w-4 h-4 mr-2" />
             New Chat
@@ -210,7 +210,7 @@ export default function ChatClient() {
                 }}
                 className={`w-full text-left px-3 py-2 rounded-lg transition-colors text-sm truncate ${
                   currentConversationId === conv.id
-                    ? "bg-blue-600 text-white"
+                    ? "bg-pink-600 text-white"
                     : "hover:bg-muted text-foreground"
                 }`}
               >
@@ -263,13 +263,13 @@ export default function ChatClient() {
                 <div
                   className={`max-w-2xl px-4 py-3 rounded-lg ${
                     message.role === "user"
-                      ? "bg-blue-600 text-white rounded-br-none"
+                      ? "bg-pink-600 text-white rounded-br-none"
                       : "bg-muted text-foreground rounded-bl-none border border-border/50"
                   }`}
                 >
                   <p className="leading-relaxed text-sm sm:text-base">{message.content}</p>
                   <p className={`text-xs mt-2 ${
-                    message.role === "user" ? "text-blue-100" : "text-muted-foreground"
+                    message.role === "user" ? "text-pink-100" : "text-muted-foreground"
                   }`}>
                     {message.timestamp.toLocaleTimeString([], {
                       hour: "2-digit",
@@ -307,13 +307,13 @@ export default function ChatClient() {
                   }
                 }}
                 placeholder="Ask me anything about IndexFast..."
-                className="flex-1 px-4 py-3 bg-background border border-border/50 rounded-lg text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all"
+                className="flex-1 px-4 py-3 bg-background border border-border/50 rounded-lg text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all"
                 disabled={isLoading}
               />
               <Button
                 onClick={handleSend}
                 disabled={isLoading || !input.trim()}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4"
+                className="bg-pink-600 hover:bg-pink-700 text-white px-4"
               >
                 <Send className="w-5 h-5" />
               </Button>

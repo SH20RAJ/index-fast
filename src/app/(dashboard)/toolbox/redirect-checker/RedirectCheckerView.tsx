@@ -102,7 +102,7 @@ export default function RedirectCheckerView() {
                     placeholder="https://example.com/old-page"
                     className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                   />
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+                  <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-zinc-400" />
                 </div>
               </div>
 
@@ -147,7 +147,7 @@ export default function RedirectCheckerView() {
                     <div key={i} className="relative flex items-start gap-4 md:gap-8">
                       <div className={cn(
                         "relative z-10 h-8 w-8 md:h-12 md:w-12 rounded-full border-4 border-white dark:border-zinc-900 flex items-center justify-center shrink-0 shadow-sm",
-                        i === chain.length - 1 ? "bg-emerald-500 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400"
+                        i === chain.length - 1 ? "bg-pink-500 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-400"
                       )}>
                         {i === chain.length - 1 ? <CheckCircle2 className="h-4 w-4 md:h-6 md:w-6" /> : <span className="text-[10px] md:text-xs font-bold">{i + 1}</span>}
                       </div>
@@ -156,7 +156,7 @@ export default function RedirectCheckerView() {
                           <p className={cn(
                             "text-xs md:text-sm font-bold uppercase tracking-widest",
                             Number(step.status) >= 300 && Number(step.status) < 400 ? "text-amber-500" : 
-                            Number(step.status) >= 200 && Number(step.status) < 300 ? "text-emerald-500" : "text-rose-500"
+                            Number(step.status) >= 200 && Number(step.status) < 300 ? "text-pink-500" : "text-rose-500"
                           )}>
                             HTTP {step.status} — {step.statusText}
                           </p>
@@ -193,7 +193,7 @@ export default function RedirectCheckerView() {
                   <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">Latency Impact</span>
                   <Badge className={cn(
                     "font-bold text-[10px] border-none px-3",
-                    chain.length > 2 ? "bg-rose-500 text-white" : "bg-emerald-500 text-white"
+                    chain.length > 2 ? "bg-rose-500 text-white" : "bg-pink-500 text-white"
                   )}>
                     {chain.length > 2 ? "High Risk" : "Low Impact"}
                   </Badge>

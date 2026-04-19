@@ -142,7 +142,7 @@ export default function InsightsView() {
             <Card className="rounded-[32px] overflow-hidden border-zinc-100 shadow-sm dark:border-white/5 dark:bg-zinc-900/40">
               <CardHeader className="pb-2">
                 <CardDescription className="text-xs uppercase tracking-widest font-bold">Total Clicks</CardDescription>
-                <CardTitle className="text-3xl tracking-tight font-light text-blue-500">{totals.clicks}</CardTitle>
+                <CardTitle className="text-3xl tracking-tight font-light text-pink-500">{totals.clicks}</CardTitle>
               </CardHeader>
             </Card>
             <Card className="rounded-[32px] overflow-hidden border-zinc-100 shadow-sm dark:border-white/5 dark:bg-zinc-900/40">
@@ -154,7 +154,7 @@ export default function InsightsView() {
             <Card className="rounded-[32px] overflow-hidden border-zinc-100 shadow-sm dark:border-white/5 dark:bg-zinc-900/40">
               <CardHeader className="pb-2">
                 <CardDescription className="text-xs uppercase tracking-widest font-bold">Average CTR</CardDescription>
-                <CardTitle className="text-3xl tracking-tight font-light text-emerald-500">{totals.ctr}%</CardTitle>
+                <CardTitle className="text-3xl tracking-tight font-light text-pink-500">{totals.ctr}%</CardTitle>
               </CardHeader>
             </Card>
             <Card className="rounded-[32px] overflow-hidden border-zinc-100 shadow-sm dark:border-white/5 dark:bg-zinc-900/40">

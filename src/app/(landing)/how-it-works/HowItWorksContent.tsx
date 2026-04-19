@@ -214,7 +214,7 @@ export default function HowItWorksContent() {
             <Card className="h-full border-beam border-border/70 bg-background/85 backdrop-blur-md shadow-sm transition-all duration-500 premium-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl font-bold tracking-tight">
-                  <span className="p-2 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-500/20 transition-colors">
+                  <span className="p-2 rounded-lg bg-pink-500/10 text-pink-600 dark:text-pink-400 group-hover:bg-pink-500/20 transition-colors">
                     <CheckCircle2 className="h-5 w-5" />
                   </span>
                   What you get
@@ -229,7 +229,7 @@ export default function HowItWorksContent() {
                     transition={{ delay: i * 0.1 + 0.3 }}
                     className="flex items-center gap-3"
                   >
-                    <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 shrink-0" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-pink-500 shrink-0" />
                     <span className="font-medium text-foreground/80">{item}</span>
                   </motion.div>
                 ))}

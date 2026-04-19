@@ -133,7 +133,7 @@ export default function SitemapExtractorView() {
                   disabled={loading}
                   onKeyDown={(e) => e.key === "Enter" && handleExtract()}
                 />
-                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+                <Globe className="absolute left-4 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-zinc-400" />
               </div>
               <Button
                 onClick={handleExtract}

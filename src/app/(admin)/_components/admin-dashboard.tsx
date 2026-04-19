@@ -33,7 +33,7 @@ function formatPercent(value: number) {
 }
 
 function getStatusTone(status: string) {
-  if (status === "success") return "text-emerald-300 bg-emerald-400/10 border-emerald-400/20";
+  if (status === "success") return "text-pink-300 bg-pink-400/10 border-pink-400/20";
   if (status === "failed") return "text-rose-300 bg-rose-400/10 border-rose-400/20";
   return "text-amber-300 bg-amber-400/10 border-amber-400/20";
 }
@@ -87,7 +87,7 @@ export default function AdminDashboard({ data, lockAction }: AdminDashboardProps
                 <LockKeyhole className="ml-2 h-4 w-4" />
               </Button>
             </form>
-            <Button asChild className="rounded-full bg-amber-300 text-slate-950 hover:bg-amber-200">
+            <Button asChild className="rounded-full bg-amber-300 text-zinc-950 hover:bg-amber-200">
               <Link href="/dashboard">
                 Open operator dashboard
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -102,18 +102,18 @@ export default function AdminDashboard({ data, lockAction }: AdminDashboardProps
           const Icon = metric.icon;
 
           return (
-            <Card key={metric.label} className="border-white/8 bg-white/95 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-white/5 dark:bg-slate-950/70">
+            <Card key={metric.label} className="border-white/8 bg-white/95 shadow-sm shadow-zinc-900/5 backdrop-blur dark:border-white/5 dark:bg-zinc-950/70">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-slate-400">{metric.label}</p>
-                    <p className="text-3xl font-light tracking-tight text-slate-950 dark:text-white">{metric.value}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-zinc-400">{metric.label}</p>
+                    <p className="text-3xl font-light tracking-tight text-zinc-950 dark:text-white">{metric.value}</p>
                   </div>
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-2 text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-white/75">
+                  <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-2 text-zinc-600 dark:border-white/10 dark:bg-white/5 dark:text-white/75">
                     <Icon className="h-4 w-4" />
                   </div>
                 </div>
-                <p className="mt-3 text-xs leading-5 text-slate-500 dark:text-slate-400">{metric.hint}</p>
+                <p className="mt-3 text-xs leading-5 text-zinc-500 dark:text-zinc-400">{metric.hint}</p>
               </CardContent>
             </Card>
           );
@@ -121,46 +121,46 @@ export default function AdminDashboard({ data, lockAction }: AdminDashboardProps
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-        <Card className="border-white/8 bg-white/95 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-white/5 dark:bg-slate-950/70">
+        <Card className="border-white/8 bg-white/95 shadow-sm shadow-zinc-900/5 backdrop-blur dark:border-white/5 dark:bg-zinc-950/70">
           <CardContent className="space-y-5 p-6">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400">Top sites</p>
-                <h2 className="mt-1 text-xl font-semibold text-slate-950 dark:text-white">Highest volume properties</h2>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-zinc-400">Top sites</p>
+                <h2 className="mt-1 text-xl font-semibold text-zinc-950 dark:text-white">Highest volume properties</h2>
               </div>
-              <Badge variant="secondary" className="rounded-full bg-slate-100 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:bg-white/5 dark:text-slate-300">
+              <Badge variant="secondary" className="rounded-full bg-zinc-100 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 dark:bg-white/5 dark:text-zinc-300">
                 {formatNumber(data.topSites.length)} tracked
               </Badge>
             </div>
 
             <div className="space-y-3">
               {data.topSites.map((site) => (
-                <div key={site.id} className="rounded-3xl border border-slate-200 bg-white px-4 py-4 dark:border-white/5 dark:bg-white/[0.03]">
+                <div key={site.id} className="rounded-3xl border border-zinc-200 bg-white px-4 py-4 dark:border-white/5 dark:bg-white/[0.03]">
                   <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                     <div className="min-w-0 space-y-1">
                       <div className="flex items-center gap-2">
-                        <p className="truncate text-sm font-semibold text-slate-950 dark:text-white">{site.url}</p>
-                        <span className="rounded-full border border-slate-200 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:border-white/10 dark:text-slate-400">
+                        <p className="truncate text-sm font-semibold text-zinc-950 dark:text-white">{site.url}</p>
+                        <span className="rounded-full border border-zinc-200 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:border-white/10 dark:text-zinc-400">
                           {site.userEmail}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400">
                         Last sync {formatDate(site.lastSyncAt)} · {site.gscConnected ? "GSC connected" : "GSC missing"}
                       </p>
                     </div>
 
                     <div className="grid grid-cols-3 gap-3 text-right text-xs">
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">Submissions</p>
-                        <p className="mt-1 font-semibold text-slate-950 dark:text-white">{formatNumber(site.submissions)}</p>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-400">Submissions</p>
+                        <p className="mt-1 font-semibold text-zinc-950 dark:text-white">{formatNumber(site.submissions)}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">Success</p>
-                        <p className="mt-1 font-semibold text-slate-950 dark:text-white">{formatPercent(site.successRate)}</p>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-400">Success</p>
+                        <p className="mt-1 font-semibold text-zinc-950 dark:text-white">{formatPercent(site.successRate)}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">Health</p>
-                        <p className="mt-1 font-semibold text-slate-950 dark:text-white">{site.gscConnected ? "Healthy" : "Review"}</p>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-400">Health</p>
+                        <p className="mt-1 font-semibold text-zinc-950 dark:text-white">{site.gscConnected ? "Healthy" : "Review"}</p>
                       </div>
                     </div>
                   </div>
@@ -170,31 +170,31 @@ export default function AdminDashboard({ data, lockAction }: AdminDashboardProps
           </CardContent>
         </Card>
 
-        <Card className="border-white/8 bg-white/95 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-white/5 dark:bg-slate-950/70">
+        <Card className="border-white/8 bg-white/95 shadow-sm shadow-zinc-900/5 backdrop-blur dark:border-white/5 dark:bg-zinc-950/70">
           <CardContent className="space-y-4 p-6">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400">Operator shortcuts</p>
-              <h2 className="mt-1 text-xl font-semibold text-slate-950 dark:text-white">Actions to do now</h2>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-zinc-400">Operator shortcuts</p>
+              <h2 className="mt-1 text-xl font-semibold text-zinc-950 dark:text-white">Actions to do now</h2>
             </div>
 
             <div className="space-y-3">
               {operatorLinks.map((link) => (
-                <Button key={link.href} asChild variant="ghost" className="h-auto w-full justify-between rounded-3xl border border-slate-200 bg-white px-4 py-4 text-left hover:bg-slate-50 dark:border-white/5 dark:bg-white/[0.03] dark:hover:bg-white/[0.06]">
+                <Button key={link.href} asChild variant="ghost" className="h-auto w-full justify-between rounded-3xl border border-zinc-200 bg-white px-4 py-4 text-left hover:bg-zinc-50 dark:border-white/5 dark:bg-white/[0.03] dark:hover:bg-white/[0.06]">
                   <Link href={link.href}>
                     <span className="space-y-1 text-left">
-                      <span className="block text-sm font-semibold text-slate-950 dark:text-white">{link.label}</span>
-                      <span className="block text-xs font-normal leading-5 text-slate-500 dark:text-slate-400">{link.description}</span>
+                      <span className="block text-sm font-semibold text-zinc-950 dark:text-white">{link.label}</span>
+                      <span className="block text-xs font-normal leading-5 text-zinc-500 dark:text-zinc-400">{link.description}</span>
                     </span>
-                    <ArrowRight className="h-4 w-4 shrink-0 text-slate-400" />
+                    <ArrowRight className="h-4 w-4 shrink-0 text-zinc-400" />
                   </Link>
                 </Button>
               ))}
             </div>
 
-            <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/[0.03]">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400">System notes</p>
-              <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                <li className="flex items-start gap-2"><RefreshCw className="mt-0.5 h-4 w-4 text-emerald-500" />Review failed submissions and retry the affected URLs.</li>
+            <div className="rounded-3xl border border-dashed border-zinc-200 bg-zinc-50 p-4 dark:border-white/10 dark:bg-white/[0.03]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-zinc-400">System notes</p>
+              <ul className="mt-3 space-y-2 text-sm text-zinc-600 dark:text-zinc-300">
+                <li className="flex items-start gap-2"><RefreshCw className="mt-0.5 h-4 w-4 text-pink-500" />Review failed submissions and retry the affected URLs.</li>
                 <li className="flex items-start gap-2"><ServerCog className="mt-0.5 h-4 w-4 text-amber-500" />Check sites without a sitemap or GSC connection.</li>
                 <li className="flex items-start gap-2"><LineChart className="mt-0.5 h-4 w-4 text-sky-500" />Compare indexed URLs against discovered URLs weekly.</li>
               </ul>
@@ -204,33 +204,33 @@ export default function AdminDashboard({ data, lockAction }: AdminDashboardProps
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <Card className="border-white/8 bg-white/95 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-white/5 dark:bg-slate-950/70">
+        <Card className="border-white/8 bg-white/95 shadow-sm shadow-zinc-900/5 backdrop-blur dark:border-white/5 dark:bg-zinc-950/70">
           <CardContent className="space-y-4 p-6">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400">Recent submissions</p>
-              <h2 className="mt-1 text-xl font-semibold text-slate-950 dark:text-white">Latest platform activity</h2>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-zinc-400">Recent submissions</p>
+              <h2 className="mt-1 text-xl font-semibold text-zinc-950 dark:text-white">Latest platform activity</h2>
             </div>
 
             <div className="space-y-3">
               {data.recentSubmissions.length === 0 ? (
-                <div className="rounded-3xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500 dark:border-white/10 dark:text-slate-400">
+                <div className="rounded-3xl border border-dashed border-zinc-200 p-8 text-center text-sm text-zinc-500 dark:border-white/10 dark:text-zinc-400">
                   No submissions recorded yet.
                 </div>
               ) : (
                 data.recentSubmissions.map((submission) => (
-                  <div key={submission.id} className="rounded-3xl border border-slate-200 bg-white px-4 py-4 dark:border-white/5 dark:bg-white/[0.03]">
+                  <div key={submission.id} className="rounded-3xl border border-zinc-200 bg-white px-4 py-4 dark:border-white/5 dark:bg-white/[0.03]">
                     <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
                       <div className="min-w-0 space-y-1">
                         <div className="flex items-center gap-2">
-                          <p className="truncate text-sm font-semibold text-slate-950 dark:text-white">{submission.websiteUrl}</p>
+                          <p className="truncate text-sm font-semibold text-zinc-950 dark:text-white">{submission.websiteUrl}</p>
                           <Badge variant="outline" className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] ${getStatusTone(submission.status)}`}>
                             {submission.status}
                           </Badge>
                         </div>
-                        <p className="truncate text-xs text-slate-500 dark:text-slate-400">{submission.url}</p>
-                        <p className="text-[10px] uppercase tracking-[0.22em] text-slate-400">{submission.userEmail} · {submission.engine}</p>
+                        <p className="truncate text-xs text-zinc-500 dark:text-zinc-400">{submission.url}</p>
+                        <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-400">{submission.userEmail} · {submission.engine}</p>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">{formatDate(submission.createdAt)}</p>
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400">{formatDate(submission.createdAt)}</p>
                     </div>
                   </div>
                 ))
@@ -239,30 +239,30 @@ export default function AdminDashboard({ data, lockAction }: AdminDashboardProps
           </CardContent>
         </Card>
 
-        <Card className="border-white/8 bg-white/95 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-white/5 dark:bg-slate-950/70">
+        <Card className="border-white/8 bg-white/95 shadow-sm shadow-zinc-900/5 backdrop-blur dark:border-white/5 dark:bg-zinc-950/70">
           <CardContent className="space-y-4 p-6">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400">Recent sites</p>
-              <h2 className="mt-1 text-xl font-semibold text-slate-950 dark:text-white">Newest account onboarding</h2>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-zinc-400">Recent sites</p>
+              <h2 className="mt-1 text-xl font-semibold text-zinc-950 dark:text-white">Newest account onboarding</h2>
             </div>
 
             <div className="space-y-3">
               {data.recentSites.length === 0 ? (
-                <div className="rounded-3xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500 dark:border-white/10 dark:text-slate-400">
+                <div className="rounded-3xl border border-dashed border-zinc-200 p-8 text-center text-sm text-zinc-500 dark:border-white/10 dark:text-zinc-400">
                   No sites recorded yet.
                 </div>
               ) : (
                 data.recentSites.map((site) => (
-                  <div key={site.id} className="rounded-3xl border border-slate-200 bg-white px-4 py-4 dark:border-white/5 dark:bg-white/[0.03]">
+                  <div key={site.id} className="rounded-3xl border border-zinc-200 bg-white px-4 py-4 dark:border-white/5 dark:bg-white/[0.03]">
                     <div className="space-y-1">
                       <div className="flex items-center justify-between gap-3">
-                        <p className="truncate text-sm font-semibold text-slate-950 dark:text-white">{site.url}</p>
-                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] ${site.gscConnected ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-700 dark:text-emerald-300" : "border-amber-400/20 bg-amber-400/10 text-amber-700 dark:text-amber-300"}`}>
+                        <p className="truncate text-sm font-semibold text-zinc-950 dark:text-white">{site.url}</p>
+                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] ${site.gscConnected ? "border-pink-400/20 bg-pink-400/10 text-pink-700 dark:text-pink-300" : "border-amber-400/20 bg-amber-400/10 text-amber-700 dark:text-amber-300"}`}>
                           {site.gscConnected ? "GSC on" : "GSC off"}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">{site.userEmail}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400">{site.userEmail}</p>
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400">
                         Sitemap {site.sitemapUrl ? "present" : "missing"} · Last sync {formatDate(site.lastSyncAt)} · Added {formatDate(site.createdAt)}
                       </p>
                     </div>

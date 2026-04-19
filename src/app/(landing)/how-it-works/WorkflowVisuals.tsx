@@ -27,12 +27,12 @@ export const CronTerminal = () => {
   }, [allLogs]);
 
   return (
-    <div className="relative w-full max-w-md overflow-hidden rounded-xl border border-zinc-800 bg-black/90 p-4 font-mono text-[11px] text-emerald-500 shadow-2xl">
+    <div className="relative w-full max-w-md overflow-hidden rounded-xl border border-zinc-800 bg-black/90 p-4 font-mono text-[11px] text-pink-500 shadow-2xl">
       {/* Scanning Line Effect */}
       <motion.div 
         animate={{ y: ["0%", "100%", "0%"] }}
         transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-x-0 h-[100px] bg-gradient-to-b from-transparent via-emerald-500/10 to-transparent pointer-events-none z-10"
+        className="absolute inset-x-0 h-[100px] bg-gradient-to-b from-transparent via-pink-500/10 to-transparent pointer-events-none z-10"
       />
       
       <div className="mb-2 flex items-center gap-2 border-b border-zinc-800 pb-2 relative z-20">
@@ -62,7 +62,7 @@ export const CronTerminal = () => {
         <motion.span
           animate={{ opacity: [0, 1] }}
           transition={{ repeat: Infinity, duration: 0.8 }}
-          className="inline-block h-4 w-1 bg-emerald-500"
+          className="inline-block h-4 w-1 bg-pink-500"
         />
       </div>
     </div>
@@ -117,24 +117,24 @@ export const ApiSubmission = () => {
           whileHover={{ x: 5 }}
           className="flex items-center gap-3 rounded-xl border border-border/50 bg-background/90 px-4 py-2.5 shadow-xl"
         >
-          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="h-2 w-2 rounded-full bg-pink-500 animate-pulse" />
           <div className="flex flex-col">
             <span className="text-[9px] font-black text-zinc-400 uppercase">Bing Search</span>
             <span className="text-[10px] font-bold">POST SUCCESS</span>
           </div>
-          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+          <CheckCircle2 className="h-4 w-4 text-pink-500" />
         </motion.div>
         
         <motion.div 
           whileHover={{ x: 5 }}
           className="flex items-center gap-3 rounded-xl border border-border/50 bg-background/90 px-4 py-2.5 shadow-xl"
         >
-          <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+          <div className="h-2 w-2 rounded-full bg-pink-500 animate-pulse" />
           <div className="flex flex-col">
             <span className="text-[9px] font-black text-zinc-400 uppercase">IndexNow</span>
             <span className="text-[10px] font-bold">SIGNAL SENT</span>
           </div>
-          <CheckCircle2 className="h-4 w-4 text-blue-500" />
+          <CheckCircle2 className="h-4 w-4 text-pink-500" />
         </motion.div>
       </div>
     </div>
@@ -235,7 +235,7 @@ export const EngineEcosystem = () => {
         delay={10}
         radius={80}
       >
-        <div className="flex h-full w-full items-center justify-center rounded-full bg-blue-500 text-white font-bold text-[8px]">IndexNow</div>
+        <div className="flex h-full w-full items-center justify-center rounded-full bg-pink-500 text-white font-bold text-[8px]">IndexNow</div>
       </OrbitingCircles>
       <OrbitingCircles
         className="size-[30px] border-none bg-transparent"

@@ -47,9 +47,9 @@ export default function AuthPage({ mode }: AuthPageProps) {
       ];
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-slate-950 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-zinc-950 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background Gradients */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-pink-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-sky-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch relative z-10">
@@ -58,10 +58,10 @@ export default function AuthPage({ mode }: AuthPageProps) {
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="lg:col-span-7 bg-white/80 dark:bg-slate-900/50 backdrop-blur-xl rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl shadow-slate-200/50 dark:shadow-black/50 p-8 md:p-12 flex flex-col justify-center"
+          className="lg:col-span-7 bg-white/80 dark:bg-zinc-900/50 backdrop-blur-xl rounded-[40px] border border-zinc-200 dark:border-zinc-800 shadow-2xl shadow-zinc-200/50 dark:shadow-black/50 p-8 md:p-12 flex flex-col justify-center"
         >
           <div className="flex flex-wrap gap-2 mb-8">
-            <Badge variant="secondary" className="h-7 px-3 text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-600 border-none">
+            <Badge variant="secondary" className="h-7 px-3 text-[10px] font-black uppercase tracking-widest bg-pink-500/10 text-pink-600 border-none">
               <ShieldCheck className="mr-1.5 h-3 w-3" /> Secure Auth
             </Badge>
             <Badge variant="secondary" className="h-7 px-3 text-[10px] font-black uppercase tracking-widest bg-sky-500/10 text-sky-600 border-none">
@@ -72,11 +72,11 @@ export default function AuthPage({ mode }: AuthPageProps) {
             </Badge>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.95] mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-zinc-900 dark:text-white leading-[0.95] mb-6">
             {pageTitle}
           </h1>
 
-          <p className="text-lg font-medium text-slate-500 dark:text-slate-400 mb-10 max-w-xl leading-relaxed">
+          <p className="text-lg font-medium text-zinc-500 dark:text-zinc-400 mb-10 max-w-xl leading-relaxed">
             {pageDescription}
           </p>
 
@@ -89,10 +89,10 @@ export default function AuthPage({ mode }: AuthPageProps) {
                 transition={{ delay: 0.2 + idx * 0.1 }}
                 className="flex items-start gap-3"
               >
-                <div className="mt-1 h-5 w-5 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
-                  <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                <div className="mt-1 h-5 w-5 rounded-full bg-pink-500/20 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="h-3 w-3 text-pink-600" />
                 </div>
-                <span className="text-[15px] font-bold text-slate-700 dark:text-slate-300">
+                <span className="text-[15px] font-bold text-zinc-700 dark:text-zinc-300">
                   {item}
                 </span>
               </motion.div>
@@ -103,18 +103,18 @@ export default function AuthPage({ mode }: AuthPageProps) {
             <Button 
               size="lg"
               onClick={() => (isSignIn ? stack.redirectToSignIn() : stack.redirectToSignUp())}
-              className="h-14 px-8 font-black rounded-2xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white shadow-xl shadow-sky-500/25 gap-3 w-full sm:w-auto transition-all active:scale-95 group"
+              className="h-14 px-8 font-black rounded-2xl bg-gradient-to-r from-sky-500 to-pink-500 hover:from-sky-600 hover:to-pink-600 text-white shadow-xl shadow-sky-500/25 gap-3 w-full sm:w-auto transition-all active:scale-95 group"
             >
               {isSignIn ? <Lock className="h-5 w-5" /> : <Rocket className="h-5 w-5" />}
               {isSignIn ? "Continue to Sign In" : "Continue to Sign Up"}
-              <ArrowRight className="h-4 w-4 opacity-50 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-4 w-4 opacity-50 group-hover:tranzinc-x-1 transition-transform" />
             </Button>
 
             <Button 
               asChild
               variant="outline" 
               size="lg"
-              className="h-14 px-8 font-black rounded-2xl border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 w-full sm:w-auto transition-all active:scale-95"
+              className="h-14 px-8 font-black rounded-2xl border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 w-full sm:w-auto transition-all active:scale-95"
             >
               <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
                 {isSignIn ? "Create Workspace" : "Access Workspace"}
@@ -128,7 +128,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
           initial={{ x: 20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-[40px] p-8 md:p-12 flex flex-col justify-between relative overflow-hidden group shadow-2xl shadow-black/50"
+          className="lg:col-span-5 bg-zinc-900 border border-zinc-800 rounded-[40px] p-8 md:p-12 flex flex-col justify-between relative overflow-hidden group shadow-2xl shadow-black/50"
         >
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none group-hover:scale-110 group-hover:rotate-12 transition-all duration-700">
@@ -145,29 +145,29 @@ export default function AuthPage({ mode }: AuthPageProps) {
               Faster indexing, cleaner operations.
             </h2>
             
-            <p className="text-slate-400 font-medium leading-relaxed">
+            <p className="text-zinc-400 font-medium leading-relaxed">
               Teams use IndexFast to automate manual SEO indexing, push instant discovery signals, and unify workflow transparency.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 mt-12 relative z-10">
             {[
-              { k: "Workflow setup", v: "< 2 min", c: "text-emerald-400" },
+              { k: "Workflow setup", v: "< 2 min", c: "text-pink-400" },
               { k: "Submission speed", v: "Realtime", c: "text-sky-400" },
               { k: "Ops visibility", v: "Live", c: "text-amber-400" },
               { k: "Manual workload", v: "-80%", c: "text-rose-400" },
             ].map((item) => (
-              <div key={item.k} className="p-4 bg-slate-950/50 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors">
+              <div key={item.k} className="p-4 bg-zinc-950/50 rounded-2xl border border-zinc-800 hover:border-zinc-700 transition-colors">
                 <p className={cn("text-base font-black tracking-tighter", item.c)}>{item.v}</p>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{item.k}</p>
+                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{item.k}</p>
               </div>
             ))}
           </div>
           
           <div className="mt-8 flex items-center gap-3 opacity-30 group-hover:opacity-60 transition-opacity">
-            <div className="h-[1px] flex-1 bg-slate-800" />
+            <div className="h-[1px] flex-1 bg-zinc-800" />
             <TrendingUp className="h-4 w-4 text-sky-400" />
-            <div className="h-[1px] flex-1 bg-slate-800" />
+            <div className="h-[1px] flex-1 bg-zinc-800" />
           </div>
         </motion.div>
       </div>
