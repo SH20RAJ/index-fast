@@ -7,6 +7,13 @@ async function run(query: string) {
   await sqlClient.unsafe(query);
 }
 
+/**
+ * Idempotent schema bootstrap.
+ *
+ * Safe to run on every server start: uses IF NOT EXISTS / ADD VALUE IF NOT EXISTS
+ * everywhere, so it both creates the schema from scratch and evolves an
+ * older database to the current shape without manual migrations.
+ */
 export async function ensureDbSchema() {
   if (initialized) {
     return;
@@ -20,11 +27,17 @@ export async function ensureDbSchema() {
   inFlight = (async () => {
     await run('CREATE EXTENSION IF NOT EXISTS "pgcrypto";');
 
+    // --- Enums -------------------------------------------------------------
     await run(`DO $$ BEGIN
       CREATE TYPE submission_engine AS ENUM ('bing', 'indexnow', 'google', 'pingomatic', 'pingler');
     EXCEPTION
       WHEN duplicate_object THEN NULL;
     END $$;`);
+
+    // Evolve the enum with engines added after the original deploy.
+    await run(`ALTER TYPE submission_engine ADD VALUE IF NOT EXISTS 'yandex';`);
+    await run(`ALTER TYPE submission_engine ADD VALUE IF NOT EXISTS 'baidu';`);
+    await run(`ALTER TYPE submission_engine ADD VALUE IF NOT EXISTS 'naver';`);
 
     await run(`DO $$ BEGIN
       CREATE TYPE submission_status AS ENUM ('success', 'failed', 'pending');
@@ -50,6 +63,7 @@ export async function ensureDbSchema() {
       WHEN duplicate_object THEN NULL;
     END $$;`);
 
+    // --- Tables ------------------------------------------------------------
     await run(`CREATE TABLE IF NOT EXISTS "users" (
       "id" text PRIMARY KEY,
       "email" text NOT NULL,
@@ -57,9 +71,14 @@ export async function ensureDbSchema() {
       "dodo_subscription_id" text,
       "dodo_customer_id" text,
       "subscription_status" text,
+      "api_key" text,
       "created_at" timestamp DEFAULT now(),
       "updated_at" timestamp DEFAULT now()
     );`);
+
+    // Evolve users: api_key column + unique index (added after initial deploy).
+    await run(`ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "api_key" text;`);
+    await run(`CREATE UNIQUE INDEX IF NOT EXISTS "users_api_key_unique" ON "users"("api_key") WHERE "api_key" IS NOT NULL;`);
 
     await run(`CREATE TABLE IF NOT EXISTS "subscription_plans" (
       "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -84,11 +103,19 @@ export async function ensureDbSchema() {
       "sitemap_url" text,
       "indexnow_key" text,
       "bing_api_key" text,
+      "yandex_token" text,
+      "baidu_token" text,
+      "naver_token" text,
       "gsc_connected" boolean DEFAULT false,
       "site_health" jsonb,
       "last_sync_at" timestamp,
       "created_at" timestamp DEFAULT now()
     );`);
+
+    // Evolve websites: new token columns (added after initial deploy).
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "yandex_token" text;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "baidu_token" text;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "naver_token" text;`);
 
     await run(`CREATE TABLE IF NOT EXISTS "user_subscriptions" (
       "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -152,6 +179,7 @@ export async function ensureDbSchema() {
       "updated_at" timestamp DEFAULT now()
     );`);
 
+    // --- Indexes -----------------------------------------------------------
     await run(`CREATE INDEX IF NOT EXISTS "idx_websites_user_id" ON "websites"("user_id");`);
     await run(`CREATE INDEX IF NOT EXISTS "idx_websites_created_at" ON "websites"("created_at");`);
     await run(`CREATE INDEX IF NOT EXISTS "idx_url_inventory_website_id" ON "url_inventory"("website_id");`);
@@ -163,8 +191,17 @@ export async function ensureDbSchema() {
     await run(`CREATE INDEX IF NOT EXISTS "idx_cron_jobs_next_run_at" ON "cron_jobs"("next_run_at");`);
 
     initialized = true;
-    inFlight = null;
   })();
 
-  await inFlight;
+  try {
+    await inFlight;
+  } catch (err) {
+    // Reset so a subsequent request can retry instead of being permanently
+    // stuck with a rejected cached promise.
+    initialized = false;
+    inFlight = null;
+    throw err;
+  } finally {
+    inFlight = null;
+  }
 }
