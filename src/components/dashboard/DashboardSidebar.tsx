@@ -204,11 +204,11 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col border-r border-border/50 bg-background/60 backdrop-blur-3xl dark:bg-background/40">
+    <div className="flex h-full min-h-0 flex-col border-r border-border/70 bg-card/40 backdrop-blur-2xl dark:bg-card/25">
       <div className="px-6 py-6 pb-4">
         <div className="flex items-center gap-3">
           <Link href={getHref("/dashboard")} className="relative group cursor-pointer" onClick={handleNavClick}>
-            <div className="absolute -inset-2 bg-rose-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+            <div className="absolute -inset-2 rounded-xl bg-primary/15 blur-xl opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
             <Image 
               src="/logo.png" 
               alt="IndexFast" 
@@ -285,7 +285,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                                     className={cn(
                                       "block rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200",
                                       childActive
-                                        ? "text-rose-500 dark:text-rose-400"
+                                        ? "text-primary"
                                         : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
                                     )}
                                   >
@@ -306,7 +306,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         </nav>
       </div>
 
-      <div className="mt-auto border-t border-border/50 p-4 space-y-4 bg-muted/30 backdrop-blur-xl">
+      <div className="mt-auto space-y-4 border-t border-border/70 bg-muted/20 p-4 backdrop-blur-xl">
         <div className="flex items-center gap-3 rounded-2xl p-2 transition-colors hover:bg-background/20">
           <Avatar className="h-10 w-10 border-2 border-primary/20 shadow-sm">
             <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">

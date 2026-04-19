@@ -1,6 +1,7 @@
 "use client";
 
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import DashboardTopBar from "@/components/dashboard/DashboardTopBar";
 import { SiteProvider, type WebsiteBasic } from "@/components/dashboard/SiteContext";
 import { LogProvider } from "@/components/dashboard/LogContext";
 import GlobalTerminal from "@/components/dashboard/GlobalTerminal";
@@ -16,8 +17,8 @@ export default function DashboardShell({
     <SiteProvider initialWebsites={initialWebsites}>
       <LogProvider>
         <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-foreground">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,var(--primary),transparent_25%)] opacity-[0.03] dark:opacity-[0.07]" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,var(--primary),transparent_25%)] opacity-[0.03] dark:opacity-[0.07]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_0%_0%,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_60%)] opacity-90 dark:opacity-100" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_100%_100%,color-mix(in_oklab,var(--primary)_10%,transparent),transparent_55%)] opacity-80" />
           
           <DashboardSidebar />
           
@@ -26,8 +27,9 @@ export default function DashboardShell({
             <div className="h-16 md:h-0" />
             
             {/* Main content */}
-            <main className="flex-1 overflow-x-hidden px-4 pb-8 pt-4 md:px-8 md:py-8">
+            <main className="flex-1 overflow-x-hidden px-4 pb-10 pt-2 md:px-8 md:pb-12 md:pt-4">
               <div className="mx-auto w-full max-w-7xl">
+                <DashboardTopBar />
                 {children}
               </div>
             </main>
