@@ -3,13 +3,11 @@ import { LANDING_FAQS } from "@/lib/landing-faq";
 import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Features from "@/components/landing/Features";
-import Pricing from "@/components/landing/Pricing";
 import FAQ from "@/components/landing/FAQ";
 import FinalCTA from "@/components/landing/FinalCTA";
 import ChatBot from "@/components/landing/ChatBot";
-import SocialProof from "@/components/landing/SocialProof";
-import Testimonials from "@/components/landing/Testimonials";
 import { LogoCloud } from "@/components/ui/logo-cloud-2";
+import { PricingCreative } from "@/components/ui/pricing-creative";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
 const title = "IndexFast - Automated SEO Indexing & URL Submission";
@@ -139,9 +137,6 @@ export default function LandingPage() {
   return (
     <>
       <Hero />
-      <SocialProof />
-      <Testimonials />
-      <HowItWorks />
       <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="space-y-3 pb-6">
           <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Search Engine Reach</p>
@@ -155,7 +150,8 @@ export default function LandingPage() {
         <LogoCloud />
       </section>
       <Features />
-      <Pricing />
+      <HowItWorks />
+      <PricingCreative />
       <FAQ />
       <FinalCTA />
       <ChatBot />
