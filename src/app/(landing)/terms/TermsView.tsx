@@ -1,62 +1,126 @@
 "use client";
 
-import { Box, Container, Typography, Stack } from "@/components/ui/mui";
-import { alpha } from "@/lib/color";
+import { Box, Chip, Container, Typography, Stack } from "@/components/ui/mui";
 
 export default function TermsView() {
   const sections = [
     {
-      title: "1. Acceptance of Terms",
-      content: "By accessing and using IndexFast, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services."
+      id: "01",
+      title: "Acceptance of Terms",
+      summary:
+        "Using IndexFast means you agree to these terms and any referenced policy updates.",
+      bullets: [
+        "You must be at least 18 years old or have permission from a legal guardian.",
+        "If you disagree with these terms, you should stop using the service.",
+        "Continued use after updates means you accept the revised terms.",
+      ],
     },
     {
-      title: "2. Description of Service",
-      content: "IndexFast provides automated URL submission and SEO indexing tools. We facilitate communication with search engine APIs but do not guarantee specific ranking results or indexing speed, as these are controlled by third-party search engines."
+      id: "02",
+      title: "Service Scope",
+      summary:
+        "IndexFast automates URL submission workflows and helps coordinate indexing tasks across supported platforms.",
+      bullets: [
+        "We provide tooling and automation, not guaranteed ranking positions.",
+        "Search engine processing times and results are controlled by third parties.",
+        "Feature availability can vary by plan and external API limits.",
+      ],
     },
     {
-      title: "3. User Responsibilities",
-      content: "You are responsible for the URLs you submit. You must not use our service for spam, illegal content, or to violate the terms of service of search engines (e.g., Google or Bing)."
+      id: "03",
+      title: "User Responsibilities",
+      summary:
+        "You are responsible for all content and destinations submitted through your account.",
+      bullets: [
+        "Do not submit spam, malicious, deceptive, or illegal content.",
+        "Respect platform policies for Google, Bing, IndexNow, and other integrated services.",
+        "Keep credentials secure and promptly report any unauthorized account activity.",
+      ],
     },
     {
-      title: "4. Account & Data",
-      content: "You are responsible for maintaining the security of your account. We reserve the right to suspend accounts that engage in abusive behavior or exceed their plan limits."
+      id: "04",
+      title: "Accounts and Fair Use",
+      summary:
+        "We may enforce plan limits and service protections to keep the platform reliable for all users.",
+      bullets: [
+        "Plan quotas and rate limits apply to submitted URLs and API operations.",
+        "Accounts using abusive automation patterns may be limited or suspended.",
+        "You can request account deletion and data export via support or dashboard settings.",
+      ],
     },
     {
-      title: "5. Payments & Refunds",
-      content: "Subscriptions are billed in advance. Refunds are handled on a case-by-case basis in accordance with our billing provider's policies. You can cancel your subscription at any time via the dashboard."
-    }
+      id: "05",
+      title: "Billing and Cancellation",
+      summary:
+        "Paid subscriptions are billed upfront and can be canceled anytime from your account.",
+      bullets: [
+        "Charges renew automatically unless canceled before the next cycle.",
+        "Refund requests are reviewed in line with provider and anti-abuse policies.",
+        "Downgrades may reduce feature access at the end of the billing period.",
+      ],
+    },
   ];
 
+  const lastUpdated = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date());
+
   return (
-    <Container maxWidth="md" sx={{ py: { xs: 10, md: 15 }, flex: 1 }}>
-      <Stack spacing={8}>
-        <Box>
-          <Typography variant="h2" sx={{ fontWeight: 900, mb: 2 }}>
-            Terms of
-            <Box component="span" sx={{ color: "primary.main", fontFamily: '"Patrick Hand", cursive', rotate: "3deg", display: "inline-block", ml: 1 }}>Service</Box>
-          </Typography>
-          <Typography color="text.secondary">
-            Last updated: {new Date().toLocaleDateString()}
-          </Typography>
+    <Container className="mx-auto w-full max-w-4xl px-4 pb-20 pt-36 sm:px-6 sm:pt-40 lg:px-8 lg:pt-44" sx={{ flex: 1 }}>
+      <Stack spacing={6}>
+        <Box className="rounded-[28px] border border-primary/20 bg-gradient-to-br from-primary/12 via-background to-background p-6 shadow-[0_20px_60px_-40px_rgba(236,72,153,0.85)] sm:p-8">
+          <Stack spacing={2}>
+            <Chip className="w-fit border-primary/30 bg-background/70 text-xs font-semibold uppercase tracking-[0.18em] text-foreground" label="Legal" />
+            <Typography variant="h2" className="text-3xl font-black tracking-tight sm:text-4xl">
+              Terms of Service
+            </Typography>
+            <Typography className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              These terms explain how to use IndexFast responsibly, what we provide, and how account and billing rules work.
+            </Typography>
+            <Typography className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Last updated: {lastUpdated}
+            </Typography>
+          </Stack>
         </Box>
 
-        <Stack spacing={4}>
+        <Stack spacing={3}>
           {sections.map((section) => (
-            <Box key={section.title}>
-              <Typography variant="h5" sx={{ fontWeight: 800, mb: 1, color: "text.primary" }}>
-                {section.title}
-              </Typography>
-              <Typography color="text.secondary" sx={{ fontSize: "1.1rem", lineHeight: 1.7 }}>
-                {section.content}
-              </Typography>
+            <Box
+              key={section.id}
+              className="rounded-3xl border border-border/70 bg-card/70 p-5 shadow-[0_16px_42px_-34px_rgba(244,114,182,0.9)] backdrop-blur-sm sm:p-6"
+            >
+              <Stack spacing={2}>
+                <Stack direction="row" spacing={1.5} className="items-center">
+                  <Box className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/12 text-xs font-black text-primary">
+                    {section.id}
+                  </Box>
+                  <Typography variant="h5" className="text-lg font-extrabold tracking-tight sm:text-xl">
+                    {section.title}
+                  </Typography>
+                </Stack>
+                <Typography className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  {section.summary}
+                </Typography>
+                <Box component="ul" className="space-y-2 pl-5">
+                  {section.bullets.map((item) => (
+                    <Box component="li" key={item} className="text-sm leading-relaxed text-foreground/90 sm:text-[0.95rem]">
+                      {item}
+                    </Box>
+                  ))}
+                </Box>
+              </Stack>
             </Box>
           ))}
         </Stack>
 
-        <Box sx={{ p: 4, borderRadius: "24px", bgcolor: alpha("#7C3AED", 0.05), border: "1px dashed", borderColor: "primary.main" }}>
-          <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>Questions?</Typography>
-          <Typography color="text.secondary">
-            If you have any questions about these Terms, please contact us at support@indexfast.com.
+        <Box className="rounded-3xl border border-dashed border-primary/35 bg-primary/5 p-5 sm:p-6">
+          <Typography variant="h6" className="mb-2 text-lg font-extrabold">
+            Questions About These Terms?
+          </Typography>
+          <Typography className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Contact us at <a href="mailto:support@indexfast.com" className="font-semibold text-primary underline-offset-4 hover:underline">support@indexfast.com</a> and we will help clarify anything related to billing, usage, or account policy.
           </Typography>
         </Box>
       </Stack>
