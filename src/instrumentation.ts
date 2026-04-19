@@ -9,8 +9,9 @@
  * Docs: node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/instrumentation.md
  */
 export async function register() {
-  // Only run on the Node.js runtime — the Edge runtime cannot load `postgres`.
-  if (process.env.NEXT_RUNTIME !== "nodejs") {
+  // Skip on the Edge runtime — it cannot load `postgres`.
+  // Allow undefined (local dev / self-hosted) to proceed.
+  if (process.env.NEXT_RUNTIME === "edge") {
     return;
   }
 

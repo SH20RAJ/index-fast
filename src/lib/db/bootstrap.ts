@@ -77,6 +77,10 @@ export async function ensureDbSchema() {
     );`);
 
     // Evolve users: api_key column + unique index (added after initial deploy).
+    // Intentionally using a partial unique index (WHERE api_key IS NOT NULL)
+    // instead of a standard UNIQUE constraint — this allows multiple rows with
+    // NULL api_key, which Drizzle's .unique() would not. If Drizzle push/diff
+    // is ever run against this DB it may flag this divergence.
     await run(`ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "api_key" text;`);
     await run(`CREATE UNIQUE INDEX IF NOT EXISTS "users_api_key_unique" ON "users"("api_key") WHERE "api_key" IS NOT NULL;`);
 
@@ -199,7 +203,6 @@ export async function ensureDbSchema() {
     // Reset so a subsequent request can retry instead of being permanently
     // stuck with a rejected cached promise.
     initialized = false;
-    inFlight = null;
     throw err;
   } finally {
     inFlight = null;
