@@ -107,7 +107,7 @@ console.log(data);`,
                   variant="ghost" 
                   size="sm" 
                   onClick={() => setShowKey(!showKey)}
-                  className="absolute right-2 top-1/2 -tranzinc-y-1/2 h-10 px-4 rounded-xl text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-rose-500"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-4 rounded-xl text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-rose-500"
                 >
                   {showKey ? "Hide" : "Reveal"}
                 </Button>

@@ -212,9 +212,9 @@ export function TextField(props: CompatProps & { onChange?: (event: any) => void
     <textarea className={cn("w-full rounded-md border border-input bg-background px-3 py-2 text-sm", error && "border-red-400")} rows={rows ?? minRows ?? 4} {...cleanProps(rest)} />
   ) : (
     <div className={cn("relative", fullWidth && "w-full")}>
-      {InputProps?.startAdornment ? <span className="absolute left-2 top-1/2 -tranzinc-y-1/2 text-muted-foreground">{InputProps.startAdornment}</span> : null}
+      {InputProps?.startAdornment ? <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">{InputProps.startAdornment}</span> : null}
       <input className={cn("h-10 w-full rounded-md border border-input bg-background px-3 text-sm", InputProps?.startAdornment && "pl-8", error && "border-red-400", className)} {...cleanProps(rest)} />
-      {InputProps?.endAdornment ? <span className="absolute right-2 top-1/2 -tranzinc-y-1/2 text-muted-foreground">{InputProps.endAdornment}</span> : null}
+      {InputProps?.endAdornment ? <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground">{InputProps.endAdornment}</span> : null}
     </div>
   );
 

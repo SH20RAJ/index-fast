@@ -139,7 +139,7 @@ export default function ContactForm() {
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Name</Label>
                 <div className="relative group">
-                  <User className="absolute left-3.5 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
                   <Input
                     id="name"
                     name="name"
@@ -159,7 +159,7 @@ export default function ContactForm() {
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Email</Label>
                 <div className="relative group">
-                  <Mail className="absolute left-3.5 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
                   <Input
                     id="email"
                     name="email"
@@ -181,7 +181,7 @@ export default function ContactForm() {
             <div className="space-y-2">
               <Label htmlFor="subject" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Subject</Label>
               <div className="relative group">
-                <MessageSquare className="absolute left-3.5 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+                <MessageSquare className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
                 <Input
                   id="subject"
                   name="subject"
@@ -225,7 +225,7 @@ export default function ContactForm() {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <span className="flex items-center gap-2">
-                  Send Message <Send className="h-4 w-4 group-hover:tranzinc-x-1 group-hover:-tranzinc-y-1 transition-transform" />
+                  Send Message <Send className="h-4 w-4 group-hover:tranzinc-x-1 group-hover:-translate-y-1 transition-transform" />
                 </span>
               )}
             </Button>

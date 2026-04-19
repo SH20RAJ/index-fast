@@ -180,7 +180,7 @@ export default function ChatClient() {
       {/* Sidebar */}
       <div
         className={`fixed inset-y-0 left-0 z-40 w-64 border-r border-border/70 bg-card/50 backdrop-blur transform transition-transform duration-300 lg:relative lg:tranzinc-x-0 ${
-          sidebarOpen ? "tranzinc-x-0" : "-tranzinc-x-full"
+          sidebarOpen ? "tranzinc-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">

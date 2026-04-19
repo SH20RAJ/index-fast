@@ -74,7 +74,7 @@ export function PricingCreative() {
   return (
     <section className="relative flex flex-col items-center py-24 bg-zinc-950 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 w-[600px] h-[600px] bg-pink-500/10 rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-500/10 rounded-full blur-[100px]" />
       </div>
       
       <div className="text-center mb-16 relative z-10 w-full px-4">
@@ -91,7 +91,7 @@ export function PricingCreative() {
                 <motion.div
                   animate={{ y: [10, 6, 10] }}
                   transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                  className="absolute -top-6 left-1/2 -tranzinc-x-1/2 rounded-full border border-black/20 bg-[#ff6fb1] px-5 py-1 text-xs font-extrabold text-[#1a1a1a] shadow"
+                  className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full border border-black/20 bg-[#ff6fb1] px-5 py-1 text-xs font-extrabold text-[#1a1a1a] shadow"
                 >
                   Popular
                 </motion.div>

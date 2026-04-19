@@ -102,7 +102,7 @@ export default function RedirectCheckerView() {
                     placeholder="https://example.com/old-page"
                     className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                   />
-                  <Search className="absolute left-4 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-zinc-400" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
                 </div>
               </div>
 

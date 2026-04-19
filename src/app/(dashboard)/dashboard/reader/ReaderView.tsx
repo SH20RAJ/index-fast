@@ -74,7 +74,7 @@ export default function ReaderView() {
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Target URL</span>
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1 group/input">
-                 <BookOpen className="absolute left-4 top-1/2 -tranzinc-y-1/2 h-4 w-4 text-zinc-400 group-focus-within/input:text-rose-500 transition-colors" />
+                 <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within/input:text-rose-500 transition-colors" />
                  <Input
                    placeholder="https://example.com/blog-post"
                    value={url}

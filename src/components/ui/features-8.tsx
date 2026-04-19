@@ -41,7 +41,7 @@ export function Features() {
           <div className="relative z-10 grid grid-cols-6 gap-3">
             {/* Card 1: 120+ Search Engines */}
             <motion.div className="col-span-full lg:col-span-2" variants={itemVariants}>
-              <Card className="relative h-full flex overflow-hidden hover:shadow-xl transition-all duration-300 hover:-tranzinc-y-1">
+              <Card className="relative h-full flex overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardContent className="relative m-auto size-fit pt-6">
                   <div className="relative flex h-24 w-56 items-center">
                     <motion.svg
@@ -72,7 +72,7 @@ export function Features() {
 
             {/* Card 2: Secure API Delivery */}
             <motion.div className="col-span-full sm:col-span-3 lg:col-span-2" variants={itemVariants}>
-              <Card className="relative h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-tranzinc-y-1 group">
+              <Card className="relative h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
                 <CardContent className="pt-6">
                   <motion.div 
                     className="relative mx-auto flex aspect-square size-32 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5"
@@ -96,7 +96,7 @@ export function Features() {
 
             {/* Card 3: Indexed in under 60 seconds */}
             <motion.div className="col-span-full sm:col-span-3 lg:col-span-2" variants={itemVariants}>
-              <Card className="relative h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-tranzinc-y-1">
+              <Card className="relative h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardContent className="pt-6">
                   <div className="pt-6 lg:px-6">
                     <svg
@@ -164,7 +164,7 @@ export function Features() {
 
             {/* Card 4: Direct API Injection */}
             <motion.div className="col-span-full lg:col-span-3" variants={itemVariants}>
-              <Card className="relative h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-tranzinc-y-1 group">
+              <Card className="relative h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
                 <CardContent className="grid pt-6 sm:grid-cols-2">
                   <div className="relative z-10 flex flex-col justify-between space-y-12 lg:space-y-6">
                     <motion.div 
@@ -244,7 +244,7 @@ export function Features() {
 
             {/* Card 5: Multi-site & Team Access */}
             <motion.div className="col-span-full lg:col-span-3" variants={itemVariants}>
-              <Card className="relative h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-tranzinc-y-1">
+              <Card className="relative h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardContent className="grid h-full pt-6 sm:grid-cols-2">
                   <div className="relative z-10 flex flex-col justify-between space-y-12 lg:space-y-6">
                     <motion.div 

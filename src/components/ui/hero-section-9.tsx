@@ -172,7 +172,7 @@ const HeroSection = ({
 
           {/* Images */}
           <motion.div
-            className="absolute left-1/2 top-0 h-48 w-48 -tranzinc-x-1/2 rounded-2xl bg-muted p-2 shadow-lg sm:h-64 sm:w-64"
+            className="absolute left-1/2 top-0 h-48 w-48 -translate-x-1/2 rounded-2xl bg-muted p-2 shadow-lg sm:h-64 sm:w-64"
             style={{ transformOrigin: "bottom center" }}
             variants={imageVariants}
           >

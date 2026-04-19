@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useMemo, useActionState } from "react";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -94,7 +95,7 @@ interface SitesViewProps {
   websiteLimit: number;
 }
 
-
+export default function SitesView({ initialSites, planName, websiteLimit }: SitesViewProps) {
   const [gscLoading, setGscLoading] = useState(false);
   const [gscImporting, setGscImporting] = useState(false);
   const [gscConnected, setGscConnected] = useState(false);
@@ -465,7 +466,7 @@ interface SitesViewProps {
           <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/5 pb-6">
             <h2 className="text-2xl font-black italic tracking-tight text-zinc-900 dark:text-zinc-100">Live Inventory</h2>
             <div className="relative w-full md:w-80 group">
-              <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
               <Input
                 value={siteSearchQuery}
                 onChange={(event) => setSiteSearchQuery(event.target.value)}
@@ -620,7 +621,7 @@ interface SitesViewProps {
 
           <div className="p-8 py-4 space-y-6">
             <div className="relative group">
-              <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
               <Input
                 value={gscSearchQuery}
                 onChange={(e) => setGscSearchQuery(e.target.value)}

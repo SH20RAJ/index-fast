@@ -8,6 +8,44 @@ import FinalCTA from "@/components/landing/FinalCTA";
 import ChatBot from "@/components/landing/ChatBot";
 import { LogoCloud } from "@/components/ui/logo-cloud-2";
 import { PricingCreative } from "@/components/ui/pricing-creative";
+import { AnimatedTestimonials } from "@/components/blocks/animated-testimonials";
+
+const testimonials = [
+  {
+    id: 1,
+    name: "Alex",
+    role: "SEO Engineer",
+    company: "TrafficScale",
+    content: "IndexFast pushed our programmatic SEO pages and ranked them within hours. The difference from manual GSC is staggering.",
+    rating: 5,
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d"
+  },
+  {
+    id: 2,
+    name: "Sarah Jones",
+    role: "Content Director",
+    company: "DailyNews",
+    content: "For a publisher, indexing time is everything. We immediately saw a boost in top stories placement once we automated our IndexNow pings.",
+    rating: 5,
+    avatar: "https://i.pravatar.cc/150?u=a04258a2462d826712d"
+  },
+  {
+    id: 3,
+    name: "Mike Chen",
+    role: "Founder",
+    company: "Storefront",
+    content: "When product inventory drops, we need Google sensing it instantly. IndexFast solved our stale cache issues on the first day.",
+    rating: 5,
+    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+  }
+];
+
+const trustedCompanies = [
+  "TrafficScale",
+  "DailyNews",
+  "Storefront",
+  "BlogMetrics"
+];
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
 const title = "IndexFast - Automated SEO Indexing & URL Submission";
@@ -151,6 +189,14 @@ export default function LandingPage() {
       </section>
       <Features />
       <HowItWorks />
+      <AnimatedTestimonials
+        title="Trusted by Modern Publishers & pSEO"
+        subtitle="See how teams are dropping their indexing times from days to minutes with IndexFast."
+        badgeText="Real Case Studies"
+        testimonials={testimonials}
+        trustedCompanies={trustedCompanies}
+        trustedCompaniesTitle="Used by high-velocity content teams"
+      />
       <PricingCreative />
       <FAQ />
       <FinalCTA />
