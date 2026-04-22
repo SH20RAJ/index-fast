@@ -25,21 +25,20 @@ export default function FinalCTA() {
             </div>
             
             <div className="space-y-4">
-              <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-                Ready to get <br />
-                <span className="text-zinc-500">indexed today?</span>
+              <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl font-serif">
+                Ready to <span className="italic">rank?</span>
               </h2>
               <p className="mx-auto max-w-xl text-sm leading-relaxed text-zinc-400 sm:text-base">
-                Stop waiting for search engines to find you. Join hundreds of teams automating their indexing and growing their traffic.
+                Stop wasting hours on manual work. Join 500+ teams who automated their indexing and saw results in hours, not weeks.
               </p>
             </div>
 
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row pt-4">
               <Button 
                 onClick={() => stack.redirectToSignUp()}
-                className="h-12 px-8 rounded-xl font-bold bg-white text-zinc-950 hover:bg-zinc-200 transition-all w-full sm:w-auto"
+                className="h-14 px-10 rounded-2xl font-bold bg-white text-zinc-950 hover:bg-zinc-200 transition-all w-full sm:w-auto text-base shadow-[0_0_20px_rgba(255,255,255,0.3)]"
               >
-                Get Started for Free
+                Start Indexing Now
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button 

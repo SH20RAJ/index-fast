@@ -80,7 +80,7 @@ export default function IndexnowKeyValidatorTool() {
               <div className="relative">
                 <Input
                   value={key}
-                  onChange={(e) => setKey(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKey(e.target.value)}
                   placeholder="e.g. 74c28309a17744148..."
                   className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20 font-mono"
                   disabled={loading}
@@ -95,7 +95,7 @@ export default function IndexnowKeyValidatorTool() {
               <div className="relative">
                 <Input
                   value={url}
-                  onChange={(e) => setUrl(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
                   placeholder="https://example.com/your-key.txt"
                   className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
                   disabled={loading}

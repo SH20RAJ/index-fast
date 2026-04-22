@@ -66,7 +66,7 @@ export default function MetaTagGeneratorTool() {
                 </div>
                 <Input
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTitle(e.target.value)}
                   placeholder="Enter your page title"
                   className="h-12 rounded-xl bg-background border-border text-sm focus-visible:ring-primary/20"
                 />
@@ -81,7 +81,7 @@ export default function MetaTagGeneratorTool() {
                 </div>
                 <Textarea
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDescription(e.target.value)}
                   placeholder="Enter your page description..."
                   className="min-h-[100px] rounded-2xl bg-background border-border p-4 text-xs leading-relaxed focus-visible:ring-primary/20 resize-none"
                 />
@@ -91,7 +91,7 @@ export default function MetaTagGeneratorTool() {
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Keywords</Label>
                 <Input
                   value={keywords}
-                  onChange={(e) => setKeywords(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setKeywords(e.target.value)}
                   placeholder="keyword1, keyword2, keyword3"
                   className="h-12 rounded-xl bg-background border-border text-sm focus-visible:ring-primary/20"
                 />

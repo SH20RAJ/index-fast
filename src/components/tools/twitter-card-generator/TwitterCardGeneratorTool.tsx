@@ -13,7 +13,7 @@ import {
   Code,
   ArrowRight,
   ShieldCheck,
-  Twitter,
+  Bird,
   Image as ImageIcon,
   Type,
   User
@@ -54,7 +54,7 @@ export default function TwitterCardGeneratorTool() {
                 <div className="relative">
                   <Input
                     value={handle}
-                    onChange={(e) => setHandle(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHandle(e.target.value)}
                     placeholder="@yourusername"
                     className="h-11 rounded-xl bg-background border-border pl-10 text-sm focus-visible:ring-primary/20"
                   />
@@ -66,7 +66,7 @@ export default function TwitterCardGeneratorTool() {
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Card Title</Label>
                 <Input
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                   placeholder="Catchy headline for X/Twitter"
                   className="h-11 rounded-xl bg-background border-border text-sm focus-visible:ring-primary/20"
                 />
@@ -76,7 +76,7 @@ export default function TwitterCardGeneratorTool() {
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Description</Label>
                 <Textarea
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
                   placeholder="Summary of your page content"
                   className="min-h-[80px] rounded-2xl bg-background border-border p-4 text-xs leading-relaxed focus-visible:ring-primary/20 resize-none"
                 />
@@ -87,7 +87,7 @@ export default function TwitterCardGeneratorTool() {
                 <div className="relative">
                   <Input
                     value={image}
-                    onChange={(e) => setImage(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setImage(e.target.value)}
                     placeholder="https://example.com/card-image.png"
                     className="h-11 rounded-xl bg-background border-border pl-10 text-sm focus-visible:ring-primary/20"
                   />
@@ -100,7 +100,7 @@ export default function TwitterCardGeneratorTool() {
               {/* Preview */}
               <div className="space-y-3">
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1 flex items-center gap-1.5">
-                  <Twitter className="h-3 w-3" /> Twitter Card Preview
+                  <Bird className="h-3 w-3" /> Twitter Card Preview
                 </Label>
                 <div className="rounded-2xl bg-background border border-border/50 shadow-sm overflow-hidden flex flex-col max-w-[400px]">
                   <div className="h-[200px] bg-muted flex items-center justify-center relative overflow-hidden">

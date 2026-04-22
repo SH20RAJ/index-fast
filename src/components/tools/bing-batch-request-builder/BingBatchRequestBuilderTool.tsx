@@ -61,7 +61,7 @@ export default function BingBatchRequestBuilderTool() {
               <div className="relative">
                 <Input
                   value={host}
-                  onChange={(e) => setHost(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHost(e.target.value)}
                   placeholder="example.com"
                   className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
                 />
@@ -75,7 +75,7 @@ export default function BingBatchRequestBuilderTool() {
               <div className="relative">
                 <Input
                   value={key}
-                  onChange={(e) => setKey(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKey(e.target.value)}
                   placeholder="Your Bing API Key"
                   className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20 font-mono"
                 />
@@ -96,7 +96,7 @@ export default function BingBatchRequestBuilderTool() {
             <div className="relative">
               <Textarea
                 value={urlsRaw}
-                onChange={(e) => setUrlsRaw(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setUrlsRaw(e.target.value)}
                 placeholder="https://example.com/page1&#10;https://example.com/page2"
                 className="min-h-[150px] rounded-2xl bg-background border-border p-4 font-mono text-xs leading-relaxed focus-visible:ring-primary/20 resize-none"
               />

@@ -49,7 +49,7 @@ export default function GoogleIndexCheckerTool() {
               <div className="relative flex-1">
                 <Input
                   value={url}
-                  onChange={(e) => setUrl(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
                   placeholder="https://example.com/page"
                   className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
                 />

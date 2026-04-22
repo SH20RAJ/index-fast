@@ -78,11 +78,11 @@ export default function BacklinkCheckerTool() {
               <div className="relative flex-1">
                 <Input
                   value={domain}
-                  onChange={(e) => setDomain(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomain(e.target.value)}
                   placeholder="example.com"
                   className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
                   disabled={loading}
-                  onKeyDown={(e) => e.key === "Enter" && handleCheck()}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleCheck()}
                 />
                 <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               </div>

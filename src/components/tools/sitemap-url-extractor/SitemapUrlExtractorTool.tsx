@@ -93,11 +93,11 @@ export default function SitemapUrlExtractorTool() {
               <div className="relative flex-1">
                 <Input
                   value={sitemapUrl}
-                  onChange={(e) => setSitemapUrl(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSitemapUrl(e.target.value)}
                   placeholder="https://example.com/sitemap.xml"
                   className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
                   disabled={loading}
-                  onKeyDown={(e) => e.key === "Enter" && handleExtract()}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleExtract()}
                 />
                 <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               </div>

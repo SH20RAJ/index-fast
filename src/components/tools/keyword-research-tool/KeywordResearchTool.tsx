@@ -88,11 +88,11 @@ export default function KeywordResearchTool() {
               <div className="relative flex-1">
                 <Input
                   value={keyword}
-                  onChange={(e) => setKeyword(e.target.value)}
-                  placeholder="e.g. digital marketing"
-                  className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
-                  disabled={loading}
-                  onKeyDown={(e) => e.key === "Enter" && handleResearch()}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
+                                    placeholder="e.g. coffee beans subscription"
+                                    className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
+                                    disabled={loading}
+                                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleResearch()}
                 />
                 <Target className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               </div>

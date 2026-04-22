@@ -70,7 +70,7 @@ export function Features() {
               </Card>
             </motion.div>
 
-            {/* Card 2: Safe and secure */}
+            {/* Card 2: Stop manual indexing */}
             <motion.div className="col-span-full sm:col-span-3 lg:col-span-2" variants={itemVariants}>
               <Card className="relative h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
                 <CardContent className="pt-6">
@@ -82,10 +82,10 @@ export function Features() {
                   </motion.div>
                   <div className="relative z-10 mt-6 space-y-2 text-center">
                     <h2 className="text-lg font-bold transition text-foreground dark:text-white">
-                      Safe and secure
+                      Stop manual indexing
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                      We send your links directly to search engines using secure connections. Your data is always safe and never shared.
+                      Stop copying and pasting URLs into Search Console. We automate the entire process for you.
                     </p>
                   </div>
                 </CardContent>
@@ -149,10 +149,10 @@ export function Features() {
                   </div>
                   <div className="relative z-10 mt-14 space-y-2 text-center">
                     <h2 className="text-lg font-bold transition text-foreground dark:text-white">
-                      Real-time indexing
+                      Get indexed in minutes
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                      Your new pages are submitted the moment they are found. Most search engines will see them in under a minute.
+                      Your new pages hit Google and Bing instantly. No more waiting weeks for a crawl.
                     </p>
                   </div>
                 </CardContent>
@@ -172,10 +172,10 @@ export function Features() {
                     </motion.div>
                     <div className="space-y-2">
                       <h2 className="text-lg font-bold text-zinc-800 transition dark:text-white">
-                        Direct submission
+                        Bulk submission
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        We push your links directly to Google, Bing, and other search engines. No more waiting for them to find your site.
+                        Push 1 or 1,000,000 URLs with a single click. Built specifically for sites that move fast.
                       </p>
                     </div>
                   </div>
@@ -251,10 +251,10 @@ export function Features() {
                     </motion.div>
                     <div className="space-y-2">
                       <h2 className="text-lg font-bold transition text-foreground dark:text-white">
-                        Manage all your sites
+                        Track your success
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        Add as many websites as you want and manage them all from one easy dashboard.
+                        See exactly which pages got indexed and which didn't. Complete transparency into your SEO status.
                       </p>
                     </div>
                   </div>

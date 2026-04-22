@@ -76,11 +76,11 @@ export default function KeywordCompetitionCheckerTool() {
               <div className="relative flex-1">
                 <Input
                   value={keyword}
-                  onChange={(e) => setKeyword(e.target.value)}
-                  placeholder="e.g. indexing automation"
-                  className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
-                  disabled={loading}
-                  onKeyDown={(e) => e.key === "Enter" && handleCheck()}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
+                                    placeholder="e.g. best coffee beans"
+                                    className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
+                                    disabled={loading}
+                                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleCheck()}
                 />
                 <Target className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               </div>

@@ -1,27 +1,27 @@
 export const LANDING_FAQS = [
   {
-    question: "How fast is indexing?",
+    question: "Is this safe for my SEO?",
     answer:
-      "URLs typically get crawled and indexed in 4-24 hours. Without automation, this process can take weeks.",
+      "Yes. We use official Google, Bing, and IndexNow APIs. This is the recommended way to notify search engines about new content. It is 100% safe and follows search engine guidelines.",
   },
   {
-    question: "Is it safe for SEO?",
+    question: "How fast does indexing happen?",
     answer:
-      "Yes. We use official Bing and IndexNow APIs. This is the recommended way to notify engines.",
+      "Most URLs are crawled and indexed in under 24 hours. Many of our users see results in as little as 30 minutes. Without IndexFast, this can take days or even weeks.",
   },
   {
-    question: "Do I need to be a developer?",
+    question: "What is the success rate?",
     answer:
-      "No. The dashboard is built for operators and marketers, not only engineers.",
+      "Our system has a 98% success rate for delivering indexing signals. As long as your content is high-quality and not blocked by robots.txt, Google will see it.",
   },
   {
-    question: "Can I cancel any time?",
+    question: "Is this better than manual Search Console?",
     answer:
-      "Yes. We offer monthly billing with no long contracts. You can cancel directly from your dashboard.",
+      "Yes. Manual submission is slow and limited. IndexFast automates the process, handles bulk submissions of thousands of URLs at once, and monitors your status so you don't have to.",
   },
   {
-    question: "What sites are supported?",
+    question: "What websites does this work with?",
     answer:
-      "Any site verified in Search Console, including WordPress, Shopify, and custom builds.",
+      "IndexFast works with any website. Whether you're on WordPress, Shopify, Next.js, or a custom build, if you have a sitemap, we can index it.",
   },
 ];

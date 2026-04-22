@@ -8,15 +8,15 @@ import { Button } from "@/components/ui/button";
 import LandingProductPreview from "@/components/landing/LandingProductPreview";
 
 const checklist = [
-  "Automatic indexing for Google & Bing",
-  "Sitemap monitoring for new pages",
-  "Perfect for blogs, stores, and large sites",
+  "Push URLs directly to Google & Bing",
+  "We find your new pages automatically",
+  "Built for anyone who wants more traffic",
 ];
 
 const stats = [
-  { value: "< 60s", label: "Speed to index" },
-  { value: "120+", label: "Indexing nodes" },
-  { value: "10K+", label: "URLs submitted" },
+  { value: "< 60s", label: "Indexing Speed" },
+  { value: "120+", label: "Search Engines" },
+  { value: "10K+", label: "Pages Indexed" },
 ];
 
 export default function Hero() {
@@ -52,8 +52,8 @@ export default function Hero() {
               transition={{ duration: 0.55, delay: 0.05 }}
               className="text-balance text-4xl font-serif font-bold tracking-tight text-foreground sm:text-5xl lg:text-[4rem] lg:leading-[1.1]"
             >
-              Get indexed{" "}
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">faster than ever.</span>
+              Get your pages indexed on Google{" "}
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">faster — automatically.</span>
             </motion.h1>
 
             <motion.p
@@ -62,7 +62,7 @@ export default function Hero() {
               transition={{ duration: 0.55, delay: 0.1 }}
               className="mx-auto mt-6 max-w-xl text-pretty text-base font-sans text-muted-foreground sm:text-lg lg:mx-0"
             >
-              A production-grade indexing pipeline that automates discovery and submission. Connect your site once, get results automatically.
+              Submit URLs, track indexing, and boost visibility without manual work. Stop waiting for Google to find your content.
             </motion.p>
 
             <motion.ul
@@ -90,23 +90,23 @@ export default function Hero() {
               {user ? (
                 <Button asChild size="lg" className="h-12 rounded-xl px-8 text-base font-semibold shadow-lg shadow-primary/20">
                   <Link href="/dashboard">
-                    Open dashboard
+                    Go to Dashboard
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               ) : (
-                <Button asChild size="lg" className="h-12 rounded-xl px-8 text-base font-semibold shadow-lg shadow-primary/20">
-                  <Link href="/sign-up">
-                    Start free
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
+                <div className="flex flex-col items-start gap-2">
+                  <Button asChild size="lg" className="h-12 rounded-xl px-8 text-base font-semibold shadow-lg shadow-primary/20 w-full sm:w-auto">
+                    <Link href="/sign-up">
+                      Start Indexing Now
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <p className="text-[10px] text-muted-foreground ml-1 font-medium italic">Start with 100 URLs free today.</p>
+                </div>
               )}
               <Button asChild variant="outline" size="lg" className="h-12 rounded-xl border-border/80 px-8 text-base font-semibold">
                 <Link href="/how-it-works">How it works</Link>
-              </Button>
-              <Button asChild variant="ghost" size="lg" className="h-12 rounded-xl px-6 text-base font-medium text-muted-foreground hover:text-foreground">
-                <Link href="/pricing">View pricing</Link>
               </Button>
             </motion.div>
 

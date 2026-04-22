@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { 
   Globe, 
   Search, 
@@ -49,7 +50,7 @@ export default function GoogleCacheCheckerTool() {
               <div className="relative flex-1">
                 <Input
                   value={url}
-                  onChange={(e) => setUrl(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
                   placeholder="https://example.com/page"
                   className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
                 />

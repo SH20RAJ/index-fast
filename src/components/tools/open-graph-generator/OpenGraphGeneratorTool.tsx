@@ -55,7 +55,7 @@ export default function OpenGraphGeneratorTool() {
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Page Title</Label>
                 <Input
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setTitle(e.target.value)}
                   placeholder="Enter title for sharing"
                   className="h-11 rounded-xl bg-background border-border text-sm focus-visible:ring-primary/20"
                 />
@@ -65,7 +65,7 @@ export default function OpenGraphGeneratorTool() {
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Description</Label>
                 <Textarea
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDescription(e.target.value)}
                   placeholder="Enter summary for social cards"
                   className="min-h-[80px] rounded-2xl bg-background border-border p-4 text-xs leading-relaxed focus-visible:ring-primary/20 resize-none"
                 />
@@ -75,7 +75,7 @@ export default function OpenGraphGeneratorTool() {
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">Canonical URL</Label>
                 <Input
                   value={url}
-                  onChange={(e) => setUrl(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setUrl(e.target.value)}
                   placeholder="https://example.com/page"
                   className="h-11 rounded-xl bg-background border-border text-sm focus-visible:ring-primary/20"
                 />
@@ -85,7 +85,7 @@ export default function OpenGraphGeneratorTool() {
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">OG Image URL</Label>
                 <Input
                   value={image}
-                  onChange={(e) => setImage(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setImage(e.target.value)}
                   placeholder="https://example.com/og-image.png"
                   className="h-11 rounded-xl bg-background border-border text-sm focus-visible:ring-primary/20"
                 />

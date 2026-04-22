@@ -6,21 +6,21 @@ import { Card, CardContent } from "@/components/ui/card";
 const steps = [
   {
     num: "01",
-    title: "Add your site",
-    desc: "Simply connect your sitemap and link your Google Search Console account. It takes just a few minutes.",
-    punch: "Quick Setup",
+    title: "Submit URLs",
+    desc: "Connect your sitemap or paste URLs manually. We'll automatically find every page that needs indexing.",
+    punch: "Setup in 1 minute",
   },
   {
     num: "02",
-    title: "Auto-Index",
-    desc: "Our system automatically finds your new pages and submits them to search engines immediately.",
-    punch: "Save Time",
+    title: "We send signals",
+    desc: "We push high-priority indexing signals directly to Google and Bing APIs to bypass the slow crawl queue.",
+    punch: "Instant Submission",
   },
   {
     num: "03",
-    title: "Track Results",
-    desc: "Monitor your indexing status and see exactly which pages have been successfully indexed.",
-    punch: "Clear Reporting",
+    title: "Track results",
+    desc: "Watch your pages get indexed in real-time. See exactly what's live and what needs attention.",
+    punch: "Real-time visibility",
   },
 ];
 

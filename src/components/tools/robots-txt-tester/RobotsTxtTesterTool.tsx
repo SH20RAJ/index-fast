@@ -86,7 +86,7 @@ export default function RobotsTxtTesterTool() {
               <div className="relative">
                 <Input
                   value={url}
-                  onChange={(e) => setUrl(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setUrl(e.target.value)}
                   placeholder="https://example.com/page"
                   className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
                   disabled={loading}
@@ -101,7 +101,7 @@ export default function RobotsTxtTesterTool() {
               <div className="relative">
                 <Input
                   value={userAgent}
-                  onChange={(e) => setUserAgent(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setUserAgent(e.target.value)}
                   placeholder="Googlebot"
                   className="h-12 rounded-xl bg-background border-border pl-11 pr-4 text-sm focus-visible:ring-primary/20"
                   disabled={loading}
@@ -121,7 +121,7 @@ export default function RobotsTxtTesterTool() {
             <div className="relative">
               <Textarea
                 value={robotsTxt}
-                onChange={(e) => setRobotsTxt(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setRobotsTxt(e.target.value)}
                 placeholder="User-agent: *&#10;Disallow: /admin"
                 className="min-h-[150px] rounded-2xl bg-background border-border p-4 font-mono text-xs leading-relaxed focus-visible:ring-primary/20 resize-none"
                 disabled={loading}
