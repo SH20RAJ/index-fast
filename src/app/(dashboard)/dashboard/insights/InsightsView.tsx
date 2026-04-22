@@ -105,10 +105,15 @@ export default function InsightsView() {
 
   return (
     <div className="space-y-8 pb-12 max-w-5xl">
-      <PageHeader
-        title="Search Insights"
-        description={`Performance over the last 28 days for ${selectedSite.url.replace(/^https?:\/\//, '')}`}
-      />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <PageHeader
+          title="Search Insights"
+          description={`Performance over the last 28 days for ${selectedSite.url.replace(/^https?:\/\//, '')}`}
+        />
+        <Badge className="w-fit h-fit bg-rose-500/10 text-rose-500 border-none px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-[10px]">
+          Available for Premium Plan
+        </Badge>
+      </div>
 
       {error ? (
         <Alert variant="destructive" className="rounded-[24px] border-rose-500/20 bg-rose-500/5 py-6">

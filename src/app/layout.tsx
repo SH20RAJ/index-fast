@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/next"
 
 const poppins = Poppins({ 
   subsets: ["latin"], 
@@ -240,6 +241,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
+        <Analytics />
       </body>
     </html>
   );
