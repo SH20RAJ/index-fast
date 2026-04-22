@@ -8,14 +8,14 @@ import { Button } from "@/components/ui/button";
 import LandingProductPreview from "@/components/landing/LandingProductPreview";
 
 const checklist = [
-  "Push URLs directly to Google & Bing",
-  "We find your new pages automatically",
-  "Built for anyone who wants more traffic",
+  "100% Safe: Uses official Google & Bing Indexing APIs",
+  "Automated discovery for new pages and updates",
+  "Beat competitors to search results within hours",
 ];
 
 const stats = [
-  { value: "< 60s", label: "Indexing Speed" },
-  { value: "120+", label: "Search Engines" },
+  { value: "4-24h", label: "Indexing Time" },
+  { value: "100%", label: "White-Hat Safe" },
   { value: "10M+", label: "Pages Indexed" },
 ];
 
@@ -37,13 +37,10 @@ export default function Hero() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary"
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary"
             >
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
-              </span>
-              IndexNow · Bing · sitemap automation
+              <Shield className="h-3 w-3" />
+              Powered by official search engine APIs
             </motion.div>
 
             <motion.h1
@@ -52,8 +49,7 @@ export default function Hero() {
               transition={{ duration: 0.55, delay: 0.05 }}
               className="text-balance text-4xl font-serif font-bold tracking-tight text-foreground sm:text-5xl lg:text-[4rem] lg:leading-[1.1]"
             >
-              Get your pages indexed on Google{" "}
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">faster — automatically.</span>
+              Get indexed on Google in <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent italic">24 hours</span> — not weeks.
             </motion.h1>
 
             <motion.p
@@ -62,21 +58,21 @@ export default function Hero() {
               transition={{ duration: 0.55, delay: 0.1 }}
               className="mx-auto mt-6 max-w-xl text-pretty text-base font-sans text-muted-foreground sm:text-lg lg:mx-0"
             >
-              Submit URLs, track indexing, and boost visibility without manual work. Stop waiting for Google to find your content.
+              Stop waiting for search engines to find you. Automate your indexing, monitor your rankings, and see your new pages go live instantly.
             </motion.p>
 
             <motion.ul
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.14 }}
-              className="mx-auto mt-8 max-w-xl space-y-2.5 text-left text-sm text-muted-foreground lg:mx-0"
+              className="mx-auto mt-8 max-w-xl space-y-3 text-left text-sm text-muted-foreground lg:mx-0"
             >
               {checklist.map((line) => (
                 <li key={line} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-500/10 text-green-600">
                     <Check className="h-3 w-3" strokeWidth={3} />
                   </span>
-                  <span>{line}</span>
+                  <span className="font-medium">{line}</span>
                 </li>
               ))}
             </motion.ul>

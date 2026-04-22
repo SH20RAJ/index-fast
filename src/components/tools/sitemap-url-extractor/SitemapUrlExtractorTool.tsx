@@ -147,23 +147,31 @@ export default function SitemapUrlExtractorTool() {
                     className="min-h-[250px] rounded-2xl bg-muted/30 border-border p-4 font-mono text-xs leading-relaxed focus-visible:ring-0 resize-none scrollbar-hide"
                   />
                 </div>
-
                 {/* Pro CTA */}
-                <div className="p-6 rounded-[2rem] bg-zinc-950 text-white relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(244,63,94,0.15),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div className="space-y-2 text-center md:text-left">
-                      <h4 className="text-lg font-bold tracking-tight">Sync sitemaps automatically</h4>
-                      <p className="text-sm text-zinc-400 max-w-md">
-                        IndexFast Pro automatically detects new URLs in your sitemap and pushes them to search engines within minutes.
-                      </p>
+                <div className="p-8 rounded-[2.5rem] bg-zinc-950 text-white relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(244,63,94,0.2),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div className="space-y-4 text-center md:text-left">
+                      <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white/70">
+                        <ShieldCheck className="h-3.5 w-3.5 text-rose-500" />
+                        Powered by official Google Indexing API
+                      </div>
+                      <div className="space-y-2">
+                        <h4 className="text-2xl font-bold tracking-tight">Automate your indexing today</h4>
+                        <p className="text-sm text-zinc-400 max-w-md">
+                          Stop checking manually. Join 1,000+ teams using IndexFast to get their content discovered instantly and safely.
+                        </p>
+                      </div>
                     </div>
-                    <Button asChild className="rounded-xl bg-white text-black hover:bg-zinc-200 font-bold px-6">
-                      <a href="/sign-up">
-                        Setup Auto-Sync
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </a>
-                    </Button>
+                    <div className="flex flex-col items-center gap-3">
+                      <Button asChild size="lg" className="rounded-xl bg-white text-black hover:bg-zinc-200 font-bold px-8 h-12 w-full sm:w-auto transition-all active:scale-95 shadow-xl shadow-white/5">
+                        <a href="/sign-up">
+                          Start Indexing Free
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </a>
+                      </Button>
+                      <p className="text-[10px] text-zinc-500 font-medium">No credit card required · Instant setup</p>
+                    </div>
                   </div>
                 </div>
               </motion.div>
