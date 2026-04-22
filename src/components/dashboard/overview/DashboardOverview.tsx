@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import type { DashboardData } from "@/app/(dashboard)/actions";
 import { motion } from "framer-motion";
+import AddSiteFlow from "@/components/dashboard/AddSiteFlow";
 
 interface DashboardOverviewProps {
   data: DashboardData;
@@ -118,27 +119,18 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
   return (
     <div className="space-y-8">
       {needsSetup ? (
-        <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-card to-card shadow-sm">
-          <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+        <Card className="overflow-hidden border-border/50 bg-muted/20 rounded-[32px]">
+          <CardContent className="flex flex-col gap-6 p-8 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/5 text-primary border border-primary/10">
                 <ListChecks className="h-6 w-6" />
               </div>
-              <div className="min-w-0 space-y-2">
-                <h2 className="text-lg font-semibold tracking-tight text-foreground">Finish setup in three steps</h2>
-                <ol className="list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
-                  <li>Add your first site and sitemap URL.</li>
-                  <li>Place your IndexNow key (we verify automatically).</li>
-                  <li>Run a sync and watch the submission stream.</li>
-                </ol>
+              <div className="min-w-0 space-y-1">
+                <h2 className="text-lg font-bold tracking-tight">Finish setup</h2>
+                <p className="text-sm text-muted-foreground">Add your first site to start tracking indexing.</p>
               </div>
             </div>
-            <Button asChild size="lg" className="h-11 shrink-0 rounded-xl px-8 font-semibold shadow-md shadow-primary/15">
-              <Link href="/sites">
-                <Plus className="mr-2 h-4 w-4" />
-                Add your first site
-              </Link>
-            </Button>
+            <AddSiteFlow />
           </CardContent>
         </Card>
       ) : null}

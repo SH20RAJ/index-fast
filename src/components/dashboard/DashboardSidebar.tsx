@@ -79,14 +79,19 @@ const navSections: NavSection[] = [
     label: "Sites",
     items: [
       {
-        label: "My Sites",
+        label: "All Sites",
         href: "/sites",
         icon: Globe,
-        children: [
-          { label: "List", href: "/sites" },
-          { label: "Pages", href: "/sites/url" },
-          { label: "Auto Jobs", href: "/sites/jobs" },
-        ],
+      },
+      {
+        label: "Site Pages",
+        href: "/sites/url",
+        icon: LayoutDashboard,
+      },
+      {
+        label: "Auto Jobs",
+        href: "/sites/jobs",
+        icon: RefreshCw,
       },
     ],
   },
@@ -94,15 +99,14 @@ const navSections: NavSection[] = [
     label: "Tools",
     items: [
       {
-        label: "Tools",
+        label: "Toolbox",
         href: "/toolbox",
         icon: Wrench,
-        children: [
-          { label: "All Tools", href: "/toolbox" },
-          { label: "Free Tools", href: "/tools" },
-          { label: "API", href: "/dashboard/api" },
-          { label: "Blogs", href: "/blogs" },
-        ],
+      },
+      {
+        label: "Free Tools",
+        href: "/tools",
+        icon: Settings,
       },
     ],
   },
