@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/dashboard/PageHeader";
+import { useSiteContext } from "@/components/dashboard/SiteContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
@@ -108,7 +109,8 @@ interface SiteUrlManagerViewProps {
 export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlManagerViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [siteId, setSiteId] = useState<string>(initialSiteId ?? "");
+  const { selectedSite } = useSiteContext();
+  const [siteId, setSiteId] = useState<string>(selectedSite?.id || initialSiteId || "");
   const [loading, setLoading] = useState(false);
   const [payload, setPayload] = useState<SiteUrlsPayload | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -117,6 +119,12 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
   const [sitemapUrl, setSitemapUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState<SubmitResponse | null>(null);
+
+  useEffect(() => {
+    if (selectedSite?.id && selectedSite.id !== siteId) {
+      setSiteId(selectedSite.id);
+    }
+  }, [selectedSite, siteId]);
 
   useEffect(() => {
     if (!siteId) return;
@@ -264,15 +272,6 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
           title="URLs"
           description="View your site pages and submit them for indexing."
         />
-        <div className="w-full sm:w-[280px]">
-          <Select
-            value={siteId}
-            onChange={(val: any) => handleSiteChange(typeof val === 'string' ? val : val?.value)}
-            options={sites.map((site) => ({ label: site.url, value: site.id }))}
-            placeholder="Select a website"
-            className="w-full h-11"
-          />
-        </div>
       </div>
 
       {loading && (

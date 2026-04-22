@@ -116,97 +116,146 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
     },
   ];
 
+  const onboardingSteps = [
+    { label: "Connect your first site", completed: data.websitesCount > 0, href: "/sites" },
+    { label: "Verify Search Console access", completed: data.websitesCount > 0, href: "/sites" },
+    { label: "Run your first indexing sync", completed: data.recentSubmissions.length > 0, href: "/sites" },
+  ];
+
   return (
     <div className="space-y-8">
       {needsSetup ? (
-        <Card className="overflow-hidden border-border/50 bg-muted/20 rounded-[32px]">
-          <CardContent className="flex flex-col gap-6 p-8 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/5 text-primary border border-primary/10">
-                <ListChecks className="h-6 w-6" />
+        <div className="grid gap-6 md:grid-cols-[1fr_350px]">
+          <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-card p-8 shadow-2xl shadow-primary/5">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,color-mix(in_oklab,var(--primary)_15%,transparent),transparent_50%)]" />
+            <div className="relative space-y-6">
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
+                <Sparkles className="h-3 w-3" />
+                Getting Started
               </div>
-              <div className="min-w-0 space-y-1">
-                <h2 className="text-lg font-bold tracking-tight">Finish setup</h2>
-                <p className="text-sm text-muted-foreground">Add your first site to start tracking indexing.</p>
+              <div className="space-y-2">
+                <h2 className="text-3xl font-serif font-bold tracking-tight text-foreground sm:text-4xl">
+                  Welcome to IndexFast
+                </h2>
+                <p className="max-w-md text-base text-muted-foreground leading-relaxed">
+                  Let's get your first site indexed. Follow these steps to reach your magic moment.
+                </p>
+              </div>
+              
+              <div className="grid gap-3 pt-2">
+                {onboardingSteps.map((step, idx) => (
+                  <Link key={idx} href={step.href}>
+                    <div className={cn(
+                      "flex items-center gap-4 p-4 rounded-2xl border transition-all hover:scale-[1.01] active:scale-[0.99]",
+                      step.completed ? "bg-green-500/5 border-green-500/20 opacity-60" : "bg-muted/30 border-border/50 hover:bg-muted/50"
+                    )}>
+                      <div className={cn(
+                        "h-6 w-6 rounded-full flex items-center justify-center border",
+                        step.completed ? "bg-green-500 border-green-500 text-white" : "border-muted-foreground/30 text-transparent"
+                      )}>
+                        <Check className="h-3.5 w-3.5" strokeWidth={4} />
+                      </div>
+                      <span className={cn("text-sm font-bold", step.completed ? "text-green-600 line-through" : "text-foreground")}>
+                        {step.label}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              <div className="pt-4">
+                <AddSiteFlow />
               </div>
             </div>
-            <AddSiteFlow />
-          </CardContent>
-        </Card>
-      ) : null}
+          </section>
 
-      <section className="relative overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_60%_at_0%_0%,color-mix(in_oklab,var(--primary)_18%,transparent),transparent_55%),radial-gradient(ellipse_70%_50%_at_100%_0%,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_50%)]" />
-        <div className="relative grid gap-6 p-6 md:grid-cols-[1.3fr_0.7fr] md:p-8">
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-              <Sparkles className="h-3 w-3 text-primary" />
-              {planTone} Workspace
+          <Card className="rounded-3xl border-border/50 bg-muted/10 p-6 flex flex-col justify-center text-center space-y-4">
+            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto">
+              <ShieldCheck className="h-8 w-8" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-serif font-bold tracking-tight text-foreground sm:text-4xl">
-                Indexing Overview
-              </h2>
-              <p className="max-w-lg text-sm font-sans leading-relaxed text-muted-foreground">
-                Monitor your website's indexing health, success rate, and recent updates in one place.
+              <h3 className="font-bold">100% API Safe</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                We use official Google Indexing APIs. Your site is safe, secure, and will never be penalized for using our automation.
               </p>
             </div>
-
-            <div className="flex flex-wrap gap-2 pt-1">
-              <Button asChild size="sm" className="h-9 rounded-lg px-4 font-semibold">
-                <Link href="/sites">
-                  <Plus className="mr-2 h-3.5 w-3.5" />
-                  Connect site
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="sm" className="h-9 rounded-lg border-border/80 px-4 font-semibold">
-                <Link href="/submissions">
-                  View activity
-                  <ArrowUpRight className="ml-2 h-3.5 w-3.5" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-between rounded-xl border border-border bg-muted/30 p-6 dark:bg-muted/15">
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Current plan</p>
-                <p className="text-2xl font-semibold tracking-tight text-foreground">{data.plan.name}</p>
-              </div>
-              <Badge variant="secondary" className="rounded-lg text-[11px] font-semibold">
-                ${data.plan.priceMonthly}/mo
-              </Badge>
-            </div>
-
-            <div className="mt-8 grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Active sites</p>
-                <p className="mt-1 text-3xl font-semibold tabular-nums text-foreground">{data.websitesCount}</p>
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Success rate</p>
-                <p className="mt-1 text-3xl font-semibold tabular-nums text-primary">{successRate}%</p>
-              </div>
-            </div>
-
-            <div className="mt-8 space-y-2">
-              <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                <span>Site slots</span>
-                <span>{websiteRatio}%</span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${websiteRatio}%` }}
-                  transition={{ type: "spring", stiffness: 120, damping: 22 }}
-                  className="h-full rounded-full bg-primary"
-                />
-              </div>
-            </div>
-          </div>
+          </Card>
         </div>
-      </section>
+      ) : (
+        <section className="relative overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+          {/* ... rest of the existing hero for active users ... */}
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_60%_at_0%_0%,color-mix(in_oklab,var(--primary)_18%,transparent),transparent_55%),radial-gradient(ellipse_70%_50%_at_100%_0%,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_50%)]" />
+          <div className="relative grid gap-6 p-6 md:grid-cols-[1.3fr_0.7fr] md:p-8">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <Sparkles className="h-3 w-3 text-primary" />
+                {planTone} Workspace
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-2xl font-serif font-bold tracking-tight text-foreground sm:text-4xl">
+                  Indexing Overview
+                </h2>
+                <p className="max-w-lg text-sm font-sans leading-relaxed text-muted-foreground">
+                  Monitor your website's indexing health, success rate, and recent updates in one place.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2 pt-1">
+                <Button asChild size="sm" className="h-9 rounded-lg px-4 font-semibold">
+                  <Link href="/sites">
+                    <Plus className="mr-2 h-3.5 w-3.5" />
+                    Connect site
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="h-9 rounded-lg border-border/80 px-4 font-semibold">
+                  <Link href="/submissions">
+                    View activity
+                    <ArrowUpRight className="ml-2 h-3.5 w-3.5" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-between rounded-xl border border-border bg-muted/30 p-6 dark:bg-muted/15">
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-1">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Current plan</p>
+                  <p className="text-2xl font-semibold tracking-tight text-foreground">{data.plan.name}</p>
+                </div>
+                <Badge variant="secondary" className="rounded-lg text-[11px] font-semibold">
+                  ${data.plan.priceMonthly}/mo
+                </Badge>
+              </div>
+
+              <div className="mt-8 grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Active sites</p>
+                  <p className="mt-1 text-3xl font-semibold tabular-nums text-foreground">{data.websitesCount}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Success rate</p>
+                  <p className="mt-1 text-3xl font-semibold tabular-nums text-primary">{successRate}%</p>
+                </div>
+              </div>
+
+              <div className="mt-8 space-y-2">
+                <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <span>Site slots</span>
+                  <span>{websiteRatio}%</span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${websiteRatio}%` }}
+                    transition={{ type: "spring", stiffness: 120, damping: 22 }}
+                    className="h-full rounded-full bg-primary"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {scorecards.map((card) => {
