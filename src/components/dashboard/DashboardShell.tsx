@@ -4,7 +4,6 @@ import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardTopBar from "@/components/dashboard/DashboardTopBar";
 import { SiteProvider, type WebsiteBasic } from "@/components/dashboard/SiteContext";
 import { LogProvider } from "@/components/dashboard/LogContext";
-import GlobalTerminal from "@/components/dashboard/GlobalTerminal";
 
 export default function DashboardShell({ 
   children,
@@ -35,7 +34,7 @@ export default function DashboardShell({
             </main>
           </div>
 
-          <GlobalTerminal />
+
         </div>
       </LogProvider>
     </SiteProvider>
