@@ -36,7 +36,7 @@ interface GscProperty {
   alreadyImported: boolean;
 }
 
-export default function AddSiteFlow() {
+export default function AddSiteFlow({ floating = false }: { floating?: boolean }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<"choice" | "manual" | "google">("choice");
@@ -134,12 +134,21 @@ export default function AddSiteFlow() {
   return (
     <Dialog open={open} onOpenChange={(val) => { if(!val) reset(); setOpen(val); }}>
       <DialogTrigger asChild>
-        <Button className="rounded-full bg-zinc-950 dark:bg-white dark:text-zinc-950 font-bold px-6 h-10 gap-2">
-          <Plus className="h-4 w-4" />
-          Add Website
-        </Button>
+        {floating ? (
+          <button
+            className="group flex h-14 w-14 items-center justify-center rounded-full bg-zinc-950 shadow-2xl shadow-black/40 ring-1 ring-white/10 transition-all duration-300 hover:scale-110 hover:shadow-primary/30 dark:bg-white"
+            title="Add Website"
+          >
+            <Plus className="h-6 w-6 text-white dark:text-zinc-950 transition-transform duration-300 group-hover:rotate-90" />
+          </button>
+        ) : (
+          <Button className="rounded-full bg-zinc-950 dark:bg-white dark:text-zinc-950 font-bold px-6 h-10 gap-2">
+            <Plus className="h-4 w-4" />
+            Add Website
+          </Button>
+        )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-[32px] border-none shadow-2xl">
+      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-[32px] border-none shadow-2xl fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="p-8">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-xl font-bold tracking-tight text-center">
@@ -217,8 +226,42 @@ export default function AddSiteFlow() {
                     <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest animate-pulse">Syncing...</p>
                   </div>
                 ) : gscSites.filter(s => !s.alreadyImported).length === 0 ? (
-                   <div className="py-12 text-center text-zinc-500">
-                      <p className="text-sm">No new sites found in your Google Console.</p>
+                   <div className="py-6 flex flex-col items-center text-center gap-5">
+                      <div className="h-14 w-14 rounded-2xl bg-zinc-100 dark:bg-white/5 flex items-center justify-center">
+                        <Globe className="h-7 w-7 text-zinc-400" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="font-bold text-zinc-800 dark:text-zinc-200 text-sm">No new sites found</p>
+                        <p className="text-xs text-zinc-500 max-w-[280px]">
+                          All your Google Console properties are already imported, or your session needs refreshing.
+                        </p>
+                      </div>
+                      <div className="w-full grid gap-3">
+                        <button
+                          onClick={() => { window.location.href = "/api/gsc/oauth/start?returnTo=/sites"; }}
+                          className="flex items-center gap-3 p-4 rounded-2xl border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10 transition-all text-left group w-full"
+                        >
+                          <div className="h-9 w-9 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500 shrink-0">
+                            <RefreshCw className="h-4 w-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">Reconnect Google</p>
+                            <p className="text-[11px] text-zinc-500">Re-authenticate and refresh properties</p>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => setStep("manual")}
+                          className="flex items-center gap-3 p-4 rounded-2xl border border-zinc-100 dark:border-white/5 hover:bg-zinc-50 dark:hover:bg-white/5 transition-all text-left group w-full"
+                        >
+                          <div className="h-9 w-9 rounded-xl bg-zinc-100 dark:bg-white/5 flex items-center justify-center text-zinc-600 dark:text-zinc-400 shrink-0">
+                            <Plus className="h-4 w-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">Add Manually</p>
+                            <p className="text-[11px] text-zinc-500">Enter a site URL directly</p>
+                          </div>
+                        </button>
+                      </div>
                    </div>
                 ) : (
                   gscSites.filter(s => !s.alreadyImported).map((site) => (

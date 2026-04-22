@@ -1,21 +1,93 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { CheckCircle2, Globe2, Radar, Zap } from "lucide-react";
+import { motion, Variants, AnimatePresence } from "framer-motion";
+import { CheckCircle2, Globe2, Radar, Zap, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
 
-const rows = [
-  { url: "/blog/shipping-fast-seo", engine: "IndexNow", status: "ok" as const },
-  { url: "/products/winter-drop", engine: "Bing", status: "ok" as const },
-  { url: "/changelog/v4-indexing", engine: "IndexNow", status: "queue" as const },
+// Pool of URLs that will stream through the live feed
+const URL_POOL = [
+  { url: "/blog/shipping-fast-seo", engine: "IndexNow" },
+  { url: "/products/winter-drop", engine: "Bing" },
+  { url: "/changelog/v4-indexing", engine: "IndexNow" },
+  { url: "/docs/getting-started", engine: "Google" },
+  { url: "/pricing/enterprise", engine: "IndexNow" },
+  { url: "/blog/seo-in-2025", engine: "Bing" },
+  { url: "/products/summer-sale", engine: "IndexNow" },
+  { url: "/about/team", engine: "Google" },
 ];
 
+type FeedRow = {
+  id: number;
+  url: string;
+  engine: string;
+  status: "queued" | "indexed";
+};
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      delay: 0.15,
+      ease: [0.16, 1, 0.3, 1],
+      when: "beforeChildren",
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+const rowVariants: Variants = {
+  enter: { opacity: 0, y: -20, scale: 0.96 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } },
+  exit: { opacity: 0, y: 16, scale: 0.94, transition: { duration: 0.25, ease: [0.4, 0, 1, 1] } },
+};
+
+let counter = 0;
+
 export default function LandingProductPreview({ className }: { className?: string }) {
+  const [feed, setFeed] = useState<FeedRow[]>(() =>
+    URL_POOL.slice(0, 3).map((r, i) => ({ ...r, id: i, status: "indexed" as const }))
+  );
+
+  useEffect(() => {
+    const tick = () => {
+      counter += 1;
+      const template = URL_POOL[counter % URL_POOL.length];
+      const newRow: FeedRow = { ...template, id: Date.now(), status: "queued" };
+
+      // Insert new row at top, cap list at 4
+      setFeed((prev) => [newRow, ...prev].slice(0, 4));
+
+      // After 900ms, mark it as indexed
+      setTimeout(() => {
+        setFeed((prev) =>
+          prev.map((r) => (r.id === newRow.id ? { ...r, status: "indexed" } : r))
+        );
+      }, 900);
+    };
+
+    const interval = setInterval(tick, 2200);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-50px" }}
       className={cn("relative", className)}
     >
       <div
@@ -25,58 +97,115 @@ export default function LandingProductPreview({ className }: { className?: strin
       <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 shadow-2xl shadow-primary/5 ring-1 ring-black/[0.04] backdrop-blur-md dark:bg-card/50 dark:ring-white/[0.06]">
         <div className="flex items-center justify-between gap-3 border-b border-border/60 px-4 py-3 sm:px-5">
           <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-              <Radar className="h-4 w-4" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary relative">
+              <motion.div
+                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-0 bg-primary/20 rounded-lg"
+              />
+              <Radar className="h-4 w-4 relative z-10" />
             </span>
             <span className="truncate">Submission workspace</span>
           </div>
-          <span className="hidden shrink-0 rounded-full bg-pink-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 sm:inline">
+          <motion.span
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.8, duration: 0.4 }}
+            className="hidden shrink-0 rounded-full bg-pink-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 sm:inline"
+          >
             Live sync
-          </span>
+          </motion.span>
         </div>
 
         <div className="grid gap-4 p-4 sm:grid-cols-2 sm:gap-5 sm:p-5">
-          <div className="rounded-xl border border-border/60 bg-muted/30 p-4 dark:bg-muted/10">
+          <motion.div variants={itemVariants} className="rounded-xl border border-border/60 bg-muted/30 p-4 dark:bg-muted/10 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Sitemap</p>
             <p className="mt-2 truncate font-mono text-xs text-foreground sm:text-sm">yoursite.com/sitemap.xml</p>
             <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
               <Globe2 className="h-3.5 w-3.5 text-primary" />
               <span>Last crawl · 2m ago</span>
             </div>
-          </div>
-          <div className="rounded-xl border border-border/60 bg-muted/30 p-4 dark:bg-muted/10">
+          </motion.div>
+          <motion.div variants={itemVariants} className="rounded-xl border border-border/60 bg-muted/30 p-4 dark:bg-muted/10">
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Queue</p>
-            <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight text-foreground">24</p>
+            <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight text-foreground">
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.5 }}
+              >
+                24
+              </motion.span>
+            </p>
             <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
               <Zap className="h-3.5 w-3.5 text-amber-500" />
               New URLs detected today
             </p>
-          </div>
+          </motion.div>
         </div>
 
         <div className="border-t border-border/60 px-2 pb-3 sm:px-4">
-          <p className="px-2 py-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground sm:px-0">
-            Recent pushes
-          </p>
-          <ul className="space-y-1">
-            {rows.map((row, i) => (
-              <li
-                key={i}
-                className="flex items-center justify-between gap-2 rounded-lg px-2 py-2.5 text-xs hover:bg-muted/40 sm:px-3"
-              >
-                <span className="min-w-0 truncate font-mono text-[11px] text-muted-foreground sm:text-xs">{row.url}</span>
-                <span className="hidden shrink-0 text-[10px] font-semibold uppercase text-muted-foreground/80 sm:inline">
-                  {row.engine}
-                </span>
-                {row.status === "ok" ? (
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-pink-500" aria-label="Delivered" />
-                ) : (
-                  <span className="shrink-0 rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
-                    Queued
+          <motion.div variants={itemVariants} className="flex items-center justify-between px-2 py-2 sm:px-0">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              Recent pushes
+            </p>
+            <span className="flex items-center gap-1 text-[10px] font-bold text-pink-500 uppercase tracking-wider">
+              <motion.span
+                animate={{ opacity: [1, 0.3, 1] }}
+                transition={{ duration: 1.4, repeat: Infinity }}
+                className="h-1.5 w-1.5 rounded-full bg-pink-500 inline-block"
+              />
+              Live
+            </span>
+          </motion.div>
+
+          <ul className="space-y-1 overflow-hidden" style={{ minHeight: "9rem" }}>
+            <AnimatePresence initial={false} mode="popLayout">
+              {feed.map((row) => (
+                <motion.li
+                  key={row.id}
+                  variants={rowVariants}
+                  initial="enter"
+                  animate="visible"
+                  exit="exit"
+                  layout
+                  className="flex items-center justify-between gap-2 rounded-lg px-2 py-2.5 text-xs sm:px-3 transition-colors"
+                >
+                  <span className="min-w-0 truncate font-mono text-[11px] text-muted-foreground sm:text-xs">
+                    {row.url}
                   </span>
-                )}
-              </li>
-            ))}
+                  <span className="hidden shrink-0 text-[10px] font-semibold uppercase text-muted-foreground/60 sm:inline">
+                    {row.engine}
+                  </span>
+                  <AnimatePresence mode="wait">
+                    {row.status === "indexed" ? (
+                      <motion.div
+                        key="indexed"
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0, opacity: 0 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      >
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-pink-500" aria-label="Indexed" />
+                      </motion.div>
+                    ) : (
+                      <motion.span
+                        key="queued"
+                        initial={{ opacity: 0, x: 6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -6 }}
+                        transition={{ duration: 0.2 }}
+                        className="shrink-0 inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-600"
+                      >
+                        <Clock className="h-2.5 w-2.5" />
+                        Queued
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </motion.li>
+              ))}
+            </AnimatePresence>
           </ul>
         </div>
       </div>

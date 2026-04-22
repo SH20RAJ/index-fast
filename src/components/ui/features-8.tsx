@@ -38,6 +38,19 @@ export function Features() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
+          {/* Section heading */}
+          <motion.div variants={itemVariants} className="mb-12 text-center space-y-3">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
+              Why IndexFast
+            </p>
+            <h2 className="text-3xl font-serif font-bold tracking-tight text-foreground sm:text-4xl">
+              Everything you need to get indexed
+            </h2>
+            <p className="mx-auto max-w-xl text-sm text-muted-foreground sm:text-base">
+              Automated, multi-engine indexing built for teams that can't afford to wait weeks for Google to notice them.
+            </p>
+          </motion.div>
+
           <div className="relative z-10 grid grid-cols-6 gap-3">
             {/* Card 1: 120+ Search Engines */}
             <motion.div className="col-span-full lg:col-span-2" variants={itemVariants}>
