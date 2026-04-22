@@ -59,7 +59,7 @@ export default function ManualPushCard({
               <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 px-1">Target Sitemap</Label>
               <Input 
                 value={sitemapUrl} 
-                onChange={(e) => onSitemapUrlChange(e.target.value)} 
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSitemapUrlChange(e.target.value)} 
                 className="h-12 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 px-4"
               />
             </div>
@@ -70,7 +70,7 @@ export default function ManualPushCard({
               <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 px-1">URL List (One per line)</Label>
               <Textarea 
                 value={manualUrls} 
-                onChange={(e) => onManualUrlsChange(e.target.value)} 
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onManualUrlsChange(e.target.value)} 
                 className="min-h-[200px] rounded-2xl bg-zinc-50 border-none dark:bg-white/5 p-4 resize-none"
               />
             </div>

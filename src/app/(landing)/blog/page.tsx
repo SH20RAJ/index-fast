@@ -3,91 +3,93 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { BLOG_POSTS } from "@/lib/blog-catalog";
+import { ArrowRight, Clock, Calendar } from "lucide-react";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
 
 export const metadata: Metadata = {
-  title: "SEO & GEO Blog",
+  title: "Blog - Indexing & SEO Guides",
   description:
-    "Long-form SEO and GEO playbooks for faster indexing, Bing visibility, AI assistant citations, and product-led growth with free tools.",
-  keywords: [
-    "indexnow blog",
-    "seo geo blog",
-    "bing indexing guides",
-    "ai visibility seo",
-    "programmatic seo indexing",
-    "seo saas growth blog",
-  ],
+    "Practical guides to help you get indexed faster and grow your website traffic.",
   alternates: {
     canonical: "/blog",
   },
-  openGraph: {
-    title: "SEO & GEO Blog | IndexFast",
-    description:
-      "Practical long-form guides on indexing, technical SEO, GEO, and conversion-led tool strategy.",
-    url: "/blog",
-    type: "website",
-  },
-};
-
-const blogCollectionJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Blog",
-  name: "IndexFast SEO and GEO Blog",
-  description:
-    "Long-form guides about indexing automation, technical SEO workflows, and generative engine optimization.",
-  url: `${siteUrl}/blog`,
-  blogPost: BLOG_POSTS.map((post) => ({
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.description,
-    datePublished: post.publishedAt,
-    dateModified: post.updatedAt,
-    author: {
-      "@type": "Organization",
-      name: post.author,
-    },
-    mainEntityOfPage: `${siteUrl}/blog/${post.slug}`,
-  })),
 };
 
 export default function BlogIndexPage() {
-  return (
-    <>
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <div className="mb-8 space-y-3 sm:mb-10">
-          <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Our Blog</p>
-          <h1 className="max-w-4xl text-4xl font-black tracking-tight sm:text-5xl">
-            SEO and indexing guides for your website
-          </h1>
-          <p className="max-w-3xl text-lg text-muted-foreground">
-            Simple tips and guides to help you get more traffic and rank faster.
-          </p>
-        </div>
+  // Sort posts by date (newest first)
+  const sortedPosts = [...BLOG_POSTS].sort((a, b) => 
+    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {BLOG_POSTS.map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="block h-full">
-              <Card className="h-full border-border/70 bg-card/70 transition-colors hover:border-primary/40">
-                <CardContent className="space-y-3 p-5 sm:p-6">
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary" className="text-[11px] uppercase">
-                      {post.primaryKeyword}
-                    </Badge>
-                    <Badge variant="outline" className="text-[11px]">
-                      {post.readingMinutes} min read
-                    </Badge>
+  return (
+    <main className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="border-b border-border/40 bg-zinc-50/50 dark:bg-zinc-950/50">
+        <div className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
+          <div className="space-y-4">
+            <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
+              Guides
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl max-w-3xl">
+              SEO and indexing <br />
+              <span className="text-muted-foreground">guides for growth.</span>
+            </h1>
+            <p className="max-w-2xl text-base text-muted-foreground sm:text-lg leading-relaxed">
+              Step-by-step playbooks to help you get your website noticed by search engines and AI assistants.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Blog Feed */}
+      <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+          {sortedPosts.map((post) => (
+            <Link key={post.slug} href={`/blog/${post.slug}`} className="group">
+              <Card className="h-full overflow-hidden border-border/50 bg-card transition-all duration-300 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 rounded-2xl">
+                <CardContent className="p-0">
+                  <div className="p-6 sm:p-8 space-y-6">
+                    <div className="flex items-center justify-between">
+                      <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 hover:bg-primary/10 text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5">
+                        {post.primaryKeyword}
+                      </Badge>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+                        <Clock className="h-3.5 w-3.5" />
+                        {post.readingMinutes} min read
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h2 className="text-2xl font-bold tracking-tight group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+                        {post.title}
+                      </h2>
+                      <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                        {post.description}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Calendar className="h-3.5 w-3.5" />
+                        {new Date(post.publishedAt).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric' 
+                        })}
+                      </div>
+                      <div className="flex items-center gap-1 text-sm font-bold text-primary opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">
+                        Read Guide
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
+                    </div>
                   </div>
-                  <h2 className="text-2xl font-bold tracking-tight">{post.title}</h2>
-                  <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{post.description}</p>
-                  <p className="text-xs text-muted-foreground">Published {post.publishedAt}</p>
                 </CardContent>
               </Card>
             </Link>
           ))}
         </div>
-      </main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogCollectionJsonLd) }} />
-    </>
+      </div>
+    </main>
   );
 }

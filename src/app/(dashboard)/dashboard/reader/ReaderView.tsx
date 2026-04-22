@@ -78,9 +78,9 @@ export default function ReaderView() {
                  <Input
                    placeholder="https://example.com/blog-post"
                    value={url}
-                   onChange={(e) => setUrl(e.target.value)}
+                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
                    className="h-14 pl-12 rounded-2xl bg-zinc-50 border-zinc-100 focus-visible:ring-rose-500/20 dark:bg-white/5 dark:border-white/10"
-                   onKeyDown={(e) => e.key === "Enter" && handleRead()}
+                   onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleRead()}
                  />
               </div>
               <Button 

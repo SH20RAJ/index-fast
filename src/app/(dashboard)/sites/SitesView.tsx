@@ -87,7 +87,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
         <Input
           value={siteSearchQuery}
-          onChange={(e) => setSiteSearchQuery(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSiteSearchQuery(e.target.value)}
           placeholder="Filter sites..."
           className="pl-10 h-10 bg-muted/30 border-none rounded-xl focus-visible:ring-1 focus-visible:ring-primary/20"
         />
