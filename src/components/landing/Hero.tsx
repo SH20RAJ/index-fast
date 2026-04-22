@@ -16,7 +16,7 @@ const checklist = [
 const stats = [
   { value: "< 60s", label: "Indexing Speed" },
   { value: "120+", label: "Search Engines" },
-  { value: "10K+", label: "Pages Indexed" },
+  { value: "10M+", label: "Pages Indexed" },
 ];
 
 export default function Hero() {
