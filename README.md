@@ -28,9 +28,10 @@ Automated search engine indexing for bloggers, vibe coders, and SEO enthusiasts.
 - **AI View:** See exactly what LLMs (ChatGPT, Claude) read from your pages by stripping away design bloat.
 - **Discoverability Score:** Track how likely your content is to be cited by AI assistants.
 
-### 5. GSC One-Click Importer
-- **Connect:** Securely list all your verified sites from Google Search Console via Stack Auth.
-- **Sync:** Import sites and their metadata in one click to start tracking.
+### 6. MCP Support (Model Context Protocol)
+- **AI-First:** Connect IndexFast to your AI agents (Claude Desktop, Cursor, Windsurf).
+- **Tooling:** Submit URLs, run SEO audits, and check usage directly from your chat interface or IDE.
+- **Documentation:** See [docs/mcp.md](/docs/mcp.md) for setup instructions.
 
 ## 💻 Tech Stack
 

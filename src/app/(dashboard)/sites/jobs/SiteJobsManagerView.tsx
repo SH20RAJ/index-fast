@@ -18,6 +18,7 @@ import { Loader2, Globe, AlertCircle, Calendar } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/dashboard/PageHeader";
+import { useSiteContext } from "@/components/dashboard/SiteContext";
 import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";
 
 interface SiteOption {
@@ -38,12 +39,19 @@ interface SiteJobsResponse {
 export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsManagerViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [siteId, setSiteId] = useState<string>(initialSiteId ?? "");
+  const { selectedSite: globalSite } = useSiteContext();
+  const [siteId, setSiteId] = useState<string>(globalSite?.id || initialSiteId || "");
   const [jobs, setJobs] = useState<CronJob[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const selectedSite = useMemo(() => sites.find((site) => site.id === siteId) ?? null, [sites, siteId]);
+
+  useEffect(() => {
+    if (globalSite?.id && globalSite.id !== siteId) {
+      setSiteId(globalSite.id);
+    }
+  }, [globalSite, siteId]);
 
   async function loadJobs(targetSiteId: string) {
     if (!targetSiteId) {
@@ -122,15 +130,6 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
           title="Automation"
           description="Schedule recurring submissions and monitor status."
         />
-        <div className="w-full sm:w-[280px]">
-          <Select
-            value={siteId}
-            onChange={(val: any) => handleSiteChange(typeof val === "object" && val !== null ? val.value : (val as string))}
-            options={sites.map((site) => ({ label: site.url, value: site.id }))}
-            placeholder="Select a website"
-            className="w-full h-11"
-          />
-        </div>
       </div>
 
       {loading && (
