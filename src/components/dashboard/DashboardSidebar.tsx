@@ -22,6 +22,7 @@ import {
   Box,
   LineChart,
   RefreshCw,
+  Bot,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -75,6 +76,16 @@ const navSections: NavSection[] = [
         icon: Box,
       },
     ]
+  },
+  {
+    label: "AI",
+    items: [
+      {
+        label: "AI Agents (MCP)",
+        href: "/dashboard/mcp",
+        icon: Bot,
+      },
+    ],
   },
   {
     label: "Sites",

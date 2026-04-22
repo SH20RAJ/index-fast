@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, type Variants } from "framer-motion";
 import { AlertCircle, ArrowRight, SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -52,26 +53,19 @@ export default function PainSection() {
             variants={itemVariants}
             className="relative aspect-square sm:aspect-video lg:aspect-square bg-card rounded-3xl border border-border shadow-2xl overflow-hidden group"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center space-y-4">
-               <div className="h-20 w-20 rounded-2xl bg-muted flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500">
-                  <SearchX className="h-10 w-10 text-muted-foreground/40" />
-               </div>
-               <p className="text-sm font-bold text-muted-foreground uppercase tracking-tighter opacity-50">Search Results</p>
-               <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: "0%" }}
-                    whileInView={{ width: "100%" }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="h-full bg-primary/20"
-                  />
-               </div>
-               <p className="font-serif italic text-muted-foreground/60">"Your page not found..."</p>
-            </div>
+            <Image 
+              src="/images/page_not_found.png"
+              alt="Page not found illustration"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 512px"
+              className="object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            
             {/* Visual indicator of "Missing" */}
-            <div className="absolute top-4 right-4 flex gap-1">
-               <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-               <div className="h-1.5 w-1.5 rounded-full bg-red-500/40" />
+            <div className="absolute top-6 right-6 flex gap-1.5">
+               <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+               <div className="h-2 w-2 rounded-full bg-red-500/20" />
             </div>
           </motion.div>
         </motion.div>

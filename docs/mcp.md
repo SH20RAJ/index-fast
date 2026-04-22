@@ -2,6 +2,13 @@
 
 IndexFast supports the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/), allowing AI agents (like Claude Desktop, Windsurf, or Cursor) to interact with your indexing dashboard, submit URLs, and run SEO audits directly.
 
+## Getting Started
+
+The easiest way to set up MCP is to visit the **AI Agents (MCP)** section in your [dashboard](https://www.indexfast.co/dashboard/mcp). There, you will find:
+- Your personal API key.
+- Pre-configured JSON snippets for Claude Desktop.
+- Step-by-step connection guides for Cursor and Windsurf.
+
 ## Endpoint
 
 - **URL:** `https://www.indexfast.co/api/mcp`

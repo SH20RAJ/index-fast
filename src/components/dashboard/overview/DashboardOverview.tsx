@@ -18,10 +18,13 @@ import {
   CalendarClock,
   BarChart3,
   ListChecks,
+  Check,
+  ShieldCheck,
 } from "lucide-react";
 import type { DashboardData } from "@/app/(dashboard)/actions";
 import { motion } from "framer-motion";
 import AddSiteFlow from "@/components/dashboard/AddSiteFlow";
+import { cn } from "@/lib/utils";
 
 interface DashboardOverviewProps {
   data: DashboardData;
