@@ -102,7 +102,7 @@ export default function Hero() {
                 </div>
               )}
               <Button asChild variant="outline" size="lg" className="h-12 rounded-xl border-border/80 px-8 text-base font-semibold">
-                <Link href="/how-it-works">How it works</Link>
+                <Link href="/tools">Try free tools</Link>
               </Button>
             </motion.div>
 
