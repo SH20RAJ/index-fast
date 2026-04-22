@@ -186,12 +186,12 @@ export default function CronJobManager({
           </DialogTrigger>
           <DialogContent className="sm:max-w-[400px] rounded-[32px] border-none shadow-2xl">
             <DialogHeader>
-              <DialogTitle className="text-xl font-light">New Automation</DialogTitle>
-              <DialogDescription className="text-xs font-light text-zinc-500 italic">
-                Broadcasting {siteUrl} to the unseen stream.
+              <DialogTitle className="text-xl font-semibold">New Automation</DialogTitle>
+              <DialogDescription className="text-xs text-zinc-500">
+                Setup automated indexing for {siteUrl}
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-6 py-6">
+            <div className="grid gap-5 py-5">
               <div className="space-y-2 px-1">
                 <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Frequency</Label>
                 <Select value={frequency} onValueChange={(v: any) => setFrequency(v)} options={[
@@ -202,18 +202,18 @@ export default function CronJobManager({
                 ]} />
               </div>
               <div className="space-y-2 px-1">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Network</Label>
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Service</Label>
                 <Select value={engine} onValueChange={(v: any) => setEngine(v)} options={[
-                  { label: "IndexNow (Global)", value: "indexnow" },
-                  { label: "Bing Webmaster", value: "bing" },
-                  { label: "Google Console", value: "google" },
+                  { label: "IndexNow", value: "indexnow" },
+                  { label: "Bing", value: "bing" },
+                  { label: "Google", value: "google" },
                 ]} />
               </div>
               <div className="space-y-2 px-1">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Signal Source</Label>
+                <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Pages Source</Label>
                 <Select value={sourceMode} onValueChange={(v: any) => setSourceMode(v)} options={[
-                  { label: "Sitemap Discovery", value: "sitemap" },
-                  { label: "Detected Inventory", value: "inventory" },
+                  { label: "Sitemap", value: "sitemap" },
+                  { label: "Found pages", value: "inventory" },
                 ]} />
               </div>
             </div>
@@ -231,12 +231,12 @@ export default function CronJobManager({
         {isLoading ? (
           <div className="py-12 flex flex-col items-center justify-center gap-4">
             <Loader2 className="h-6 w-6 animate-spin text-rose-500" />
-            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Syncing schedules...</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Loading...</p>
           </div>
         ) : initialJobs.length === 0 ? (
           <div className="py-12 text-center rounded-[24px] bg-zinc-50/50 dark:bg-white/[0.02] border border-zinc-100 dark:border-white/5">
             <Clock className="mx-auto h-6 w-6 text-zinc-200" />
-            <p className="mt-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400 italic px-8 leading-relaxed">No automated signals are currently active for this domain.</p>
+            <p className="mt-4 text-[10px] font-bold uppercase tracking-widest text-zinc-400 px-8 leading-relaxed">No automations found for this site.</p>
           </div>
         ) : (
           <div className="grid gap-3">

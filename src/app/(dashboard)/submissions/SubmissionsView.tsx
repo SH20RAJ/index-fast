@@ -30,7 +30,7 @@ import { useSiteContext } from "@/components/dashboard/SiteContext";
 type SubmissionRow = {
   id: string;
   url: string;
-  engine: "bing" | "indexnow" | "google" | "pingomatic" | "pingler";
+  engine: "bing" | "indexnow" | "google" | "pingomatic" | "pingler" | "yandex" | "baidu" | "naver";
   status: "success" | "failed" | "pending";
   errorMessage: string | null;
   createdAt: string | null;
@@ -170,6 +170,9 @@ export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
               { label: "Google", value: "google" },
               { label: "Ping-o-Matic", value: "pingomatic" },
               { label: "Pingler", value: "pingler" },
+              { label: "Yandex", value: "yandex" },
+              { label: "Baidu", value: "baidu" },
+              { label: "Naver", value: "naver" },
             ]}
             className="w-full h-10"
           />

@@ -21,6 +21,7 @@ import {
   ChevronDown,
   Box,
   LineChart,
+  RefreshCw,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -53,18 +54,18 @@ const navSections: NavSection[] = [
         href: "/dashboard",
         icon: LayoutDashboard,
       },
-      {
-        label: "Stats",
-        href: "/dashboard/insights",
-        icon: LineChart,
-      },
+      // {
+      //   label: "Stats",
+      //   href: "/dashboard/insights",
+      //   icon: LineChart,
+      // },
     ],
   },
   {
     label: "Reports",
     items: [
       {
-        label: "History",
+        label: "Recent Activity",
         href: "/submissions",
         icon: Activity,
       },
@@ -79,17 +80,17 @@ const navSections: NavSection[] = [
     label: "Sites",
     items: [
       {
-        label: "All Sites",
+        label: "Websites",
         href: "/sites",
         icon: Globe,
       },
       {
-        label: "Site Pages",
+        label: "Pages",
         href: "/sites/url",
         icon: LayoutDashboard,
       },
       {
-        label: "Auto Jobs",
+        label: "Automation",
         href: "/sites/jobs",
         icon: RefreshCw,
       },
@@ -386,7 +387,7 @@ export default function DashboardSidebar() {
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:h-screen md:w-72 md:flex-col md:overflow-visible z-20">
+      <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:h-screen md:w-72 md:flex-col z-20 overflow-y-auto border-r border-border/70">
         <SidebarContent />
       </aside>
     </>

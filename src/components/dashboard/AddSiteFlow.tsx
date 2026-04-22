@@ -141,16 +141,16 @@ export default function AddSiteFlow() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-[32px] border-none shadow-2xl">
         <div className="p-8">
-          <DialogHeader className="mb-6">
-            <DialogTitle className="text-2xl font-bold tracking-tight text-center">
-              {step === "choice" && "Add Website"}
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-xl font-bold tracking-tight text-center">
+              {step === "choice" && "Add Site"}
               {step === "manual" && "Enter URL"}
               {step === "google" && "Select Properties"}
             </DialogTitle>
-            <DialogDescription className="text-center">
+            <DialogDescription className="text-center text-sm">
               {step === "choice" && "Choose how you want to add your site"}
-              {step === "manual" && "Type the website address manually"}
-              {step === "google" && "Choose sites from your Google Console"}
+              {step === "manual" && "Type the website address"}
+              {step === "google" && "Import from Google Search Console"}
             </DialogDescription>
           </DialogHeader>
 
@@ -194,7 +194,7 @@ export default function AddSiteFlow() {
                   id="url"
                   placeholder="https://example.com" 
                   value={manualUrl}
-                  onChange={(e) => setManualUrl(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setManualUrl(e.target.value)}
                   className="h-12 rounded-xl bg-zinc-50 border-none dark:bg-white/5"
                   autoFocus
                 />

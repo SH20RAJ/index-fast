@@ -63,58 +63,54 @@ export default function ArchiveSubmissionPanel({ websiteId, websiteUrl }: Archiv
   }
 
   return (
-    <DashboardPanel title="Wayback Machine Archive" className="lg:flex-1">
+    <DashboardPanel title="Archive" className="lg:flex-1">
       <div className="space-y-4">
-        {/* Info Card */}
         <Card className="border-border/40 bg-background/60">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <Archive className="h-4 w-4" />
-              Submit to Internet Archive
+              <Archive className="h-4 w-4 text-primary" />
+              Internet Archive
             </CardTitle>
             <CardDescription className="text-xs">
-              Create a permanent backup of your site on the Wayback Machine (archive.org). Free, permanent, and no account needed.
+              Save your site to the Wayback Machine for free.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* URL Display */}
             <div className="rounded-lg border border-border/40 bg-background/40 p-3">
-              <p className="text-xs text-muted-foreground font-medium mb-1">Target URL</p>
+              <p className="text-xs text-muted-foreground font-medium mb-1">Website</p>
               <code className="text-xs font-mono break-all text-foreground">{websiteUrl || "Your website"}</code>
             </div>
 
-            {/* Options */}
             <div className="space-y-3 pb-2 border-b border-border/30">
               <label className="flex items-start gap-2 cursor-pointer">
                 <Checkbox
                   checked={includeSubpaths}
                   onCheckedChange={(checked) => setIncludeSubpaths(checked as boolean)}
-                  className="mt-1"
+                  className="mt-0.5"
                 />
                 <div className="flex-1">
-                  <p className="text-sm font-medium">Include common subpaths</p>
-                  <p className="text-xs text-muted-foreground">Also archive /blog, /pricing, /contact</p>
+                  <p className="text-sm font-medium">Archive main pages</p>
+                  <p className="text-xs text-muted-foreground">Saves /blog, /pricing, and /contact</p>
                 </div>
               </label>
             </div>
 
-            {/* Submit Button */}
             <Button
               onClick={handleSubmitToArchive}
               disabled={loading}
-              className="w-full gap-2"
+              className="w-full gap-2 rounded-lg"
               variant="outline"
+              size="sm"
             >
               {loading ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Archiving...
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Saving...
                 </>
               ) : (
                 <>
-                  <Archive className="h-4 w-4" />
-                  Submit to Wayback Machine
-                  <ArrowRight className="h-4 w-4" />
+                  <Archive className="h-3.5 w-3.5" />
+                  Start Archiving
                 </>
               )}
             </Button>
@@ -154,12 +150,10 @@ export default function ArchiveSubmissionPanel({ websiteId, websiteUrl }: Archiv
 
             {/* Benefits */}
             <div className="rounded-lg border border-border/30 bg-muted/20 p-3">
-              <p className="text-xs font-semibold text-foreground mb-2">Benefits:</p>
               <ul className="text-xs text-muted-foreground space-y-1">
-                <li>✓ Permanent backup of your site</li>
-                <li>✓ Helps Google understand your site better</li>
-                <li>✓ SEO preservation and credibility</li>
-                <li>✓ Historical record for future reference</li>
+                <li>✓ Permanent site backup</li>
+                <li>✓ Better SEO credibility</li>
+                <li>✓ Historical record</li>
               </ul>
             </div>
           </CardContent>

@@ -55,11 +55,11 @@ export default function SiteCard({ site, onSync, onOpenGsc, onDeleteSite }: Site
             
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-black tracking-tighter leading-none group-hover:text-primary transition-colors">
+                <h3 className="text-lg font-bold tracking-tight leading-none group-hover:text-primary transition-colors">
                   {hostname}
                 </h3>
                 {site.isPro && (
-                  <Badge variant="secondary" className="h-5 px-1.5 text-[9px] font-black uppercase tracking-widest bg-primary/10 text-primary border-none">
+                  <Badge variant="secondary" className="h-5 px-1.5 text-[9px] font-bold uppercase tracking-widest bg-primary/10 text-primary border-none">
                     Pro
                   </Badge>
                 )}
@@ -73,10 +73,10 @@ export default function SiteCard({ site, onSync, onOpenGsc, onDeleteSite }: Site
 
           <div className="flex flex-wrap items-center gap-6 md:gap-8">
             <div className="hidden lg:flex flex-col items-end gap-1">
-              <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">Last Sync</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/40">Synced</span>
               <div className="flex items-center gap-1.5 text-xs font-bold">
                 <Activity className="h-3 w-3 text-pink-500" />
-                {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : "Not synced"}
+                {site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : "Never"}
               </div>
             </div>
 
@@ -96,7 +96,7 @@ export default function SiteCard({ site, onSync, onOpenGsc, onDeleteSite }: Site
                         <RefreshCw className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent className="font-bold">Sync Sitemap</TooltipContent>
+                    <TooltipContent className="font-semibold text-xs">Sync</TooltipContent>
                   </Tooltip>
 
                   <Tooltip>
@@ -112,7 +112,7 @@ export default function SiteCard({ site, onSync, onOpenGsc, onDeleteSite }: Site
                         </Link>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent className="font-bold">AI SEO Audit</TooltipContent>
+                    <TooltipContent className="font-semibold text-xs">Audit</TooltipContent>
                   </Tooltip>
 
                   <Tooltip>
@@ -127,7 +127,7 @@ export default function SiteCard({ site, onSync, onOpenGsc, onDeleteSite }: Site
                         <Search className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent className="font-bold">GSC Insights</TooltipContent>
+                    <TooltipContent className="font-semibold text-xs">Insights</TooltipContent>
                   </Tooltip>
 
                   <div className="w-px h-6 bg-border/40 mx-1" />
@@ -144,7 +144,7 @@ export default function SiteCard({ site, onSync, onOpenGsc, onDeleteSite }: Site
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent className="font-bold">Remove Site</TooltipContent>
+                    <TooltipContent className="font-semibold text-xs">Delete</TooltipContent>
                   </Tooltip>
                 </div>
               </TooltipProvider>

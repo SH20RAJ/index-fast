@@ -60,22 +60,22 @@ function statusTone(rate: number) {
 
 const quickActions = [
   {
-    label: "Add a website",
+    label: "Add site",
     href: "/sites",
     icon: Plus,
-    description: "Connect your first site to start indexing.",
+    description: "Connect a new site to start indexing.",
   },
   {
-    label: "View activity",
+    label: "Activity",
     href: "/submissions",
     icon: Activity,
-    description: "Check your recent indexing results.",
+    description: "View your recent indexing updates.",
   },
   {
-    label: "Account settings",
+    label: "Settings",
     href: "/settings",
     icon: Settings,
-    description: "Manage your plan and preferences.",
+    description: "Manage your account and plan.",
   },
 ];
 
@@ -91,13 +91,13 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
 
   const scorecards = [
     {
-      label: "Websites",
+      label: "Sites",
       value: formatNumber(data.websitesCount),
-      hint: `${websiteHeadroom} available`,
+      hint: `${websiteHeadroom} free`,
       icon: Globe,
     },
     {
-      label: "Usage this month",
+      label: "Used this month",
       value: formatNumber(data.submissionsThisMonth),
       hint: `${formatNumber(submissionsHeadroom)} left`,
       icon: BarChart3,
@@ -109,9 +109,9 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
       icon: Shield,
     },
     {
-      label: "Recent Activity",
+      label: "Last update",
       value: formatDate(data.recentSubmissions[0]?.createdAt),
-      hint: "View history",
+      hint: "View all",
       icon: CalendarClock,
     },
   ];
@@ -135,34 +135,34 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
         </Card>
       ) : null}
 
-      <section className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <section className="relative overflow-hidden rounded-xl border border-border bg-card shadow-sm">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_60%_at_0%_0%,color-mix(in_oklab,var(--primary)_18%,transparent),transparent_55%),radial-gradient(ellipse_70%_50%_at_100%_0%,color-mix(in_oklab,var(--primary)_12%,transparent),transparent_50%)]" />
-        <div className="relative grid gap-8 p-6 md:grid-cols-[1.25fr_0.75fr] md:p-10">
-          <div className="space-y-5">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-              {planTone} · workspace
+        <div className="relative grid gap-6 p-6 md:grid-cols-[1.3fr_0.7fr] md:p-8">
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <Sparkles className="h-3 w-3 text-primary" />
+              {planTone} Workspace
             </div>
-            <div className="space-y-3">
-              <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                Indexing health at a glance
+            <div className="space-y-2">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                Indexing status
               </h2>
-              <p className="max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
-                Capacity, delivery quality, and your latest pushes—organized the way modern SaaS dashboards are: scannable in five seconds, actionable in two clicks.
+              <p className="max-w-lg text-sm leading-relaxed text-muted-foreground">
+                Monitor your website's indexing health, success rate, and recent updates in one place.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3 pt-1">
-              <Button asChild size="lg" className="h-11 rounded-xl px-7 font-semibold">
+            <div className="flex flex-wrap gap-2 pt-1">
+              <Button asChild size="sm" className="h-9 rounded-lg px-4 font-semibold">
                 <Link href="/sites">
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus className="mr-2 h-3.5 w-3.5" />
                   Connect site
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="h-11 rounded-xl border-border/80 px-6 font-semibold">
+              <Button asChild variant="outline" size="sm" className="h-9 rounded-lg border-border/80 px-4 font-semibold">
                 <Link href="/submissions">
-                  Open stream
-                  <ArrowUpRight className="ml-2 h-4 w-4" />
+                  View activity
+                  <ArrowUpRight className="ml-2 h-3.5 w-3.5" />
                 </Link>
               </Button>
             </div>

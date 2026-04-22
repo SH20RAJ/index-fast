@@ -90,12 +90,12 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
             <Sparkles className="h-8 w-8 text-primary" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-xl font-black tracking-tight">Run AI SEO Audit</h3>
+            <h3 className="text-xl font-bold tracking-tight">SEO Audit</h3>
             <p className="text-sm text-muted-foreground max-w-[280px]">
-              Get instant SEO insights and ready-to-use Cursor prompts to fix your site.
+              Find SEO issues and get AI prompts to fix them instantly.
             </p>
           </div>
-          <Button onClick={runAudit} className="gap-2 font-bold shadow-xl shadow-primary/20">
+          <Button onClick={runAudit} className="gap-2 font-bold shadow-lg shadow-primary/10">
             <RefreshCcw className="h-4 w-4" /> Start Audit
           </Button>
         </CardContent>
@@ -122,13 +122,13 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
               "relative h-20 w-20 rounded-full border-[6px] flex items-center justify-center transition-all duration-700 group-hover:scale-110",
               getScoreColor(score)
             )}>
-              <span className="text-2xl font-black">{score}</span>
+              <span className="text-2xl font-bold">{score}</span>
               <div className="absolute inset-0 rounded-full bg-current opacity-5 animate-pulse" />
             </div>
             <div>
-              <h3 className="text-lg font-black tracking-tight">SEO Health Score</h3>
+              <h3 className="text-lg font-bold tracking-tight">SEO Score</h3>
               <p className="text-xs text-muted-foreground font-medium opacity-70">
-                Based on critical on-page SEO signals
+                Calculated from your page data
               </p>
             </div>
           </div>
@@ -154,8 +154,8 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
                 <CheckCircle2 className="h-6 w-6 text-pink-500" />
               </div>
               <div className="space-y-1">
-                <h4 className="font-black tracking-tight">Everything looks great!</h4>
-                <p className="text-xs text-pink-600/70 font-medium">No critical SEO issues found on this sweep.</p>
+                <h4 className="font-bold tracking-tight">No issues found</h4>
+                <p className="text-xs text-pink-600/70 font-medium">Your site looks good.</p>
               </div>
             </CardContent>
           </Card>
@@ -177,9 +177,9 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
                   
                   <div className="flex-grow space-y-3">
                     <div className="flex items-center justify-between gap-4">
-                      <h4 className="text-base font-black tracking-tight leading-tight">{issue.title}</h4>
+                      <h4 className="text-base font-bold tracking-tight leading-tight">{issue.title}</h4>
                       <Badge variant="outline" className={cn(
-                        "font-black text-[10px] uppercase border-none px-2 py-0.5",
+                        "font-bold text-[10px] uppercase border-none px-2 py-0.5",
                         issue.type === "error" ? "bg-red-500/10 text-red-600" : 
                         issue.type === "warning" ? "bg-amber-500/10 text-amber-600" : 
                         "bg-pink-500/10 text-pink-600"
@@ -193,8 +193,8 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
                     
                     <div className="p-4 rounded-2xl bg-muted/30 border border-border/10 space-y-2 relative group/prompt">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-                          <CheckCircle2 className="h-3 w-3" /> Cursor Prompt to Fix
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                          <CheckCircle2 className="h-3 w-3" /> Fix with AI
                         </span>
                         <TooltipProvider>
                           <Tooltip>

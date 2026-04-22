@@ -8,7 +8,7 @@ import type { AdminDashboardData } from "../actions";
 
 interface AdminDashboardProps {
   data: AdminDashboardData;
-  lockAction: () => Promise<never>;
+  lockAction: () => Promise<void>;
 }
 
 function formatNumber(value: number) {

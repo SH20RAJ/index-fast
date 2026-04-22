@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { getSiteInsightsAction } from "@/app/(dashboard)/actions";
 import { useStackApp } from "@stackframe/stack";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { LineChart as LucideLineChart, AlertCircle, RotateCw, ShieldCheck } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {

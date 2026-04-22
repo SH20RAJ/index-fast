@@ -8,34 +8,34 @@ import { cn } from "@/lib/utils";
 
 function titleFromPath(pathname: string): { title: string; subtitle?: string } {
   if (pathname === "/dashboard" || pathname === "/dashboard/") {
-    return { title: "Overview", subtitle: "Plan health, activity, and next steps" };
+    return { title: "Overview", subtitle: "Your progress and recent activity" };
   }
   if (pathname.startsWith("/dashboard/insights")) {
-    return { title: "Insights", subtitle: "Trends and indexing signals" };
+    return { title: "Insights", subtitle: "Growth and performance" };
   }
   if (pathname.startsWith("/dashboard/sitemaps")) {
-    return { title: "Sitemaps", subtitle: "Sync and inventory" };
+    return { title: "Sitemaps", subtitle: "List of pages found" };
   }
   if (pathname.startsWith("/dashboard/reader")) {
-    return { title: "AI reader", subtitle: "Plain-text view of your pages" };
+    return { title: "AI Reader", subtitle: "See how AI views your pages" };
   }
   if (pathname.startsWith("/dashboard/api")) {
-    return { title: "API", subtitle: "Keys and automation" };
+    return { title: "API", subtitle: "Developer settings" };
   }
   if (pathname.startsWith("/submissions")) {
-    return { title: "Submissions", subtitle: "Stream of indexing events" };
+    return { title: "History", subtitle: "Recent updates" };
   }
   if (pathname.startsWith("/sites/url")) {
-    return { title: "URLs & inventory", subtitle: "Discovered URLs per site" };
+    return { title: "Inventory", subtitle: "All discovered pages" };
   }
   if (pathname.startsWith("/sites/jobs")) {
-    return { title: "Auto jobs", subtitle: "Scheduled sync and pushes" };
+    return { title: "Automation", subtitle: "Automatic sync updates" };
   }
   if (pathname.startsWith("/sites")) {
-    return { title: "Websites", subtitle: "Connected properties" };
+    return { title: "Websites", subtitle: "Your connected sites" };
   }
   if (pathname.startsWith("/toolbox")) {
-    return { title: "Toolbox", subtitle: "Utilities and experiments" };
+    return { title: "Toolbox", subtitle: "Extra tools and utilities" };
   }
   if (pathname.startsWith("/settings")) {
     return { title: "Settings", subtitle: "Account and billing" };
@@ -51,7 +51,7 @@ export default function DashboardTopBar() {
     <header
       className={cn(
         "sticky z-30 -mx-4 mb-6 border-b border-border/60 bg-background/80 px-4 py-3 backdrop-blur-md md:-mx-8 md:mb-8 md:px-8",
-        "top-16 md:top-0",
+        "md:top-0",
       )}
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

@@ -1,59 +1,85 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  Discussion,
-  DiscussionBody,
-  DiscussionContent,
-  DiscussionExpand,
-  DiscussionItem,
-  DiscussionReplies,
-  DiscussionTitle,
-} from "@/components/ui/discussion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Minus } from "lucide-react";
 import { LANDING_FAQS } from "@/lib/landing-faq";
+import { cn } from "@/lib/utils";
 
 export default function FAQ() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
   return (
-    <section id="faq" className="border-b border-border/70 py-14 sm:py-20">
-      <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-10 space-y-3 text-center">
-          <Badge
-            variant="outline"
-            className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase"
-          >
-            Common Questions
-          </Badge>
-          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
-            Frequently asked questions
+    <section id="faq" className="py-20 bg-background border-t border-border/40">
+      <div className="mx-auto max-w-3xl px-6">
+        <div className="text-center mb-16 space-y-4">
+          <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
+            Support
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
+            FAQ
           </h2>
-          <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Everything you need to know about setup, safety, and indexing outcomes.
+          <p className="text-sm text-muted-foreground sm:text-base max-w-lg mx-auto leading-relaxed">
+            Everything you need to know about setting up and getting indexed.
           </p>
         </div>
 
-        {/* Discussion-style FAQ */}
-        <Discussion type="multiple" className="w-full space-y-1">
-          {LANDING_FAQS.map((faq, index) => (
-            <DiscussionItem key={index} value={`item-${index}`}>
-              <DiscussionContent className="gap-2">
-                <div className="flex flex-col gap-2 py-1">
-                  <div className="flex flex-col gap-1">
-                    <DiscussionTitle className="text-base tracking-tight">
-                      {faq.question}
-                    </DiscussionTitle>
+        <div className="space-y-3">
+          {LANDING_FAQS.map((faq, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <div
+                key={index}
+                className={cn(
+                  "group overflow-hidden rounded-2xl border transition-all duration-300",
+                  isOpen 
+                    ? "border-primary/20 bg-primary/[0.02] shadow-sm" 
+                    : "border-border/50 bg-card/50 hover:border-border hover:bg-card"
+                )}
+              >
+                <button
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  className="flex w-full items-center justify-between p-5 text-left transition-colors"
+                >
+                  <span className={cn(
+                    "text-sm font-semibold tracking-tight sm:text-base transition-colors",
+                    isOpen ? "text-primary" : "text-foreground"
+                  )}>
+                    {faq.question}
+                  </span>
+                  <div className={cn(
+                    "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all duration-300",
+                    isOpen 
+                      ? "rotate-90 border-primary bg-primary text-white" 
+                      : "border-border text-muted-foreground group-hover:border-foreground group-hover:text-foreground"
+                  )}>
+                    {isOpen ? (
+                      <Minus className="h-3 w-3" />
+                    ) : (
+                      <Plus className="h-3 w-3" />
+                    )}
                   </div>
-                  <DiscussionExpand />
-                </div>
-              </DiscussionContent>
-              <DiscussionReplies>
-                <DiscussionBody className="text-muted-foreground pb-4 pt-2">
-                  {faq.answer}
-                </DiscussionBody>
-              </DiscussionReplies>
-            </DiscussionItem>
-          ))}
-        </Discussion>
+                </button>
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                    >
+                      <div className="px-5 pb-5">
+                        <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+                          {faq.answer}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
