@@ -15,12 +15,12 @@ const countFormatter = new Intl.NumberFormat("en-US");
 
 function getPlanFeatureLines(plan: (typeof plans)[number]) {
   const limitLines = [
-    `${countFormatter.format(plan.submissionLimitMonthly)} URL submissions/month`,
-    `${countFormatter.format(plan.submissionLimitDaily)} URL submissions/day`,
-    plan.cronLimit === 1 ? "1 cron job" : `${countFormatter.format(plan.cronLimit)} cron jobs`,
-    plan.allowHourly ? "Hourly scheduling" : "Daily scheduling",
+    `${countFormatter.format(plan.submissionLimitMonthly)} submissions / month`,
+    `${countFormatter.format(plan.submissionLimitDaily)} submissions / day`,
+    plan.cronLimit === 1 ? "1 automatic job" : `${countFormatter.format(plan.cronLimit)} automatic jobs`,
+    plan.allowHourly ? "Hourly updates" : "Daily updates",
     plan.websiteLimit >= 1000
-      ? "High-volume website support"
+      ? "Support for many websites"
       : `Up to ${countFormatter.format(plan.websiteLimit)} websites`,
   ];
 
@@ -80,9 +80,9 @@ export default function Pricing() {
           <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase">
             Pricing Plans
           </Badge>
-          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">Simple, predictable pricing</h2>
+          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">Simple, honest pricing</h2>
           <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Choose the level of indexing execution your properties need. No hidden fees.
+            Choose the best plan for your website. No hidden costs.
           </p>
         </div>
 

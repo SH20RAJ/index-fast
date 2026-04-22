@@ -15,32 +15,32 @@ export const metadata: Metadata = {
 };
 
 const quickStart = [
-  "Create your IndexFast account and add your primary site URL.",
-  "Upload or verify your IndexNow key file on your root domain.",
-  "Connect a sitemap endpoint (XML sitemap index or standard sitemap).",
-  "Run your first manual submission from the dashboard.",
-  "Enable automated sync to keep fresh URLs flowing without manual work.",
+  "Create your IndexFast account and add your website.",
+  "Verify your IndexNow key on your website's main folder.",
+  "Add your sitemap URL to our system.",
+  "Run your first indexing request from the dashboard.",
+  "Turn on automatic jobs to keep your new pages indexed.",
 ];
 
 const coreModules = [
   {
     title: "Sitemap Scanner",
-    description: "Fetches sitemap URLs, extracts loc entries, and deduplicates the final submission set.",
+    description: "Automatically finds new pages from your sitemap and gets them ready for indexing.",
     icon: FileText,
   },
   {
-    title: "IndexNow Dispatcher",
-    description: "Formats IndexNow payloads and sends batched URL notifications to participating engines.",
+    title: "IndexNow Pinger",
+    description: "Sends instant notifications to search engines whenever you publish new content.",
     icon: Link2,
   },
   {
-    title: "Bing Batch Submitter",
-    description: "Submits URL batches to Bing Webmaster API and stores status outcomes for auditability.",
+    title: "Bing Submitter",
+    description: "Pushes your new pages directly to Bing so they show up in search results faster.",
     icon: Bot,
   },
   {
-    title: "Ops Dashboard",
-    description: "Shows acceptance trends, failures, and run history to support daily SEO operations.",
+    title: "Simple Dashboard",
+    description: "Track your indexing progress and see exactly which pages have been indexed.",
     icon: Gauge,
   },
 ];
@@ -72,14 +72,13 @@ export default function DocsPage() {
       <div className="mx-auto w-full max-w-6xl space-y-12 px-4 sm:px-6 lg:px-8">
         <header className="space-y-5">
           <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase">
-            Product Docs
+            Help Center
           </Badge>
           <h1 className="max-w-4xl text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
-            IndexFast documentation, end to end.
+            Everything you need to know.
           </h1>
           <p className="max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            This page documents the full operating model: setup, submission pipeline, modules, operational checks,
-            troubleshooting flow, and launch guidance for teams that need reliable indexing execution.
+            Learn how to set up your account, connect your website, and start indexing your pages automatically.
           </p>
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <Button asChild className="font-semibold">
@@ -88,7 +87,7 @@ export default function DocsPage() {
               </Link>
             </Button>
             <Button asChild variant="outline" className="font-medium">
-              <Link href="/how-it-works">View workflow overview</Link>
+              <Link href="/how-it-works">See how it works</Link>
             </Button>
           </div>
         </header>
@@ -195,14 +194,14 @@ export default function DocsPage() {
         <Card className="border-border/70 bg-gradient-to-r from-card to-muted/35">
           <CardContent className="flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-black tracking-tight sm:text-2xl">Need implementation support?</h2>
+              <h2 className="text-xl font-black tracking-tight sm:text-2xl">Need more help?</h2>
               <p className="mt-1 text-sm text-muted-foreground sm:text-base">
-                Contact the IndexFast team for onboarding help or workflow tuning.
+                Our support team is here to help you get started or answer any questions.
               </p>
             </div>
             <Button asChild className="sm:shrink-0">
               <Link href="/contact">
-                Contact support <ArrowRight className="ml-2 h-4 w-4" />
+                Contact Us <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </CardContent>

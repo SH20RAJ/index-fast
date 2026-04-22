@@ -70,7 +70,7 @@ export function Features() {
               </Card>
             </motion.div>
 
-            {/* Card 2: Secure API Delivery */}
+            {/* Card 2: Safe and secure */}
             <motion.div className="col-span-full sm:col-span-3 lg:col-span-2" variants={itemVariants}>
               <Card className="relative h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
                 <CardContent className="pt-6">
@@ -82,12 +82,10 @@ export function Features() {
                   </motion.div>
                   <div className="relative z-10 mt-6 space-y-2 text-center">
                     <h2 className="text-lg font-bold transition text-foreground dark:text-white">
-                      Secure API Delivery
+                      Safe and secure
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                      Your URLs are pushed directly over verified HTTPS endpoints.
-                      No third-party proxies, no data leakage — just raw, audited
-                      API calls.
+                      We send your links directly to search engines using secure connections. Your data is always safe and never shared.
                     </p>
                   </div>
                 </CardContent>
@@ -151,11 +149,10 @@ export function Features() {
                   </div>
                   <div className="relative z-10 mt-14 space-y-2 text-center">
                     <h2 className="text-lg font-bold transition text-foreground dark:text-white">
-                      Indexed in under 60 seconds
+                      Real-time indexing
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                      URLs submitted via the IndexNow protocol reach participating
-                      engines in real-time — measured, not estimated.
+                      Your new pages are submitted the moment they are found. Most search engines will see them in under a minute.
                     </p>
                   </div>
                 </CardContent>
@@ -175,11 +172,10 @@ export function Features() {
                     </motion.div>
                     <div className="space-y-2">
                       <h2 className="text-lg font-bold text-zinc-800 transition dark:text-white">
-                        Direct API Injection
+                        Direct submission
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        Skip the crawl queue. Your URLs are pushed directly into
-                        Bing, IndexNow, Yandex, Baidu, and Naver simultaneously.
+                        We push your links directly to Google, Bing, and other search engines. No more waiting for them to find your site.
                       </p>
                     </div>
                   </div>
@@ -255,11 +251,10 @@ export function Features() {
                     </motion.div>
                     <div className="space-y-2">
                       <h2 className="text-lg font-bold transition text-foreground dark:text-white">
-                        Multi-site & Team Access
+                        Manage all your sites
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        Manage unlimited sites from a single dashboard. Built for
-                        agencies, pSEO builders, and indie hackers scaling fast.
+                        Add as many websites as you want and manage them all from one easy dashboard.
                       </p>
                     </div>
                   </div>

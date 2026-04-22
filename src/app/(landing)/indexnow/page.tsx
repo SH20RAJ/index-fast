@@ -44,21 +44,21 @@ export default function IndexNowPage() {
       <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 space-y-3 sm:mb-10">
           <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.14em]">
-            IndexNow Console
+            IndexNow Tool
           </Badge>
-          <h1 className="text-3xl font-black tracking-tight sm:text-4xl">Submit all site URLs to IndexNow</h1>
+          <h1 className="text-3xl font-black tracking-tight sm:text-4xl">Send all your pages to search engines</h1>
           <p className="max-w-3xl text-base text-muted-foreground sm:text-lg">
-            Trigger one-shot submission of all public URLs from your sitemap source directly to IndexNow.
+            Quickly send all your pages to search engines at once so they can find your content faster.
           </p>
         </div>
 
         <Card className="border-border/70 bg-card/80">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
-              <Send className="h-5 w-5" /> Bulk URL Submission
+              <Send className="h-5 w-5" /> Send All Pages
             </CardTitle>
             <CardDescription>
-              This uses your configured IndexNow key and submits all URLs in batches.
+              We'll send all your website's pages to search engines in groups.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -78,11 +78,11 @@ export default function IndexNowPage() {
             <Button onClick={handleSubmitAll} disabled={loading} className="w-full sm:w-auto">
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting to IndexNow...
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
                 </>
               ) : (
                 <>
-                  Submit All URLs <ArrowRight className="ml-2 h-4 w-4" />
+                  Send All Pages <ArrowRight className="ml-2 h-4 w-4" />
                 </>
               )}
             </Button>

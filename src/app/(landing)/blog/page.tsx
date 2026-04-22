@@ -56,12 +56,12 @@ export default function BlogIndexPage() {
     <>
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <div className="mb-8 space-y-3 sm:mb-10">
-          <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Editorial Hub</p>
+          <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Our Blog</p>
           <h1 className="max-w-4xl text-4xl font-black tracking-tight sm:text-5xl">
-            SEO playbooks for indexing and conversion-led growth
+            SEO and indexing guides for your website
           </h1>
           <p className="max-w-3xl text-lg text-muted-foreground">
-            Frameworks and operating models for teams shipping content weekly.
+            Simple tips and guides to help you get more traffic and rank faster.
           </p>
         </div>
 

@@ -10,46 +10,46 @@ import { motion } from "framer-motion";
 const pipeline = [
   {
     id: "01",
-    title: "Connect your site once",
+    title: "Add your site",
     description:
-      "Add your primary domain, sitemap URL, and IndexNow key file. IndexFast validates the setup before running submissions.",
+      "Simply add your domain and sitemap. We'll verify your setup and get everything ready for indexing.",
     icon: ShieldCheck,
   },
   {
     id: "02",
-    title: "Detect URL changes fast",
+    title: "We find new pages",
     description:
-      "Scheduled scans pick up newly published URLs from your sitemap, deduplicate entries, and stage them for submission.",
+      "Our system automatically scans your sitemap for new pages and prepares them for submission.",
     icon: Search,
   },
   {
     id: "03",
-    title: "Submit to multiple engines",
+    title: "Automatic submission",
     description:
-      "Batched requests are sent to IndexNow and Bing endpoints with retries, reducing failed pushes under network load.",
+      "We send your new URLs to search engines like Google and Bing automatically so you don't have to.",
     icon: Link2,
   },
   {
     id: "04",
-    title: "Global Engine Propagation",
+    title: "Get indexed faster",
     description:
-      "Your URLs are broadcasted across a high-speed ecosystem of 120+ global search engines, regional directories, and AI datasets instantly.",
+      "Your pages show up in search results much quicker, helping you get more traffic and visitors.",
     icon: Gauge,
   },
 ];
 
 const operators = [
-  "Solo builders shipping content every day",
-  "SEO teams managing multiple sites and client portfolios",
-  "Programmatic SEO operators publishing pages at scale",
-  "Ecommerce teams launching high-priority product URLs",
+  "Bloggers and creators",
+  "SEO teams and agencies",
+  "Large websites with many pages",
+  "Online stores and products",
 ];
 
 const guarantees = [
-  "No manual copy-paste URL submission loop",
-  "A repeatable operating workflow for index pushes",
-  "Visibility into what was submitted and when",
-  "A clean handoff between publishing and indexing",
+  "Stop manually copying URLs",
+  "Automate your indexing workflow",
+  "See exactly when pages are indexed",
+  "Easy setup for any website",
 ];
 
 const containerVariants = {
@@ -94,26 +94,26 @@ export default function HowItWorksContent() {
         >
           <motion.div variants={itemVariants}>
             <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase shadow-sm border-primary/20 text-primary">
-              Infrastructure Breakdown
+              How it works
             </Badge>
           </motion.div>
           <motion.h1 
             variants={itemVariants}
             className="max-w-4xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-400"
           >
-            A high-performance indexing engine.
+            Get indexed automatically.
           </motion.h1>
           <motion.p variants={itemVariants} className="max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            IndexFast isn't just a dashboard—it's a production-grade indexing pipeline that automates discovery, injection, and multi-engine propagation.
+            IndexFast helps your website show up in search results faster by automating the submission process for you.
           </motion.p>
           <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-3 pt-4">
-            <Button asChild size="lg" className="h-14 font-black rounded-2xl shadow-xl shadow-primary/10 tracking-wide uppercase text-xs">
+            <Button asChild size="lg" className="h-14 font-bold rounded-2xl shadow-xl shadow-primary/10 tracking-wide uppercase text-xs">
               <Link href="/sign-up">
-                Start Accelerating <ArrowRight className="ml-2 h-4 w-4" />
+                Get Started <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="h-14 font-bold rounded-2xl bg-background/50 backdrop-blur-sm tracking-wide uppercase text-xs">
-              <Link href="/docs">View Documentation</Link>
+              <Link href="/docs">Read Docs</Link>
             </Button>
           </motion.div>
         </motion.header>
@@ -249,10 +249,10 @@ export default function HowItWorksContent() {
             <CardContent className="relative flex flex-col gap-6 p-8 sm:p-10 md:flex-row md:items-center md:justify-between">
               <div className="space-y-2">
                 <h2 className="text-2xl font-black tracking-tight sm:text-3xl text-white">
-                  Ready to run indexing as an actual system?
+                  Ready to start indexing?
                 </h2>
                 <p className="max-w-xl text-zinc-300">
-                  Create your account, connect your sitemap, and start shipping URLs with a repeatable process.
+                  Create your account today and get your pages noticed by search engines in minutes.
                 </p>
               </div>
               <Button asChild size="lg" className="shrink-0 rounded-full bg-white text-zinc-900 hover:bg-zinc-100 border-none font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all">

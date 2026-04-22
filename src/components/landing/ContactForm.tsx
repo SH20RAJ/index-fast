@@ -108,7 +108,7 @@ export default function ContactForm() {
           How can we <span className="text-primary italic font-hand inline-block -rotate-2">help?</span>
         </h2>
         <p className="text-lg font-medium text-muted-foreground/60 max-w-md mx-auto">
-          Have a question about indexing or enterprise plans? Our team is standing by.
+          Have a question? We're here to help.
         </p>
       </div>
 
@@ -119,7 +119,7 @@ export default function ContactForm() {
               <CheckCircle2 className="h-4 w-4 text-pink-500" />
               <AlertTitle className="font-bold tracking-tight">Message Sent!</AlertTitle>
               <AlertDescription className="font-medium opacity-90">
-                We've received your inquiry and will get back to you within 24 hours.
+                We've received your message and will get back to you soon.
               </AlertDescription>
             </Alert>
           )}
@@ -203,7 +203,7 @@ export default function ContactForm() {
               <Textarea
                 id="message"
                 name="message"
-                placeholder="Tell us more about your indexing needs..."
+                placeholder="How can we help?"
                 rows={5}
                 value={formData.message}
                 onChange={handleChange}

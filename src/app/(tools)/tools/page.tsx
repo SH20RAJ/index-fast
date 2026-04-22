@@ -61,15 +61,14 @@ export  function ToolsHomePage() {
           <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
             <div className="space-y-4">
               <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.14em]">
-                <Sparkles className="mr-1.5 h-3.5 w-3.5" /> Free SEO Tool Stack
+                <Sparkles className="mr-1.5 h-3.5 w-3.5" /> Free SEO Tools
               </Badge>
               <h1 className="max-w-4xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-                Pick a tool,
-                <span className="block text-muted-foreground">fix a bottleneck in minutes.</span>
+                Fix your SEO
+                <span className="block text-muted-foreground">in just a few minutes.</span>
               </h1>
               <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                High-intent SEO utilities for crawl diagnostics, indexing workflows, and metadata checks. Start free, then
-                move your winning workflows into recurring automation.
+                Simple tools to help you find and fix indexing and SEO problems. Start for free and automate your work later.
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
                 <Button asChild>
@@ -85,8 +84,8 @@ export  function ToolsHomePage() {
 
             <Card className="border-border/70 bg-card/80">
               <CardHeader>
-                <CardDescription>Directory Snapshot</CardDescription>
-                <CardTitle className="text-xl">Built for execution, not vanity metrics</CardTitle>
+                <CardDescription>Tool Directory</CardDescription>
+                <CardTitle className="text-xl">Built for results, not just numbers</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
                 <div className="rounded-lg border border-border/70 bg-background/70 p-3">
@@ -108,10 +107,10 @@ export  function ToolsHomePage() {
           <ToolsExplorer
             tools={SEO_TOOLS}
             categories={TOOL_CATEGORIES}
-            title="Search and sort tools fast"
-            description="Filter by keyword, sort by SEO ratio, and open the fastest tools first."
+            title="Find tools fast"
+            description="Search for what you need and get started immediately."
             ctaHref="/tools/seotools"
-            ctaLabel="Open SEO tools hub"
+            ctaLabel="View all tools"
           />
 
           <div className="rounded-xl border border-border/70 bg-card/60 p-3 sm:p-4" id="tool-categories">
@@ -188,8 +187,8 @@ export  function ToolsHomePage() {
           </div>
 
           <ToolCta
-            primaryText="Turn quick checks into recurring wins"
-            secondaryText="Create an account to save scans, add projects, and automate sitemap-driven indexing workflows daily."
+            primaryText="Ready to automate your work?"
+            secondaryText="Create an account to save your progress and start indexing your website automatically."
           />
         </div>
       </div>
@@ -204,11 +203,11 @@ export  function ToolsHomePage() {
               <ExternalLink className="mr-1.5 h-3 w-3" /> {ALL_FREE_TOOLS.length}+ Curated Free SEO Tools
             </Badge>
             <h2 className="text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
-              The complete free SEO toolkit
-              <span className="block text-muted-foreground">organised by category.</span>
+              Complete SEO Toolkit
+              <span className="block text-muted-foreground">sorted by category.</span>
             </h2>
             <p className="max-w-3xl text-base text-muted-foreground">
-              Hand-curated collection of the best free and freemium SEO tools across every workflow — from Ping-O-Matic and Ahrefs to Surfer SEO and Claude. Click any tool to open or embed it.
+              A collection of the best free SEO tools to help you with your website. Click any tool to get started.
             </p>
           </div>
 
@@ -331,15 +330,14 @@ export  function ToolsHomePage2() {
           <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
             <div className="space-y-4">
               <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.14em]">
-                <Sparkles className="mr-1.5 h-3.5 w-3.5" /> Free SEO Tool Stack
+                <Sparkles className="mr-1.5 h-3.5 w-3.5" /> Free SEO Tools
               </Badge>
               <h1 className="max-w-4xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-                Pick a tool,
-                <span className="block text-muted-foreground">fix a bottleneck in minutes.</span>
+                Fix your SEO
+                <span className="block text-muted-foreground">in just a few minutes.</span>
               </h1>
               <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                High-intent SEO utilities for crawl diagnostics, indexing workflows, and metadata checks. Start free, then
-                move your winning workflows into recurring automation.
+                Simple tools to help you find and fix indexing and SEO problems. Start for free and automate your work later.
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
                 <Button asChild>
@@ -355,8 +353,8 @@ export  function ToolsHomePage2() {
 
             <Card className="border-border/70 bg-card/80">
               <CardHeader>
-                <CardDescription>Directory Snapshot</CardDescription>
-                <CardTitle className="text-xl">Built for execution, not vanity metrics</CardTitle>
+                <CardDescription>Tool Directory</CardDescription>
+                <CardTitle className="text-xl">Built for results, not just numbers</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
                 <div className="rounded-lg border border-border/70 bg-background/70 p-3">
@@ -445,8 +443,8 @@ export  function ToolsHomePage2() {
           </div>
 
           <ToolCta
-            primaryText="Turn quick checks into recurring wins"
-            secondaryText="Create an account to save scans, add projects, and automate sitemap-driven indexing workflows daily."
+            primaryText="Ready to automate your work?"
+            secondaryText="Create an account to save your progress and start indexing your website automatically."
           />
         </div>
       </div>
