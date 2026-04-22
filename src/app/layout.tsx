@@ -6,14 +6,23 @@ import ThemeRegistry from "@/components/ThemeRegistry";
 import PwaRegister from "@/components/pwa/PwaRegister";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
-import { Poppins } from "next/font/google";
+import { Playfair_Display, Source_Sans_3, Fira_Code } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/next"
 
-const poppins = Poppins({ 
+const playfair = Playfair_Display({ 
   subsets: ["latin"], 
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-serif" 
+});
+
+const sourceSans = Source_Sans_3({ 
+  subsets: ["latin"], 
   variable: "--font-sans" 
+});
+
+const firaCode = Fira_Code({
+  subsets: ["latin"],
+  variable: "--font-mono"
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
@@ -174,48 +183,48 @@ const websiteJsonLd = {
 };
 
 const stackTheme = {
-  radius: "0.85rem",
+  radius: "0.5rem",
   light: {
-    background: "#f8fafc",
-    foreground: "#0f172a",
-    card: "#ffffff",
-    cardForeground: "#0f172a",
-    popover: "#ffffff",
-    popoverForeground: "#0f172a",
-    primary: "#0ea5e9",
-    primaryForeground: "#ffffff",
-    secondary: "#e2e8f0",
-    secondaryForeground: "#0f172a",
-    muted: "#f1f5f9",
-    mutedForeground: "#475569",
-    accent: "#ecfeff",
-    accentForeground: "#0f172a",
-    destructive: "#dc2626",
-    destructiveForeground: "#ffffff",
-    border: "#cbd5e1",
-    input: "#e2e8f0",
-    ring: "#0ea5e9",
+    background: "#FAFAF9",
+    foreground: "#1C1917",
+    card: "#F5F5F4",
+    cardForeground: "#1C1917",
+    popover: "#F5F5F4",
+    popoverForeground: "#1C1917",
+    primary: "#C2410C",
+    primaryForeground: "#FAFAF9",
+    secondary: "#E7E5E4",
+    secondaryForeground: "#57534E",
+    muted: "#F5F5F4",
+    mutedForeground: "#78716C",
+    accent: "#F59E0B",
+    accentForeground: "#1C1917",
+    destructive: "#DC2626",
+    destructiveForeground: "#FAFAF9",
+    border: "#D6D3D1",
+    input: "#F5F5F4",
+    ring: "#C2410C",
   },
   dark: {
-    background: "#020617",
-    foreground: "#e2e8f0",
-    card: "#0f172a",
-    cardForeground: "#f8fafc",
-    popover: "#0f172a",
-    popoverForeground: "#f8fafc",
-    primary: "#38bdf8",
-    primaryForeground: "#082f49",
-    secondary: "#1e293b",
-    secondaryForeground: "#e2e8f0",
-    muted: "#1e293b",
-    mutedForeground: "#94a3b8",
-    accent: "#0f172a",
-    accentForeground: "#e2e8f0",
-    destructive: "#ef4444",
-    destructiveForeground: "#ffffff",
-    border: "#334155",
-    input: "#1e293b",
-    ring: "#38bdf8",
+    background: "#1C1917",
+    foreground: "#FAFAF9",
+    card: "#262220",
+    cardForeground: "#FAFAF9",
+    popover: "#262220",
+    popoverForeground: "#FAFAF9",
+    primary: "#EA580C",
+    primaryForeground: "#1C1917",
+    secondary: "#44403C",
+    secondaryForeground: "#D6D3D1",
+    muted: "#262220",
+    mutedForeground: "#A8A29E",
+    accent: "#F59E0B",
+    accentForeground: "#1C1917",
+    destructive: "#EF4444",
+    destructiveForeground: "#FAFAF9",
+    border: "#44403C",
+    input: "#262220",
+    ring: "#EA580C",
   },
 } as const;
 
@@ -225,7 +234,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={cn("font-sans", poppins.variable)}>
+    <html lang="en" data-scroll-behavior="smooth" className={cn("font-sans", sourceSans.variable, playfair.variable, firaCode.variable)}>
       <body>
         <PwaRegister />
         <StackProvider app={stackClientApp}>

@@ -98,7 +98,7 @@ export default function PrivacyView() {
             Need Clarification?
           </Typography>
           <Typography className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-            For privacy requests or data access inquiries, contact <a href="mailto:support@indexfast.com" className="font-semibold text-primary underline-offset-4 hover:underline">support@indexfast.com</a>.
+            For privacy requests or data access inquiries, contact <a href="mailto:support@indexfast.co" className="font-semibold text-primary underline-offset-4 hover:underline">support@indexfast.co</a>.
           </Typography>
         </Box>
       </Stack>

@@ -50,19 +50,19 @@ export default function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.05 }}
-              className="text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem] lg:leading-[1.08]"
+              className="text-balance text-4xl font-serif font-bold tracking-tight text-foreground sm:text-5xl lg:text-[4rem] lg:leading-[1.1]"
             >
-              Get new URLs indexed{" "}
-              <span className="bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">before your competitors do</span>
+              Get indexed{" "}
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">faster than ever.</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.1 }}
-              className="mx-auto mt-5 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg lg:mx-0"
+              className="mx-auto mt-6 max-w-xl text-pretty text-base font-sans text-muted-foreground sm:text-lg lg:mx-0"
             >
-              Connect your sitemap once. IndexFast detects fresh URLs and pushes them to search engines on a schedule you control—so launches, drops, and blog posts show up in results faster.
+              A production-grade indexing pipeline that automates discovery and submission. Connect your site once, get results automatically.
             </motion.p>
 
             <motion.ul

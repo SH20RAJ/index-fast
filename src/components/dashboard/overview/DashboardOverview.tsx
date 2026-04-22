@@ -144,10 +144,10 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
               {planTone} Workspace
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                Indexing status
+              <h2 className="text-2xl font-serif font-bold tracking-tight text-foreground sm:text-4xl">
+                Indexing Overview
               </h2>
-              <p className="max-w-lg text-sm leading-relaxed text-muted-foreground">
+              <p className="max-w-lg text-sm font-sans leading-relaxed text-muted-foreground">
                 Monitor your website's indexing health, success rate, and recent updates in one place.
               </p>
             </div>

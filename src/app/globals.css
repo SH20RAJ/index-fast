@@ -4,50 +4,71 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Premium Light Mode - Blush/Pink */
-  --background: oklch(0.99 0.005 340);
-  --foreground: oklch(0.15 0.02 340);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.02 340);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.02 340);
-  --primary: oklch(0.65 0.22 340); /* Vibrant Pink */
-  --primary-foreground: oklch(0.99 0.005 340);
-  --secondary: oklch(0.96 0.02 340);
-  --secondary-foreground: oklch(0.15 0.02 340);
-  --muted: oklch(0.96 0.02 340);
-  --muted-foreground: oklch(0.45 0.02 340);
-  --accent: oklch(0.96 0.02 340);
-  --accent-foreground: oklch(0.15 0.02 340);
-  --destructive: oklch(0.6 0.18 25);
-  --destructive-foreground: oklch(0.99 0.005 340);
-  --border: oklch(0.92 0.02 340);
-  --input: oklch(0.92 0.02 340);
-  --ring: oklch(0.65 0.22 340);
-  --radius: 0.75rem;
+  /* Ember Studio - Light Mode */
+  --background: oklch(0.98 0.005 60); /* #FAFAF9 */
+  --foreground: oklch(0.2 0.01 60);    /* #1C1917 */
+  
+  --card: oklch(0.96 0.005 60);       /* #F5F5F4 */
+  --card-foreground: oklch(0.2 0.01 60);
+  
+  --popover: oklch(0.96 0.005 60);
+  --popover-foreground: oklch(0.2 0.01 60);
+  
+  --primary: oklch(0.55 0.22 35);     /* #C2410C - Terracotta */
+  --primary-foreground: oklch(0.98 0.005 60);
+  
+  --secondary: oklch(0.85 0.01 60);   /* #D6D3D1 - Border/Stone */
+  --secondary-foreground: oklch(0.45 0.01 60); /* #57534E */
+  
+  --muted: oklch(0.96 0.005 60);
+  --muted-foreground: oklch(0.55 0.02 50); /* #78716C */
+  
+  --accent: oklch(0.75 0.18 70);      /* #F59E0B - Amber */
+  --accent-foreground: oklch(0.2 0.01 60);
+  
+  --destructive: oklch(0.55 0.2 25);   /* #DC2626 */
+  --destructive-foreground: oklch(0.98 0.005 60);
+  
+  --border: oklch(0.85 0.01 60);      /* #D6D3D1 */
+  --input: oklch(0.96 0.005 60);
+  --ring: oklch(0.55 0.22 35);
+  
+  --radius: 0.75rem; /* 12px for cards */
+  
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 .dark {
-  /* Premium Dark Mode - Deep Pink/Midnight */
-  --background: oklch(0.12 0.02 340);
-  --foreground: oklch(0.98 0.01 340);
-  --card: oklch(0.16 0.02 340);
-  --card-foreground: oklch(0.98 0.01 340);
-  --popover: oklch(0.14 0.02 340);
-  --popover-foreground: oklch(0.98 0.01 340);
-  --primary: oklch(0.7 0.24 340); /* Neon Pink */
-  --primary-foreground: oklch(0.1 0.02 340);
-  --secondary: oklch(0.2 0.04 340);
-  --secondary-foreground: oklch(0.98 0.01 340);
-  --muted: oklch(0.2 0.04 340);
-  --muted-foreground: oklch(0.7 0.02 340);
-  --accent: oklch(0.2 0.04 340);
-  --accent-foreground: oklch(0.98 0.01 340);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.99 0.01 340);
-  --border: oklch(0.24 0.04 340);
-  --input: oklch(0.24 0.04 340);
-  --ring: oklch(0.7 0.24 340);
+  /* Ember Studio - Dark Mode - Intentional warm dark */
+  --background: oklch(0.2 0.01 60);    /* #1C1917 */
+  --foreground: oklch(0.98 0.005 60);  /* #FAFAF9 */
+  
+  --card: oklch(0.25 0.01 60);        /* Slightly raised dark */
+  --card-foreground: oklch(0.98 0.005 60);
+  
+  --popover: oklch(0.25 0.01 60);
+  --popover-foreground: oklch(0.98 0.005 60);
+  
+  --primary: oklch(0.65 0.2 40);      /* Brighter terracotta for dark mode */
+  --primary-foreground: oklch(0.15 0.01 60);
+  
+  --secondary: oklch(0.35 0.01 60);   /* Warm dark stone */
+  --secondary-foreground: oklch(0.85 0.01 60);
+  
+  --muted: oklch(0.3 0.01 60);
+  --muted-foreground: oklch(0.7 0.01 60);
+  
+  --accent: oklch(0.75 0.18 70);      /* Amber remains same */
+  --accent-foreground: oklch(0.2 0.01 60);
+  
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(0.98 0.005 60);
+  
+  --border: oklch(0.35 0.01 60);
+  --input: oklch(0.25 0.01 60);
+  --ring: oklch(0.65 0.2 40);
 }
 
 @theme inline {
@@ -70,45 +91,27 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: calc(var(--radius) - 8px); /* 4px */
+  --radius-md: calc(var(--radius) - 4px); /* 8px */
+  --radius-lg: var(--radius);              /* 12px */
+  --radius-xl: calc(var(--radius) + 4px); /* 16px */
+  --radius-full: 9999px;
 
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
+  --shadow-sm: 0 1px 2px rgba(28,25,23,0.05);
+  --shadow: 0 4px 16px rgba(28,25,23,0.06);
+  --shadow-md: 0 8px 24px rgba(28,25,23,0.08);
+  --shadow-lg: 0 12px 32px rgba(28,25,23,0.1);
+  --shadow-xl: 0 24px 48px rgba(28,25,23,0.12);
+  
   --animate-orbit: orbit calc(var(--duration)*1s) linear infinite;
   @keyframes orbit {
-  0% {
-    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
-    }
-  100% {
-    transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg));
-    }
+    0% { transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg)); }
+    100% { transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg)); }
   }
 }
 
@@ -117,11 +120,40 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground shrink-0;
+    @apply bg-background text-foreground shrink-0 font-sans;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-bold tracking-tight text-foreground;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-primary-foreground font-semibold px-4 py-2 rounded-md hover:opacity-90 hover:shadow-lg transition-all duration-150 active:scale-95;
+  }
+  .btn-secondary {
+    @apply bg-transparent border border-border text-foreground font-semibold px-4 py-2 rounded-md hover:bg-secondary/10 transition-all duration-150;
+  }
+  .card-premium {
+    @apply bg-card border border-border rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300;
+  }
+  .input-ember {
+    @apply bg-card border border-border rounded-md px-4 py-2 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all;
   }
 }
 
 @layer utilities {
+  .text-display { @apply text-6xl font-serif font-bold; }
+  .text-headline { @apply text-5xl font-serif font-bold; }
+  .text-section { @apply text-2xl font-serif font-bold; }
+  .text-subhead { @apply text-xl font-sans font-semibold; }
+  .text-body { @apply text-base font-sans; }
+  .text-small { @apply text-sm font-sans; }
+  .text-caption { @apply text-xs font-sans; }
+  .text-overline { @apply text-[11px] font-sans font-bold uppercase tracking-wide; }
+
   .border-beam {
     position: relative;
     z-index: 0;
@@ -153,25 +185,13 @@
   }
 
   @keyframes beam-spin {
-    from {
-      --beam-angle: 0deg;
-    }
-    to {
-      --beam-angle: 360deg;
-    }
+    from { --beam-angle: 0deg; }
+    to { --beam-angle: 360deg; }
   }
 
   @property --beam-angle {
     syntax: "<angle>";
     initial-value: 0deg;
     inherits: false;
-  }
-
-  .premium-card {
-    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .premium-card:hover {
-    @apply border-primary/30 ring-1 ring-primary/10 shadow-[0_0_20px_rgba(var(--primary),0.05)];
   }
 }

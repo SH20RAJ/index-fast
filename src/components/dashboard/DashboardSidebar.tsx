@@ -126,21 +126,19 @@ function SidebarItem({
 }) {
   return (
     <Button
-      variant={active ? "default" : "ghost"}
-      color={active ? "primary" : "secondary"}
+      variant="ghost"
       asChild
       className={cn(
-        "w-full justify-start gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
+        "w-full justify-start gap-3 rounded-none border-l-2 px-4 py-2.5 text-sm transition-all duration-200",
         active 
-          ? "shadow-md shadow-primary/20" 
-          : "text-muted-foreground hover:text-foreground"
+          ? "border-primary bg-primary/5 text-foreground font-semibold" 
+          : "border-transparent text-muted-foreground hover:bg-secondary/5 hover:text-foreground"
       )}
       onClick={onClick}
     >
       <Link href={href || item.href || "#"}>
-        <item.icon className={cn("h-4 w-4 shrink-0", active ? "text-primary-foreground" : "")} />
-        <span className="flex-1 font-medium">{item.label}</span>
-        {active && <span className="h-1.5 w-1.5 rounded-full bg-primary-foreground/90 animate-in fade-in zoom-in duration-300" />}
+        <item.icon className={cn("h-4 w-4 shrink-0", active ? "text-primary" : "")} />
+        <span className="flex-1">{item.label}</span>
       </Link>
     </Button>
   );

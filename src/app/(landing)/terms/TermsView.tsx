@@ -120,7 +120,7 @@ export default function TermsView() {
             Questions About These Terms?
           </Typography>
           <Typography className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Contact us at <a href="mailto:support@indexfast.com" className="font-semibold text-primary underline-offset-4 hover:underline">support@indexfast.com</a> and we will help clarify anything related to billing, usage, or account policy.
+            Contact us at <a href="mailto:support@indexfast.co" className="font-semibold text-primary underline-offset-4 hover:underline">support@indexfast.co</a> and we will help clarify anything related to billing, usage, or account policy.
           </Typography>
         </Box>
       </Stack>
