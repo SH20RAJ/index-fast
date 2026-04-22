@@ -50,7 +50,7 @@ const TIER_STYLES: Record<string, string> = {
 export  function ToolsHomePage() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-border/70">
+      <section className="relative overflow-hidden border-b border-border/70 py-20">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-secondary/60 blur-3xl" />
         <div className="absolute left-1/4 top-1/3 h-64 w-64 rounded-full bg-muted/70 blur-3xl" />
@@ -318,7 +318,7 @@ export  function ToolsHomePage() {
 
 export  function ToolsHomePage2() {
   return (
-    <>
+    <div className=" mt-20 pt-10">
       <section className="relative overflow-hidden border-b border-border/70">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-secondary/60 blur-3xl" />
@@ -450,7 +450,7 @@ export  function ToolsHomePage2() {
       </div>
       </section>
       <ExternalResourcesSection />
-    </>
+    </div>
   );
 }
 

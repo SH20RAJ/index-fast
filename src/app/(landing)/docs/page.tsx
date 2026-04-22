@@ -66,7 +66,7 @@ const troubleshooting = [
 
 export default function DocsPage() {
   return (
-    <section className="relative isolate overflow-hidden border-b border-border/70 py-12 sm:py-16 lg:py-20">
+    <section className="relative isolate overflow-hidden border-b border-border/70 mt-20 pt-10">
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-70 [background:radial-gradient(52rem_28rem_at_15%_0%,rgba(145,185,255,0.14),transparent),radial-gradient(44rem_26rem_at_90%_8%,rgba(255,196,110,0.14),transparent)]" />
 
       <div className="mx-auto w-full max-w-6xl space-y-12 px-4 sm:px-6 lg:px-8">

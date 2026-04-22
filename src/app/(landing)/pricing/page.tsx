@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function PricingPage() {
-  return <Pricing />;
+  return <div className="pt-20"><Pricing /></div>;
 }

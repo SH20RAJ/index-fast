@@ -13,7 +13,7 @@ export default function LandingLayout({
         aria-hidden
       />
       <Navbar />
-      <main className="relative z-10 flex-1">{children}</main>
+      <main className="relative z-10 flex-1 pb-10">{children}</main>
       <Footer />
     </div>
   );

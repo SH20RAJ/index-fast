@@ -82,11 +82,11 @@ import { CronTerminal, ApiSubmission, PingRadar, EngineEcosystem } from "./Workf
 
 export default function HowItWorksContent() {
   return (
-    <section className="relative isolate overflow-hidden border-b border-border/70 py-12 sm:py-16 lg:py-20">
+    <section className="relative isolate overflow-hidden border-b border-border/70 mt-20 pt-10">
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-70 [background:radial-gradient(60rem_30rem_at_20%_0%,rgba(255,184,108,0.12),transparent),radial-gradient(48rem_28rem_at_80%_10%,rgba(120,180,255,0.12),transparent)]" />
 
       <div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
-        <motion.header 
+        <motion.header
           initial="hidden"
           animate="visible"
           variants={containerVariants}
@@ -97,7 +97,7 @@ export default function HowItWorksContent() {
               How it works
             </Badge>
           </motion.div>
-          <motion.h1 
+          <motion.h1
             variants={itemVariants}
             className="max-w-4xl text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-400"
           >
@@ -121,7 +121,7 @@ export default function HowItWorksContent() {
         {/* Animated Pipeline Diagram */}
         <div className="relative py-8">
           <div className="absolute left-8 top-16 bottom-16 w-[2px] bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden md:block" />
-          <motion.section 
+          <motion.section
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -135,7 +135,7 @@ export default function HowItWorksContent() {
                   <motion.div variants={itemVariants} className="relative pl-0 md:pl-20 group order-2 md:order-1">
                     {/* Custom animated connector */}
                     <div className="absolute left-[calc(2rem-5px)] top-8 hidden md:flex h-3 w-3 rounded-full bg-primary/40 group-hover:bg-primary transition-colors duration-300 shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
-                    
+
                     <Card className="border-beam border-border/70 bg-card/85 backdrop-blur-md shadow-sm transition-all duration-300 premium-card h-full">
                       <CardHeader className="space-y-3 pb-4">
                         <p className="text-[10px] font-black tracking-[0.2em] text-primary/80 uppercase">PHASE {step.id}</p>
@@ -152,16 +152,16 @@ export default function HowItWorksContent() {
                     </Card>
                   </motion.div>
 
-                  <motion.div 
-                    variants={idx % 2 === 0 ? slideInRight : slideInLeft} 
+                  <motion.div
+                    variants={idx % 2 === 0 ? slideInRight : slideInLeft}
                     className="flex justify-center order-1 md:order-2"
                   >
                     {idx === 0 && (
                       <div className="w-full flex justify-center py-4">
                         <div className="p-1 bg-gradient-to-br from-primary/20 to-transparent rounded-2xl">
                           <div className="px-6 py-4 bg-background/80 rounded-xl backdrop-blur-lg border border-border/50 font-mono text-[11px] text-zinc-400">
-                            ID: PRO-2987-X <br/>
-                            STATUS: ACTIVE <br/>
+                            ID: PRO-2987-X <br />
+                            STATUS: ACTIVE <br />
                             DOMAIN: VERIFIED
                           </div>
                         </div>
@@ -177,7 +177,7 @@ export default function HowItWorksContent() {
           </motion.section>
         </div>
 
-        <motion.section 
+        <motion.section
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
@@ -195,8 +195,8 @@ export default function HowItWorksContent() {
               </CardHeader>
               <CardContent className="space-y-4 pt-2 text-sm text-muted-foreground">
                 {operators.map((item, i) => (
-                  <motion.div 
-                    key={item} 
+                  <motion.div
+                    key={item}
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 + 0.3 }}
@@ -222,7 +222,7 @@ export default function HowItWorksContent() {
               </CardHeader>
               <CardContent className="space-y-4 pt-2 text-sm text-muted-foreground">
                 {guarantees.map((item, i) => (
-                  <motion.div 
+                  <motion.div
                     key={item}
                     initial={{ opacity: 0, x: 10 }}
                     whileInView={{ opacity: 1, x: 0 }}
