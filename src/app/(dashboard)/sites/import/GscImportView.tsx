@@ -124,7 +124,12 @@ export default function GscImportView({ planName }: { planName: string }) {
 
       toast.success(payload.message || "Import complete!");
       logStep("Import successful", "success");
-      router.push("/sites");
+      
+      if (payload.imported && payload.imported.length > 0) {
+        router.push(`/sites/url?siteId=${payload.imported[0].id}`);
+      } else {
+        router.push("/sites");
+      }
     } catch (err: any) {
       toast.error(err.message);
       logStep(`Import failed: ${err.message}`, "failed");
@@ -134,53 +139,53 @@ export default function GscImportView({ planName }: { planName: string }) {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <div className="mb-8 flex items-center justify-between">
+    <div className="min-h-[80vh] flex items-center justify-center p-4 sm:p-8">
+      <div className="w-full max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={() => router.push("/sites")}
-            className="rounded-full hover:bg-zinc-100 dark:hover:bg-white/5"
+            className="rounded-full hover:bg-zinc-100 dark:hover:bg-white/5 -ml-2"
           >
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Websites
           </Button>
           
-          <Badge className="bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 border-none px-4 py-1 rounded-full font-bold uppercase tracking-[0.1em] text-[10px]">
+          <Badge className="bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 border-none px-4 py-1.5 rounded-full font-bold uppercase tracking-[0.1em] text-[10px]">
              <Sparkles className="mr-1.5 h-3 w-3" /> Available for Premium Plan
           </Badge>
         </div>
 
-        <Card className="rounded-[40px] border-none shadow-2xl shadow-rose-500/5 bg-white dark:bg-zinc-950 overflow-hidden">
-          <CardHeader className="p-8 pb-4 text-center">
+        <Card className="rounded-3xl sm:rounded-[40px] border-none shadow-2xl shadow-rose-500/5 bg-white dark:bg-zinc-950 overflow-hidden">
+          <CardHeader className="p-6 sm:p-10 pb-4 text-center">
             <div className="mx-auto h-16 w-16 rounded-3xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-6">
               <Globe className="h-8 w-8" />
             </div>
-            <CardTitle className="text-3xl font-black italic tracking-tight">Select GSC Properties</CardTitle>
-            <CardDescription className="text-zinc-500 dark:text-zinc-400 mt-2 text-base">
+            <CardTitle className="text-2xl sm:text-4xl font-black italic tracking-tight">Select GSC Properties</CardTitle>
+            <CardDescription className="text-zinc-500 dark:text-zinc-400 mt-2 text-sm sm:text-base">
               Choose the properties you want to sync with IndexFast.
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="p-8 pt-4 space-y-6">
+          <CardContent className="p-6 sm:p-10 pt-4 space-y-6">
             <div className="relative group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-rose-500 transition-colors" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Filter properties..."
+                placeholder="Search properties..."
                 className="pl-12 h-14 bg-zinc-50 border-none rounded-2xl focus-visible:ring-rose-500/20 dark:bg-white/5 text-base"
               />
             </div>
 
-            <div className="max-h-[350px] overflow-y-auto space-y-3 pr-2 custom-scrollbar min-h-[200px]">
+            <div className="max-h-[400px] overflow-y-auto space-y-3 pr-2 custom-scrollbar min-h-[250px]">
               {loading ? (
-                <div className="flex flex-col items-center justify-center py-20 gap-4 text-zinc-400">
+                <div className="flex flex-col items-center justify-center py-24 gap-4 text-zinc-400">
                   <Spinner className="h-8 w-8" />
-                  <p className="text-xs font-bold uppercase tracking-widest animate-pulse">Syncing with Google Console...</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest animate-pulse">Syncing with Google Console...</p>
                 </div>
               ) : filteredSites.length === 0 ? (
-                <div className="py-20 text-center text-zinc-500 bg-zinc-50/50 dark:bg-white/[0.01] rounded-3xl border-2 border-dashed border-zinc-100 dark:border-white/5">
+                <div className="py-24 text-center text-zinc-500 bg-zinc-50/50 dark:bg-white/[0.01] rounded-3xl border-2 border-dashed border-zinc-100 dark:border-white/5">
                   <p className="font-light italic text-zinc-400">No importable properties found.</p>
                   <Button variant="link" onClick={loadSites} className="mt-2 text-rose-500 font-bold uppercase tracking-widest text-[10px]">
                     <RefreshCw className="mr-2 h-3 w-3" /> Refresh Scan
@@ -191,7 +196,7 @@ export default function GscImportView({ planName }: { planName: string }) {
                   <div 
                     key={site.propertyUrl} 
                     className={cn(
-                      "flex items-center gap-4 p-5 rounded-3xl border transition-all cursor-pointer group/item",
+                      "flex items-center gap-4 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border transition-all cursor-pointer group/item",
                       selection.has(site.propertyUrl) 
                         ? "bg-rose-500/5 border-rose-500/20 shadow-sm" 
                         : "bg-white border-zinc-100 hover:border-zinc-200 dark:bg-zinc-900 dark:border-white/5"
@@ -206,7 +211,7 @@ export default function GscImportView({ planName }: { planName: string }) {
                     }}
                   >
                     <div className={cn(
-                      "h-6 w-6 rounded-lg border-2 flex items-center justify-center transition-all",
+                      "h-6 w-6 rounded-lg border-2 flex items-center justify-center transition-all shrink-0",
                       selection.has(site.propertyUrl) 
                         ? "bg-rose-500 border-rose-500" 
                         : "border-zinc-200 dark:border-white/10"
@@ -214,10 +219,10 @@ export default function GscImportView({ planName }: { planName: string }) {
                       {selection.has(site.propertyUrl) && <Check className="h-4 w-4 text-white" />}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-base font-bold truncate text-zinc-900 dark:text-zinc-100">{site.propertyUrl}</p>
+                      <p className="text-sm sm:text-base font-bold truncate text-zinc-900 dark:text-zinc-100">{site.propertyUrl}</p>
                       <p className="text-[10px] uppercase font-black text-zinc-400 tracking-widest mt-1 opacity-70">{site.permissionLevel}</p>
                     </div>
-                    <div className="opacity-0 group-hover/item:opacity-100 transition-opacity">
+                    <div className="opacity-0 group-hover/item:opacity-100 transition-opacity shrink-0 hidden sm:block">
                        <ChevronRight className="h-4 w-4 text-rose-500" />
                     </div>
                   </div>
@@ -226,8 +231,8 @@ export default function GscImportView({ planName }: { planName: string }) {
             </div>
           </CardContent>
 
-          <CardFooter className="p-8 pt-0 flex flex-col sm:flex-row gap-6 items-center sm:justify-between border-t border-zinc-50 dark:border-white/5 bg-zinc-50/30 dark:bg-white/[0.01]">
-            <div className="flex items-center gap-6">
+          <CardFooter className="p-6 sm:p-10 pt-0 flex flex-col sm:flex-row gap-6 items-center sm:justify-between border-t border-zinc-50 dark:border-white/5 bg-zinc-50/30 dark:bg-white/[0.01]">
+            <div className="flex items-center gap-8 w-full sm:w-auto justify-center sm:justify-start">
               <button 
                 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-rose-500 transition-colors"
                 onClick={() => setSelection(new Set(filteredSites.map(s => s.propertyUrl)))}
@@ -238,16 +243,16 @@ export default function GscImportView({ planName }: { planName: string }) {
                 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
                 onClick={() => setSelection(new Set())}
               >
-                Clear selection
+                Clear
               </button>
             </div>
             <Button 
               disabled={selection.size === 0 || importing} 
               onClick={handleImport}
-              className="w-full sm:w-auto rounded-full px-10 h-14 bg-zinc-950 hover:bg-zinc-900 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-zinc-950/20"
+              className="w-full sm:w-auto rounded-full px-12 h-14 bg-zinc-950 hover:bg-zinc-900 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-zinc-950/20"
             >
-              {importing ? <Spinner className="mr-3 h-4 w-4" /> : <RefreshCw className="mr-3 h-4 w-4" />}
-              Import {selection.size > 0 ? `${selection.size} Propery` : "Sites"}
+              {importing ? <Spinner className="mr-3 h-4 w-4" /> : <RefreshCw className={cn("mr-3 h-4 w-4", importing && "animate-spin")} />}
+              Import {selection.size > 0 ? `${selection.size} Prop${selection.size === 1 ? 'erty' : 'erties'}` : "Sites"}
             </Button>
           </CardFooter>
         </Card>

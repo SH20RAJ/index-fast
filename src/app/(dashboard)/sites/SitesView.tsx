@@ -42,9 +42,11 @@ import {
   MoreVertical,
   X,
   Archive,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/dashboard/PageHeader";
 import CronJobManager, { type CronJob } from "@/components/dashboard/CronJobManager";
 import { useLogs } from "@/components/dashboard/LogContext";
@@ -96,6 +98,8 @@ interface SitesViewProps {
 }
 
 export default function SitesView({ initialSites, planName, websiteLimit }: SitesViewProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [gscLoading, setGscLoading] = useState(false);
   const [gscImporting, setGscImporting] = useState(false);
   const [gscConnected, setGscConnected] = useState(false);
@@ -231,7 +235,6 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
       setGscConnected(Boolean(data.connected));
       setGscSites(data.sites || []);
       setGscSelection(new Set());
-      setIsGscModalOpen(true);
       logStep(`Loaded ${data.sites?.length ?? 0} properties from Google Search Console.`);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to load GSC properties.";
@@ -394,6 +397,33 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
         />
 
         <div className="space-y-4">
+          {searchParams.get("url") && (
+            <Alert className="rounded-[32px] p-6 border-none shadow-2xl bg-zinc-950 text-white dark:bg-zinc-900 overflow-hidden relative mb-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
+                 <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-rose-500 flex items-center justify-center shrink-0">
+                      <Plus className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="min-w-0">
+                      <AlertTitle className="text-lg font-bold tracking-tight">New Property Discovery</AlertTitle>
+                      <AlertDescription className="text-zinc-400 font-medium truncate">
+                        Ready to import <span className="text-white italic">{searchParams.get("url")}</span>?
+                      </AlertDescription>
+                    </div>
+                 </div>
+                 <Button 
+                  onClick={() => window.location.href = `/api/gsc/oauth/start?returnTo=/sites/import&url=${encodeURIComponent(searchParams.get("url")!)}`}
+                  className="bg-rose-500 text-white hover:bg-rose-600 rounded-full px-8 font-black uppercase tracking-widest h-12 shadow-xl shrink-0"
+                 >
+                   <Globe className="mr-2 h-4 w-4" /> Import Now
+                 </Button>
+              </div>
+              <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                 <Sparkles className="h-24 w-24 text-white" />
+              </div>
+            </Alert>
+          )}
+
           {gscError && gscError.toLowerCase().includes("token") && (
             <Alert variant="destructive" className="rounded-[32px] p-6 border-none shadow-2xl bg-rose-500 text-white dark:bg-rose-600">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -460,15 +490,25 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
 
 
         <section className="space-y-10">
-          <div className="flex items-center justify-between border-b border-zinc-100 dark:border-white/5 pb-6">
-            <h2 className="text-2xl font-black italic tracking-tight text-zinc-900 dark:text-zinc-100">Live Inventory</h2>
+          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-zinc-100 dark:border-white/5 pb-6 gap-6">
+            <div className="flex items-center gap-4">
+              <h2 className="text-2xl font-black italic tracking-tight text-zinc-900 dark:text-zinc-100">Live Inventory</h2>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => router.push("/sites/import")}
+                className="rounded-full bg-zinc-100 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest px-4 hover:bg-rose-500 hover:text-white transition-all"
+              >
+                <Plus className="mr-1.5 h-3 w-3" /> Import New
+              </Button>
+            </div>
             <div className="relative w-full md:w-80 group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400 group-focus-within:text-rose-500 transition-colors" />
               <Input
                 value={siteSearchQuery}
                 onChange={(event) => setSiteSearchQuery(event.target.value)}
                 placeholder="Filter ecosystem..."
-                className="pl-10 h-10 bg-zinc-50 border-none rounded-xl focus-visible:ring-rose-500/20 dark:bg-white/5"
+                className="pl-10 h-10 bg-zinc-50 border-none rounded-xl focus-visible:ring-rose-500/20 dark:bg-white/5 transition-all"
               />
             </div>
           </div>
