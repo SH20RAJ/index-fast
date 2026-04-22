@@ -125,21 +125,21 @@ export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
   return (
     <div className="space-y-8 pb-12 max-w-5xl">
       <PageHeader
-        title="Timeline"
-        description="Every submission and indexing signal, chronicled in real-time."
+        title="History"
+        description="A complete record of all your indexing requests."
       />
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: "Total", value: totals.all, icon: Database },
-          { label: "Success", value: totals.success, icon: CheckCircle2, color: "text-pink-500" },
-          { label: "Failed", value: totals.failed, icon: AlertCircle, color: "text-rose-500" },
+          { label: "Success", value: totals.success, icon: CheckCircle2, color: "text-primary" },
+          { label: "Failed", value: totals.failed, icon: AlertCircle, color: "text-red-500" },
           { label: "Pending", value: totals.pending, icon: Clock, color: "text-amber-500" },
         ].map((item) => (
-          <div key={item.label} className="space-y-1 px-1">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{item.label}</p>
-            <p className={cn("text-3xl font-light tracking-tight text-zinc-900 dark:text-zinc-100", item.color)}>{item.value}</p>
+          <div key={item.label} className="p-4 rounded-2xl bg-card border border-border/50 space-y-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{item.label}</p>
+            <p className={cn("text-2xl font-serif font-bold tracking-tight", item.color || "text-foreground")}>{item.value}</p>
           </div>
         ))}
       </div>
@@ -182,13 +182,13 @@ export default function SubmissionsView({ initialRows }: SubmissionsViewProps) {
       {/* List */}
       <div className="space-y-4">
         {rows.length === 0 || filtered.length === 0 ? (
-          <div className="py-20 text-center rounded-[32px] bg-zinc-50/50 border-2 border-dashed border-zinc-200 dark:bg-white/[0.02] dark:border-white/5">
-            <History className="mx-auto h-8 w-8 text-zinc-200" />
-            <p className="mt-4 text-sm font-light text-zinc-500">The timeline is currently empty.</p>
+          <div className="py-24 text-center rounded-[32px] bg-card border-2 border-dashed border-border/50">
+            <History className="mx-auto h-8 w-8 text-muted-foreground/30" />
+            <p className="mt-4 text-sm font-medium text-muted-foreground">No history found.</p>
           </div>
         ) : (
-          <div className="bg-white rounded-[32px] border border-zinc-100 overflow-hidden dark:bg-zinc-900/40 dark:border-white/5 shadow-sm">
-            <div className="divide-y divide-zinc-50 dark:divide-white/5">
+          <div className="bg-card rounded-[32px] border border-border/50 overflow-hidden shadow-sm">
+            <div className="divide-y divide-border/50">
               {paginated.map((row) => (
                 <div key={row.id} className="p-5 md:p-6 hover:bg-zinc-50/50 dark:hover:bg-white/[0.02] transition-colors">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

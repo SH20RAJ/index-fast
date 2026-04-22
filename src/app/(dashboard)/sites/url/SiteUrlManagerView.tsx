@@ -275,17 +275,17 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
       </div>
 
       {loading && (
-        <div className="flex items-center gap-3 p-4 rounded-3xl bg-zinc-50 dark:bg-white/5 animate-pulse">
-          <Loader2 className="h-4 w-4 animate-spin text-rose-500" />
-          <p className="text-xs text-zinc-500 font-medium">Loading pages...</p>
+        <div className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 animate-pulse">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <p className="text-xs text-muted-foreground font-medium">Loading pages...</p>
         </div>
       )}
 
       {error && (
-        <Alert variant="destructive" className="rounded-3xl border-rose-500/20 bg-rose-500/5">
-          <AlertCircle className="h-4 w-4 text-rose-500" />
-          <AlertTitle className="text-sm font-bold uppercase tracking-widest text-rose-500">Error</AlertTitle>
-          <AlertDescription className="text-xs font-medium text-rose-600/80">
+        <Alert variant="destructive" className="rounded-2xl border-red-500/20 bg-red-500/5">
+          <AlertCircle className="h-4 w-4 text-red-500" />
+          <AlertTitle className="text-sm font-bold uppercase tracking-widest text-red-500">Error</AlertTitle>
+          <AlertDescription className="text-xs font-medium text-red-600/80">
             {error}
           </AlertDescription>
         </Alert>

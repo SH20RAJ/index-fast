@@ -133,17 +133,17 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
       </div>
 
       {loading && (
-        <div className="flex items-center gap-3 p-4 rounded-3xl bg-zinc-50 dark:bg-white/5 animate-pulse">
-          <Loader2 className="h-4 w-4 animate-spin text-rose-500" />
-          <p className="text-xs text-zinc-500 font-light italic">Orchestrating schedules...</p>
+        <div className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 animate-pulse">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <p className="text-xs text-muted-foreground font-medium">Loading automation...</p>
         </div>
       )}
 
       {error && (
-        <Alert variant="destructive" className="rounded-3xl border-rose-500/20 bg-rose-500/5">
-          <AlertCircle className="h-4 w-4 text-rose-500" />
-          <AlertTitle className="text-sm font-bold uppercase tracking-widest text-rose-500">Automation Interrupted</AlertTitle>
-          <AlertDescription className="text-xs font-light text-rose-600/80 italic">
+        <Alert variant="destructive" className="rounded-2xl border-red-500/20 bg-red-500/5">
+          <AlertCircle className="h-4 w-4 text-red-500" />
+          <AlertTitle className="text-sm font-bold uppercase tracking-widest text-red-500">Error</AlertTitle>
+          <AlertDescription className="text-xs font-medium text-red-600/80">
             {error}
           </AlertDescription>
         </Alert>
@@ -151,16 +151,16 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
 
       {selectedSite && !loading && (
         <div className="space-y-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: "Selected Site", value: selectedSite.url.replace(/^https?:\/\//, ""), color: "text-zinc-900 dark:text-zinc-100" },
               { label: "Total Jobs", value: jobs.length },
-              { label: "Active", value: jobs.filter(j => j.enabled).length, color: jobs.some(j => j.enabled) ? "text-pink-500" : "text-zinc-400" },
-              { label: "Status", value: jobs.some(j => j.enabled) ? "Running" : "Paused", color: jobs.some(j => j.enabled) ? "text-pink-500" : "text-zinc-400" },
+              { label: "Active", value: jobs.filter(j => j.enabled).length, color: jobs.some(j => j.enabled) ? "text-primary" : "text-muted-foreground" },
+              { label: "Status", value: jobs.some(j => j.enabled) ? "Active" : "Paused", color: jobs.some(j => j.enabled) ? "text-primary" : "text-muted-foreground" },
+              { label: "Updates", value: "Hourly", color: "text-muted-foreground" },
             ].map((stat) => (
-              <div key={stat.label} className="space-y-1 px-1">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{stat.label}</p>
-                <p className={cn("text-xl font-light tracking-tight truncate", stat.color)}>{stat.value}</p>
+              <div key={stat.label} className="p-4 rounded-2xl bg-card border border-border/50 space-y-1">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{stat.label}</p>
+                <p className={cn("text-2xl font-serif font-bold tracking-tight", stat.color || "text-foreground")}>{stat.value}</p>
               </div>
             ))}
           </div>

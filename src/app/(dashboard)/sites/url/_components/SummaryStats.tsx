@@ -31,11 +31,11 @@ export default function SummaryStats({
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {stats.map((stat) => (
-        <div key={stat.label} className="space-y-1 px-1">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{stat.label}</p>
-          <p className={cn("text-2xl font-light tracking-tight text-zinc-900 dark:text-zinc-100", stat.color)}>
+        <div key={stat.label} className="p-4 rounded-2xl bg-card border border-border/50 space-y-1">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{stat.label}</p>
+          <p className={cn("text-2xl font-serif font-bold tracking-tight text-foreground", stat.color && !stat.color.includes("zinc") ? "text-primary" : "")}>
             {stat.value}
           </p>
         </div>
