@@ -46,25 +46,25 @@ interface NavSection {
 
 const navSections: NavSection[] = [
   {
-    label: "Control",
+    label: "Main",
     items: [
       {
-        label: "Dashboard",
+        label: "Home",
         href: "/dashboard",
         icon: LayoutDashboard,
       },
       {
-        label: "Insights",
+        label: "Stats",
         href: "/dashboard/insights",
         icon: LineChart,
       },
     ],
   },
   {
-    label: "Site Details",
+    label: "Reports",
     items: [
       {
-        label: "Submissions",
+        label: "History",
         href: "/submissions",
         icon: Activity,
       },
@@ -76,35 +76,29 @@ const navSections: NavSection[] = [
     ]
   },
   {
-    label: "Management",
+    label: "Sites",
     items: [
       {
-        label: "Websites",
+        label: "My Sites",
         href: "/sites",
         icon: Globe,
         children: [
-          { label: "All Websites", href: "/sites" },
-          { label: "URLs & Inventory", href: "/sites/url" },
+          { label: "List", href: "/sites" },
+          { label: "Pages", href: "/sites/url" },
           { label: "Auto Jobs", href: "/sites/jobs" },
         ],
       },
     ],
   },
   {
-    label: "Growth",
+    label: "Tools",
     items: [
       {
-        label: "Toolbox",
+        label: "Tools",
         href: "/toolbox",
         icon: Wrench,
         children: [
-          { label: "Overview", href: "/toolbox" },
-          { label: "Sitemap Extractor", href: "/toolbox/sitemap-extractor" },
-          { label: "Robots.txt Tester", href: "/toolbox/robots-txt-tester" },
-          { label: "Redirect Checker", href: "/toolbox/redirect-checker" },
-          { label: "Universal Ping", href: "/toolbox/ping" },
-          { label: "AI Content Reader", href: "/dashboard/reader" },
-          { label: "SubmitExpress", href: "/toolbox/submitexpress" },
+          { label: "All Tools", href: "/toolbox" },
           { label: "Free Tools", href: "/tools" },
           { label: "API", href: "/dashboard/api" },
           { label: "Blogs", href: "/blogs" },
@@ -219,7 +213,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
           </Link>
           <div className="flex min-w-0 flex-1 flex-col">
             <span className="text-sm font-bold leading-none tracking-tight">IndexFast</span>
-            <span className="text-[10px] text-zinc-500 mt-1 font-medium">Operations Console</span>
+            <span className="text-[10px] text-zinc-500 mt-1 font-medium">Dashboard</span>
           </div>
         </div>
 

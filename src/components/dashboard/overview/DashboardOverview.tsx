@@ -59,22 +59,22 @@ function statusTone(rate: number) {
 
 const quickActions = [
   {
-    label: "Connect a website",
+    label: "Add a website",
     href: "/sites",
     icon: Plus,
-    description: "Add a domain, sitemap, and optional GSC link.",
+    description: "Connect your first site to start indexing.",
   },
   {
-    label: "Submission stream",
+    label: "View activity",
     href: "/submissions",
     icon: Activity,
-    description: "See successes, failures, and retries in one feed.",
+    description: "Check your recent indexing results.",
   },
   {
-    label: "Billing & limits",
+    label: "Account settings",
     href: "/settings",
     icon: Settings,
-    description: "Upgrade capacity or adjust account preferences.",
+    description: "Manage your plan and preferences.",
   },
 ];
 
@@ -83,22 +83,22 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
   const submissionRatio = ratio(data.usage.submissionsUsed, data.usage.submissionsLimit);
   const successRate =
     data.submissionsThisMonth > 0 ? Math.round((data.successfulThisMonth / data.submissionsThisMonth) * 100) : 0;
-  const planTone = statusTone(successRate);
+  const planTone = successRate >= 90 ? "Great" : successRate >= 70 ? "Good" : "Needs attention";
   const websiteHeadroom = Math.max(0, data.usage.websitesLimit - data.usage.websitesUsed);
   const submissionsHeadroom = Math.max(0, data.usage.submissionsLimit - data.usage.submissionsUsed);
   const needsSetup = data.websitesCount === 0;
 
   const scorecards = [
     {
-      label: "Live websites",
+      label: "Websites",
       value: formatNumber(data.websitesCount),
-      hint: `${websiteHeadroom} slots free`,
+      hint: `${websiteHeadroom} available`,
       icon: Globe,
     },
     {
-      label: "Submissions this month",
+      label: "Usage this month",
       value: formatNumber(data.submissionsThisMonth),
-      hint: `${formatNumber(submissionsHeadroom)} quota left`,
+      hint: `${formatNumber(submissionsHeadroom)} left`,
       icon: BarChart3,
     },
     {
@@ -108,9 +108,9 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
       icon: Shield,
     },
     {
-      label: "Last activity",
+      label: "Recent Activity",
       value: formatDate(data.recentSubmissions[0]?.createdAt),
-      hint: "Submission stream",
+      hint: "View history",
       icon: CalendarClock,
     },
   ];

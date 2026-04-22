@@ -262,7 +262,7 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <PageHeader
           title="URLs"
-          description="Sync sitemaps and push manual indexing requests."
+          description="View your site pages and submit them for indexing."
         />
         <div className="w-full sm:w-[280px]">
           <Select
@@ -278,15 +278,15 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
       {loading && (
         <div className="flex items-center gap-3 p-4 rounded-3xl bg-zinc-50 dark:bg-white/5 animate-pulse">
           <Loader2 className="h-4 w-4 animate-spin text-rose-500" />
-          <p className="text-xs text-zinc-500 font-light italic">Gathering digital signals...</p>
+          <p className="text-xs text-zinc-500 font-medium">Loading pages...</p>
         </div>
       )}
 
       {error && (
         <Alert variant="destructive" className="rounded-3xl border-rose-500/20 bg-rose-500/5">
           <AlertCircle className="h-4 w-4 text-rose-500" />
-          <AlertTitle className="text-sm font-bold uppercase tracking-widest text-rose-500">Signal Interrupted</AlertTitle>
-          <AlertDescription className="text-xs font-light text-rose-600/80 italic">
+          <AlertTitle className="text-sm font-bold uppercase tracking-widest text-rose-500">Error</AlertTitle>
+          <AlertDescription className="text-xs font-medium text-rose-600/80">
             {error}
           </AlertDescription>
         </Alert>

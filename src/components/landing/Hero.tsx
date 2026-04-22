@@ -8,14 +8,14 @@ import { Button } from "@/components/ui/button";
 import LandingProductPreview from "@/components/landing/LandingProductPreview";
 
 const checklist = [
-  "IndexNow + Bing batch in one flow",
-  "Sitemap watchlists with change detection",
-  "Built for publishers, stores, and pSEO",
+  "Automatic indexing for Google & Bing",
+  "Sitemap monitoring for new pages",
+  "Perfect for blogs, stores, and large sites",
 ];
 
 const stats = [
-  { value: "< 60s", label: "Typical push window" },
-  { value: "120+", label: "Ping endpoints" },
+  { value: "< 60s", label: "Speed to index" },
+  { value: "120+", label: "Indexing nodes" },
   { value: "10K+", label: "URLs submitted" },
 ];
 

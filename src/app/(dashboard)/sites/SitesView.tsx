@@ -388,10 +388,10 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
       <div className="flex flex-col gap-10">
         <PageHeader
           title="Websites"
-          description="Manage your properties and monitor indexing status."
+          description="Manage your sites and track their indexing status."
           action={
             <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 bg-zinc-100 dark:bg-white/5 px-4 py-2 rounded-full border border-zinc-200 dark:border-white/10">
-              {planName} Plan • {initialSites.length} / {websiteLimit} used
+              {initialSites.length} / {websiteLimit} sites used
             </div>
           }
         />
@@ -456,58 +456,49 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
           )}
         </div>
 
-        <section className="space-y-8 py-10">
-          <div className="flex flex-col items-center justify-center text-center space-y-4 max-w-2xl mx-auto">
-             <div className="h-20 w-20 rounded-[32px] bg-rose-500/10 flex items-center justify-center text-rose-500">
-               <Globe className="h-10 w-10" />
-             </div>
-             <h2 className="text-4xl font-black tracking-tight text-zinc-900 dark:text-zinc-100 italic">Ecosystem Connection</h2>
-             <p className="text-zinc-500 font-light italic">Sync your properties directly from Google Search Console for automated indexing and health monitoring.</p>
+        <section className="space-y-6 py-6">
+          <div className="flex flex-col items-center justify-center text-center space-y-3 max-w-2xl mx-auto">
+             <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Connect Google Console</h2>
+             <p className="text-zinc-500 text-sm">Import your websites directly from Google Search Console to start indexing.</p>
           </div>
 
-          <div className="flex justify-center max-w-xl mx-auto">
+          <div className="flex justify-center max-w-lg mx-auto">
             <Button
               variant="outline"
               onClick={() => {
-                logStep("Opening Google OAuth consent screen...");
+                logStep("Connecting to Google...");
                 window.location.href = "/api/gsc/oauth/start?returnTo=/sites/import";
               }}
-              className="w-full group relative overflow-hidden h-32 rounded-[48px] border-2 border-dashed border-rose-500/20 bg-rose-500/[0.02] hover:bg-rose-500/5 hover:border-rose-500/50 transition-all duration-500"
+              className="w-full group relative h-24 rounded-3xl border-2 border-dashed border-zinc-200 hover:border-rose-500/50 hover:bg-rose-500/[0.02] transition-all duration-300"
             >
-              <div className="relative z-10 flex flex-col items-center gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
-                  <span className="text-lg font-black uppercase tracking-[0.2em] text-zinc-950 dark:text-white">Import GSC Properties</span>
-                </div>
-                <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest">Connect your master console</p>
-              </div>
-              <div className="absolute right-6 bottom-6 opacity-0 group-hover:opacity-10 transition-opacity duration-500">
-                <ChevronRight className="w-12 h-12 text-rose-500" />
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-base font-bold text-zinc-950 dark:text-white">Connect Google Console</span>
+                <p className="text-xs text-zinc-400">Import your sites at once</p>
               </div>
             </Button>
           </div>
         </section>
 
 
-        <section className="space-y-10">
-          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-zinc-100 dark:border-white/5 pb-6 gap-6">
-            <div className="flex items-center gap-4">
-              <h2 className="text-2xl font-black italic tracking-tight text-zinc-900 dark:text-zinc-100">Live Inventory</h2>
+        <section className="space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-zinc-100 dark:border-white/5 pb-4 gap-4">
+            <div className="flex items-center gap-3">
+              <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Your Websites</h2>
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={() => router.push("/sites/import")}
-                className="rounded-full bg-zinc-100 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest px-4 hover:bg-rose-500 hover:text-white transition-all"
+                className="rounded-full bg-zinc-100 dark:bg-white/5 text-[10px] font-bold uppercase tracking-widest px-3 hover:bg-rose-500 hover:text-white transition-all"
               >
-                <Plus className="mr-1.5 h-3 w-3" /> Import New
+                <Plus className="mr-1.5 h-3.5 w-3.5" /> Add Site
               </Button>
             </div>
-            <div className="relative w-full md:w-80 group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400 group-focus-within:text-rose-500 transition-colors" />
+            <div className="relative w-full md:w-72 group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-rose-500 transition-colors" />
               <Input
                 value={siteSearchQuery}
                 onChange={(event) => setSiteSearchQuery(event.target.value)}
-                placeholder="Filter ecosystem..."
+                placeholder="Search your sites..."
                 className="pl-10 h-10 bg-zinc-50 border-none rounded-xl focus-visible:ring-rose-500/20 dark:bg-white/5 transition-all"
               />
             </div>

@@ -161,9 +161,9 @@ export default function GscImportView({ planName }: { planName: string }) {
             <div className="mx-auto h-16 w-16 rounded-3xl bg-rose-500/10 flex items-center justify-center text-rose-500 mb-6">
               <Globe className="h-8 w-8" />
             </div>
-            <CardTitle className="text-2xl sm:text-4xl font-black italic tracking-tight">Select GSC Properties</CardTitle>
+            <CardTitle className="text-2xl sm:text-4xl font-bold tracking-tight">Import your sites</CardTitle>
             <CardDescription className="text-zinc-500 dark:text-zinc-400 mt-2 text-sm sm:text-base">
-              Choose the properties you want to sync with IndexFast.
+              Select the websites you want to add to IndexFast.
             </CardDescription>
           </CardHeader>
 
@@ -173,7 +173,7 @@ export default function GscImportView({ planName }: { planName: string }) {
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search properties..."
+                placeholder="Search your sites..."
                 className="pl-12 h-14 bg-zinc-50 border-none rounded-2xl focus-visible:ring-rose-500/20 dark:bg-white/5 text-base"
               />
             </div>
@@ -182,13 +182,13 @@ export default function GscImportView({ planName }: { planName: string }) {
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-24 gap-4 text-zinc-400">
                   <Spinner className="h-8 w-8" />
-                  <p className="text-[10px] font-bold uppercase tracking-widest animate-pulse">Syncing with Google Console...</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest animate-pulse">Loading sites from Google...</p>
                 </div>
               ) : filteredSites.length === 0 ? (
                 <div className="py-24 text-center text-zinc-500 bg-zinc-50/50 dark:bg-white/[0.01] rounded-3xl border-2 border-dashed border-zinc-100 dark:border-white/5">
-                  <p className="font-light italic text-zinc-400">No importable properties found.</p>
+                  <p className="font-medium text-zinc-400 text-sm">No sites found.</p>
                   <Button variant="link" onClick={loadSites} className="mt-2 text-rose-500 font-bold uppercase tracking-widest text-[10px]">
-                    <RefreshCw className="mr-2 h-3 w-3" /> Refresh Scan
+                    <RefreshCw className="mr-2 h-3 w-3" /> Refresh
                   </Button>
                 </div>
               ) : (
@@ -249,10 +249,10 @@ export default function GscImportView({ planName }: { planName: string }) {
             <Button 
               disabled={selection.size === 0 || importing} 
               onClick={handleImport}
-              className="w-full sm:w-auto rounded-full px-12 h-14 bg-zinc-950 hover:bg-zinc-900 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-zinc-950/20"
+              className="w-full sm:w-auto rounded-full px-12 h-14 bg-zinc-950 hover:bg-zinc-900 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 font-bold uppercase tracking-[0.2em] text-xs shadow-xl shadow-zinc-950/20"
             >
               {importing ? <Spinner className="mr-3 h-4 w-4" /> : <RefreshCw className={cn("mr-3 h-4 w-4", importing && "animate-spin")} />}
-              Import {selection.size > 0 ? `${selection.size} Prop${selection.size === 1 ? 'erty' : 'erties'}` : "Sites"}
+              Import {selection.size > 0 ? `${selection.size} Site${selection.size === 1 ? '' : 's'}` : "Sites"}
             </Button>
           </CardFooter>
         </Card>

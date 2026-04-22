@@ -6,21 +6,21 @@ import { Card, CardContent } from "@/components/ui/card";
 const steps = [
   {
     num: "01",
-    title: "Connect Once",
-    desc: "Import verified properties and sitemap endpoints in minutes. Your indexing stack is ready without custom setup.",
-    punch: "No engineering bottleneck",
+    title: "Add your site",
+    desc: "Simply connect your sitemap and link your Google Search Console account. It takes just a few minutes.",
+    punch: "Quick Setup",
   },
   {
     num: "02",
-    title: "Submit at Speed",
-    desc: "Detect fresh URLs from sitemap updates and submit immediately to IndexNow and Bing from one workflow.",
-    punch: "From publish to ping fast",
+    title: "Auto-Index",
+    desc: "Our system automatically finds your new pages and submits them to search engines immediately.",
+    punch: "Save Time",
   },
   {
     num: "03",
-    title: "Scale with Proof",
-    desc: "Track accepted requests, failures, and trend lines so teams can double down on what actually improves discovery.",
-    punch: "Execution with visibility",
+    title: "Track Results",
+    desc: "Monitor your indexing status and see exactly which pages have been successfully indexed.",
+    punch: "Clear Reporting",
   },
 ];
 
@@ -30,14 +30,14 @@ export default function HowItWorks() {
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 max-w-2xl space-y-3 sm:mb-12">
           <Badge variant="outline" className="rounded-full px-3 py-1 text-[11px] tracking-[0.14em] uppercase">
-            Operational Workflow
+            How it works
           </Badge>
-          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
-            Stop publishing blind.
-            <span className="block text-muted-foreground">Start indexing with intent.</span>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Get your pages ranked.
+            <span className="block text-muted-foreground">Faster and easier than ever.</span>
           </h2>
           <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
-            IndexFast gives you a daily operating system to push fresh pages, monitor outcomes, and compound discoverability.
+            IndexFast helps you get your new content noticed by Google and Bing in minutes, not days.
           </p>
         </div>
 

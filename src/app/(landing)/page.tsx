@@ -177,12 +177,12 @@ export default function LandingPage() {
       <Hero />
       <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="space-y-3 pb-6">
-          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Search Engine Reach</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Supported Search Engines</p>
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Popular search engines impacted by your indexing workflow
+            Get your site noticed on Google, Bing, and more
           </h2>
           <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
-            This cloud includes globally popular search engines and regional leaders. Direct engines can receive IndexNow signals, while others are influenced by stronger crawl and freshness signals.
+            We submit your pages directly to top search engines so they show up in search results faster.
           </p>
         </div>
         <LogoCloud />
