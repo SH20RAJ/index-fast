@@ -127,11 +127,11 @@ export default function SitemapExtractorView() {
               <div className="relative flex-1">
                 <Input
                   value={sitemapUrl}
-                  onChange={(e) => setSitemapUrl(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSitemapUrl(e.target.value)}
                   placeholder="https://example.com/sitemap.xml"
                   className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                   disabled={loading}
-                  onKeyDown={(e) => e.key === "Enter" && handleExtract()}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleExtract()}
                 />
                 <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
               </div>

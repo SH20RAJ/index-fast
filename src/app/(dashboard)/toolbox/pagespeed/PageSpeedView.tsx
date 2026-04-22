@@ -221,11 +221,11 @@ export default function PageSpeedView() {
                   <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     value={url}
-                    onChange={(e) => setUrl(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
                     placeholder="https://example.com"
                     className="pl-11 h-12 bg-background border-border/40 focus-visible:ring-primary/20 transition-all text-sm font-medium rounded-xl shadow-inner shadow-black/[0.02]"
                     disabled={loading}
-                    onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && handleAnalyze()}
                   />
                 </div>
                 <Button

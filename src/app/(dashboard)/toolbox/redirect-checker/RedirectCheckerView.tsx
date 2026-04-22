@@ -98,7 +98,7 @@ export default function RedirectCheckerView() {
                 <div className="relative">
                   <Input
                     value={url}
-                    onChange={(e) => setUrl(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
                     placeholder="https://example.com/old-page"
                     className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                   />

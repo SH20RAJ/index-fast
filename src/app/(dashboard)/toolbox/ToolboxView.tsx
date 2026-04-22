@@ -568,7 +568,7 @@ export default function ToolboxView() {
               placeholder="Search platforms..."
               className="pl-10 h-11 bg-white border-zinc-200 rounded-xl focus-visible:ring-rose-500/20 dark:bg-white/5 dark:border-white/10"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
             />
           </div>
         </div>

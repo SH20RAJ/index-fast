@@ -425,7 +425,7 @@ export default function PingView() {
                         <div className="relative">
                           <Input
                             value={url}
-                            onChange={(e) => setUrl(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
                             placeholder="https://example.com/blog-post"
                             className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                             disabled={running}
@@ -438,7 +438,7 @@ export default function PingView() {
                         <div className="relative">
                           <Input
                             value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                             placeholder="My Epic Content"
                             className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 text-xs focus-visible:ring-rose-500/30"
                             disabled={running}
@@ -454,7 +454,7 @@ export default function PingView() {
                       <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 px-1">Enter URLs (One per line)</Label>
                       <Textarea
                         value={bulkUrls}
-                        onChange={(e) => setBulkUrls(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBulkUrls(e.target.value)}
                         placeholder="https://example.com/page-1\nhttps://example.com/page-2"
                         className="min-h-[160px] rounded-2xl bg-zinc-50 border-none dark:bg-white/5 p-4 font-mono text-xs focus-visible:ring-rose-500/30"
                         disabled={running}
@@ -469,7 +469,7 @@ export default function PingView() {
                         <div className="relative flex-1">
                           <Input
                             value={sitemapUrl}
-                            onChange={(e) => setSitemapUrl(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSitemapUrl(e.target.value)}
                             placeholder="https://example.com/sitemap.xml"
                             className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                             disabled={running || parsingSitemap}

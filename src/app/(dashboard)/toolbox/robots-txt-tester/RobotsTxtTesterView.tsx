@@ -137,7 +137,7 @@ export default function RobotsTxtTesterView() {
                     <div className="relative flex-1">
                       <Input
                         value={robotsTxtUrl}
-                        onChange={(e) => setRobotsTxtUrl(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRobotsTxtUrl(e.target.value)}
                         placeholder="https://example.com/robots.txt"
                         className="h-14 rounded-2xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                       />
@@ -158,7 +158,7 @@ export default function RobotsTxtTesterView() {
                   <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 px-1">robots.txt Content</Label>
                   <Textarea
                     value={robotsTxtContent}
-                    onChange={(e) => setRobotsTxtContent(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setRobotsTxtContent(e.target.value)}
                     placeholder="User-agent: *\nDisallow: /admin/\nSitemap: https://example.com/sitemap.xml"
                     className="min-h-[200px] rounded-2xl bg-zinc-50 border-none dark:bg-white/5 p-6 font-mono text-xs leading-relaxed focus-visible:ring-rose-500/30"
                   />
@@ -172,7 +172,7 @@ export default function RobotsTxtTesterView() {
                   <div className="relative">
                     <Input
                       value={userAgent}
-                      onChange={(e) => setUserAgent(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAgent(e.target.value)}
                       placeholder="*"
                       className="h-12 rounded-xl bg-zinc-50 border-none dark:bg-white/5 pl-11 pr-4 font-mono text-xs focus-visible:ring-rose-500/30"
                     />

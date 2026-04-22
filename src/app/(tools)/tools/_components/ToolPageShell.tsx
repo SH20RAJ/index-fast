@@ -14,6 +14,7 @@ interface ToolPageShellProps {
   faqs: Array<{ question: string; answer: string }>;
   categoryTitle?: string;
   relatedTools?: Array<{ slug: string; title: string }>;
+  children?: React.ReactNode;
 }
 
 export default function ToolPageShell({
@@ -25,6 +26,7 @@ export default function ToolPageShell({
   faqs,
   categoryTitle,
   relatedTools,
+  children,
 }: ToolPageShellProps) {
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
@@ -51,6 +53,8 @@ export default function ToolPageShell({
             </Card>
           ))}
         </div>
+
+        {children}
 
         <Separator />
 
