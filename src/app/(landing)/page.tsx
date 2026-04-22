@@ -18,7 +18,7 @@ const testimonials = [
     name: "Alex",
     role: "SEO Engineer",
     company: "TrafficScale",
-    content: "We pushed 1,200 programmatic pages. Google indexed them in under 24 hours. The difference from manual GSC is staggering.",
+    content: "We pushed 1.2M programmatic pages. Google indexed them in under 24 hours. The difference from manual GSC is staggering.",
     rating: 5,
     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d"
   },
@@ -182,7 +182,7 @@ export default function LandingPage() {
         <div className="space-y-3 pb-6">
           <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Supported Search Engines</p>
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Get your site noticed on Google, Bing, and more
+            Get your site noticed on Google, Bing, and 120+ more
           </h2>
           <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
             We submit your pages directly to top search engines so they show up in search results faster.
