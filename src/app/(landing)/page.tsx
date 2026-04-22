@@ -7,7 +7,7 @@ import FAQ from "@/components/landing/FAQ";
 import FinalCTA from "@/components/landing/FinalCTA";
 import ChatBot from "@/components/landing/ChatBot";
 import { LogoCloud } from "@/components/ui/logo-cloud-2";
-import { PricingCreative } from "@/components/ui/pricing-creative";
+import Pricing from "@/components/landing/Pricing";
 import { AnimatedTestimonials } from "@/components/blocks/animated-testimonials";
 
 const testimonials = [
@@ -197,7 +197,7 @@ export default function LandingPage() {
         trustedCompanies={trustedCompanies}
         trustedCompaniesTitle="Used by high-velocity content teams"
       />
-      <PricingCreative />
+      <Pricing />
       <FAQ />
       <FinalCTA />
       <ChatBot />
