@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import React from "react";
@@ -29,7 +29,7 @@ interface HeroSectionProps {
 }
 
 // Animation variants for Framer Motion
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -39,7 +39,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
@@ -50,19 +50,19 @@ const itemVariants = {
   },
 };
 
-const imageVariants = {
+const imageVariants: Variants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: {
     opacity: 1,
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: "easeOut",
+      ease: [0.22, 1, 0.36, 1],
     },
   },
 };
 
-const floatingVariants = {
+const floatingVariants: Variants = {
   animate: {
     y: [0, -8, 0],
     transition: {
