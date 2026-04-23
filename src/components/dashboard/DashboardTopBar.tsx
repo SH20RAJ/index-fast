@@ -40,6 +40,9 @@ function titleFromPath(pathname: string): { title: string; subtitle?: string } {
   if (pathname.startsWith("/settings")) {
     return { title: "Settings", subtitle: "Account and billing" };
   }
+  if (pathname.startsWith("/dashboard/mcp")) {
+    return { title: "AI Agents (MCP)", subtitle: "Connect to Claude, Cursor, and Windsurf" };
+  }
   return { title: "Workspace", subtitle: "IndexFast" };
 }
 

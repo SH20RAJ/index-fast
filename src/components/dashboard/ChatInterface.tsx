@@ -52,12 +52,12 @@ export function ChatInterface() {
             <Bot className="h-6 w-6" />
           </div>
           <div>
-            <h3 className="text-sm font-bold">AI Assistant</h3>
-            <p className="text-[10px] text-emerald-500 font-medium">Ready to help with your SEO</p>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-bold">AI Assistant</h3>
+              <Badge variant="secondary" className="text-[9px] h-4 px-1 uppercase leading-none font-black bg-primary/10 text-primary border-none">Beta</Badge>
+            </div>
+            <p className="text-[10px] text-muted-foreground font-medium">Powered by Gemini 2.0 & Search Console API</p>
           </div>
-        </div>
-        <div className="flex gap-2">
-          <Badge variant="outline" className="text-[10px] uppercase tracking-widest font-bold">GPT-4o Powered</Badge>
         </div>
       </div>
       

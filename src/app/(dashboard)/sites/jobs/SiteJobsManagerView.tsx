@@ -126,10 +126,7 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
   return (
     <div className="space-y-10 pb-16 max-w-5xl">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <PageHeader
-          title="Automation"
-          description="Schedule recurring submissions and monitor status."
-        />
+        {/* Page header is now handled by DashboardTopBar */}
       </div>
 
       {loading && (

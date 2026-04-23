@@ -151,7 +151,7 @@ export default function AddSiteFlow({ floating = false }: { floating?: boolean }
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-[32px] border-none shadow-2xl fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+      <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-[32px] border-none shadow-2xl">
         <div className="p-8">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-xl font-bold tracking-tight text-center">

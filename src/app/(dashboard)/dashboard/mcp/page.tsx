@@ -29,10 +29,8 @@ export default async function McpPage() {
   return (
     <div className="max-w-5xl space-y-8 pb-20">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <PageHeader 
-          title="AI Agents (MCP)" 
-          description="Connect your dashboard to Claude, Cursor, and Windsurf."
-        />
+        {/* Page header is now handled by DashboardTopBar */}
+        <div className="flex-1" />
         <Badge variant="secondary" className="w-fit bg-primary/10 text-primary border-none py-1 px-3">
           <Zap className="mr-1.5 h-3 w-3 fill-current" />
           Protocol v1.0
