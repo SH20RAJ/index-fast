@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Users, Zap } from "lucide-react";
+import { Shield, Users, Zap, Bot } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -305,6 +305,68 @@ export function Features() {
                         </motion.div>
                       ))}
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Card 6: AI Command Center (Full Width) */}
+            <motion.div className="col-span-full" variants={itemVariants}>
+              <Card className="relative overflow-hidden border-primary/20 bg-primary/5 hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 group">
+                <CardContent className="flex flex-col md:flex-row items-center gap-12 p-8 md:p-12">
+                  <div className="flex-1 space-y-6">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary ring-1 ring-primary/20">
+                      <Zap className="h-3 w-3" /> New: AI Command Center
+                    </div>
+                    <h2 className="text-3xl font-serif font-bold tracking-tight text-foreground sm:text-4xl">
+                      Manage SEO with <span className="text-primary italic">Natural Language</span>
+                    </h2>
+                    <p className="text-base text-muted-foreground sm:text-lg leading-relaxed">
+                      Our new AI assistant doesn't just talk—it takes action. Ask it to audit your site, 
+                      index new URLs, generate meta tags, or schedule automation. 
+                      It's like having a senior SEO engineer embedded in your dashboard.
+                    </p>
+                    <div className="flex flex-wrap gap-3 pt-2">
+                      {["SEO Audits", "Instant Indexing", "Blog Generation", "Cron Management"].map((feature) => (
+                        <div key={feature} className="flex items-center gap-2 rounded-xl bg-background px-3 py-1.5 text-xs font-semibold shadow-sm border border-border/40">
+                          <div className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          {feature}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="relative w-full max-w-md lg:max-w-lg">
+                    {/* Chat UI Mockup */}
+                    <div className="rounded-2xl border border-border/60 bg-card shadow-2xl overflow-hidden">
+                      <div className="border-b bg-muted/30 px-4 py-2 flex items-center gap-2">
+                        <div className="size-2.5 rounded-full bg-rose-500/80" />
+                        <div className="size-2.5 rounded-full bg-amber-500/80" />
+                        <div className="size-2.5 rounded-full bg-emerald-500/80" />
+                        <span className="ml-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">IndexFast Assistant</span>
+                      </div>
+                      <div className="p-4 space-y-4 font-mono text-[11px] leading-relaxed">
+                        <div className="flex gap-2">
+                          <span className="text-primary">user:</span>
+                          <span>"Index all new pages on indexfast.co"</span>
+                        </div>
+                        <div className="flex gap-2 text-emerald-500 bg-emerald-500/5 p-2 rounded-lg border border-emerald-500/10">
+                          <Bot className="h-3 w-3 shrink-0" />
+                          <span>Executing: submit_url(url="indexfast.co/*")</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <Bot className="h-3 w-3 shrink-0 text-primary" />
+                          <span className="text-muted-foreground italic">"I've submitted 12 new URLs for indexing. Would you like a technical SEO audit for the landing page next?"</span>
+                        </div>
+                        <div className="border-t pt-4 flex gap-2">
+                          <span className="text-primary">user:</span>
+                          <span className="border-r-2 border-primary pr-1 animate-pulse">"Yes, and generate meta tags..."</span>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Decorative elements */}
+                    <div className="absolute -top-6 -right-6 h-32 w-32 bg-primary/20 blur-3xl rounded-full -z-10" />
+                    <div className="absolute -bottom-6 -left-6 h-32 w-32 bg-emerald-500/20 blur-3xl rounded-full -z-10" />
                   </div>
                 </CardContent>
               </Card>

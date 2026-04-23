@@ -5,6 +5,7 @@ import DashboardTopBar from "@/components/dashboard/DashboardTopBar";
 import { SiteProvider, type WebsiteBasic } from "@/components/dashboard/SiteContext";
 import { LogProvider } from "@/components/dashboard/LogContext";
 import AddSiteFlow from "@/components/dashboard/AddSiteFlow";
+import ChatAssistant from "@/components/dashboard/ChatAssistant";
 
 export default function DashboardShell({
   children,
@@ -35,8 +36,9 @@ export default function DashboardShell({
             </main>
           </div>
 
-          {/* Floating Add Site button — fixed bottom-right */}
-          <div className="fixed bottom-6 right-6 z-50">
+          {/* Floating Actions */}
+          <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-4">
+            <ChatAssistant />
             <AddSiteFlow floating />
           </div>
         </div>

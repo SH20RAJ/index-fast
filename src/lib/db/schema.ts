@@ -178,6 +178,31 @@ export const cronJobs = pgTable("cron_jobs", {
 }));
 
 /**
+ * Chat System: History and project-based AI context
+ */
+export const chatConversations = pgTable("chat_conversations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  websiteId: uuid("website_id").references(() => websites.id, { onDelete: "set null" }),
+  title: text("title").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_chat_conv_user_id").on(table.userId),
+}));
+
+export const chatMessages = pgTable("chat_messages", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  conversationId: uuid("conversation_id").references(() => chatConversations.id, { onDelete: "cascade" }).notNull(),
+  role: text("role").notNull(), // 'system', 'user', 'assistant', 'tool'
+  content: text("content").notNull(),
+  toolCalls: jsonb("tool_calls"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => ({
+  conversationIdIdx: index("idx_chat_msg_conv_id").on(table.conversationId),
+}));
+
+/**
  * Exporting Types for Drizzle
  */
 export type User = typeof users.$inferSelect;
@@ -196,3 +221,8 @@ export type UsageEvent = typeof usageEvents.$inferSelect;
 export type NewUsageEvent = typeof usageEvents.$inferInsert;
 export type CronJob = typeof cronJobs.$inferSelect;
 export type NewCronJob = typeof cronJobs.$inferInsert;
+export type ChatConversation = typeof chatConversations.$inferSelect;
+export type NewChatConversation = typeof chatConversations.$inferInsert;
+export type ChatMessage = typeof chatMessages.$inferSelect;
+export type NewChatMessage = typeof chatMessages.$inferInsert;
+
