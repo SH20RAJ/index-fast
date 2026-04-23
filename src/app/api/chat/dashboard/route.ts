@@ -34,11 +34,14 @@ export async function POST(req: Request) {
     - If a user wants to know about their sites, use list_websites.
     - You can perform technical audits using run_seo_audit.
     - You can analyze search performance (clicks, impressions, top queries) using the gsc_ tools.
+    - Use gsc_run_quick_wins to identify high-potential keywords that are ranking on page 2.
+    - Use gsc_get_performance for deep dives into search trends, specific page performance, or geographic data.
     - If GSC is not connected, inform the user they can connect it in the settings.
     - You can deep-inspect URL indexing status via gsc_inspect_url.
     - You can generate optimized content and meta tags using the generation tools.
     - User ID: ${user.id}. 
     
+    Proactively suggest running a "Quick Wins" analysis or a technical audit if the user is looking to improve their SEO.
     When a user asks about "my sites" or "websites", always start by listing them if you haven't already.`,
     messages,
     tools: {
@@ -118,14 +121,35 @@ export async function POST(req: Request) {
         },
       } as any,
       gsc_get_performance: {
-        description: "Get search performance insights (clicks, impressions, CTR) for a GSC property.",
+        description: "Get search performance insights (clicks, impressions, CTR) for a GSC property with optional filters.",
         inputSchema: z.object({
-          siteUrl: z.string().describe("The GSC property URL (e.g. https://example.com/ or sc-domain:example.com)"),
-          days: z.number().optional().default(28),
-          dimensions: z.array(z.enum(['query', 'page', 'country', 'device', 'date'])).optional().default(['query']),
+          siteUrl: z.string().describe("The GSC property URL"),
+          options: z.object({
+            daysBack: z.number().optional().default(28),
+            startDate: z.string().optional().describe("YYYY-MM-DD"),
+            endDate: z.string().optional().describe("YYYY-MM-DD"),
+            dimensions: z.array(z.enum(['query', 'page', 'country', 'device', 'date'])).optional(),
+            type: z.enum(['web', 'image', 'video', 'news', 'discover', 'googleNews']).optional(),
+            rowLimit: z.number().max(25000).optional(),
+            filters: z.array(z.object({
+              dimension: z.enum(['query', 'page', 'country', 'device', 'searchAppearance']),
+              operator: z.enum(['equals', 'contains', 'notEquals', 'notContains', 'includingRegex', 'excludingRegex']),
+              expression: z.string()
+            })).optional()
+          }).optional().default({ daysBack: 28 })
         }),
-        execute: async ({ siteUrl, days, dimensions }: any) => {
-          const res = await aiAssistantTools.gsc_get_performance(gscAccessToken, siteUrl, days, dimensions);
+        execute: async ({ siteUrl, options }: any) => {
+          const res = await aiAssistantTools.gsc_get_performance(gscAccessToken, siteUrl, options);
+          return JSON.stringify(res);
+        },
+      } as any,
+      gsc_run_quick_wins: {
+        description: "Analyze a GSC property to find 'Quick Wins' - high-impression queries currently on page 2.",
+        inputSchema: z.object({
+          siteUrl: z.string().describe("The GSC property URL"),
+        }),
+        execute: async ({ siteUrl }: any) => {
+          const res = await aiAssistantTools.gsc_run_quick_wins(gscAccessToken, siteUrl);
           return JSON.stringify(res);
         },
       } as any,

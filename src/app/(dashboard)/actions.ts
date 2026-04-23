@@ -742,11 +742,11 @@ export async function getSiteInsightsAction(websiteId: string) {
     // but the original GSC siteUrl might be needed. Let's try website.url first.
     let rows;
     try {
-      rows = await getSearchAnalytics(tokenResult.data.accessToken, siteUrl, 28);
+      rows = await getSearchAnalytics(tokenResult.data.accessToken, siteUrl, { daysBack: 28 });
     } catch (e: any) {
       // If the URL fails, sometimes GSC expects sc-domain
       const domainUrl = `sc-domain:${siteUrl.replace(/^https?:\/\//, '')}`;
-      rows = await getSearchAnalytics(tokenResult.data.accessToken, domainUrl, 28);
+      rows = await getSearchAnalytics(tokenResult.data.accessToken, domainUrl, { daysBack: 28 });
     }
 
     return {

@@ -6,7 +6,8 @@ import { auditWebsite } from "./audit-service";
 import { 
   listSearchConsoleSites, 
   getSearchAnalytics, 
-  inspectUrl 
+  inspectUrl,
+  runQuickWinsAnalysis
 } from "@/lib/api/google";
 import axios from "axios";
 
@@ -161,13 +162,26 @@ export const aiAssistantTools = {
   /**
    * Get search performance insights
    */
-  gsc_get_performance: async (accessToken: string | undefined, siteUrl: string, days: number = 28, dimensions: string[] = ['query']) => {
+  gsc_get_performance: async (accessToken: string | undefined, siteUrl: string, options: any = {}) => {
     if (!accessToken) return { error: "Google Search Console is not connected." };
     try {
-      const data = await getSearchAnalytics(accessToken, siteUrl, days, dimensions);
+      const data = await getSearchAnalytics(accessToken, siteUrl, options);
       return data;
     } catch (error) {
       return { error: "Failed to fetch search performance data." };
+    }
+  },
+
+  /**
+   * Automatically identify "Quick Wins" (queries on page 2 with high impressions)
+   */
+  gsc_run_quick_wins: async (accessToken: string | undefined, siteUrl: string) => {
+    if (!accessToken) return { error: "Google Search Console is not connected." };
+    try {
+      const wins = await runQuickWinsAnalysis(accessToken, siteUrl);
+      return wins;
+    } catch (error) {
+      return { error: "Failed to run Quick Wins analysis." };
     }
   },
 

@@ -74,24 +74,53 @@ export async function listSearchConsoleSitemaps(accessToken: string, siteUrl: st
 export async function getSearchAnalytics(
   accessToken: string, 
   siteUrl: string, 
-  daysBack: number = 28,
-  dimensions: string[] = ['date'],
-  rowLimit: number = 1000
+  options: {
+    daysBack?: number,
+    startDate?: string,
+    endDate?: string,
+    dimensions?: string[],
+    rowLimit?: number,
+    type?: 'web' | 'image' | 'video' | 'news' | 'discover' | 'googleNews',
+    aggregationType?: 'auto' | 'byNewsShowcasePanel' | 'byProperty' | 'byPage',
+    dataState?: 'all' | 'final',
+    filters?: Array<{
+      dimension: 'query' | 'page' | 'country' | 'device' | 'searchAppearance',
+      operator: 'equals' | 'contains' | 'notEquals' | 'notContains' | 'includingRegex' | 'excludingRegex',
+      expression: string
+    }>
+  } = {}
 ) {
   const searchconsole = createSearchConsoleClient(accessToken);
   
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(endDate.getDate() - daysBack);
+  let start = options.startDate;
+  let end = options.endDate;
+
+  if (!start || !end) {
+    const endDateObj = new Date();
+    const startDateObj = new Date();
+    startDateObj.setDate(endDateObj.getDate() - (options.daysBack || 28));
+    start = startDateObj.toISOString().split('T')[0];
+    end = endDateObj.toISOString().split('T')[0];
+  }
   
   try {
     const response = await searchconsole.searchanalytics.query({
       siteUrl,
       requestBody: {
-        startDate: startDate.toISOString().split('T')[0],
-        endDate: endDate.toISOString().split('T')[0],
-        dimensions,
-        rowLimit,
+        startDate: start,
+        endDate: end,
+        dimensions: options.dimensions || ['date'],
+        rowLimit: options.rowLimit || 1000,
+        type: options.type || 'web',
+        aggregationType: options.aggregationType || 'auto',
+        dataState: options.dataState || 'final',
+        dimensionFilterGroups: options.filters ? [{
+          filters: options.filters.map(f => ({
+            dimension: f.dimension,
+            operator: f.operator,
+            expression: f.expression
+          }))
+        }] : undefined
       }
     });
     
@@ -100,6 +129,29 @@ export async function getSearchAnalytics(
     console.error("Error querying GSC analytics:", error);
     throw error;
   }
+}
+
+/**
+ * Run a Quick Wins analysis to find high-impression queries ranking on page 2 (position 11-20).
+ */
+export async function runQuickWinsAnalysis(accessToken: string, siteUrl: string) {
+  const data = await getSearchAnalytics(accessToken, siteUrl, {
+    daysBack: 28,
+    dimensions: ['query'],
+    rowLimit: 5000,
+  });
+
+  // Filter for position between 10 and 20 (page 2) and significant impressions
+  const quickWins = data
+    .filter(row => {
+      const pos = row.position || 0;
+      const impressions = row.impressions || 0;
+      return pos > 10 && pos <= 20 && impressions > 100;
+    })
+    .sort((a, b) => (b.impressions || 0) - (a.impressions || 0))
+    .slice(0, 10);
+
+  return quickWins;
 }
 
 /**
