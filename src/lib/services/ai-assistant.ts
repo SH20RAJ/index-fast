@@ -3,6 +3,11 @@ import { websites, urlInventory, submissions, cronJobs, users } from "@/lib/db/s
 import { eq, and, desc } from "drizzle-orm";
 import { triggerSubmissions } from "./indexing-service";
 import { auditWebsite } from "./audit-service";
+import { 
+  listSearchConsoleSites, 
+  getSearchAnalytics, 
+  inspectUrl 
+} from "@/lib/api/google";
 import axios from "axios";
 
 const NVIDIA_API_URL = process.env.NVIDIA_API_URL || "https://integrate.api.nvidia.com/v1/chat/completions";
@@ -138,5 +143,44 @@ export const aiAssistantTools = {
       .where(eq(cronJobs.websiteId, websiteId));
 
     return { message: `Automation successfully ${action}d for ${site.url}.` };
+  },
+
+  /**
+   * List verified GSC properties
+   */
+  gsc_list_properties: async (accessToken?: string) => {
+    if (!accessToken) return { error: "Google Search Console is not connected. Please connect it in the settings or via the GSC OAuth button." };
+    try {
+      const sites = await listSearchConsoleSites(accessToken);
+      return sites;
+    } catch (error) {
+      return { error: "Failed to fetch GSC properties." };
+    }
+  },
+
+  /**
+   * Get search performance insights
+   */
+  gsc_get_performance: async (accessToken: string | undefined, siteUrl: string, days: number = 28, dimensions: string[] = ['query']) => {
+    if (!accessToken) return { error: "Google Search Console is not connected." };
+    try {
+      const data = await getSearchAnalytics(accessToken, siteUrl, days, dimensions);
+      return data;
+    } catch (error) {
+      return { error: "Failed to fetch search performance data." };
+    }
+  },
+
+  /**
+   * Inspect a URL's status in Google Search
+   */
+  gsc_inspect_url: async (accessToken: string | undefined, url: string, siteUrl: string) => {
+    if (!accessToken) return { error: "Google Search Console is not connected." };
+    try {
+      const result = await inspectUrl(accessToken, url, siteUrl);
+      return result;
+    } catch (error) {
+      return { error: "Failed to inspect URL in GSC." };
+    }
   }
 };

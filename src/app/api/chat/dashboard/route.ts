@@ -3,6 +3,7 @@ import { streamText } from "ai";
 import { stackServerApp } from "@/stack";
 import { aiAssistantTools } from "@/lib/services/ai-assistant";
 import { z } from "zod";
+import { cookies } from "next/headers";
 
 const nvidia = createOpenAI({
   apiKey: process.env.NVIDIA_API_KEY,
@@ -19,17 +20,22 @@ export async function POST(req: Request) {
   }
 
   const { messages }: { messages: any[] } = await req.json();
+  const cookieStore = await cookies();
+  const gscAccessToken = cookieStore.get("gsc_access_token")?.value;
 
   const result = streamText({
     model: nvidia(process.env.NVIDIA_MODEL || "meta/llama3-70b-instruct"),
     system: `You are the IndexFast AI Assistant. You help users manage their SEO indexing and analyze their websites.
-    You have access to the user's websites, indexing status, and technical SEO tools.
+    You have access to the user's websites, indexing status, technical SEO tools, and Google Search Console (GSC) data.
     
     Guidelines:
     - Be technical yet helpful.
     - If a user asks to index a URL, use the submit_url tool.
     - If a user wants to know about their sites, use list_websites.
     - You can perform technical audits using run_seo_audit.
+    - You can analyze search performance (clicks, impressions, top queries) using the gsc_ tools.
+    - If GSC is not connected, inform the user they can connect it in the settings.
+    - You can deep-inspect URL indexing status via gsc_inspect_url.
     - You can generate optimized content and meta tags using the generation tools.
     - User ID: ${user.id}. 
     
@@ -101,6 +107,36 @@ export async function POST(req: Request) {
         }),
         execute: async ({ websiteId, action }: any) => {
           const res = await aiAssistantTools.manage_automation(user.id, websiteId, action);
+          return JSON.stringify(res);
+        },
+      } as any,
+      gsc_list_properties: {
+        description: "List all verified Google Search Console properties the user has access to.",
+        execute: async () => {
+          const res = await aiAssistantTools.gsc_list_properties(gscAccessToken);
+          return JSON.stringify(res);
+        },
+      } as any,
+      gsc_get_performance: {
+        description: "Get search performance insights (clicks, impressions, CTR) for a GSC property.",
+        inputSchema: z.object({
+          siteUrl: z.string().describe("The GSC property URL (e.g. https://example.com/ or sc-domain:example.com)"),
+          days: z.number().optional().default(28),
+          dimensions: z.array(z.enum(['query', 'page', 'country', 'device', 'date'])).optional().default(['query']),
+        }),
+        execute: async ({ siteUrl, days, dimensions }: any) => {
+          const res = await aiAssistantTools.gsc_get_performance(gscAccessToken, siteUrl, days, dimensions);
+          return JSON.stringify(res);
+        },
+      } as any,
+      gsc_inspect_url: {
+        description: "Deep inspect a specific URL in Google Search Console to see indexing status and errors.",
+        inputSchema: z.object({
+          url: z.string().url(),
+          siteUrl: z.string().describe("The GSC property URL"),
+        }),
+        execute: async ({ url, siteUrl }: any) => {
+          const res = await aiAssistantTools.gsc_inspect_url(gscAccessToken, url, siteUrl);
           return JSON.stringify(res);
         },
       } as any,

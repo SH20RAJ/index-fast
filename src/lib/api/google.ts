@@ -71,7 +71,13 @@ export async function listSearchConsoleSitemaps(accessToken: string, siteUrl: st
   }
 }
 
-export async function getSearchAnalytics(accessToken: string, siteUrl: string, daysBack: number = 28) {
+export async function getSearchAnalytics(
+  accessToken: string, 
+  siteUrl: string, 
+  daysBack: number = 28,
+  dimensions: string[] = ['date'],
+  rowLimit: number = 1000
+) {
   const searchconsole = createSearchConsoleClient(accessToken);
   
   const endDate = new Date();
@@ -84,13 +90,34 @@ export async function getSearchAnalytics(accessToken: string, siteUrl: string, d
       requestBody: {
         startDate: startDate.toISOString().split('T')[0],
         endDate: endDate.toISOString().split('T')[0],
-        dimensions: ['date'],
+        dimensions,
+        rowLimit,
       }
     });
     
     return response.data.rows || [];
   } catch (error) {
     console.error("Error querying GSC analytics:", error);
+    throw error;
+  }
+}
+
+/**
+ * Inspects a URL in Search Console.
+ */
+export async function inspectUrl(accessToken: string, url: string, siteUrl: string) {
+  const searchconsole = createSearchConsoleClient(accessToken);
+
+  try {
+    const response = await searchconsole.urlInspection.index.inspect({
+      requestBody: {
+        inspectionUrl: url,
+        siteUrl: siteUrl,
+      },
+    });
+    return response.data.inspectionResult;
+  } catch (error) {
+    console.error("Error inspecting URL:", error);
     throw error;
   }
 }
