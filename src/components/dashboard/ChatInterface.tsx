@@ -56,7 +56,8 @@ export function ChatInterface() {
               <h3 className="text-sm font-bold">AI Assistant</h3>
               <Badge variant="secondary" className="text-[9px] h-4 px-1 uppercase leading-none font-black bg-primary/10 text-primary border-none">Beta</Badge>
             </div>
-           </div>
+            <p className="text-[10px] text-muted-foreground font-medium">Powered by Gemini 2.0 & Search Console API</p>
+          </div>
         </div>
       </div>
       
