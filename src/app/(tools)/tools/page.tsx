@@ -174,7 +174,7 @@ export  function ToolsHomePage() {
                         <CardContent className="pt-0">
                           <Button asChild className="w-full justify-center">
                             <Link href={`/tools/${tool.slug}`} aria-label={`Open tool: ${tool.title}`}>
-                              Open {tool.title} <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:tranzinc-x-0.5" />
+                              Open {tool.title} <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                             </Link>
                           </Button>
                         </CardContent>
@@ -430,7 +430,7 @@ export  function ToolsHomePage2() {
                         <CardContent className="pt-0">
                           <Button asChild className="w-full justify-center">
                             <Link href={`/tools/${tool.slug}`}>
-                              Open Tool <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:tranzinc-x-0.5" />
+                              Open Tool <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                             </Link>
                           </Button>
                         </CardContent>

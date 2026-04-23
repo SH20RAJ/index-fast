@@ -91,7 +91,7 @@ export default function ExternalResourcesSection() {
                       <CardContent>
                         <Button asChild className="w-full justify-center">
                           <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                            Visit <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:tranzinc-x-0.5" />
+                            Visit <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                           </a>
                         </Button>
                       </CardContent>

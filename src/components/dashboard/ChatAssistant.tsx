@@ -22,12 +22,25 @@ import { cn } from "@/lib/utils";
 
 export default function ChatAssistant() {
   const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   
-  const { messages, input, handleInputChange, handleSubmit, status } = useChat({
+  const { messages, sendMessage, status } = useChat({
     api: "/api/chat/dashboard",
-  } as any) as any;
-  const isLoading = status === "loading" || status === "streaming";
+  } as any);
+  
+  const isLoading = status === "submitted" || status === "streaming";
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+    sendMessage({ text: input });
+    setInput("");
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -76,8 +89,12 @@ export default function ChatAssistant() {
                         </p>
                         
                         <div className="mt-6 grid grid-cols-2 gap-2 px-4">
-                          <QuickAction onClick={() => handleInputChange({ target: { value: "List my websites" } } as any)} icon={Globe} label="My Sites" />
-                          <QuickAction onClick={() => handleInputChange({ target: { value: "Show my stats" } } as any)} icon={BarChart3} label="View Stats" />
+                          <QuickAction onClick={() => {
+                            if (!isLoading) sendMessage({ text: "List my websites" });
+                          }} icon={Globe} label="My Sites" />
+                          <QuickAction onClick={() => {
+                            if (!isLoading) sendMessage({ text: "Show my stats" });
+                          }} icon={BarChart3} label="View Stats" />
                         </div>
                       </div>
                     )}

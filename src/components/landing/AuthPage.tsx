@@ -107,7 +107,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
             >
               {isSignIn ? <Lock className="h-5 w-5" /> : <Rocket className="h-5 w-5" />}
               {isSignIn ? "Continue to Sign In" : "Continue to Sign Up"}
-              <ArrowRight className="h-4 w-4 opacity-50 group-hover:tranzinc-x-1 transition-transform" />
+              <ArrowRight className="h-4 w-4 opacity-50 group-hover:translate-x-1 transition-transform" />
             </Button>
 
             <Button 

@@ -184,45 +184,51 @@ export default function CronJobManager({
               <Plus className="mr-2 h-3.5 w-3.5" /> Add Task
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[400px] rounded-[32px] border-none shadow-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-semibold">New Automation</DialogTitle>
-              <DialogDescription className="text-xs text-zinc-500">
-                Setup automated indexing for {siteUrl}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-5 py-5">
-              <div className="space-y-2 px-1">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Frequency</Label>
-                <Select value={frequency} onValueChange={(v: any) => setFrequency(v)} options={[
-                  { label: "Hourly", value: "hourly" },
-                  { label: "Daily", value: "daily" },
-                  { label: "Weekly", value: "weekly" },
-                  { label: "Monthly", value: "monthly" },
-                ]} />
+          <DialogContent className="sm:max-w-[420px] rounded-[2.5rem] border border-white/5 bg-card/95 backdrop-blur-2xl shadow-2xl p-0 overflow-hidden">
+            <div className="p-8">
+              <DialogHeader className="mb-6">
+                <DialogTitle className="text-2xl font-serif font-bold tracking-tight text-center">New Automation</DialogTitle>
+                <DialogDescription className="text-center text-xs text-muted-foreground mt-1">
+                  Setup automated indexing for <span className="text-foreground font-medium">{siteUrl}</span>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-6 py-2">
+                <div className="space-y-3">
+                  <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground pl-1">Frequency</Label>
+                  <Select value={frequency} onValueChange={(v: any) => setFrequency(v)} options={[
+                    { label: "Hourly", value: "hourly" },
+                    { label: "Daily", value: "daily" },
+                    { label: "Weekly", value: "weekly" },
+                    { label: "Monthly", value: "monthly" },
+                  ]} />
+                </div>
+                <div className="space-y-3">
+                  <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground pl-1">Service</Label>
+                  <Select value={engine} onValueChange={(v: any) => setEngine(v)} options={[
+                    { label: "IndexNow", value: "indexnow" },
+                    { label: "Bing Search", value: "bing" },
+                    { label: "Google Console", value: "google" },
+                  ]} />
+                </div>
+                <div className="space-y-3">
+                  <Label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground pl-1">Pages Source</Label>
+                  <Select value={sourceMode} onValueChange={(v: any) => setSourceMode(v)} options={[
+                    { label: "Sitemap XML", value: "sitemap" },
+                    { label: "Discovered Pages", value: "inventory" },
+                  ]} />
+                </div>
               </div>
-              <div className="space-y-2 px-1">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Service</Label>
-                <Select value={engine} onValueChange={(v: any) => setEngine(v)} options={[
-                  { label: "IndexNow", value: "indexnow" },
-                  { label: "Bing", value: "bing" },
-                  { label: "Google", value: "google" },
-                ]} />
-              </div>
-              <div className="space-y-2 px-1">
-                <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Pages Source</Label>
-                <Select value={sourceMode} onValueChange={(v: any) => setSourceMode(v)} options={[
-                  { label: "Sitemap", value: "sitemap" },
-                  { label: "Found pages", value: "inventory" },
-                ]} />
-              </div>
+              <DialogFooter className="mt-8">
+                <Button 
+                  onClick={handleCreateCronJob} 
+                  disabled={loading} 
+                  className="w-full h-14 rounded-2xl bg-zinc-950 hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 font-bold uppercase tracking-[0.15em] text-xs shadow-xl shadow-black/10 dark:shadow-white/5"
+                >
+                  {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Zap className="mr-2 h-4 w-4" />}
+                  Confirm Task
+                </Button>
+              </DialogFooter>
             </div>
-            <DialogFooter>
-              <Button onClick={handleCreateCronJob} disabled={loading} className="w-full h-12 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 font-bold uppercase tracking-widest text-xs">
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Confirm Task
-              </Button>
-            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

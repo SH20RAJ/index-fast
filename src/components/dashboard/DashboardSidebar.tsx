@@ -63,31 +63,6 @@ const navSections: NavSection[] = [
     ],
   },
   {
-    label: "Reports",
-    items: [
-      {
-        label: "Recent Activity",
-        href: "/submissions",
-        icon: Activity,
-      },
-      {
-        label: "Sitemaps",
-        href: "/dashboard/sitemaps",
-        icon: Box,
-      },
-    ]
-  },
-  {
-    label: "AI",
-    items: [
-      {
-        label: "AI Agents (MCP)",
-        href: "/dashboard/mcp",
-        icon: Bot,
-      },
-    ],
-  },
-  {
     label: "Sites",
     items: [
       {
@@ -107,6 +82,37 @@ const navSections: NavSection[] = [
       },
     ],
   },
+  {
+    label: "Reports",
+    items: [
+      {
+        label: "Recent Activity",
+        href: "/submissions",
+        icon: Activity,
+      },
+      {
+        label: "Sitemaps",
+        href: "/dashboard/sitemaps",
+        icon: Box,
+      },
+    ]
+  },
+  {
+    label: "AI",
+    items: [
+      {
+        label: "AI Assistant",
+        href: "/dashboard/chat",
+        icon: Bot,
+      },
+      {
+        label: "AI Agents (MCP)",
+        href: "/dashboard/mcp",
+        icon: Bot,
+      },
+    ],
+  },
+  
   {
     label: "Tools",
     items: [

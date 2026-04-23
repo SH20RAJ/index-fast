@@ -180,7 +180,7 @@ export default function ToolsExplorer({
                   </div>
                   <Button asChild className="w-full justify-center">
                     <Link href={`/tools/${tool.slug}`}>
-                      Open tool <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:tranzinc-x-0.5" />
+                      Open tool <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                     </Link>
                   </Button>
                 </CardContent>

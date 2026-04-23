@@ -225,7 +225,7 @@ export default function ContactForm() {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <span className="flex items-center gap-2">
-                  Send Message <Send className="h-4 w-4 group-hover:tranzinc-x-1 group-hover:-translate-y-1 transition-transform" />
+                  Send Message <Send className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </span>
               )}
             </Button>
