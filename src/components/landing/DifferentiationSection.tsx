@@ -71,7 +71,7 @@ const agents = [
     label: "Claude Code",
     color: "text-violet-400",
     dot: "bg-violet-400",
-    instructions: `# claude_desktop_config.json\n{\n  "mcpServers": {\n    "indexfast": {\n      "command": "curl",\n      "args": [\n        "-X", "POST",\n        "-H", "Authorization: Bearer idx_YOUR_KEY",\n        "-H", "Content-Type: application/json",\n        "https://www.indexfast.co/api/mcp"\n      ]\n    }\n  }\n}`,
+    instructions: `# claude_desktop_config.json\n{\n  "mcpServers": {\n    "indexfast": {\n      "command": "curl",\n      "args": [\n        "-s",\n        "-X", "POST",\n        "-H", "Authorization: Bearer idx_YOUR_KEY",\n        "-H", "Content-Type: application/json",\n        "-d", "{\\\"method\\\":\\\"initialize\\\",\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"params\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"capabilities\\\":{},\\\"clientInfo\\\":{\\\"name\\\":\\\"claude-desktop\\\",\\\"version\\\":\\\"1.0.0\\\"}}}",\n        "https://www.indexfast.co/api/mcp"\n      ]\n    }\n  }\n}`,
   },
   {
     id: "windsurf",

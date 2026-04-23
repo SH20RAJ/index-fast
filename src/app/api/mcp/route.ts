@@ -55,7 +55,29 @@ export async function POST(req: NextRequest) {
     const { method, params, id: requestId } = body;
     if (requestId !== undefined) id = requestId;
 
-    if (method === "list_tools") {
+    // Handle MCP Lifecycle Methods
+    if (method === "initialize") {
+      return NextResponse.json({
+        jsonrpc: "2.0",
+        id,
+        result: {
+          protocolVersion: "2024-11-05",
+          capabilities: {
+            tools: {}
+          },
+          serverInfo: {
+            name: "IndexFast",
+            version: "1.0.0"
+          }
+        }
+      });
+    }
+
+    if (method === "notifications/initialized") {
+      return new Response(null, { status: 204 });
+    }
+
+    if (method === "list_tools" || method === "tools/list") {
       return NextResponse.json({
         jsonrpc: "2.0",
         id,
@@ -129,7 +151,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    if (method === "call_tool") {
+    if (method === "call_tool" || method === "tools/call") {
       const { name, arguments: args } = params || {};
 
       switch (name) {

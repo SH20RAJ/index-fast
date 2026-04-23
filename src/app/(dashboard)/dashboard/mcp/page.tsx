@@ -16,10 +16,11 @@ export default async function McpPage() {
       indexfast: {
         command: "curl",
         args: [
+          "-s",
           "-X", "POST",
           "-H", `Authorization: Bearer ${apiKey}`,
           "-H", "Content-Type: application/json",
-          "-d", "{\"method\":\"list_tools\",\"jsonrpc\":\"2.0\",\"id\":1}",
+          "-d", "{\"method\":\"initialize\",\"jsonrpc\":\"2.0\",\"id\":1,\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"claude-desktop\",\"version\":\"1.0.0\"}}}",
           "https://www.indexfast.co/api/mcp"
         ]
       }

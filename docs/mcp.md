@@ -60,17 +60,18 @@ Add the following to your `claude_desktop_config.json`:
     "indexfast": {
       "command": "curl",
       "args": [
+        "-s",
         "-X", "POST",
         "-H", "Authorization: Bearer YOUR_API_KEY",
         "-H", "Content-Type: application/json",
-        "-d", "{\"method\":\"list_tools\",\"jsonrpc\":\"2.0\",\"id\":1}",
+        "-d", "{\"method\":\"initialize\",\"jsonrpc\":\"2.0\",\"id\":1,\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"claude-desktop\",\"version\":\"1.0.0\"}}}",
         "https://www.indexfast.co/api/mcp"
       ]
     }
   }
 }
 ```
-*Note: The exact configuration might vary depending on how the client handles HTTP-based MCP servers. For most clients, a simple HTTP bridge or a custom script is used.*
+*Note: Using `curl` as a command is a simple way to connect. For a more robust setup, use the official MCP SDK with an SSE transport.*
 
 ## Benefits for Developers
 
