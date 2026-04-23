@@ -26,6 +26,7 @@ const footerLinks = {
 };
 
 const socialLinks = [
+  { name: "Bluesky", icon: Bird, href: "https://bsky.app/profile/indexfast.bsky.social" },
   // { name: "Twitter", icon: Bird, href: "https://twitter.com/indexfast" },
   // { name: "GitHub", icon: Code, href: "https://github.com/indexfast" },
   // { name: "LinkedIn", icon: Users, href: "https://linkedin.com/company/indexfast" },
