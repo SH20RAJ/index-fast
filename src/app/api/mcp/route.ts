@@ -15,11 +15,24 @@ import { auditWebsite } from "@/lib/services/audit-service";
 
 export const dynamic = "force-dynamic";
 
+export async function GET() {
+  return NextResponse.json({
+    status: "online",
+    message: "IndexFast MCP Endpoint is active. Use POST with JSON-RPC 2.0 to call tools.",
+    docs: "https://indexfast.co/docs/mcp"
+  });
+}
+
 export async function POST(req: NextRequest) {
+  let id: string | number | null = null;
   try {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized. Missing or invalid Authorization header." }, { status: 401 });
+      return NextResponse.json({ 
+        jsonrpc: "2.0",
+        error: { code: -32001, message: "Unauthorized. Missing or invalid Authorization header." },
+        id 
+      }, { status: 401 });
     }
 
     const apiKey = authHeader.replace("Bearer ", "");
@@ -30,15 +43,21 @@ export async function POST(req: NextRequest) {
     });
 
     if (!dbUser) {
-      return NextResponse.json({ error: "Unauthorized. Invalid API key." }, { status: 401 });
+      return NextResponse.json({ 
+        jsonrpc: "2.0",
+        error: { code: -32001, message: "Unauthorized. Invalid API key." },
+        id 
+      }, { status: 401 });
     }
 
     // 2. Parse JSON-RPC Request
     const body = await req.json().catch(() => ({}));
-    const { method, params, id } = body;
+    const { method, params, id: requestId } = body;
+    if (requestId !== undefined) id = requestId;
 
     if (method === "list_tools") {
       return NextResponse.json({
+        jsonrpc: "2.0",
         id,
         result: {
           tools: [
@@ -94,6 +113,16 @@ export async function POST(req: NextRequest) {
                 },
                 required: ["siteId"]
               }
+            },
+            {
+              name: "echo",
+              description: "Echo back the input for testing connectivity.",
+              inputSchema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" }
+                }
+              }
             }
           ]
         }
@@ -107,6 +136,7 @@ export async function POST(req: NextRequest) {
         case "list_websites": {
           const userWebsites = await db.select().from(websites).where(eq(websites.userId, dbUser.id));
           return NextResponse.json({
+            jsonrpc: "2.0",
             id,
             result: {
               content: [{ type: "text", text: JSON.stringify(userWebsites.map(w => ({ id: w.id, url: w.url, lastSyncAt: w.lastSyncAt })), null, 2) }]
@@ -127,6 +157,7 @@ export async function POST(req: NextRequest) {
           }
 
           return NextResponse.json({
+            jsonrpc: "2.0",
             id,
             result: {
               content: [{ type: "text", text: JSON.stringify(site, null, 2) }]
@@ -155,6 +186,7 @@ export async function POST(req: NextRequest) {
           };
 
           return NextResponse.json({
+            jsonrpc: "2.0",
             id,
             result: {
               content: [{ type: "text", text: JSON.stringify(usage, null, 2) }]
@@ -185,6 +217,7 @@ export async function POST(req: NextRequest) {
 
           const results = await triggerSubmissions(matchedWebsite, [url], dbUser.isPro ?? false);
           return NextResponse.json({
+            jsonrpc: "2.0",
             id,
             result: {
               content: [{ type: "text", text: JSON.stringify(results.map(r => ({ engine: r.engine, status: r.status, error: r.errorMessage })), null, 2) }]
@@ -200,6 +233,7 @@ export async function POST(req: NextRequest) {
 
           const audit = await auditWebsite(url);
           return NextResponse.json({
+            jsonrpc: "2.0",
             id,
             result: {
               content: [{ type: "text", text: JSON.stringify(audit, null, 2) }]
@@ -223,9 +257,20 @@ export async function POST(req: NextRequest) {
             .limit(limit);
 
           return NextResponse.json({
+            jsonrpc: "2.0",
             id,
             result: {
               content: [{ type: "text", text: JSON.stringify(recent, null, 2) }]
+            }
+          });
+        }
+        
+        case "echo": {
+          return NextResponse.json({
+            jsonrpc: "2.0",
+            id,
+            result: {
+              content: [{ type: "text", text: JSON.stringify(args, null, 2) }]
             }
           });
         }
@@ -235,10 +280,18 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ error: "Invalid request. Method should be list_tools or call_tool." }, { status: 400 });
+    return NextResponse.json({ 
+      jsonrpc: "2.0",
+      error: { code: -32600, message: "Invalid request. Method should be list_tools or call_tool." },
+      id 
+    }, { status: 400 });
 
   } catch (error) {
     console.error("[MCP ERROR]", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      jsonrpc: "2.0",
+      error: { code: -32603, message: "Internal Server Error" },
+      id 
+    }, { status: 500 });
   }
 }

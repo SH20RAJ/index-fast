@@ -19,9 +19,9 @@ import {
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Free SEO Tools Directory",
+  title: "100+ Free SEO Tools for Indexing & Content Strategy",
   description:
-    "Browse a complete free SEO tools directory organized by category: indexing, crawl diagnostics, keyword research, backlinks, domain authority, and metadata optimization.",
+    "The ultimate free SEO tools directory. Find 100+ tools for instant indexing, keyword research, backlink analysis, and sitemap health to boost your search rankings.",
   keywords: [
     "free seo tools directory",
     "seo tools for indexing",
@@ -173,8 +173,8 @@ export  function ToolsHomePage() {
                         </CardHeader>
                         <CardContent className="pt-0">
                           <Button asChild className="w-full justify-center">
-                            <Link href={`/tools/${tool.slug}`}>
-                              Open Tool <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:tranzinc-x-0.5" />
+                            <Link href={`/tools/${tool.slug}`} aria-label={`Open tool: ${tool.title}`}>
+                              Open {tool.title} <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:tranzinc-x-0.5" />
                             </Link>
                           </Button>
                         </CardContent>
@@ -269,7 +269,7 @@ export  function ToolsHomePage() {
                           </div>
 
                           {/* Description */}
-                          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 flex-1">
+                          <p className="text-xs text-zinc-400 dark:text-zinc-400 leading-relaxed line-clamp-3 flex-1">
                             {tool.description}
                           </p>
 
@@ -288,7 +288,7 @@ export  function ToolsHomePage() {
                           {/* Action buttons */}
                           <div className="flex gap-2 pt-1">
                             <Button asChild size="sm" className="flex-1 text-xs font-bold h-8">
-                              <Link href={`/tools/ext/${tool.id}`}>
+                              <Link href={`/tools/ext/${tool.id}`} aria-label={`View info for ${tool.title}`}>
                                 {tool.canEmbed ? "Open Tool" : "View Info"}
                                 <ArrowUpRight className="ml-1 h-3 w-3" />
                               </Link>

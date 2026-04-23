@@ -227,7 +227,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
           </Link>
           <div className="flex min-w-0 flex-1 flex-col">
             <span className="text-sm font-bold leading-none tracking-tight">IndexFast</span>
-            <span className="text-[10px] text-zinc-500 mt-1 font-medium">Dashboard</span>
+            <span className="text-[10px] text-zinc-400 mt-1 font-medium">Dashboard</span>
           </div>
         </div>
 
@@ -243,7 +243,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         <nav className="space-y-6">
           {navSections.map((section) => (
             <div key={section.label} className="space-y-1">
-              <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600">
+              <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-300 dark:text-zinc-400">
                 {section.label}
               </p>
               <div className="space-y-0.5">
@@ -270,7 +270,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                             onClick={() => setOpenSubmenu(submenuOpen ? null : item.label)}
                             className={cn(
                               "w-full justify-start gap-3 rounded-xl px-3 py-2 text-sm transition-all duration-200",
-                              submenuOpen ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800/50 dark:text-zinc-100" : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
+                              submenuOpen ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800/50 dark:text-zinc-100" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
                             )}
                           >
                             <item.icon className="h-4 w-4 shrink-0 opacity-70" />
@@ -294,7 +294,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                                       "block rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200",
                                       childActive
                                         ? "text-primary"
-                                        : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
+                                        : "text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
                                     )}
                                   >
                                     {child.label}
@@ -335,6 +335,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
             className="h-9 rounded-xl px-0 shadow-sm transition-transform active:scale-95"
             asChild
             title="Settings"
+            aria-label="Settings"
           >
             <Link href={getHref("/settings")}>
               <Settings className="h-4 w-4" />
@@ -347,6 +348,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
             className="h-9 rounded-xl px-0 shadow-sm transition-transform active:scale-95"
             onClick={toggleColorMode}
             title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
+            aria-label={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
           >
             {mode === "dark" ? (
               <Sun className="h-4 w-4 text-amber-400" />
@@ -364,6 +366,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
               stack.signOut();
             }}
             title="Logout"
+            aria-label="Logout"
           >
             <LogOut className="h-4 w-4" />
           </Button>
@@ -382,7 +385,7 @@ export default function DashboardSidebar() {
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-16 px-4 flex items-center border-b border-black/5 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/85">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-xl border border-black/5 bg-white/70 shadow-sm dark:border-white/10 dark:bg-white/5">
+            <Button variant="ghost" size="icon" aria-label="Open navigation menu" className="rounded-xl border border-black/5 bg-white/70 shadow-sm dark:border-white/10 dark:bg-white/5">
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
