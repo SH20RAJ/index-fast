@@ -207,19 +207,17 @@ src/
 - Sitemap discovery and metadata refresh
 
 ### 5. SEO Tools Directory
-- 35+ internally built tools across 5 categories:
-  - Indexing/Crawl
-  - Keyword Research
-  - Backlink Analysis
-  - Domain Authority
-  - Metadata/Snippets
-- 80+ curated external tools with tier badges (free/freemium/limited-free)
-- Tools explorer with search/sort/filter
+- **35+ native tools** for technical SEO audits (Indexability, Robots.txt, Sitemap health).
+- **80+ curated external tools** with tier tracking (Free, Freemium, Limited Free).
+- Categorized into Indexing, Keywords, Backlinks, Authority, and Metadata.
+- Integrated recommendation engine suggests professional alternatives for native checks.
+- Tools explorer with search, category filtering, and sorting.
 
-### 6. AI Chatbot
-- Streaming chat via NVIDIA API (qwen3-coder-480b)
-- System prompt configured for IndexFast SEO context
-- Located at `/chat`
+### 6. AI Chatbot & Assistant
+- Streaming chat via NVIDIA API (`qwen/qwen-2.5-coder-32b`)
+- Context-aware assistance for on-page and technical SEO.
+- Integrated into the dashboard for rapid access.
+- System prompt configured for IndexFast SEO context.
 
 ### 7. Dodo Payments Integration
 - Checkout API: `/api/billing/checkout`
@@ -414,4 +412,4 @@ Located in `src/app/(dashboard)/actions.ts`:
 
 ---
 
-*Last updated: April 11, 2026*
+*Last updated: April 23, 2026*

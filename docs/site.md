@@ -1,89 +1,55 @@
-# IndexFast — Lean & Fast SEO Indexing SaaS
+# IndexFast — The Indexing Engine for Growth
 
-Automated search engine indexing for bloggers, vibe coders, and SEO enthusiasts. No AI bloat, just speed and results.
+IndexFast is an automated SEO indexing SaaS platform that helps website owners push URLs to search engines (Google, Bing, IndexNow, and ping services) faster than waiting for organic crawling.
 
 ## 🎯 Target Audience
-- **Vibe Coders:** Developers who want to launch fast and see immediate indexing results without reading 50 pages of documentation.
-- **Bloggers & Content Creators:** People who ship daily and need their new posts on Google/Bing within minutes, not weeks.
-- **E-commerce Store Owners:** (Shopify/Ghost/Woo) Need new product pages indexed instantly to start capturing seasonal or trending traffic.
-- **Programmatic SEO (pSEO) Builders:** Managing 10,000+ pages that need systematic crawling and indexing coordination to avoid "Discovered - currently not indexed" limbo.
-- **Niche Site Flippers:** Scaling sites quickly to improve traffic metrics for a faster, higher-value exit.
-- **Indie Hackers:** Builders who need early search traction to validate their ideas and get their first 100 users.
-- **Local Business Owners:** Ensuring their specific service pages (e.g., "Plumber in Austin") are live the moment they launch to capture local leads.
-- **SEO Agencies:** Teams managing multiple client sites who need a unified, high-level "pushed-to-index" dashboard to show progress to clients.
+- **Vibe Coders & Indie Hackers**: Developers launching fast and needing immediate indexing.
+- **Bloggers & Content Creators**: People who ship daily and need their posts on Google/Bing in minutes.
+- **E-commerce Store Owners**: Capturing seasonal or trending traffic with instant indexing of new products.
+- **Programmatic SEO (pSEO) Builders**: Managing 10,000+ pages with systematic crawling coordination.
+- **AI-Focused Brands**: Ensuring content is indexed in Bing to appear in ChatGPT, Copilot, and Perplexity.
+- **SEO Agencies**: Unified dashboard to manage and report on client site indexing.
 
 ---
 
-## 🛠️ Core Features (MVP)
+## 🛠️ Core Features
 
 ### 1. Automated Sitemap Pinger
-- **How it works:** Add a sitemap URL once.
-- **Sync:** Runs every 6 hours (Cron).
-- **Action:** Automatically detects new URLs and pushes them to IndexNow and Bing Batch API.
+- **How it works**: Connect your sitemap URL once.
+- **Sync**: Automated hourly sync via Vercel Cron for Pro users.
+- **Action**: Diffs sitemap URLs against existing inventory and pushes new ones to all configured engines.
 
-### 2. Instant Bing & IndexNow Submission
-- **Bing API:** Uses `SubmitUrlbatch` for high-volume URL pushes.
-- **IndexNow:** Real-time notification to Bing, Yandex, and other participating engines.
-- **Key Verification:** Simple automated check to ensure your `indexnow.txt` is correctly placed.
+### 2. Multi-Engine Submission
+- **Bing Batch API**: Push up to 500 URLs per batch for instant processing.
+- **IndexNow Protocol**: Real-time notification to Bing, Yandex, and participating engines.
+- **Google Search Console**: Integrated site import and metadata refresh via GSC API.
+- **Universal Pings**: Automated pings to Ping-o-Matic and Pingler to notify the wider web.
 
-### 3. GSC One-Click Importer
-- **Connect:** Securely list all your verified sites from Google Search Console.
-- **Sync:** Import sites and their metadata in one click to start tracking.
+### 3. SEO Tools Directory (100+ Tools)
+- **Built-in Tools**: 35+ native utilities for technical SEO audits (Indexability, Robots.txt, Sitemap health).
+- **Curated Directory**: 80+ professional-grade external tools with categorization and tier tracking.
 
-### 4. SEO Toolbox
-- **Directory Launcher:** A curated list of 100+ high-DA manual submission sites (Reddit, IndieHackers, ProductHunt, etc.).
-- **Header Status Checker:** Verify if your pages are returning clean `200 OK` responses.
-- **Dead Link Guard:** Flags 404 links in your sitemap before they hurt your indexing quota.
+### 4. AI & GEO Insights
+- **AI View**: Analysis of how LLMs perceive and read your content.
+- **Discoverability Score**: Metrics on how likely your content is to be cited by AI search engines.
+- **AI Assistant**: Dashboard chatbot for real-time SEO advice and automation.
 
 ---
 
 ## 💻 Tech Stack
-
-- **Core:** Next.js (App Router)
-- **Styling:** Tailwind CSS (Modern, premium aesthetics)
-- **Database:** PostgreSQL (Optimal storage for URLs and submission history)
-- **Runtime:** Cloudflare Workers (Scaling API submissions)
-- **Automation:** Scheduled Cron Jobs (Syncing sitemaps on autopilot)
-
----
-
-## 🔌 API Reference (Fast Implementation)
-
-### IndexNow (POST)
-- **Endpoint:** `https://www.bing.com/indexnow`
-- **Body:**
-  ```json
-  {
-    "host": "example.com",
-    "key": "your-key-string",
-    "urlList": ["https://example.com/page1", "https://example.com/page2"]
-  }
-  ```
-
-### Bing Batch Submission (POST)
-- **Endpoint:** `https://ssl.bing.com/webmaster/api.svc/json/SubmitUrlbatch?apikey=YOUR_API_KEY`
-- **Body:**
-  ```json
-  {
-    "siteUrl": "https://example.com",
-    "urlList": ["https://example.com/page1", "https://example.com/page2"]
-  }
-  ```
+- **Framework**: Next.js 16 (App Router) + React 19
+- **Styling**: Tailwind CSS v4 + OKLCH Color System
+- **Auth**: Stack Auth
+- **DB**: PostgreSQL + Drizzle ORM
+- **Payments**: Dodo Payments
+- **AI**: NVIDIA API (Qwen Models)
 
 ---
 
-## 💸 Monetization Strategy
+## 💸 Pricing Plans
 
 | Plan | Features |
 | :--- | :--- |
-| **Free (Solo)** | 1 Site, Manual "One-Click" Sync, Basic Analytics. |
-| **Premium ($)** | Unlimited Sites, **Auto-Sitemap Sync (Cron)**, Email Alerts, Full Directory Access. |
-| **Agency ($$)** | White-Label Reports for clients, Team Access, Higher API Quotas. |
-
----
-
-## 🗓️ Roadmap
-- [ ] Build Core Sitemap Parser (v0.1)
-- [ ] Integrate Google Search Console OAuth (v0.2)
-- [ ] Launch "Submission Stream" Dashboard (v0.3)
-- [ ] Automated Slack/Discord Notifications (v0.4)
+| **Free (Solo)** | 1 Site, Manual "One-Click" Sync, Basic Tools. |
+| **Pro ($49/mo)** | Unlimited Sites, **Auto-Sitemap Sync (Hourly)**, AI View, Full Tools Access. |
+| **Agency ($149/mo)** | White-label Reports, API Access, Team Management. |

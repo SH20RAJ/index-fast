@@ -6,72 +6,59 @@ All source code resides in the `src/` directory.
 ```text
 src/
 ├── app/                  # Next.js App Router (Routing, Layouts, Metadata)
-│   ├── (auth)/           # Logic for login/registration
+│   ├── (landing)/        # Public marketing & static pages
 │   ├── (dashboard)/      # Protected routes for the management platform
-│   │   └── sites/        # Site management pages
-│   │       ├── _components/ # Components SPECIFIC to this route
-│   │       └── page.tsx
-│   ├── api/              # Public/Private API Route Handlers
-│   ├── layout.tsx        # Root layout with MUI Cache/Theme Providers
-│   └── globals.css       # Global styles (keep minimal)
-├── components/           # Shared UI components (Atomic design)
-│   ├── ui/               # Basic primitives (Buttons, Inputs)
-│   ├── layout/           # Shared layouts (Navbars, Footers)
-│   └── indicators/       # SEO/Index status indicators
-├── db/                   # Database Layer (Drizzle ORM)
-│   ├── schema/           # SQL table definitions
-│   └── index.ts          # Postgres connection instance
-├── lib/                  # External API wrappers (Google, Bing, IndexNow)
+│   │   └── _components/  # Components SPECIFIC to a route
+│   ├── (tools)/          # SEO tools directory
+│   ├── api/              # API Route Handlers (Cron, Webhooks, Chat)
+│   ├── layout.tsx        # Root layout (Auth, Theme, PWA)
+│   └── globals.css       # Tailwind v4 styles & OKLCH variables
+├── components/           # Shared UI components
+│   ├── ui/               # shadcn/ui primitives (Radix-based)
+│   ├── landing/          # Landing page sections
+│   ├── dashboard/        # Dashboard layout & shared elements
+│   └── tools/            # Components for SEO tools
+├── lib/                  # Core logic & Service Layer
+│   ├── db/               # Drizzle ORM schema & client
+│   ├── api/              # External API wrappers (Bing, Google, etc.)
+│   ├── services/         # Business logic (Indexing, Audits, Billing)
+│   └── utils/            # Helper functions (Sitemap parser, formatting)
 ├── hooks/                # Custom React hooks
-├── types/                # TypeScript interfaces/types
-└── utils/                # Pure helper functions
+└── types/                # TypeScript interfaces
 ```
 
 ## 🛠️ Tech Stack
-- **Framework:** Next.js 16+ (App Router)
-- **Database:** PostgreSQL (Cloudflare Hyperdrive or Neon)
-- **ORM:** Drizzle ORM (Type-safe SQL)
-- **UI & Styling:** Material UI (MUI) v6 with Emotion
-- **State Management:** React Server Components (RSC) + Server Actions
-- **Auth:** Next-Auth / Auth.js
+- **Framework:** Next.js 16 (App Router) with React 19
+- **Database:** PostgreSQL with Drizzle ORM
+- **Styling:** Tailwind CSS v4 + Framer Motion
+- **UI Components:** shadcn/ui (Radix UI)
+- **Auth:** Stack Auth (`@stackframe/stack`)
+- **Payments:** Dodo Payments
+- **AI:** NVIDIA API (Qwen models)
 
-## 🎨 MUI (Material UI) Implementation Rules
-To ensure zero Flash of Unstyled Content (FOUC) and optimal performance:
-1. **Server First:** Use Server Components for data fetching. Pass data to Client Components that use MUI.
-2. **ThemeProvider:** Wrap the app in `AppRouterCacheProvider` inside `src/app/layout.tsx`.
-3. **Registry:** Use a `ThemeRegistry` Client Component for your `ThemeProvider` and `CssBaseline`.
-4. **Icons:** Use `@mui/icons-material` but favor SVGs for super-lightweight components.
+## 🎨 UI & Styling Rules
+1. **OKLCH Colors**: Use the warm terracotta palette defined in `globals.css` using OKLCH.
+2. **Minimalism**: Favor subtle borders and whitespace over heavy shadows.
+3. **Icons**: Use `Lucide React` for UI and `HugeIcons` for specialized categories.
+4. **Animations**: Use `Framer Motion` for layout transitions and scroll reveals.
 
-## 🚀 Next.js Best Practices
-1. **Server Actions:** All mutations (deleting a site, adding a sitemap) MUST happen in Server Actions.
-2. **Colocation:** Keep components used by only one page inside a `_components` folder next to that `page.tsx`.
-3. **Streaming:** Use `loading.tsx` and `<Suspense>` for data-heavy dashboard views.
-4. **Environment Variables:** All secrets (Google API, DB URLs) strictly in `.env.local`. NEVER export them to the client unless prefixed with `NEXT_PUBLIC_`.
-5. **Server Component Pages:** NEVER use `"use client";` inside a `page.tsx`. If you need client-side logic (hooks, state, MUI effects), move that logic into a separate Client Component and import it into the `page.tsx`. This is required to export SEO `metadata`.
+## 🚀 Next.js & React Best Practices
+1. **Server Components**: All pages in `app/` should be Server Components by default to support SEO metadata.
+2. **Server Actions**: All mutations must use Server Actions (`"use server"`) located in `src/app/(dashboard)/actions.ts` or route-specific action files.
+3. **Data Fetching**: Fetch data directly in Server Components. Use `<Suspense>` and `loading.tsx` for streaming.
+4. **Auth Guards**: Use `stackServerApp.getUser()` to protect dashboard routes.
+5. **Database Sync**: Call `ensureUserRecord()` in authenticated server contexts to keep Postgres in sync with the Auth provider.
 
-## 📈 SEO & Metadata Rules
-1. **Metadata API:** Use `export const metadata` in static pages and `generateMetadata()` for dynamic site details.
-2. **Title Template:** Use `%s | IndexFast` in the root layout.
-3. **Canonical Tags:** Always export canonical URLs to avoid duplicate content rankings.
-4. **Sitemap:** Use `app/sitemap.ts` to generate dynamic sitemaps for the IndexFast landing pages.
-5. **Standard Metadata Object:**
-```typescript
-export const metadata = {
-  title: 'IndexFast | Automated SEO Indexing',
-  description: 'Submit your URLs to Google, Bing, and IndexNow instantly.',
-  metadataBase: new URL('https://www.indexfast.co'),
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    type: 'website',
-  },
-};
-```
+## 📈 SEO & Metadata
+1. **Metadata API**: Always export `metadata` from `page.tsx`.
+2. **Canonical URLs**: Ensure every page has a canonical URL set.
+3. **Structured Data**: Use JSON-LD for Organization, SoftwareApplication, and FAQ pages.
+4. **Title Template**: `%s | IndexFast`
 
-## 📜 Coding Technical Rules
-- Use `pnpm` exclusively.
-- All database schemas must be in `src/db/schema/`.
-- Use TypeScript `interface` over `type` for model definitions.
-- Components should be functional and named using PascalCase.
-- File names should use kebab-case (e.g., `user-profile.tsx`).
+## 📜 Coding Standards
+- Use `pnpm` or `bun` for package management.
+- Kebab-case for file names (`sitemap-parser.ts`).
+- PascalCase for React components (`SiteCard.tsx`).
+- Absolute imports using `@/*` alias.
+- Use `interface` over `type` for object definitions.
+- Strictly typed Server Actions using `ActionState`.
