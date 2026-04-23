@@ -1692,3 +1692,51 @@ export function getAllFreeToolById(id: string): FreeTool | undefined {
 export function getAllFreeToolsByCategory(categoryId: string): FreeTool[] {
   return ALL_FREE_TOOLS.filter((t) => t.categoryId === categoryId);
 }
+
+// ─────────────────────────────────────────────────────────────
+// RECOMMENDATION ENGINE — Maps internal slugs to external tools
+// ─────────────────────────────────────────────────────────────
+
+export const TOOL_RECOMMENDATIONS: Record<string, string[]> = {
+  "backlink-checker": ["ahrefs-backlink-checker", "moz-link-explorer", "semrush-backlink-analytics", "openlinkprofiler"],
+  "keyword-research-tool": ["google-keyword-planner", "ahrefs-keyword-generator", "ubersuggest-keywords", "answerthepublic", "questiondb"],
+  "keyword-difficulty-checker": ["ahrefs-keyword-generator", "ubersuggest-keywords", "keysearch"],
+  "keyword-competition-checker": ["ahrefs-keyword-generator", "semrush", "mangools-serpchecker"],
+  "domain-authority-checker": ["moz-domain-analysis", "ahrefs-website-authority-checker", "smallseotools-domain-authority"],
+  "domain-spam-score-checker": ["moz-domain-analysis"],
+  "keyword-position-checker": ["serprobot", "mangools-serpchecker", "smallseotools-rank-checker"],
+  "website-seo-score-checker": ["google-pagespeed-insights", "seoptimer-seo-audit", "woorank", "seobility-seo-checker"],
+  "broken-link-checker": ["screaming-frog-seo-spider", "seobility-seo-checker"],
+  "indexability-checker": ["google-search-console", "bing-webmaster-tools", "screaming-frog-seo-spider"],
+  "sitemap-health-checker": ["google-search-console", "bing-webmaster-tools", "xml-sitemaps-com"],
+  "robots-txt-tester": ["google-search-console", "robots-txt-generator"],
+  "meta-tags-analyzer": ["metatags-io", "hemingway-app", "seoptimer-seo-audit"],
+  "meta-tag-generator": ["metatags-io", "schema-markup-generator"],
+  "open-graph-checker": ["opengraph-xyz", "metatags-io", "twitter-card-validator", "linkedin-post-inspector"],
+  "open-graph-generator": ["opengraph-xyz", "metatags-io"],
+  "twitter-card-generator": ["twitter-card-validator", "metatags-io"],
+  "google-index-checker": ["google-search-console", "google-search-operators"],
+  "google-cache-checker": ["google-search-operators"],
+  "server-status-checker": ["pingdom-speed-test", "ssl-labs-test"],
+  "redirect-checker": ["screaming-frog-seo-spider", "sitechecker-pro"],
+  "sitemap-url-extractor": ["google-search-console", "xml-sitemaps-com"],
+  "indexnow-key-validator": ["bing-webmaster-tools", "indexnow-submit"],
+  "bing-batch-request-builder": ["bing-webmaster-tools"],
+  "submitexpress-bulk-submitter": ["submitexpress-submit", "free-search-engine-submission"],
+  "free-search-engine-submission": ["submitexpress-submit", "free-search-engine-submission"],
+  "spider-simulator": ["screaming-frog-seo-spider", "seobility-seo-checker"],
+  "keyword-density-checker": ["smallseotools-article-rewriter", "seobility-seo-checker"],
+  "long-tail-keyword-generator": ["answerthepublic", "keywordtool-io", "soovle", "google-autocomplete"],
+  "website-link-analyzer": ["ahrefs-backlink-checker", "moz-link-explorer", "smallseotools-backlink-checker"],
+  "website-link-count-checker": ["smallseotools-backlink-checker", "screaming-frog-seo-spider"],
+  "domain-age-checker": ["age-of-domain", "whois-lookup"],
+  "domain-hosting-checker": ["whois-lookup", "dnschecker"],
+  "xml-sitemap-generator": ["xml-sitemaps-com"],
+};
+
+export function getRecommendedExternalTools(slug: string): FreeTool[] {
+  const ids = TOOL_RECOMMENDATIONS[slug] || [];
+  return ids
+    .map(id => getAllFreeToolById(id))
+    .filter((t): t is FreeTool => t !== undefined);
+}

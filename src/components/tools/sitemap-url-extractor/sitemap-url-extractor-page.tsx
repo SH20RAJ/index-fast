@@ -51,6 +51,7 @@ export default function SitemapUrlExtractorPageContent() {
       />
 
       <ToolPageShell
+        slug={slug}
         badge={category?.badge ?? "SEO Tool"}
         title={`Free ${tool.title}`}
         description={tool.description}

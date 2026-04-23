@@ -153,6 +153,7 @@ export default function ToolStaticPage({ slug }: ToolStaticPageProps) {
         faqs={faqs}
         categoryTitle={category?.title}
         relatedTools={relatedTools}
+        slug={slug}
       />
     </>
   );

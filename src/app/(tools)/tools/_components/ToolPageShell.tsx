@@ -3,7 +3,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ExternalLink, ShieldCheck, Zap } from "lucide-react";
 import ToolCta from "./ToolCta";
+import { getRecommendedExternalTools } from "@/lib/tools-catalog";
 
 interface ToolPageShellProps {
   badge: string;
@@ -15,6 +17,7 @@ interface ToolPageShellProps {
   categoryTitle?: string;
   relatedTools?: Array<{ slug: string; title: string }>;
   children?: React.ReactNode;
+  slug?: string;
 }
 
 export default function ToolPageShell({
@@ -27,7 +30,10 @@ export default function ToolPageShell({
   categoryTitle,
   relatedTools,
   children,
+  slug,
 }: ToolPageShellProps) {
+  const externalRecommendations = slug ? getRecommendedExternalTools(slug) : [];
+
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
       <div className="space-y-7">
@@ -55,6 +61,46 @@ export default function ToolPageShell({
         </div>
 
         {children}
+
+        {externalRecommendations.length > 0 && (
+          <div className="space-y-6 py-10">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-amber-500 fill-amber-500" />
+                  <h2 className="text-xl font-bold tracking-tight">Professional Grade Alternatives</h2>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Our lightweight tool is great for quick checks. For deep audits and production workflows, we recommend these industry leaders.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {externalRecommendations.map((ext) => (
+                <Card key={ext.id} className="group relative overflow-hidden border-border/50 bg-muted/20 hover:bg-muted/30 transition-colors">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-base font-bold">{ext.title}</CardTitle>
+                      <Badge variant="secondary" className="text-[10px] uppercase tracking-tighter">{ext.tier}</Badge>
+                    </div>
+                    <CardDescription className="text-xs line-clamp-2 mt-1">
+                      {ext.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="outline" size="sm" className="w-full text-xs font-bold uppercase tracking-widest h-9" asChild>
+                      <a href={ext.url} target="_blank" rel="noopener noreferrer">
+                        Visit Tool
+                        <ExternalLink className="ml-2 h-3 w-3" />
+                      </a>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
 
         <Separator />
 

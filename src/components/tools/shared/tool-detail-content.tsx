@@ -27,6 +27,7 @@ export default function ToolDetailContent({ slug }: ToolDetailContentProps) {
 
   return (
     <ToolPageShell
+        slug={slug}
       badge={category?.badge ?? "SEO Tool"}
       title={`Free ${tool.title} for practical SEO workflows`}
       description={tool.description}
