@@ -105,9 +105,10 @@ function CopySnippet({ text }: { text: string }) {
   return (
     <button
       onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1800); }}
-      className="absolute top-3 right-3 h-7 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[10px] font-bold text-zinc-400 hover:text-white transition-all flex items-center gap-1.5"
+      aria-label={copied ? "Copied to clipboard" : "Copy code to clipboard"}
+      className="absolute top-3 right-3 h-7 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[10px] font-bold text-zinc-300 hover:text-white transition-all flex items-center gap-1.5"
     >
-      {copied ? <><Check className="h-3 w-3 text-emerald-400" /> Copied</> : <><Copy className="h-3 w-3" /> Copy</>}
+      {copied ? <><Check className="h-3 w-3 text-emerald-400" aria-hidden="true" /> Copied</> : <><Copy className="h-3 w-3" aria-hidden="true" /> Copy</>}
     </button>
   );
 }
@@ -219,14 +220,16 @@ export default function DifferentiationSection() {
                   <button
                     key={a.id}
                     onClick={() => setActiveAgent(a.id)}
+                    aria-label={`Show ${a.label} configuration`}
+                    aria-pressed={activeAgent === a.id}
                     className={cn(
                       "flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all border",
                       activeAgent === a.id
                         ? "bg-white/10 border-white/20 text-white"
-                        : "bg-transparent border-white/5 text-zinc-500 hover:border-white/10 hover:text-zinc-300"
+                        : "bg-transparent border-white/5 text-zinc-400 hover:border-white/10 hover:text-zinc-200"
                     )}
                   >
-                    <span className={cn("h-1.5 w-1.5 rounded-full", a.dot)} />
+                    <span className={cn("h-1.5 w-1.5 rounded-full", a.dot)} aria-hidden="true" />
                     {a.label}
                   </button>
                 ))}
@@ -276,7 +279,7 @@ export default function DifferentiationSection() {
               <div className="rounded-3xl bg-zinc-900 border border-white/5 p-6 space-y-5">
                 <div className="flex items-center gap-2">
                   <Terminal className="h-4 w-4 text-primary" />
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Available MCP Tools</p>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-300">Available MCP Tools</p>
                 </div>
                 <div className="space-y-3">
                   {mcpTools.map(tool => (
@@ -284,7 +287,7 @@ export default function DifferentiationSection() {
                       <Check className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
                       <div>
                         <code className="text-[11px] font-bold text-primary">{tool.name}</code>
-                        <p className="text-[11px] text-zinc-500 mt-0.5">{tool.desc}</p>
+                        <p className="text-[11px] text-zinc-400 mt-0.5">{tool.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -293,7 +296,7 @@ export default function DifferentiationSection() {
 
               {/* Workflow card */}
               <div className="rounded-3xl bg-zinc-900 border border-white/5 p-6 space-y-4">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Auto-index workflow</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-300">Auto-index workflow</p>
                 {[
                   "You write & publish a new page",
                   "Your AI agent detects the change",
@@ -304,7 +307,7 @@ export default function DifferentiationSection() {
                     <span className="h-6 w-6 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center shrink-0">
                       {i + 1}
                     </span>
-                    <p className="text-xs text-zinc-400">{step}</p>
+                    <p className="text-xs text-zinc-300">{step}</p>
                     {i < 3 && <ChevronRight className="h-3 w-3 text-zinc-700 ml-auto shrink-0" />}
                   </div>
                 ))}

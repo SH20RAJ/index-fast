@@ -138,8 +138,11 @@ export default function AddSiteFlow({ floating = false }: { floating?: boolean }
           <button
             className="group flex h-14 w-14 items-center justify-center rounded-full bg-zinc-950 shadow-2xl shadow-black/40 ring-1 ring-white/10 transition-all duration-300 hover:scale-110 hover:shadow-primary/30 dark:bg-white"
             title="Add Website"
+            aria-label="Add Website"
           >
-            <Plus className="h-6 w-6 text-white dark:text-zinc-950 transition-transform duration-300 group-hover:rotate-90" />
+            <span aria-hidden="true">
+              <Plus className="h-6 w-6 text-white dark:text-zinc-950 transition-transform duration-300 group-hover:rotate-90" />
+            </span>
           </button>
         ) : (
           <Button className="rounded-full bg-zinc-950 dark:bg-white dark:text-zinc-950 font-bold px-6 h-10 gap-2">
