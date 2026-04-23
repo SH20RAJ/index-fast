@@ -31,28 +31,29 @@ export default function WebsiteSwitcher() {
         <Button
           variant="outline"
           role="combobox"
+          aria-label="Select website"
           aria-expanded={open}
           className="w-full justify-between rounded-xl bg-zinc-50/50 border-zinc-200/60 shadow-none hover:bg-zinc-100 dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10 transition-all font-semibold h-11 px-3"
         >
           <div className="flex items-center gap-2.5 truncate">
             <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-              <Globe className="h-3.5 w-3.5" />
+              <Globe className="h-3.5 w-3.5" aria-hidden="true" />
             </div>
             <span className="truncate text-sm tracking-tight">
               {selectedSite ? selectedSite.url.replace(/^https?:\/\//, '').replace(/\/$/, '') : "Select website"}
             </span>
           </div>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-40" />
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-40" aria-hidden="true" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 rounded-2xl shadow-2xl border-border bg-popover overflow-hidden z-[100]" align="start">
         <Command className="bg-transparent">
           <div className="flex items-center border-b border-border/50 px-3">
-             <Search className="mr-2 h-4 w-4 shrink-0 opacity-40" />
+             <Search className="mr-2 h-4 w-4 shrink-0 opacity-40" aria-hidden="true" />
              <CommandInput 
-               placeholder="Search sites..." 
+               placeholder="Search sites…" 
                className="h-11 border-none bg-transparent focus:ring-0 text-sm" 
-             />
+               aria-label="Search sites"             />
           </div>
           <CommandList className="max-h-[280px] overflow-y-auto p-1.5">
             <CommandEmpty className="py-8 text-center text-xs text-muted-foreground font-medium">

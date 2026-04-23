@@ -100,11 +100,11 @@ const navSections: NavSection[] = [
   {
     label: "AI",
     items: [
-      {
-        label: "AI Assistant",
-        href: "/dashboard/chat",
-        icon: Bot,
-      },
+      // {
+      //   label: "AI Assistant",
+      //   href: "/dashboard/chat",
+      //   icon: Bot,
+      // },
       {
         label: "AI Agents (MCP)",
         href: "/dashboard/mcp",

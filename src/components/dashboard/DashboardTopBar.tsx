@@ -65,7 +65,7 @@ export default function DashboardTopBar() {
         <div className="flex shrink-0 flex-wrap items-center gap-2">
           <Button variant="outline" size="sm" className="rounded-lg font-medium" asChild>
             <Link href="/pricing">
-              <Crown className="mr-1.5 h-3.5 w-3.5 text-amber-500" />
+              <Crown className="mr-1.5 h-3.5 w-3.5 text-amber-500" aria-hidden="true" />
               Plans & upgrade
             </Link>
           </Button>

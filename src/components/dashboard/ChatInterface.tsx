@@ -56,8 +56,7 @@ export function ChatInterface() {
               <h3 className="text-sm font-bold">AI Assistant</h3>
               <Badge variant="secondary" className="text-[9px] h-4 px-1 uppercase leading-none font-black bg-primary/10 text-primary border-none">Beta</Badge>
             </div>
-            <p className="text-[10px] text-muted-foreground font-medium">Powered by Gemini 2.0 & Search Console API</p>
-          </div>
+           </div>
         </div>
       </div>
       
@@ -140,18 +139,17 @@ export function ChatInterface() {
       <div className="p-6 border-t bg-muted/5">
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto flex items-center gap-3">
           <Input
-            placeholder="Ask your assistant anything about your SEO..."
+            placeholder="Ask your assistant anything about your SEO…"
             value={input}
             onChange={handleInputChange}
             className="flex-1 h-14 rounded-2xl border-border/60 bg-background px-6 shadow-sm focus-visible:ring-primary/20"
+            aria-label="Chat input"
           />
-          <Button type="submit" disabled={isLoading || !input} className="h-14 w-14 rounded-2xl shadow-xl shadow-primary/20 shrink-0">
-            {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+          <Button type="submit" disabled={isLoading || !input} className="h-14 w-14 rounded-2xl shadow-xl shadow-primary/20 shrink-0" aria-label="Send message">
+            {isLoading ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" /> : <Send className="h-5 w-5" aria-hidden="true" />}
           </Button>
         </form>
-        <p className="mt-4 text-center text-[10px] text-muted-foreground uppercase tracking-[0.2em]">
-          Powered by Gemini 2.0 & Search Console API
-        </p>
+        
       </div>
     </div>
   );

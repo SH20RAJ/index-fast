@@ -85,8 +85,8 @@ export default function ChatAssistant() {
                     <p className="text-[10px] text-muted-foreground font-medium">Powered by Gemini 2.0 & GSC API</p>
                   </div>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="h-8 w-8 rounded-full hover:bg-muted">
-                  <X className="h-4 w-4" />
+                <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="h-8 w-8 rounded-full hover:bg-muted" aria-label="Close chat">
+                  <X className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </CardHeader>
               
@@ -155,13 +155,14 @@ export default function ChatAssistant() {
               <CardFooter className="border-t bg-muted/5 p-4">
                 <form onSubmit={handleSubmit} className="flex w-full items-center gap-2">
                   <Input
-                    placeholder="Ask your SEO assistant..."
+                    placeholder="Ask your SEO assistant…"
                     value={input}
                     onChange={handleInputChange}
                     className="flex-1 border-border/60 bg-background/50 h-11 rounded-2xl focus-visible:ring-1"
+                    aria-label="Chat input"
                   />
-                  <Button type="submit" size="icon" disabled={isLoading || !input} className="h-11 w-11 rounded-2xl shadow-lg shadow-primary/20">
-                    <Send className="h-4 w-4" />
+                  <Button type="submit" size="icon" disabled={isLoading || !input} className="h-11 w-11 rounded-2xl shadow-lg shadow-primary/20" aria-label="Send message">
+                    <Send className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </form>
               </CardFooter>
