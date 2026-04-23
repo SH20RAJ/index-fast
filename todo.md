@@ -1,3 +1,17 @@
+
+
+I wanna add a chatbot on dashboard where people can talk about there website and it will have access of mcp's related that can be used for onpage , offpage , technical seo with all tools access, with history and project based  of that website also use the seach for libraries open source to integrate it very quick plug and play , people can also submit there urls to indexfast and all in chats, means will have access to indexfast seo also - also reccomend features that I must add, 1. add lighhouse mcp for site audit , and also for speed test , 2. add tool for meta tags generation using gemini and with best practices and keyword based and competitive based, 3. add tool for blog generation using gemini and people can manually add mcp or connect apps, also they can create crons and manage whole dashboard using the mcp or the chatbot , see stats/ reports (beta feature) create bect plan for it and add this to landing page.... SEo + GEO Made simple IndexFast.co
+
+
+
+
+
+
+
+
+----
+
+
 1. ai seo analyser for each page - premium = can export a cursor prompt to fix/improve
 after_auth_return_to
 

@@ -152,6 +152,19 @@ export function LogoCloud({ className, ...props }: LogoCloudProps) {
         }}
       />
 
+      <LogoCard
+        className="relative border-l border-t md:border-t-0 bg-background"
+        logo={{
+          src: "/engines/internetarchive.png",
+          alt: "Internet Archive Logo",
+        }}
+      >
+        <div className="absolute top-2 left-2 flex items-center gap-1">
+          <Badge className="h-4 px-1 text-[7px] bg-blue-500/10 text-blue-500 border-none uppercase font-black">Archive</Badge>
+          <Badge className="h-4 px-1 text-[7px] bg-emerald-500/10 text-emerald-500 border-none uppercase font-black">Preserve</Badge>
+        </div>
+      </LogoCard>
+
       <div className="-translate-x-1/2 -bottom-px pointer-events-none absolute left-1/2 w-screen border-b" />
       </div>
 

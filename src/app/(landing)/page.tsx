@@ -8,7 +8,7 @@ import Features from "@/components/landing/Features";
 import FAQ from "@/components/landing/FAQ";
 import FinalCTA from "@/components/landing/FinalCTA";
 import ChatBot from "@/components/landing/ChatBot";
-import { LogoCloud } from "@/components/ui/logo-cloud-2";
+import SupportedEngines from "@/components/landing/SupportedEngines";
 import Pricing from "@/components/landing/Pricing";
 import { AnimatedTestimonials } from "@/components/blocks/animated-testimonials";
 
@@ -178,18 +178,7 @@ export default function LandingPage() {
     <>
       <Hero />
       <PainSection />
-      <section className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="space-y-3 pb-6">
-          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Supported Search Engines</p>
-          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Get your site noticed on Google, Bing, and 120+ more
-          </h2>
-          <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
-            We submit your pages directly to top search engines so they show up in search results faster.
-          </p>
-        </div>
-        <LogoCloud />
-      </section>
+      <SupportedEngines />
       <Features />
       <HowItWorks />
       <AnimatedTestimonials
