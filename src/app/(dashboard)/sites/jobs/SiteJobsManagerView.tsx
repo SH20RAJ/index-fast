@@ -124,52 +124,131 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
   }
 
   return (
-    <div className="space-y-10 pb-16 max-w-5xl">
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        {/* Page header is now handled by DashboardTopBar */}
+    <div className="space-y-12 pb-20 max-w-6xl mx-auto">
+      {/* Header & Site Selector */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/40 pb-8">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Automation Control</span>
+          </div>
+          <h1 className="text-4xl font-serif font-bold tracking-tight text-foreground">Robot Scheduling</h1>
+          <p className="text-sm text-muted-foreground/80 mt-1 max-w-md">Configure and monitor automated indexing workflows to maintain fresh visibility across search engines.</p>
+        </div>
+        
+        <div className="flex flex-col gap-2 min-w-[240px]">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-1">Active Property</label>
+          <Select 
+            value={siteId} 
+            onValueChange={handleSiteChange}
+          >
+            <option value="" disabled>Select a property...</option>
+            {sites.map(s => (
+              <option key={s.id} value={s.id}>{new URL(s.url).hostname}</option>
+            ))}
+          </Select>
+        </div>
       </div>
 
       {loading && (
-        <div className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 animate-pulse">
-          <Loader2 className="h-4 w-4 animate-spin text-primary" />
-          <p className="text-xs text-muted-foreground font-medium">Loading automation...</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/20 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-card p-8 rounded-[2.5rem] shadow-2xl border border-border/40 flex flex-col items-center gap-4">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground animate-pulse">Accessing Automation Protocol...</p>
+          </div>
         </div>
       )}
 
       {error && (
-        <Alert variant="destructive" className="rounded-2xl border-red-500/20 bg-red-500/5">
-          <AlertCircle className="h-4 w-4 text-red-500" />
-          <AlertTitle className="text-sm font-bold uppercase tracking-widest text-red-500">Error</AlertTitle>
-          <AlertDescription className="text-xs font-medium text-red-600/80">
-            {error}
-          </AlertDescription>
-        </Alert>
+        <div className="p-6 rounded-[2rem] bg-red-500/5 border border-red-500/10 flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
+          <AlertCircle className="h-5 w-5 text-red-500" />
+          <div>
+            <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest">Protocol Error</p>
+            <p className="text-xs text-red-600/80 font-medium">{error}</p>
+          </div>
+        </div>
       )}
 
       {selectedSite && !loading && (
-        <div className="space-y-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          {/* Dashboard Stats Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: "Total Jobs", value: jobs.length },
-              { label: "Active", value: jobs.filter(j => j.enabled).length, color: jobs.some(j => j.enabled) ? "text-primary" : "text-muted-foreground" },
-              { label: "Status", value: jobs.some(j => j.enabled) ? "Active" : "Paused", color: jobs.some(j => j.enabled) ? "text-primary" : "text-muted-foreground" },
-              { label: "Updates", value: "Hourly", color: "text-muted-foreground" },
+              { 
+                label: "Total Jobs", 
+                value: jobs.length, 
+                sub: "Configured tasks",
+                icon: Calendar,
+                color: "text-blue-500",
+                bg: "bg-blue-500/5"
+              },
+              { 
+                label: "Active Flow", 
+                value: jobs.filter(j => j.enabled).length, 
+                sub: "Running currently",
+                icon: Zap,
+                color: "text-emerald-500",
+                bg: "bg-emerald-500/5"
+              },
+              { 
+                label: "System Health", 
+                value: jobs.some(j => j.enabled) ? "Nominal" : "Idle", 
+                sub: "Operational status",
+                icon: Globe,
+                color: jobs.some(j => j.enabled) ? "text-primary" : "text-zinc-400",
+                bg: jobs.some(j => j.enabled) ? "bg-primary/5" : "bg-zinc-500/5"
+              },
+              { 
+                label: "Next Cycle", 
+                value: "T-Minus", 
+                sub: "Automation pulse",
+                icon: Loader2,
+                color: "text-purple-500",
+                bg: "bg-purple-500/5"
+              },
             ].map((stat) => (
-              <div key={stat.label} className="p-4 rounded-2xl bg-card border border-border/50 space-y-1">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{stat.label}</p>
-                <p className={cn("text-2xl font-serif font-bold tracking-tight", stat.color || "text-foreground")}>{stat.value}</p>
-              </div>
+              <Card key={stat.label} className="group border-none bg-zinc-50/50 dark:bg-white/5 overflow-hidden rounded-[2rem] transition-all duration-500">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-3">
+                      <div className={cn("p-2.5 rounded-2xl w-fit transition-transform group-hover:scale-110 duration-500", stat.bg)}>
+                        <stat.icon className={cn("h-5 w-5", stat.color)} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">{stat.label}</p>
+                        <h3 className="text-2xl font-serif font-bold tracking-tight mt-1">{stat.value}</h3>
+                        <p className="text-[10px] text-muted-foreground/60 font-medium mt-0.5">{stat.sub}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
 
-          <div className="rounded-[32px] overflow-hidden border border-zinc-100 dark:border-white/5 bg-white dark:bg-zinc-900/40 shadow-sm">
-            <CronJobManager
-              siteId={selectedSite.id}
-              siteUrl={selectedSite.url}
-              initialJobs={jobs}
-              isLoading={loading}
-              onRefresh={() => void loadJobs(selectedSite.id)}
-            />
+          <div className="grid grid-cols-1 gap-8">
+            <div className="rounded-[3rem] overflow-hidden border border-border/40 bg-white dark:bg-zinc-900/40 shadow-xl shadow-zinc-900/5 p-2">
+              <div className="bg-zinc-50/50 dark:bg-white/[0.02] rounded-[2.8rem] p-6 md:p-10">
+                <CronJobManager
+                  siteId={selectedSite.id}
+                  siteUrl={selectedSite.url}
+                  initialJobs={jobs}
+                  isLoading={loading}
+                  onRefresh={() => void loadJobs(selectedSite.id)}
+                />
+              </div>
+            </div>
+            
+            <div className="flex flex-col md:flex-row items-center justify-between p-8 rounded-[2.5rem] bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 gap-6">
+               <div className="space-y-1">
+                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">Pro Tip</p>
+                 <h4 className="text-lg font-serif font-bold">Staggered Scheduling</h4>
+                 <p className="text-xs opacity-60 max-w-md">Distribute your automation cycles across different hours to ensure consistent indexing signals throughout the day.</p>
+               </div>
+               <Button asChild variant="outline" className="h-12 px-8 rounded-full border-white/20 bg-white/5 hover:bg-white/10 text-white dark:border-zinc-900/20 dark:bg-zinc-900/5 dark:hover:bg-zinc-900/10 dark:text-zinc-900 font-bold uppercase tracking-widest text-[10px]">
+                 <Link href={`/sites/url?siteId=${siteId}`}>View Real-time URLs</Link>
+               </Button>
+            </div>
           </div>
         </div>
       )}

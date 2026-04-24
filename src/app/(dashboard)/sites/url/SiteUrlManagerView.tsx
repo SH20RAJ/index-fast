@@ -266,33 +266,54 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
   }
 
   return (
-    <div className="space-y-10 pb-16 max-w-5xl">
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <PageHeader
-          title="URLs"
-          description="View your site pages and submit them for indexing."
-        />
+    <div className="space-y-12 pb-20 max-w-6xl mx-auto">
+      {/* Header & Site Selector */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/40 pb-8">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Live Property View</span>
+          </div>
+          <h1 className="text-4xl font-serif font-bold tracking-tight text-foreground">Site Intelligence</h1>
+          <p className="text-sm text-muted-foreground/80 mt-1 max-w-md">Analyze discovered URLs and manage indexing signal distribution across global search networks.</p>
+        </div>
+        
+        <div className="flex flex-col gap-2 min-w-[240px]">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-1">Selected Website</label>
+          <Select 
+            value={siteId} 
+            onValueChange={handleSiteChange}
+          >
+            <option value="" disabled>Select a property...</option>
+            {sites.map(s => (
+              <option key={s.id} value={s.id}>{new URL(s.url).hostname}</option>
+            ))}
+          </Select>
+        </div>
       </div>
 
       {loading && (
-        <div className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 animate-pulse">
-          <Loader2 className="h-4 w-4 animate-spin text-primary" />
-          <p className="text-xs text-muted-foreground font-medium">Loading pages...</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/20 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-card p-8 rounded-[2.5rem] shadow-2xl border border-border/40 flex flex-col items-center gap-4">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground animate-pulse">Synchronizing Data...</p>
+          </div>
         </div>
       )}
 
       {error && (
-        <Alert variant="destructive" className="rounded-2xl border-red-500/20 bg-red-500/5">
-          <AlertCircle className="h-4 w-4 text-red-500" />
-          <AlertTitle className="text-sm font-bold uppercase tracking-widest text-red-500">Error</AlertTitle>
-          <AlertDescription className="text-xs font-medium text-red-600/80">
-            {error}
-          </AlertDescription>
-        </Alert>
+        <div className="p-6 rounded-[2rem] bg-red-500/5 border border-red-500/10 flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
+          <AlertCircle className="h-5 w-5 text-red-500" />
+          <div>
+            <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest">Protocol Error</p>
+            <p className="text-xs text-red-600/80 font-medium">{error}</p>
+          </div>
+        </div>
       )}
 
       {payload && (
-        <div className="space-y-10">
+        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          {/* Top Row: Summary Stats */}
           <SummaryStats 
             inventoryTotal={payload.inventory.total}
             sitemapCount={payload.sitemapPreview.count}
@@ -300,28 +321,54 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
             hasBingApiKey={!!payload.website.bingApiKey}
           />
 
-          <section className="grid gap-8 lg:grid-cols-[1fr_350px]">
-            <ManualPushCard 
-              sitemapUrl={sitemapUrl}
-              onSitemapUrlChange={setSitemapUrl}
-              manualUrls={manualUrls}
-              onManualUrlsChange={setManualUrls}
-              submitting={submitting}
-              onSubmit={handleSubmit}
-              submitResult={submitResult}
-            />
+          {/* Main Workspace: Manual Actions & Secondary Data */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
+            <div className="space-y-8">
+              <ManualPushCard 
+                sitemapUrl={sitemapUrl}
+                onSitemapUrlChange={setSitemapUrl}
+                manualUrls={manualUrls}
+                onManualUrlsChange={setManualUrls}
+                submitting={submitting}
+                onSubmit={handleSubmit}
+                submitResult={submitResult}
+              />
+              
+              {/* URL Pulse List moved into the main area for better prominence */}
+              <UrlPulseList 
+                inventoryUrls={payload.inventory.urls}
+                sitemapUrls={payload.sitemapPreview.urls}
+                onExport={handleExport}
+              />
+            </div>
 
             <div className="space-y-8">
-              <ExternalLinks websiteUrl={payload.website.url} />
-              <HealthStats stats={payload.stats} />
-            </div>
-          </section>
+              {/* Sidebar Content */}
+              <div className="p-8 rounded-[2.5rem] bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow-xl shadow-zinc-900/10">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">Property Meta</span>
+                </div>
+                <h3 className="text-xl font-serif font-bold tracking-tight mb-4">Quick Insights</h3>
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Primary Origin</p>
+                    <p className="text-sm font-medium truncate">{payload.website.url}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Last Intelligence Sync</p>
+                    <p className="text-sm font-medium">{payload.website.lastSyncAt ? new Date(payload.website.lastSyncAt).toLocaleString() : 'Pending first sync'}</p>
+                  </div>
+                  <Button asChild variant="outline" className="w-full h-12 rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 text-white dark:border-zinc-950/10 dark:bg-zinc-950/5 dark:hover:bg-zinc-950/10 dark:text-zinc-950 font-bold uppercase tracking-widest text-[10px] mt-4">
+                    <Link href={`/sites/jobs?siteId=${siteId}`}>Configure Automation</Link>
+                  </Button>
+                </div>
+              </div>
 
-          <UrlPulseList 
-            inventoryUrls={payload.inventory.urls}
-            sitemapUrls={payload.sitemapPreview.urls}
-            onExport={handleExport}
-          />
+              <HealthStats stats={payload.stats} />
+              <ExternalLinks websiteUrl={payload.website.url} />
+            </div>
+          </div>
         </div>
       )}
     </div>

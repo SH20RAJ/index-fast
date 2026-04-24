@@ -4,6 +4,7 @@ import { stackServerApp } from "@/stack";
 import { db } from "@/lib/db";
 import { websites } from "@/lib/db/schema";
 import { ensureUserRecord } from "@/lib/db/user-sync";
+import { normalizeWebsiteOrigin } from "@/lib/services/gsc-service";
 import SiteUrlManagerView from "./SiteUrlManagerView";
 
 export const metadata = {
@@ -12,7 +13,7 @@ export const metadata = {
 };
 
 interface SitesUrlPageProps {
-  searchParams?: Promise<{ siteId?: string }>;
+  searchParams?: Promise<{ siteId?: string; url?: string }>;
 }
 
 export default async function SitesUrlPage({ searchParams }: SitesUrlPageProps) {
@@ -30,9 +31,22 @@ export default async function SitesUrlPage({ searchParams }: SitesUrlPageProps) 
     .orderBy(desc(websites.createdAt));
 
   const params = (await searchParams) ?? {};
-  const selectedSiteId = params.siteId && sites.some((site) => site.id === params.siteId)
+  
+  let selectedSiteId = params.siteId && sites.some((site) => site.id === params.siteId)
     ? params.siteId
-    : sites[0]?.id ?? null;
+    : null;
+
+  if (!selectedSiteId && params.url) {
+    const normalized = normalizeWebsiteOrigin(params.url);
+    if (normalized) {
+      const match = sites.find(s => s.url === normalized);
+      if (match) selectedSiteId = match.id;
+    }
+  }
+
+  if (!selectedSiteId) {
+    selectedSiteId = sites[0]?.id ?? null;
+  }
 
   return <SiteUrlManagerView sites={sites} initialSiteId={selectedSiteId} />;
 }
