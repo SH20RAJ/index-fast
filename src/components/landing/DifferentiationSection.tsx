@@ -158,9 +158,9 @@ export default function DifferentiationSection() {
               <motion.div
                 key={item.title}
                 variants={fadeUp}
-                className="group flex flex-col gap-5 rounded-3xl border border-border/60 bg-card/60 p-7 shadow-sm hover:border-primary/25 hover:shadow-lg transition-all duration-300 backdrop-blur-sm"
+                className="group flex flex-col gap-5 rounded-3xl border border-border/60 bg-card p-7 shadow-sm transition-all duration-300"
               >
-                <div className={cn("h-11 w-11 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110", item.bg)}>
+                <div className={cn("h-11 w-11 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105", item.bg)}>
                   <item.icon className={cn("h-5 w-5", item.color)} strokeWidth={1.75} />
                 </div>
                 <div className="space-y-2">
@@ -177,12 +177,6 @@ export default function DifferentiationSection() {
       {/* Section 2 — MCP Agent Integration                                  */}
       {/* ------------------------------------------------------------------ */}
       <section className="relative overflow-hidden py-24 sm:py-32 bg-zinc-950 dark:bg-zinc-950">
-        {/* Ambient glow */}
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-primary/10 blur-[120px] opacity-60" />
-          <div className="absolute bottom-0 right-0 h-[300px] w-[400px] rounded-full bg-violet-500/10 blur-[100px] opacity-40" />
-        </div>
-
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <motion.div

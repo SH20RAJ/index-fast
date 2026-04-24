@@ -50,7 +50,7 @@ export default function Navbar() {
         className={cn(
           "mx-auto max-w-5xl rounded-2xl transition-all duration-500 border",
           isScrolled 
-            ? "bg-background/80 backdrop-blur-xl border-border/50 shadow-2xl shadow-black/5 py-2 px-3 sm:px-4" 
+            ? "bg-background/80 backdrop-blur-xl border-border/50 shadow-sm py-2 px-3 sm:px-4" 
             : "bg-transparent border-transparent py-2 px-3 sm:px-4"
         )}
       >
@@ -99,7 +99,7 @@ export default function Navbar() {
 
             <div className="hidden sm:flex items-center gap-2">
               {user ? (
-                <Button asChild variant="default" size="sm" className="h-9 rounded-xl px-5 font-bold shadow-lg shadow-primary/10">
+                <Button asChild variant="default" size="sm" className="h-9 rounded-xl px-5 font-bold">
                   <Link href="/dashboard">Dashboard</Link>
                 </Button>
               ) : (
@@ -107,7 +107,7 @@ export default function Navbar() {
                   <Button asChild variant="ghost" size="sm" className="h-9 rounded-xl px-4 font-semibold text-muted-foreground hover:text-foreground">
                     <Link href="/sign-in">Sign in</Link>
                   </Button>
-                  <Button asChild size="sm" className="h-9 rounded-xl px-5 font-bold shadow-lg shadow-primary/10 bg-primary hover:bg-primary/90">
+                  <Button asChild size="sm" className="h-9 rounded-xl px-5 font-bold bg-primary hover:bg-primary/90">
                     <Link href="/sign-up">Get started</Link>
                   </Button>
                 </>

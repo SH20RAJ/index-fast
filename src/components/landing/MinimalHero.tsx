@@ -99,7 +99,7 @@ export default function MinimalHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <Button size="lg" className="h-16 rounded-2xl px-10 text-xl font-black shadow-2xl shadow-primary/20">
+          <Button size="lg" className="h-16 rounded-2xl px-10 text-xl font-black">
             Get started
             <ChevronRight className="ml-2 size-6" />
           </Button>

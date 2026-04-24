@@ -90,36 +90,21 @@ export default function LandingProductPreview({ className }: { className?: strin
       viewport={{ once: true, margin: "-50px" }}
       className={cn("relative", className)}
     >
-      <div
-        className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-primary/20 via-transparent to-cyan-500/10 blur-2xl"
-        aria-hidden
-      />
-      <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-card/90 shadow-2xl shadow-primary/5 ring-1 ring-black/[0.04] backdrop-blur-md dark:bg-card/50 dark:ring-white/[0.06]">
-        <div className="flex items-center justify-between gap-3 border-b border-border/60 px-4 py-3 sm:px-5">
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3 sm:px-5">
           <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary relative">
-              <motion.div
-                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-0 bg-primary/20 rounded-lg"
-              />
-              <Radar className="h-4 w-4 relative z-10" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary text-foreground">
+              <Radar className="h-4 w-4" />
             </span>
             <span className="truncate">Submission workspace</span>
           </div>
-          <motion.span
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8, duration: 0.4 }}
-            className="hidden shrink-0 rounded-full bg-pink-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 sm:inline"
-          >
+          <span className="hidden shrink-0 rounded-full bg-secondary px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground sm:inline">
             Live sync
-          </motion.span>
+          </span>
         </div>
 
         <div className="grid gap-4 p-4 sm:grid-cols-2 sm:gap-5 sm:p-5">
-          <motion.div variants={itemVariants} className="rounded-xl border border-border/60 bg-muted/30 p-4 dark:bg-muted/10 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+          <motion.div variants={itemVariants} className="rounded-xl border border-border bg-muted/30 p-4">
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Sitemap</p>
             <p className="mt-2 truncate font-mono text-xs text-foreground sm:text-sm">yoursite.com/sitemap.xml</p>
             <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
@@ -127,7 +112,7 @@ export default function LandingProductPreview({ className }: { className?: strin
               <span>Last crawl · 2m ago</span>
             </div>
           </motion.div>
-          <motion.div variants={itemVariants} className="rounded-xl border border-border/60 bg-muted/30 p-4 dark:bg-muted/10">
+          <motion.div variants={itemVariants} className="rounded-xl border border-border bg-muted/30 p-4">
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Queue</p>
             <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight text-foreground">
               <motion.span
@@ -145,17 +130,13 @@ export default function LandingProductPreview({ className }: { className?: strin
           </motion.div>
         </div>
 
-        <div className="border-t border-border/60 px-2 pb-3 sm:px-4">
+        <div className="border-t border-border px-2 pb-3 sm:px-4">
           <motion.div variants={itemVariants} className="flex items-center justify-between px-2 py-2 sm:px-0">
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               Recent pushes
             </p>
-            <span className="flex items-center gap-1 text-[10px] font-bold text-pink-500 uppercase tracking-wider">
-              <motion.span
-                animate={{ opacity: [1, 0.3, 1] }}
-                transition={{ duration: 1.4, repeat: Infinity }}
-                className="h-1.5 w-1.5 rounded-full bg-pink-500 inline-block"
-              />
+            <span className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+              <span className="h-1.5 w-1.5 rounded-full bg-border inline-block" />
               Live
             </span>
           </motion.div>

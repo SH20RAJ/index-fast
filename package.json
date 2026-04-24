@@ -93,6 +93,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.15.9",
     "@tailwindcss/postcss": "^4",
     "@types/axios": "^0.14.4",
     "@types/cheerio": "^1.0.0",

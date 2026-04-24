@@ -83,8 +83,6 @@ import { CronTerminal, ApiSubmission, PingRadar, EngineEcosystem } from "./Workf
 export default function HowItWorksContent() {
   return (
     <section className="relative isolate overflow-hidden border-b border-border/70 mt-20 pt-10">
-      <div className="pointer-events-none absolute inset-0 -z-10 opacity-70 [background:radial-gradient(60rem_30rem_at_20%_0%,rgba(255,184,108,0.12),transparent),radial-gradient(48rem_28rem_at_80%_10%,rgba(120,180,255,0.12),transparent)]" />
-
       <div className="mx-auto w-full max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
         <motion.header
           initial="hidden"
@@ -107,7 +105,7 @@ export default function HowItWorksContent() {
             IndexFast helps your website show up in search results faster by automating the submission process for you.
           </motion.p>
           <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-3 pt-4">
-            <Button asChild size="lg" className="h-14 font-bold rounded-2xl shadow-xl shadow-primary/10 tracking-wide uppercase text-xs">
+            <Button asChild size="lg" className="h-14 font-bold rounded-2xl tracking-wide uppercase text-xs">
               <Link href="/sign-up">
                 Get Started <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -136,7 +134,7 @@ export default function HowItWorksContent() {
                     {/* Custom animated connector */}
                     <div className="absolute left-[calc(2rem-5px)] top-8 hidden md:flex h-3 w-3 rounded-full bg-primary/40 group-hover:bg-primary transition-colors duration-300 shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
 
-                    <Card className="border-beam border-border/70 bg-card/85 backdrop-blur-md shadow-sm transition-all duration-300 premium-card h-full">
+                    <Card className="border-border/70 bg-card/85 backdrop-blur-md shadow-sm transition-all duration-300 h-full">
                       <CardHeader className="space-y-3 pb-4">
                         <p className="text-[10px] font-black tracking-[0.2em] text-primary/80 uppercase">PHASE {step.id}</p>
                         <CardTitle className="flex items-center gap-3 text-xl font-bold tracking-tight">
@@ -184,7 +182,7 @@ export default function HowItWorksContent() {
           className="grid gap-6 lg:grid-cols-2"
         >
           <motion.div variants={slideInLeft}>
-            <Card className="h-full border-beam border-border/70 bg-background/85 backdrop-blur-md shadow-sm transition-all duration-500 premium-card">
+            <Card className="h-full border-border/70 bg-background/85 backdrop-blur-md shadow-sm transition-all duration-500 h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl font-bold tracking-tight">
                   <span className="p-2 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400 group-hover:bg-teal-500/20 transition-colors">
@@ -211,7 +209,7 @@ export default function HowItWorksContent() {
           </motion.div>
 
           <motion.div variants={slideInRight}>
-            <Card className="h-full border-beam border-border/70 bg-background/85 backdrop-blur-md shadow-sm transition-all duration-500 premium-card">
+            <Card className="h-full border-border/70 bg-background/85 backdrop-blur-md shadow-sm transition-all duration-500 h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-xl font-bold tracking-tight">
                   <span className="p-2 rounded-lg bg-pink-500/10 text-pink-600 dark:text-pink-400 group-hover:bg-pink-500/20 transition-colors">
@@ -255,7 +253,7 @@ export default function HowItWorksContent() {
                   Create your account today and get your pages noticed by search engines in minutes.
                 </p>
               </div>
-              <Button asChild size="lg" className="shrink-0 rounded-full bg-white text-zinc-900 hover:bg-zinc-100 border-none font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all">
+              <Button asChild size="lg" className="shrink-0 rounded-full font-bold transition-all">
                 <Link href="/sign-up">
                   Create account <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

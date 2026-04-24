@@ -24,12 +24,6 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden pt-28 pb-16 sm:pt-36 sm:pb-24 lg:pt-40 lg:pb-28">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-0 h-[min(520px,70vw)] w-[min(900px,120%)] -translate-x-1/2 rounded-full bg-primary/[0.12] blur-3xl dark:bg-primary/20" />
-        <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,color-mix(in_oklab,var(--primary)_8%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_oklab,var(--primary)_8%,transparent)_1px,transparent_1px)] bg-[size:48px_48px] opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,black,transparent)] dark:opacity-25" />
-      </div>
-
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:gap-16">
           <div className="text-center lg:text-left">
@@ -37,9 +31,9 @@ export default function Hero() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary"
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-foreground"
             >
-              <Shield className="h-3 w-3" />
+              <Shield className="h-3 w-3 text-primary" />
               Powered by official search engine APIs
             </motion.div>
 
@@ -49,7 +43,7 @@ export default function Hero() {
               transition={{ duration: 0.55, delay: 0.05 }}
               className="text-balance text-4xl font-serif font-bold tracking-tight text-foreground sm:text-5xl lg:text-[4rem] lg:leading-[1.1]"
             >
-              Get indexed on Google in <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent italic">24 hours</span> — not weeks.
+              Get indexed on Google in <span className="text-primary italic">24 hours</span> — not weeks.
             </motion.h1>
 
             <motion.p
@@ -69,10 +63,10 @@ export default function Hero() {
             >
               {checklist.map((line) => (
                 <li key={line} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-500/10 text-green-600">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary text-foreground">
                     <Check className="h-3 w-3" strokeWidth={3} />
                   </span>
-                  <span className="font-medium">{line}</span>
+                  <span className="font-medium text-foreground/80">{line}</span>
                 </li>
               ))}
             </motion.ul>
@@ -84,7 +78,7 @@ export default function Hero() {
               className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap lg:justify-start"
             >
               {user ? (
-                <Button asChild size="lg" className="h-12 rounded-xl px-8 text-base font-semibold shadow-lg shadow-primary/20">
+                <Button asChild size="lg" className="h-12 rounded-xl px-8 text-base font-semibold">
                   <Link href="/dashboard">
                     Go to Dashboard
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -92,7 +86,7 @@ export default function Hero() {
                 </Button>
               ) : (
                 <div className="flex flex-col items-start gap-2">
-                  <Button asChild size="lg" className="h-12 rounded-xl px-8 text-base font-semibold shadow-lg shadow-primary/20 w-full sm:w-auto">
+                  <Button asChild size="lg" className="h-12 rounded-xl px-8 text-base font-semibold w-full sm:w-auto">
                     <Link href="/sign-up">
                       Start Indexing Now
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -101,7 +95,7 @@ export default function Hero() {
                   <p className="text-[10px] text-muted-foreground ml-1 font-medium italic">Start with 100 URLs free today.</p>
                 </div>
               )}
-              <Button asChild variant="outline" size="lg" className="h-12 rounded-xl border-border/80 px-8 text-base font-semibold">
+              <Button asChild variant="outline" size="lg" className="h-12 rounded-xl border-border px-8 text-base font-semibold">
                 <Link href="/tools">Try free tools</Link>
               </Button>
             </motion.div>

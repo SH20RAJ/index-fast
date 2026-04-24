@@ -141,7 +141,7 @@ export default function Pricing() {
                   <Button
                     className={cn(
                       "w-full h-12 rounded-2xl font-bold transition-all active:scale-95",
-                      p.popular ? "bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/20" : "bg-muted/50 hover:bg-muted text-foreground border-none"
+                      p.popular ? "bg-primary hover:bg-primary/90 text-white" : "bg-muted/50 hover:bg-muted text-foreground border-none"
                     )}
                     onClick={() => void startCheckout(p.name)}
                     disabled={loadingPlan === p.name}
@@ -186,7 +186,7 @@ export default function Pricing() {
                       </p>
                    </div>
                 </div>
-                <div className="bg-primary text-white p-8 rounded-[2rem] text-center space-y-2 shadow-2xl shadow-primary/20">
+                <div className="bg-primary text-white p-8 rounded-[2rem] text-center space-y-2">
                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-80">Estimated ROI</p>
                    <p className="text-5xl font-bold">12x</p>
                    <p className="text-[10px] font-medium opacity-60">minimum per cycle</p>
