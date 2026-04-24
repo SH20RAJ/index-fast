@@ -55,14 +55,20 @@ export async function importGscSites(
   websiteLimit: number,
   selectedPropertyUrls?: string[]
 ) {
+  console.log(`[GSC Import] Starting import for user ${userId}. Website limit: ${websiteLimit}. Selected: ${selectedPropertyUrls?.length || 'all'}`);
   const allGscSites = await listSearchConsoleSites(accessToken);
+  console.log(`[GSC Import] Fetched ${allGscSites.length} total sites from GSC API.`);
+
   const selectedSet = new Set((selectedPropertyUrls ?? []).map((value) => value.trim()).filter(Boolean));
   const gscSites =
     selectedSet.size > 0
       ? allGscSites.filter((site) => selectedSet.has(site.siteUrl))
       : allGscSites;
 
+  console.log(`[GSC Import] Filtered to ${gscSites.length} sites to process.`);
+
   if (!gscSites || gscSites.length === 0) {
+    console.log(`[GSC Import] No sites to import. Selected count: ${selectedSet.size}`);
     return {
       message:
         selectedSet.size > 0

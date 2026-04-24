@@ -38,10 +38,21 @@ interface GscProperty {
 
 export default function AddSiteFlow({ floating = false }: { floating?: boolean }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<"choice" | "manual" | "google">("choice");
   const [manualUrl, setManualUrl] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const urlParam = searchParams.get("url");
+    if (urlParam && !open) {
+      setManualUrl(urlParam);
+      // Auto-start GSC flow to see if we can find it
+      void loadGscSites(urlParam);
+      setOpen(true);
+    }
+  }, [searchParams]);
   
   // Google Console State
   const [gscLoading, setGscLoading] = useState(false);
@@ -83,7 +94,7 @@ export default function AddSiteFlow({ floating = false }: { floating?: boolean }
     }
   };
 
-  const loadGscSites = async () => {
+  const loadGscSites = async (autoSelectUrl?: string) => {
     setStep("google");
     setGscLoading(true);
     try {
@@ -91,16 +102,31 @@ export default function AddSiteFlow({ floating = false }: { floating?: boolean }
       const data = await response.json();
       if (!response.ok) {
          if (response.status === 400 || response.status === 401) {
-            // Probably need to reconnect
-            window.location.href = "/api/gsc/oauth/start?returnTo=/sites";
+            const returnPath = autoSelectUrl ? `/sites?url=${encodeURIComponent(autoSelectUrl)}` : "/sites";
+            window.location.href = `/api/gsc/oauth/start?returnTo=${encodeURIComponent(returnPath)}`;
             return;
          }
          throw new Error(data.error || "Failed to load Google sites");
       }
-      setGscSites(data.sites || []);
+      const sites = (data.sites || []) as GscProperty[];
+      setGscSites(sites);
+      
+      if (autoSelectUrl) {
+        const normalizedInput = autoSelectUrl.toLowerCase().replace(/^https?:\/\//, "").replace(/\/$/, "");
+        const match = sites.find((s) => {
+          const normalizedProp = s.propertyUrl.toLowerCase().replace(/^https?:\/\//, "").replace(/\/$/, "").replace(/^sc-domain:/, "");
+          return normalizedProp === normalizedInput;
+        });
+        
+        if (match && !match.alreadyImported) {
+          setSelection(new Set([match.propertyUrl]));
+        } else if (!match) {
+          setStep("manual");
+        }
+      }
     } catch (err: any) {
       toast.error(err.message);
-      setStep("choice");
+      if (!autoSelectUrl) setStep("choice");
     } finally {
       setGscLoading(false);
     }

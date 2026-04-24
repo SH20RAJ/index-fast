@@ -5,6 +5,7 @@ import { stackServerApp } from "@/stack";
 import { db } from "@/lib/db";
 import { websites } from "@/lib/db/schema";
 import { listSearchConsoleSites } from "@/lib/api/google";
+import { GSC_READONLY_SCOPE } from "@/lib/google/constants";
 import { normalizeWebsiteOrigin } from "@/lib/services/gsc-service";
 
 export async function GET() {
@@ -14,10 +15,25 @@ export async function GET() {
   }
 
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("gsc_access_token")?.value;
+  let accessToken = cookieStore.get("gsc_access_token")?.value;
 
   if (!accessToken) {
-    return NextResponse.json({ connected: false, sites: [] });
+    const connectedAccounts = await user.listConnectedAccounts();
+    const googleAccount = connectedAccounts.find((account) => account.provider === "google");
+
+    if (googleAccount) {
+      const tokenResult = await googleAccount.getAccessToken({ scopes: [GSC_READONLY_SCOPE] });
+      if (tokenResult.status === "ok" && tokenResult.data.accessToken) {
+        accessToken = tokenResult.data.accessToken;
+      }
+    }
+  }
+
+  if (!accessToken) {
+    return NextResponse.json(
+      { connected: false, sites: [], error: "Google Search Console is not connected. Reconnect Google to import sites." },
+      { status: 401 }
+    );
   }
 
   try {
