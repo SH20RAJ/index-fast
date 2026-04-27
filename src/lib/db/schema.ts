@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, boolean, integer, pgEnum, jsonb, index } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, boolean, integer, pgEnum, jsonb, index, uniqueIndex } from "drizzle-orm/pg-core";
 
 /**
  * Submission Engine Types
@@ -178,6 +178,21 @@ export const cronJobs = pgTable("cron_jobs", {
 }));
 
 /**
+ * Google Search Console Properties: Cached list of properties available for import
+ */
+export const gscProperties = pgTable("gsc_properties", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  siteUrl: text("site_url").notNull(),
+  permissionLevel: text("permission_level").notNull(),
+  alreadyImported: boolean("already_imported").default(false),
+  lastSyncedAt: timestamp("last_synced_at").defaultNow(),
+}, (table) => ({
+  userIdIdx: index("idx_gsc_props_user_id").on(table.userId),
+  uniqueUserSite: uniqueIndex("idx_gsc_props_user_site_unique").on(table.userId, table.siteUrl),
+}));
+
+/**
  * Chat System: History and project-based AI context
  */
 export const chatConversations = pgTable("chat_conversations", {
@@ -225,4 +240,6 @@ export type ChatConversation = typeof chatConversations.$inferSelect;
 export type NewChatConversation = typeof chatConversations.$inferInsert;
 export type ChatMessage = typeof chatMessages.$inferSelect;
 export type NewChatMessage = typeof chatMessages.$inferInsert;
+export type GscProperty = typeof gscProperties.$inferSelect;
+export type NewGscProperty = typeof gscProperties.$inferInsert;
 

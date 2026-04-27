@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { stackServerApp } from "@/stack";
 import { db } from "@/lib/db";
-import { websites } from "@/lib/db/schema";
+import { websites, gscProperties } from "@/lib/db/schema";
 import { listSearchConsoleSites } from "@/lib/api/google";
 import { GSC_READONLY_SCOPE } from "@/lib/google/constants";
-import { normalizeWebsiteOrigin } from "@/lib/services/gsc-service";
+import { normalizeWebsiteOrigin, syncGscProperties } from "@/lib/services/gsc-service";
 
 export async function GET() {
   const user = await stackServerApp.getUser();
@@ -35,32 +35,27 @@ export async function GET() {
       { status: 401 }
     );
   }
-
   try {
-    const [existingSites, gscSites] = await Promise.all([
-      db.select({ url: websites.url }).from(websites).where(eq(websites.userId, user.id)),
-      listSearchConsoleSites(accessToken),
-    ]);
+    const sites = await syncGscProperties(user.id, accessToken);
+    
+    // Fetch from DB to return structured data
+    const dbProperties = await db
+      .select()
+      .from(gscProperties)
+      .where(eq(gscProperties.userId, user.id));
 
-    const existingUrlSet = new Set(existingSites.map((row) => row.url));
+    const responseSites = dbProperties.map(prop => {
+      const normalizedUrl = normalizeWebsiteOrigin(prop.siteUrl);
+      return {
+        propertyUrl: prop.siteUrl,
+        permissionLevel: prop.permissionLevel,
+        normalizedUrl,
+        supported: Boolean(normalizedUrl),
+        alreadyImported: prop.alreadyImported,
+      };
+    });
 
-    const sites = await Promise.all(
-      gscSites.map(async (site) => {
-        const normalizedUrl = normalizeWebsiteOrigin(site.siteUrl);
-        const supported = Boolean(normalizedUrl);
-        const alreadyImported = normalizedUrl ? existingUrlSet.has(normalizedUrl) : false;
-
-        return {
-          propertyUrl: site.siteUrl,
-          permissionLevel: site.permissionLevel,
-          normalizedUrl,
-          supported,
-          alreadyImported,
-        };
-      })
-    );
-
-    return NextResponse.json({ connected: true, sites });
+    return NextResponse.json({ connected: true, sites: responseSites });
   } catch {
     const response = NextResponse.json(
       { connected: false, sites: [], error: "Failed to fetch GSC sites. Reconnect Google and try again." },

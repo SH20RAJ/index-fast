@@ -183,6 +183,17 @@ export async function ensureDbSchema() {
       "updated_at" timestamp DEFAULT now()
     );`);
 
+    await run(`CREATE TABLE IF NOT EXISTS "gsc_properties" (
+      "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      "user_id" text NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+      "site_url" text NOT NULL,
+      "permission_level" text NOT NULL,
+      "already_imported" boolean DEFAULT false,
+      "last_synced_at" timestamp DEFAULT now()
+    );`);
+
+    await run(`CREATE UNIQUE INDEX IF NOT EXISTS "idx_gsc_props_user_site_unique" ON "gsc_properties"("user_id", "site_url");`);
+
     // --- Indexes -----------------------------------------------------------
     await run(`CREATE INDEX IF NOT EXISTS "idx_websites_user_id" ON "websites"("user_id");`);
     await run(`CREATE INDEX IF NOT EXISTS "idx_websites_created_at" ON "websites"("created_at");`);

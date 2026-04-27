@@ -1,4 +1,4 @@
-import { count, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { stackServerApp } from "@/stack";
@@ -6,7 +6,7 @@ import { ensureUserRecord } from "@/lib/db/user-sync";
 import { getSubscriptionSnapshot } from "@/lib/services/subscription-service";
 import { importGscSites } from "@/lib/services/gsc-service";
 import { db } from "@/lib/db";
-import { websites } from "@/lib/db/schema";
+import { websites, gscProperties } from "@/lib/db/schema";
 import { GSC_READONLY_SCOPE } from "@/lib/google/constants";
 import { cookies } from "next/headers";
 
@@ -60,6 +60,18 @@ export async function POST(request: Request) {
   }
 
   const result = await importGscSites(user.id, accessToken, plan.websiteLimit, selectedSiteUrls);
+
+  // Mark already imported in gsc_properties
+  if (result.importedCount > 0) {
+    for (const site of result.imported) {
+      // Find the source property from siteHealth if available, otherwise use site.url
+      const sourceProperty = site.siteHealth?.gsc?.sourceProperty || site.url;
+      await db
+        .update(gscProperties)
+        .set({ alreadyImported: true })
+        .where(and(eq(gscProperties.userId, user.id), eq(gscProperties.siteUrl, sourceProperty)));
+    }
+  }
 
   revalidatePath("/sites");
   revalidatePath("/dashboard");

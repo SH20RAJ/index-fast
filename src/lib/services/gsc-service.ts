@@ -1,79 +1,97 @@
 import "server-only";
-import { and, eq, count } from "drizzle-orm";
+import { and, eq, count, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { websites } from "@/lib/db/schema";
+import { websites, gscProperties } from "@/lib/db/schema";
 import { listSearchConsoleSites, listSearchConsoleSitemaps } from "@/lib/api/google";
 
 export function normalizeWebsiteOrigin(rawUrl: string) {
+  if (!rawUrl) return null;
+  
   if (rawUrl.startsWith("sc-domain:")) {
     const domain = rawUrl.slice("sc-domain:".length).trim();
-    if (!domain) {
-      return null;
-    }
-
-    try {
-      return new URL(`https://${domain}`).origin;
-    } catch {
-      return null;
-    }
+    if (!domain) return null;
+    return `https://${domain}`;
   }
 
-  const normalized = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
   try {
-    return new URL(normalized).origin;
+    const normalized = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+    const url = new URL(normalized);
+    return url.origin;
   } catch {
     return null;
   }
 }
 
 function inferDefaultSitemap(rawUrl: string) {
-  if (rawUrl.startsWith("sc-domain:")) {
-    const domain = rawUrl.slice("sc-domain:".length).trim();
-    if (!domain) {
-      return null;
-    }
-
-    try {
-      return `https://${new URL(`https://${domain}`).host}/sitemap.xml`;
-    } catch {
-      return null;
-    }
-  }
-
-  const normalized = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
-  try {
-    const url = new URL(normalized);
-    return `${url.origin}/sitemap.xml`;
-  } catch {
-    return null;
-  }
+  const origin = normalizeWebsiteOrigin(rawUrl);
+  if (!origin) return null;
+  return `${origin}/sitemap.xml`;
 }
 
+/**
+ * Syncs the user's GSC properties to the local database cache.
+ */
+export async function syncGscProperties(userId: string, accessToken: string) {
+  console.log(`[GSC Sync] Syncing properties for user ${userId}...`);
+  const allGscSites = await listSearchConsoleSites(accessToken);
+  console.log(`[GSC Sync] Fetched ${allGscSites.length} sites from GSC API.`);
+
+  // Get currently imported websites to mark alreadyImported
+  const existingWebsites = await db
+    .select({ url: websites.url })
+    .from(websites)
+    .where(eq(websites.userId, userId));
+  
+  const existingUrlSet = new Set(existingWebsites.map(w => w.url));
+
+  // Upsert properties into gsc_properties
+  for (const site of allGscSites) {
+    const normalizedUrl = normalizeWebsiteOrigin(site.siteUrl);
+    const alreadyImported = normalizedUrl ? existingUrlSet.has(normalizedUrl) : false;
+
+    await db.insert(gscProperties).values({
+      userId,
+      siteUrl: site.siteUrl,
+      permissionLevel: site.permissionLevel,
+      alreadyImported,
+      lastSyncedAt: new Date(),
+    }).onConflictDoUpdate({
+      target: [gscProperties.userId, gscProperties.siteUrl], // Note: Need unique index for this
+      set: {
+        permissionLevel: site.permissionLevel,
+        alreadyImported,
+        lastSyncedAt: new Date(),
+      }
+    });
+  }
+
+  return allGscSites;
+}
+
+/**
+ * Core logic for importing selected GSC properties into the websites table.
+ */
 export async function importGscSites(
   userId: string,
   accessToken: string,
   websiteLimit: number,
   selectedPropertyUrls?: string[]
 ) {
-  console.log(`[GSC Import] Starting import for user ${userId}. Website limit: ${websiteLimit}. Selected: ${selectedPropertyUrls?.length || 'all'}`);
+  console.log(`[GSC Import] Starting import for user ${userId}. Limit: ${websiteLimit}.`);
+  
+  // 1. Fetch all available sites to ensure we have fresh metadata
   const allGscSites = await listSearchConsoleSites(accessToken);
-  console.log(`[GSC Import] Fetched ${allGscSites.length} total sites from GSC API.`);
+  
+  const selectedSet = new Set((selectedPropertyUrls ?? []).map(v => v.trim()).filter(Boolean));
+  const gscSitesToProcess = selectedSet.size > 0
+    ? allGscSites.filter(site => selectedSet.has(site.siteUrl))
+    : allGscSites;
 
-  const selectedSet = new Set((selectedPropertyUrls ?? []).map((value) => value.trim()).filter(Boolean));
-  const gscSites =
-    selectedSet.size > 0
-      ? allGscSites.filter((site) => selectedSet.has(site.siteUrl))
-      : allGscSites;
+  console.log(`[GSC Import] Processing ${gscSitesToProcess.length} sites.`);
 
-  console.log(`[GSC Import] Filtered to ${gscSites.length} sites to process.`);
-
-  if (!gscSites || gscSites.length === 0) {
-    console.log(`[GSC Import] No sites to import. Selected count: ${selectedSet.size}`);
+  if (gscSitesToProcess.length === 0) {
     return {
-      message:
-        selectedSet.size > 0
-          ? "No selected sites were found in Google Search Console"
-          : "No sites found in Google Search Console",
+      message: "No properties found to import.",
       importedCount: 0,
       skippedCount: 0,
       imported: [],
@@ -81,7 +99,7 @@ export async function importGscSites(
     };
   }
 
-  // Get current website count
+  // 2. Check current usage
   const [{ total: currentCount }] = await db
     .select({ total: count() })
     .from(websites)
@@ -89,44 +107,24 @@ export async function importGscSites(
 
   const availableSlots = Math.max(0, websiteLimit - (currentCount ?? 0));
 
-  if (availableSlots === 0) {
-    return {
-      message: "Plan limit reached",
-      importedCount: 0,
-      skippedCount: gscSites.length,
-      imported: [],
-      skipped: gscSites.map((site) => ({
-        url: site.siteUrl,
-        reason: `Plan allows maximum ${websiteLimit} website(s). Remove some to import new ones.`,
-      })),
-    };
-  }
+  const imported: any[] = [];
+  const skipped: any[] = [];
 
-  const imported: Array<{ id: string; url: string; sitemapUrl: string | null }> = [];
-  const skipped: Array<{ url: string; reason: string }> = [];
-
-  for (const site of gscSites) {
-    // Stop importing once we hit the limit
+  for (const site of gscSitesToProcess) {
     if (imported.length >= availableSlots) {
-      skipped.push({
-        url: site.siteUrl,
-        reason: `Plan limit reached. ${availableSlots} site(s) imported; remaining skipped.`,
-      });
+      skipped.push({ url: site.siteUrl, reason: "Plan limit reached" });
       continue;
     }
 
     const websiteUrl = normalizeWebsiteOrigin(site.siteUrl);
-
     if (!websiteUrl) {
-      skipped.push({
-        url: site.siteUrl,
-        reason: "Property URL is invalid and could not be normalized.",
-      });
+      skipped.push({ url: site.siteUrl, reason: "Invalid URL" });
       continue;
     }
 
+    // Check if already exists
     const [existing] = await db
-      .select({ id: websites.id })
+      .select()
       .from(websites)
       .where(and(eq(websites.userId, userId), eq(websites.url, websiteUrl)))
       .limit(1);
@@ -136,33 +134,32 @@ export async function importGscSites(
       continue;
     }
 
+    // 3. Fetch sitemaps for the property
     const discoveredSitemaps = await listSearchConsoleSitemaps(accessToken, site.siteUrl);
     const sitemapUrl = discoveredSitemaps[0] ?? inferDefaultSitemap(site.siteUrl);
 
-    const [created] = await db
-      .insert(websites)
-      .values({
-        userId,
-        url: websiteUrl,
-        sitemapUrl,
-        gscConnected: true,
-        siteHealth: {
-          gsc: {
-            importedAt: new Date().toISOString(),
-            permissionLevel: site.permissionLevel,
-            sourceProperty: site.siteUrl,
-            discoveredSitemaps,
-          },
-        },
-        createdAt: new Date(),
-      })
-      .returning({ id: websites.id, url: websites.url, sitemapUrl: websites.sitemapUrl });
+    // 4. Create the website
+    const [created] = await db.insert(websites).values({
+      userId,
+      url: websiteUrl,
+      sitemapUrl,
+      gscConnected: true,
+      siteHealth: {
+        gsc: {
+          importedAt: new Date().toISOString(),
+          sourceProperty: site.siteUrl,
+          permissionLevel: site.permissionLevel,
+          discoveredSitemaps,
+        }
+      },
+      createdAt: new Date(),
+    }).returning();
 
     imported.push(created);
   }
 
   return {
-    message: imported.length > 0 ? `Imported ${imported.length} site(s) from Google Search Console.` : "No new sites were imported.",
+    message: imported.length > 0 ? `Successfully imported ${imported.length} site(s).` : "No new sites were imported.",
     importedCount: imported.length,
     skippedCount: skipped.length,
     imported,
