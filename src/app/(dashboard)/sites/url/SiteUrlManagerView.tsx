@@ -283,12 +283,12 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
           <Select 
             value={siteId} 
             onValueChange={handleSiteChange}
-          >
-            <option value="" disabled>Select a property...</option>
-            {sites.map(s => (
-              <option key={s.id} value={s.id}>{new URL(s.url).hostname}</option>
-            ))}
-          </Select>
+            placeholder="Select a property..."
+            options={sites.map(s => ({ 
+              label: new URL(s.url).hostname, 
+              value: s.id 
+            }))}
+          />
         </div>
       </div>
 

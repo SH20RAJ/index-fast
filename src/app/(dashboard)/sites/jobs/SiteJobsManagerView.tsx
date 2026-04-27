@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select } from "@/components/ui/select";
-import { Loader2, Globe, AlertCircle, Calendar } from "lucide-react";
+import { Loader2, Globe, AlertCircle, Calendar, Zap } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/dashboard/PageHeader";
@@ -141,12 +141,12 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
           <Select 
             value={siteId} 
             onValueChange={handleSiteChange}
-          >
-            <option value="" disabled>Select a property...</option>
-            {sites.map(s => (
-              <option key={s.id} value={s.id}>{new URL(s.url).hostname}</option>
-            ))}
-          </Select>
+            placeholder="Select a property..."
+            options={sites.map(s => ({ 
+              label: new URL(s.url).hostname, 
+              value: s.id 
+            }))}
+          />
         </div>
       </div>
 

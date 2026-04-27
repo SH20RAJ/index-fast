@@ -195,7 +195,7 @@ export default function AddSiteFlow({ floating = false }: { floating?: boolean }
           {step === "choice" && (
             <div className="grid gap-4">
               <button 
-                onClick={loadGscSites}
+                onClick={() => loadGscSites()}
                 className="flex items-center gap-4 p-5 rounded-2xl border border-zinc-100 hover:border-rose-500/30 hover:bg-rose-500/[0.02] transition-all text-left group"
               >
                 <div className="h-12 w-12 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500 shrink-0 group-hover:scale-110 transition-transform">

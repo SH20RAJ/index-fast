@@ -5,13 +5,20 @@ import { Select as RizzSelect, type SelectProps as RizzSelectProps } from "rizzu
 import { cn } from "@/lib/utils";
 
 // The main Select component from RizzUI
-const Select = ({ onValueChange, onChange, ...props }: any) => {
+const Select = ({ onValueChange, onChange, options, children, ...props }: any) => {
+  const finalOptions = options || React.Children.map(children, (child: any) => {
+    if (child && child.type === 'option') {
+      return { label: child.props.children, value: child.props.value };
+    }
+    return null;
+  })?.filter(Boolean) || [];
+
   const handleChange = (value: any) => {
     // RizzUI Select's onChange passes the value (or the full option object depending on usage)
     onChange?.(value);
     onValueChange?.(value);
   };
-  return <RizzSelect onChange={handleChange} {...props} />;
+  return <RizzSelect onChange={handleChange} options={finalOptions} {...props} />;
 };
 
 // Shim components to prevent immediate breakage in existing code
