@@ -1,132 +1,80 @@
-import { NextResponse } from "next/server";
-import { stackServerApp } from "@/stack";
 import { db } from "@/lib/db";
-import { cronJobs, users, websites } from "@/lib/db/schema";
+import { cronJobs, websites } from "@/lib/db/schema";
+import { stackServerApp } from "@/stack";
 import { eq, and } from "drizzle-orm";
-import { resolvePlanId, type PlanId } from "@/lib/billing/plans";
+import { NextResponse } from "next/server";
 
-const CRON_PLAN_LIMITS: Record<PlanId, { maxTotalJobs: number; allowHourly: boolean }> = {
-  free: { maxTotalJobs: 1, allowHourly: false },
-  pro: { maxTotalJobs: 25, allowHourly: true },
-  agency: { maxTotalJobs: 200, allowHourly: true },
-};
-
+/**
+ * PATCH: Update a specific cron job (toggle enabled status, change frequency, etc.)
+ */
 export async function PATCH(
-  request: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string; cronJobId: string }> }
 ) {
-  const user = await stackServerApp.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const { id: websiteId, cronJobId } = await params;
+  const user = await stackServerApp.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const [userRow] = await db
-      .select({ subscriptionStatus: users.subscriptionStatus, isPro: users.isPro })
-      .from(users)
-      .where(eq(users.id, user.id))
-      .limit(1);
-    const planId = resolvePlanId(userRow?.subscriptionStatus ?? null, userRow?.isPro ?? false);
-    const limits = CRON_PLAN_LIMITS[planId];
-
-    // Verify website ownership
-    const website = await db
+    const body = await req.json();
+    
+    // Verify website ownership first
+    const [website] = await db
       .select()
       .from(websites)
-        .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)))
-      .limit(1);
+      .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
 
-    if (!website || website.length === 0) {
-      return NextResponse.json({ error: "Website not found" }, { status: 404 });
-    }
+    if (!website) return NextResponse.json({ error: "Website not found" }, { status: 404 });
 
-    const body = (await request.json()) as { enabled?: boolean };
-
-    const [targetJob] = await db
-      .select({ id: cronJobs.id, enabled: cronJobs.enabled, frequency: cronJobs.frequency })
-      .from(cronJobs)
-      .where(and(eq(cronJobs.id, cronJobId), eq(cronJobs.websiteId, websiteId)))
-      .limit(1);
-
-    if (!targetJob) {
-      return NextResponse.json({ error: "Cron job not found" }, { status: 404 });
-    }
-
-    if (body.enabled === true && !targetJob.enabled) {
-      if (!limits.allowHourly && targetJob.frequency === "hourly") {
-        return NextResponse.json(
-          { error: "Hourly schedules are available on Pro and Agency plans." },
-          { status: 403 }
-        );
-      }
-
-      const existingUserJobs = await db
-        .select({ id: cronJobs.id })
-        .from(cronJobs)
-        .innerJoin(websites, eq(cronJobs.websiteId, websites.id))
-        .where(eq(websites.userId, user.id));
-
-      if (existingUserJobs.length >= limits.maxTotalJobs) {
-        return NextResponse.json(
-          { error: `Your ${planId.toUpperCase()} plan allows up to ${limits.maxTotalJobs} auto-submit job${limits.maxTotalJobs === 1 ? "" : "s"}.` },
-          { status: 403 }
-        );
-      }
-    }
-
-    await db
+    // Update job
+    const [updatedJob] = await db
       .update(cronJobs)
       .set({
-        enabled: body.enabled,
+        ...body,
         updatedAt: new Date(),
       })
-      .where(and(eq(cronJobs.id, cronJobId), eq(cronJobs.websiteId, websiteId)));
+      .where(and(eq(cronJobs.id, cronJobId), eq(cronJobs.websiteId, websiteId)))
+      .returning();
 
-    return NextResponse.json({ message: "Cron job updated" });
+    if (!updatedJob) return NextResponse.json({ error: "Job not found" }, { status: 404 });
+
+    return NextResponse.json({ job: updatedJob });
   } catch (error) {
-    console.error("Error updating cron job:", error);
-    return NextResponse.json(
-      { error: "Failed to update cron job" },
-      { status: 500 }
-    );
+    console.error("[api/cron-jobs/[id]] PATCH error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
+/**
+ * DELETE: Remove a cron job
+ */
 export async function DELETE(
-  request: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string; cronJobId: string }> }
 ) {
-  const user = await stackServerApp.getUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const { id: websiteId, cronJobId } = await params;
+  const user = await stackServerApp.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     // Verify website ownership
-    const website = await db
+    const [website] = await db
       .select()
       .from(websites)
-        .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)))
-      .limit(1);
+      .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
 
-    if (!website || website.length === 0) {
-      return NextResponse.json({ error: "Website not found" }, { status: 404 });
-    }
+    if (!website) return NextResponse.json({ error: "Website not found" }, { status: 404 });
 
-    await db
+    const [deletedJob] = await db
       .delete(cronJobs)
-      .where(and(eq(cronJobs.id, cronJobId), eq(cronJobs.websiteId, websiteId)));
+      .where(and(eq(cronJobs.id, cronJobId), eq(cronJobs.websiteId, websiteId)))
+      .returning();
 
-    return NextResponse.json({ message: "Cron job deleted" });
+    if (!deletedJob) return NextResponse.json({ error: "Job not found" }, { status: 404 });
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting cron job:", error);
-    return NextResponse.json(
-      { error: "Failed to delete cron job" },
-      { status: 500 }
-    );
+    console.error("[api/cron-jobs/[id]] DELETE error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
