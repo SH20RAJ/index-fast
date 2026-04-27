@@ -250,9 +250,19 @@ export default function AddSiteFlow({ floating = false }: { floating?: boolean }
             <div className="space-y-6">
               <div className="max-h-[300px] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
                 {gscLoading ? (
-                  <div className="py-12 flex flex-col items-center justify-center gap-4">
-                    <Spinner className="h-6 w-6" />
-                    <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest animate-pulse">Syncing...</p>
+                  <div className="py-16 flex flex-col items-center justify-center gap-6 animate-in fade-in zoom-in-95 duration-500">
+                    <div className="relative group flex items-center justify-center">
+                      <div className="absolute -inset-8 rounded-full bg-rose-500/10 blur-2xl opacity-50 group-hover:opacity-100 transition-opacity animate-pulse" />
+                      <div className="absolute h-24 w-24 rounded-full border border-rose-500/5 animate-spin-slow" />
+                      <div className="absolute h-20 w-20 rounded-full border border-t-rose-500/20 border-r-transparent border-b-transparent border-l-transparent animate-spin-reverse" />
+                      <div className="relative h-16 w-16 rounded-2xl bg-rose-500/5 border border-rose-500/10 flex items-center justify-center shadow-inner">
+                        <RefreshCw className="h-7 w-7 text-rose-500 animate-spin-slow" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 text-center">
+                      <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-zinc-900 dark:text-zinc-100">Synchronizing</p>
+                      <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 italic">Connecting to Google Search Console...</p>
+                    </div>
                   </div>
                 ) : gscSites.filter(s => !s.alreadyImported).length === 0 ? (
                    <div className="py-6 flex flex-col items-center text-center gap-5">

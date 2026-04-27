@@ -293,10 +293,22 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
       </div>
 
       {loading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/20 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-card p-8 rounded-[2.5rem] shadow-2xl border border-border/40 flex flex-col items-center gap-4">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground animate-pulse">Synchronizing Data...</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-md animate-in fade-in duration-500">
+          <div className="relative group">
+            {/* Soft glow background */}
+            <div className="absolute -inset-4 rounded-[3rem] bg-primary/20 blur-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-1000 animate-pulse" />
+            
+            <div className="relative bg-white/80 dark:bg-zinc-900/80 p-10 rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white dark:border-white/5 flex flex-col items-center gap-6 min-w-[280px]">
+              <div className="relative flex items-center justify-center">
+                <div className="absolute h-16 w-16 rounded-full border-2 border-primary/5 animate-spin-slow" />
+                <div className="absolute h-12 w-12 rounded-full border-2 border-t-primary/40 border-r-transparent border-b-transparent border-l-transparent animate-spin-reverse" />
+                <Loader2 className="h-10 w-10 animate-spin text-primary stroke-[1.5px]" />
+              </div>
+              <div className="space-y-1.5 text-center">
+                <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-zinc-900 dark:text-zinc-100">Synchronizing</p>
+                <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 italic">Fetching latest GSC data...</p>
+              </div>
+            </div>
           </div>
         </div>
       )}
