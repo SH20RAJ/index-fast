@@ -45,11 +45,11 @@ export default function AddSiteFlow({ floating = false }: { floating?: boolean }
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const urlParam = searchParams.get("url");
-    if (urlParam && !open) {
-      setManualUrl(urlParam);
+    const addUrlParam = searchParams.get("add_url");
+    if (addUrlParam && !open) {
+      setManualUrl(addUrlParam);
       // Auto-start GSC flow to see if we can find it
-      void loadGscSites(urlParam);
+      void loadGscSites(addUrlParam);
       setOpen(true);
     }
   }, [searchParams]);

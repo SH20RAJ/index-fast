@@ -175,6 +175,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         href.startsWith('http') || 
         href.startsWith('/toolbox') || 
         href.startsWith('/blogs') || 
+        href.startsWith('/settings') || 
         href.startsWith('/tools')) {
       return href;
     }
