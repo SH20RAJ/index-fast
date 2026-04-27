@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select } from "@/components/ui/select";
+import { NativeSelect } from "@/components/ui/native-select";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -65,12 +67,23 @@ export default function CronJobManager({
   const [frequency, setFrequency] = useState<"hourly" | "daily" | "weekly" | "monthly">("daily");
   const [engine, setEngine] = useState<"indexnow" | "bing" | "google">("indexnow");
   const [sourceMode, setSourceMode] = useState<"sitemap" | "inventory">("sitemap");
+  const [sitemapUrlInput, setSitemapUrlInput] = useState(siteUrl.endsWith("/") ? `${siteUrl}sitemap.xml` : `${siteUrl}/sitemap.xml`);
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
   async function handleCreateCronJob() {
     setLoading(true);
     try {
+      // 1. If source mode is sitemap, ensure the website has a sitemap URL
+      if (sourceMode === "sitemap" && sitemapUrlInput) {
+        await fetch(`/api/websites/${siteId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sitemapUrl: sitemapUrlInput }),
+        });
+      }
+
+      // 2. Create the cron job
       const response = await fetch(`/api/websites/${siteId}/cron-jobs`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -120,6 +133,22 @@ export default function CronJobManager({
     }
   }
 
+  async function handleRunNow(cronJobId: string) {
+    const toastId = toast.loading("Triggering pipeline execution...");
+    try {
+      const response = await fetch(`/api/websites/${siteId}/cron-jobs/${cronJobId}/run`, {
+        method: "POST"
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Trigger failed");
+      
+      onRefresh();
+      toast.success("Indexing cycle started", { id: toastId });
+    } catch (err: any) {
+      toast.error(err.message, { id: toastId });
+    }
+  }
+
   const formatTime = (iso: string | null) => {
     if (!iso) return "Not Scheduled";
     const date = new Date(iso);
@@ -149,7 +178,7 @@ export default function CronJobManager({
               <div className="space-y-6">
                 <div className="space-y-3">
                   <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 pl-1">Frequency Pulse</Label>
-                  <Select value={frequency} onValueChange={(v: any) => setFrequency(v)} options={[
+                  <NativeSelect value={frequency} onChange={(e: any) => setFrequency(e.target.value)} options={[
                     { label: "Hourly Cycle", value: "hourly" },
                     { label: "Daily Baseline", value: "daily" },
                     { label: "Weekly Batch", value: "weekly" },
@@ -159,7 +188,7 @@ export default function CronJobManager({
 
                 <div className="space-y-3">
                   <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 pl-1">Engine Protocol</Label>
-                  <Select value={engine} onValueChange={(v: any) => setEngine(v)} options={[
+                  <NativeSelect value={engine} onChange={(e: any) => setEngine(e.target.value)} options={[
                     { label: "IndexNow (Fast-track)", value: "indexnow" },
                     { label: "Bing Webmaster API", value: "bing" },
                     { label: "Google Sitemap Ping", value: "google" },
@@ -168,11 +197,24 @@ export default function CronJobManager({
 
                 <div className="space-y-3">
                   <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 pl-1">Intelligence Source</Label>
-                  <Select value={sourceMode} onValueChange={(v: any) => setSourceMode(v)} options={[
+                  <NativeSelect value={sourceMode} onChange={(e: any) => setSourceMode(e.target.value)} options={[
                     { label: "Automatic Sitemap Discovery", value: "sitemap" },
                     { label: "URL Inventory Database", value: "inventory" },
                   ]} />
                 </div>
+
+                {sourceMode === "sitemap" && (
+                  <div className="space-y-3 animate-in slide-in-from-top-2 duration-300">
+                    <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 pl-1">Sitemap URL</Label>
+                    <Input 
+                      placeholder="https://example.com/sitemap.xml"
+                      value={sitemapUrlInput}
+                      onChange={(e: any) => setSitemapUrlInput(e.target.value)}
+                      className="rounded-xl border-border/50 bg-muted/20 h-12"
+                    />
+                    <p className="text-[9px] text-muted-foreground/60 italic pl-1">We'll use this to discover new pages automatically.</p>
+                  </div>
+                )}
               </div>
 
               <DialogFooter>
@@ -248,6 +290,15 @@ export default function CronJobManager({
                            {cron.enabled ? 'Live' : 'Paused'}
                         </Badge>
                         <span className="text-[10px] text-muted-foreground/40 font-medium">Last: {formatTime(cron.lastRunAt)}</span>
+                        
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleRunNow(cron.id)}
+                          className="h-6 px-2 text-[9px] font-black uppercase tracking-widest text-primary hover:bg-primary/5 rounded-full ml-auto"
+                        >
+                          Run Now
+                        </Button>
                       </div>
                     </div>
 
@@ -270,8 +321,8 @@ export default function CronJobManager({
                         </Button>
                       </div>
                       
-                      <Button asChild variant="ghost" size="icon" className="h-10 w-10 rounded-2xl text-muted-foreground hover:bg-primary/5 hover:text-primary transition-all duration-500">
-                         <Link href={`/submissions?websiteId=${cron.websiteId}`}>
+                      <Button asChild variant="ghost" size="icon" className="h-10 w-10 rounded-2xl text-muted-foreground hover:bg-primary/5 hover:text-primary transition-all duration-500" title="View Submissions">
+                         <Link href={`/sites/url?siteId=${siteId}`}>
                             <ExternalLink className="h-4 w-4" />
                          </Link>
                       </Button>
