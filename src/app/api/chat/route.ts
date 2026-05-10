@@ -97,10 +97,17 @@ export async function POST(request: NextRequest) {
                   return;
                 }
                 try {
-                  // Send the raw JSON line to client
-                  controller.enqueue(new TextEncoder().encode(line + "\n"));
+                  const json = JSON.parse(data);
+                  // Only send chunks that have content in delta
+                  if (json.choices?.[0]?.delta?.content) {
+                    controller.enqueue(new TextEncoder().encode(line + "\n"));
+                  } else if (data === "[DONE]" || json.choices?.[0]?.finish_reason === "stop") {
+                    controller.enqueue(new TextEncoder().encode("data: [DONE]\n\n"));
+                    controller.close();
+                    return;
+                  }
                 } catch (e) {
-                  console.error("Error sending chunk:", e);
+                  console.error("Error parsing chunk:", e);
                 }
               }
             }

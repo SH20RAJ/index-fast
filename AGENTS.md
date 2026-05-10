@@ -27,3 +27,9 @@ IndexFast is a Next.js 15 (React 19) SEO Indexing SaaS. It uses a high-polish mi
 - When adding a tool, update `src/lib/tools-catalog.ts`.
 - When modifying the dashboard, ensure responsive mobile design.
 - Always check `ActionState` return types for Server Actions.
+
+## 📝 Writing Guidelines
+- **Use simple English**: Avoid complex jargon, fancy words, or overly technical terms.
+- **Be clear and direct**: Use short sentences. Everyone should understand, including non-native speakers.
+- **UI labels**: Use common words like "Add", "Create", "Delete", "Run", "Save" instead of fancy terms like "Deploy Pipeline", "Dismantle", "Activate Protocol".
+- **Error messages**: Keep them short and helpful. Explain what went wrong in plain language.
