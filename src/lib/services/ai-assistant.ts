@@ -3,12 +3,6 @@ import { websites, urlInventory, submissions, cronJobs, users } from "@/lib/db/s
 import { eq, and, desc } from "drizzle-orm";
 import { triggerSubmissions } from "./indexing-service";
 import { auditWebsite } from "./audit-service";
-import { 
-  listSearchConsoleSites, 
-  getSearchAnalytics, 
-  inspectUrl,
-  runQuickWinsAnalysis
-} from "@/lib/api/google";
 import axios from "axios";
 
 const NVIDIA_API_URL = process.env.NVIDIA_API_URL || "https://integrate.api.nvidia.com/v1/chat/completions";
@@ -72,11 +66,11 @@ export const aiAssistantTools = {
   },
 
   /**
-   * Generate SEO meta tags using Gemini
+   * Generate SEO meta tags using AI
    */
   generate_meta_tags: async (url: string, keywords: string[]) => {
     try {
-      const prompt = `Generate highly optimized SEO meta tags for the following URL: ${url}. 
+      const prompt = `Generate highly optimized SEO meta tags for the following URL: ${url}.
       Target Keywords: ${keywords.join(", ")}.
       Please provide:
       1. A compelling Title Tag (50-60 chars)
@@ -113,7 +107,7 @@ export const aiAssistantTools = {
   get_dashboard_stats: async (userId: string) => {
     const userWebsites = await db.select().from(websites).where(eq(websites.userId, userId));
     const siteIds = userWebsites.map(s => s.id);
-    
+
     if (siteIds.length === 0) return { message: "No websites found." };
 
     const recentSubmissions = await db.select()
@@ -144,57 +138,5 @@ export const aiAssistantTools = {
       .where(eq(cronJobs.websiteId, websiteId));
 
     return { message: `Automation successfully ${action}d for ${site.url}.` };
-  },
-
-  /**
-   * List verified GSC properties
-   */
-  gsc_list_properties: async (accessToken?: string) => {
-    if (!accessToken) return { error: "Google Search Console is not connected. Please connect it in the settings or via the GSC OAuth button." };
-    try {
-      const sites = await listSearchConsoleSites(accessToken);
-      return sites;
-    } catch (error) {
-      return { error: "Failed to fetch GSC properties." };
-    }
-  },
-
-  /**
-   * Get search performance insights
-   */
-  gsc_get_performance: async (accessToken: string | undefined, siteUrl: string, options: any = {}) => {
-    if (!accessToken) return { error: "Google Search Console is not connected." };
-    try {
-      const data = await getSearchAnalytics(accessToken, siteUrl, options);
-      return data;
-    } catch (error) {
-      return { error: "Failed to fetch search performance data." };
-    }
-  },
-
-  /**
-   * Automatically identify "Quick Wins" (queries on page 2 with high impressions)
-   */
-  gsc_run_quick_wins: async (accessToken: string | undefined, siteUrl: string) => {
-    if (!accessToken) return { error: "Google Search Console is not connected." };
-    try {
-      const wins = await runQuickWinsAnalysis(accessToken, siteUrl);
-      return wins;
-    } catch (error) {
-      return { error: "Failed to run Quick Wins analysis." };
-    }
-  },
-
-  /**
-   * Inspect a URL's status in Google Search
-   */
-  gsc_inspect_url: async (accessToken: string | undefined, url: string, siteUrl: string) => {
-    if (!accessToken) return { error: "Google Search Console is not connected." };
-    try {
-      const result = await inspectUrl(accessToken, url, siteUrl);
-      return result;
-    } catch (error) {
-      return { error: "Failed to inspect URL in GSC." };
-    }
   }
 };

@@ -38,7 +38,6 @@ interface WebsiteRecord {
   baiduToken: string | null;
   naverToken: string | null;
   siteHealth: unknown;
-  gscConnected: boolean | null;
   lastSyncAt: Date | null;
 }
 
@@ -110,12 +109,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                   <Globe className="h-5 w-5 text-primary/70" />
                 </div>
                 <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-sm truncate">{new URL(site.url).hostname}</h3>
-                    {site.gscConnected && (
-                      <Badge variant="secondary" className="h-4 px-1 text-[8px] bg-green-500/10 text-green-600 border-none uppercase font-bold">Connected</Badge>
-                    )}
-                  </div>
+                  <h3 className="font-bold text-sm truncate">{new URL(site.url).hostname}</h3>
                   <div className="flex items-center gap-3 mt-0.5">
                     <p className="text-[10px] text-muted-foreground truncate max-w-[150px]">{site.url}</p>
                     <div className="flex items-center gap-1 text-[10px] text-muted-foreground/60">

@@ -16,7 +16,6 @@ interface SiteOption {
   id: string;
   url: string;
   sitemapUrl: string | null;
-  gscConnected: boolean | null;
 }
 
 interface SiteJobsManagerViewProps {

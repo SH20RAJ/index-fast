@@ -44,7 +44,7 @@ export default function AdminDashboard({ data, lockAction }: AdminDashboardProps
 
   const metrics = [
     { label: "Users", value: formatNumber(data.totals.users), hint: `${formatNumber(data.totals.freeUsers)} free / ${formatNumber(data.totals.proUsers)} pro / ${formatNumber(data.totals.agencyUsers)} agency`, icon: LockKeyhole },
-    { label: "Websites", value: formatNumber(data.totals.websites), hint: `${formatNumber(data.totals.websitesWithGsc)} connected to GSC`, icon: Globe },
+    { label: "Websites", value: formatNumber(data.totals.websites), hint: `${formatNumber(data.totals.websitesWithSitemaps)} with sitemaps`, icon: Globe },
     { label: "Submissions", value: formatNumber(data.totals.submissions), hint: `${formatNumber(data.totals.submissionsThisMonth)} this month`, icon: Database },
     { label: "Success rate", value: formatPercent(successRate), hint: `${formatNumber(data.totals.successfulThisMonth)} successful submissions this month`, icon: LineChart },
     { label: "Pending", value: formatNumber(data.totals.pendingSubmissions), hint: `${formatNumber(data.totals.failedSubmissions)} failed in the queue`, icon: TriangleAlert },
@@ -145,7 +145,7 @@ export default function AdminDashboard({ data, lockAction }: AdminDashboardProps
                         </span>
                       </div>
                       <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                        Last sync {formatDate(site.lastSyncAt)} · {site.gscConnected ? "GSC connected" : "GSC missing"}
+                        Last sync {formatDate(site.lastSyncAt)} · {site.sitemapUrl ? "Sitemap configured" : "No sitemap"}
                       </p>
                     </div>
 
@@ -160,7 +160,7 @@ export default function AdminDashboard({ data, lockAction }: AdminDashboardProps
                       </div>
                       <div>
                         <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-400">Health</p>
-                        <p className="mt-1 font-semibold text-zinc-950 dark:text-white">{site.gscConnected ? "Healthy" : "Review"}</p>
+                        <p className="mt-1 font-semibold text-zinc-950 dark:text-white">{site.sitemapUrl ? "OK" : "No sitemap"}</p>
                       </div>
                     </div>
                   </div>
@@ -257,8 +257,8 @@ export default function AdminDashboard({ data, lockAction }: AdminDashboardProps
                     <div className="space-y-1">
                       <div className="flex items-center justify-between gap-3">
                         <p className="truncate text-sm font-semibold text-zinc-950 dark:text-white">{site.url}</p>
-                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] ${site.gscConnected ? "border-pink-400/20 bg-pink-400/10 text-pink-700 dark:text-pink-300" : "border-amber-400/20 bg-amber-400/10 text-amber-700 dark:text-amber-300"}`}>
-                          {site.gscConnected ? "GSC on" : "GSC off"}
+                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] ${site.sitemapUrl ? "border-pink-400/20 bg-pink-400/10 text-pink-700 dark:text-pink-300" : "border-amber-400/20 bg-amber-400/10 text-amber-700 dark:text-amber-300"}`}>
+                          {site.sitemapUrl ? "Sitemap" : "No sitemap"}
                         </span>
                       </div>
                       <p className="text-xs text-zinc-500 dark:text-zinc-400">{site.userEmail}</p>

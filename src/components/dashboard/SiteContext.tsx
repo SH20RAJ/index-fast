@@ -15,7 +15,6 @@ const normalizeUrl = (url: string) => {
 export interface WebsiteBasic {
   id: string;
   url: string;
-  gscConnected: boolean | null;
   sitemapUrl: string | null;
 }
 

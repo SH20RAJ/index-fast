@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -13,74 +13,38 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  Plus, 
-  Globe, 
-  Search, 
-  RefreshCw, 
-  Check, 
-  ChevronRight,
-  ArrowRight,
-  Loader2,
-  Sparkles
-} from "lucide-react";
+import { Plus, Globe, Loader2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-import { Spinner } from "@/components/ui/spinner";
 
-interface GscProperty {
-  propertyUrl: string;
-  permissionLevel: string;
-  normalizedUrl: string | null;
-  supported: boolean;
-  alreadyImported: boolean;
+interface AddSiteFlowProps {
+  floating?: boolean;
 }
 
-export default function AddSiteFlow({ floating = false }: { floating?: boolean }) {
+export default function AddSiteFlow({ floating = false }: AddSiteFlowProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState<"choice" | "manual" | "google">("choice");
-  const [manualUrl, setManualUrl] = useState("");
+  const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const addUrlParam = searchParams.get("add_url");
-    if (addUrlParam && !open) {
-      setManualUrl(addUrlParam);
-      // Auto-start GSC flow to see if we can find it
-      void loadGscSites(addUrlParam);
-      setOpen(true);
-    }
-  }, [searchParams]);
-  
-  // Google Console State
-  const [gscLoading, setGscLoading] = useState(false);
-  const [gscSites, setGscSites] = useState<GscProperty[]>([]);
-  const [selection, setSelection] = useState<Set<string>>(new Set());
-  const [importing, setImporting] = useState(false);
-
   const reset = () => {
-    setStep("choice");
-    setManualUrl("");
-    setSelection(new Set());
+    setUrl("");
     setOpen(false);
   };
 
-  const handleManualSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!manualUrl) return;
-    
+    if (!url) return;
+
     setLoading(true);
     try {
       const response = await fetch("/api/websites", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: manualUrl }),
+        body: JSON.stringify({ url }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to add site");
-      
+
       toast.success("Site added successfully");
       reset();
       router.refresh();
@@ -94,71 +58,8 @@ export default function AddSiteFlow({ floating = false }: { floating?: boolean }
     }
   };
 
-  const loadGscSites = async (autoSelectUrl?: string) => {
-    setStep("google");
-    setGscLoading(true);
-    try {
-      const response = await fetch("/api/gsc/sites", { cache: "no-store" });
-      const data = await response.json();
-      if (!response.ok) {
-         if (response.status === 400 || response.status === 401) {
-            const returnPath = autoSelectUrl ? `/sites?url=${encodeURIComponent(autoSelectUrl)}` : "/sites";
-            window.location.href = `/api/gsc/oauth/start?returnTo=${encodeURIComponent(returnPath)}`;
-            return;
-         }
-         throw new Error(data.error || "Failed to load Google sites");
-      }
-      const sites = (data.sites || []) as GscProperty[];
-      setGscSites(sites);
-      
-      if (autoSelectUrl) {
-        const normalizedInput = autoSelectUrl.toLowerCase().replace(/^https?:\/\//, "").replace(/\/$/, "");
-        const match = sites.find((s) => {
-          const normalizedProp = s.propertyUrl.toLowerCase().replace(/^https?:\/\//, "").replace(/\/$/, "").replace(/^sc-domain:/, "");
-          return normalizedProp === normalizedInput;
-        });
-        
-        if (match && !match.alreadyImported) {
-          setSelection(new Set([match.propertyUrl]));
-        } else if (!match) {
-          setStep("manual");
-        }
-      }
-    } catch (err: any) {
-      toast.error(err.message);
-      if (!autoSelectUrl) setStep("choice");
-    } finally {
-      setGscLoading(false);
-    }
-  };
-
-  const handleGoogleImport = async () => {
-    if (selection.size === 0) return;
-    setImporting(true);
-    try {
-      const response = await fetch("/api/gsc/import", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ selectedSiteUrls: Array.from(selection) }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Import failed");
-      
-      toast.success(data.message || "Import complete");
-      reset();
-      router.refresh();
-      if (data.imported && data.imported.length > 0) {
-        router.push(`/sites/url?siteId=${data.imported[0].id}`);
-      }
-    } catch (err: any) {
-      toast.error(err.message);
-    } finally {
-      setImporting(false);
-    }
-  };
-
   return (
-    <Dialog open={open} onOpenChange={(val) => { if(!val) reset(); setOpen(val); }}>
+    <Dialog open={open} onOpenChange={(val) => { if (!val) reset(); setOpen(val); }}>
       <DialogTrigger asChild>
         {floating ? (
           <button
@@ -179,171 +80,68 @@ export default function AddSiteFlow({ floating = false }: { floating?: boolean }
       </DialogTrigger>
       <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-[32px] border-none shadow-2xl">
         <div className="p-8">
-          <DialogHeader className="mb-4">
+          <DialogHeader className="mb-6">
             <DialogTitle className="text-xl font-bold tracking-tight text-center">
-              {step === "choice" && "Add Site"}
-              {step === "manual" && "Enter URL"}
-              {step === "google" && "Select Properties"}
+              Add Site
             </DialogTitle>
             <DialogDescription className="text-center text-sm">
-              {step === "choice" && "Choose how you want to add your site"}
-              {step === "manual" && "Type the website address"}
-              {step === "google" && "Import from Google Search Console"}
+              Enter your website URL to start tracking
             </DialogDescription>
           </DialogHeader>
 
-          {step === "choice" && (
-            <div className="grid gap-4">
-              <button 
-                onClick={() => loadGscSites()}
-                className="flex items-center gap-4 p-5 rounded-2xl border border-zinc-100 hover:border-rose-500/30 hover:bg-rose-500/[0.02] transition-all text-left group"
-              >
-                <div className="h-12 w-12 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500 shrink-0 group-hover:scale-110 transition-transform">
-                  <Globe className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-zinc-900 dark:text-zinc-100">Google Search Console</p>
-                  <p className="text-xs text-zinc-500">Import sites you already own</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-zinc-300 group-hover:text-rose-500 transition-colors" />
-              </button>
-
-              <button 
-                onClick={() => setStep("manual")}
-                className="flex items-center gap-4 p-5 rounded-2xl border border-zinc-100 hover:border-zinc-300 hover:bg-zinc-50 dark:border-white/5 dark:hover:bg-white/5 transition-all text-left group"
-              >
-                <div className="h-12 w-12 rounded-xl bg-zinc-100 dark:bg-white/5 flex items-center justify-center text-zinc-600 dark:text-zinc-400 shrink-0 group-hover:scale-110 transition-transform">
-                  <Plus className="h-6 w-6" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-zinc-900 dark:text-zinc-100">Add Manually</p>
-                  <p className="text-xs text-zinc-500">Enter a single URL</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-zinc-300 group-hover:text-zinc-500 transition-colors" />
-              </button>
+          <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+                  GSC Import Deprecated
+                </p>
+                <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                  Google Search Console import is temporarily unavailable. We are focusing on core SEO features first. Please add your site manually.
+                </p>
+              </div>
             </div>
-          )}
+          </div>
 
-          {step === "manual" && (
-            <form onSubmit={handleManualSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="url" className="text-xs font-bold uppercase tracking-widest text-zinc-400">Website URL</Label>
-                <Input 
-                  id="url"
-                  placeholder="https://example.com" 
-                  value={manualUrl}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setManualUrl(e.target.value)}
-                  className="h-12 rounded-xl bg-zinc-50 border-none dark:bg-white/5"
-                  autoFocus
-                />
-              </div>
-              <div className="flex gap-3">
-                <Button type="button" variant="ghost" onClick={() => setStep("choice")} className="flex-1 h-12 rounded-xl font-bold">Back</Button>
-                <Button type="submit" disabled={loading} className="flex-[2] h-12 rounded-xl font-bold">
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Add Website"}
-                </Button>
-              </div>
-            </form>
-          )}
-
-          {step === "google" && (
-            <div className="space-y-6">
-              <div className="max-h-[300px] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-                {gscLoading ? (
-                  <div className="py-16 flex flex-col items-center justify-center gap-6 animate-in fade-in zoom-in-95 duration-500">
-                    <div className="relative group flex items-center justify-center">
-                      <div className="absolute -inset-8 rounded-full bg-rose-500/10 blur-2xl opacity-50 group-hover:opacity-100 transition-opacity animate-pulse" />
-                      <div className="absolute h-24 w-24 rounded-full border border-rose-500/5 animate-spin-slow" />
-                      <div className="absolute h-20 w-20 rounded-full border border-t-rose-500/20 border-r-transparent border-b-transparent border-l-transparent animate-spin-reverse" />
-                      <div className="relative h-16 w-16 rounded-2xl bg-rose-500/5 border border-rose-500/10 flex items-center justify-center shadow-inner">
-                        <RefreshCw className="h-7 w-7 text-rose-500 animate-spin-slow" />
-                      </div>
-                    </div>
-                    <div className="space-y-1.5 text-center">
-                      <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-zinc-900 dark:text-zinc-100">Synchronizing</p>
-                      <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 italic">Connecting to Google Search Console...</p>
-                    </div>
-                  </div>
-                ) : gscSites.filter(s => !s.alreadyImported).length === 0 ? (
-                   <div className="py-6 flex flex-col items-center text-center gap-5">
-                      <div className="h-14 w-14 rounded-2xl bg-zinc-100 dark:bg-white/5 flex items-center justify-center">
-                        <Globe className="h-7 w-7 text-zinc-400" />
-                      </div>
-                      <div className="space-y-1">
-                        <p className="font-bold text-zinc-800 dark:text-zinc-200 text-sm">No new sites found</p>
-                        <p className="text-xs text-zinc-500 max-w-[280px]">
-                          All your Google Console properties are already imported, or your session needs refreshing.
-                        </p>
-                      </div>
-                      <div className="w-full grid gap-3">
-                        <button
-                          onClick={() => { window.location.href = "/api/gsc/oauth/start?returnTo=/sites"; }}
-                          className="flex items-center gap-3 p-4 rounded-2xl border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10 transition-all text-left group w-full"
-                        >
-                          <div className="h-9 w-9 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-500 shrink-0">
-                            <RefreshCw className="h-4 w-4" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">Reconnect Google</p>
-                            <p className="text-[11px] text-zinc-500">Re-authenticate and refresh properties</p>
-                          </div>
-                        </button>
-                        <button
-                          onClick={() => setStep("manual")}
-                          className="flex items-center gap-3 p-4 rounded-2xl border border-zinc-100 dark:border-white/5 hover:bg-zinc-50 dark:hover:bg-white/5 transition-all text-left group w-full"
-                        >
-                          <div className="h-9 w-9 rounded-xl bg-zinc-100 dark:bg-white/5 flex items-center justify-center text-zinc-600 dark:text-zinc-400 shrink-0">
-                            <Plus className="h-4 w-4" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">Add Manually</p>
-                            <p className="text-[11px] text-zinc-500">Enter a site URL directly</p>
-                          </div>
-                        </button>
-                      </div>
-                   </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="url" className="text-xs font-bold uppercase tracking-widest text-zinc-400">
+                Website URL
+              </Label>
+              <Input
+                id="url"
+                placeholder="https://example.com"
+                value={url}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
+                className="h-12 rounded-xl bg-zinc-50 border-none dark:bg-white/5"
+                autoFocus
+              />
+            </div>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setOpen(false)}
+                className="flex-1 h-12 rounded-xl font-bold"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={loading || !url}
+                className="flex-[2] h-12 rounded-xl font-bold"
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  gscSites.filter(s => !s.alreadyImported).map((site) => (
-                    <div 
-                      key={site.propertyUrl}
-                      onClick={() => {
-                        setSelection(prev => {
-                          const next = new Set(prev);
-                          if (next.has(site.propertyUrl)) next.delete(site.propertyUrl);
-                          else next.add(site.propertyUrl);
-                          return next;
-                        });
-                      }}
-                      className={cn(
-                        "flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all",
-                        selection.has(site.propertyUrl) 
-                          ? "bg-rose-500/5 border-rose-500/20" 
-                          : "bg-zinc-50 border-transparent hover:border-zinc-200 dark:bg-white/5"
-                      )}
-                    >
-                      <div className={cn(
-                        "h-5 w-5 rounded border-2 flex items-center justify-center transition-all",
-                        selection.has(site.propertyUrl) ? "bg-rose-500 border-rose-500" : "border-zinc-300 dark:border-white/10"
-                      )}>
-                        {selection.has(site.propertyUrl) && <Check className="h-3 w-3 text-white" />}
-                      </div>
-                      <span className="text-sm font-medium truncate flex-1">{site.propertyUrl}</span>
-                    </div>
-                  ))
+                  <>
+                    <Globe className="h-4 w-4 mr-2" />
+                    Add Website
+                  </>
                 )}
-              </div>
-              <div className="flex gap-3">
-                <Button type="button" variant="ghost" onClick={() => setStep("choice")} className="flex-1 h-12 rounded-xl font-bold">Back</Button>
-                <Button 
-                  onClick={handleGoogleImport} 
-                  disabled={selection.size === 0 || importing} 
-                  className="flex-[2] h-12 rounded-xl font-bold bg-zinc-950 dark:bg-white dark:text-zinc-950"
-                >
-                  {importing ? <Loader2 className="h-4 w-4 animate-spin" /> : `Import ${selection.size} ${selection.size === 1 ? 'Site' : 'Sites'}`}
-                </Button>
-              </div>
+              </Button>
             </div>
-          )}
+          </form>
         </div>
       </DialogContent>
     </Dialog>

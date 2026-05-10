@@ -2,7 +2,7 @@
 
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { buildBingIndexNowPortalUrl, buildGoogleSearchConsolePropertyUrl } from "@/lib/utils";
+import { buildBingIndexNowPortalUrl } from "@/lib/utils";
 
 interface ExternalLinksProps {
   websiteUrl: string;
@@ -16,11 +16,6 @@ export default function ExternalLinks({ websiteUrl }: ExternalLinksProps) {
         <Button asChild variant="outline" className="h-12 justify-between rounded-2xl border-zinc-100 dark:border-white/5 hover:bg-zinc-50 dark:hover:bg-white/5 font-medium text-xs">
           <a href={buildBingIndexNowPortalUrl(websiteUrl)} target="_blank" rel="noopener noreferrer">
             Bing Portal <ExternalLink className="h-3 w-3 opacity-30" />
-          </a>
-        </Button>
-        <Button asChild variant="outline" className="h-12 justify-between rounded-2xl border-zinc-100 dark:border-white/5 hover:bg-zinc-50 dark:hover:bg-white/5 font-medium text-xs">
-          <a href={buildGoogleSearchConsolePropertyUrl(websiteUrl)} target="_blank" rel="noopener noreferrer">
-            Google Console <ExternalLink className="h-3 w-3 opacity-30" />
           </a>
         </Button>
       </div>

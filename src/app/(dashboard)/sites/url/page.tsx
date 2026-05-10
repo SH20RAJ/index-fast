@@ -4,13 +4,30 @@ import { stackServerApp } from "@/stack";
 import { db } from "@/lib/db";
 import { websites } from "@/lib/db/schema";
 import { ensureUserRecord } from "@/lib/db/user-sync";
-import { normalizeWebsiteOrigin } from "@/lib/services/gsc-service";
 import SiteUrlManagerView from "./SiteUrlManagerView";
 
 export const metadata = {
   title: "Site URLs",
   description: "Inspect sitemap URLs, URL inventory, and run manual submission workflows.",
 };
+
+function normalizeWebsiteOrigin(rawUrl: string) {
+  if (!rawUrl) return null;
+
+  if (rawUrl.startsWith("sc-domain:")) {
+    const domain = rawUrl.slice("sc-domain:".length).trim();
+    if (!domain) return null;
+    return `https://${domain}`;
+  }
+
+  try {
+    const normalized = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+    const url = new URL(normalized);
+    return url.origin;
+  } catch {
+    return null;
+  }
+}
 
 interface SitesUrlPageProps {
   searchParams?: Promise<{ siteId?: string; url?: string }>;
@@ -31,7 +48,7 @@ export default async function SitesUrlPage({ searchParams }: SitesUrlPageProps) 
     .orderBy(desc(websites.createdAt));
 
   const params = (await searchParams) ?? {};
-  
+
   let selectedSiteId = params.siteId && sites.some((site) => site.id === params.siteId)
     ? params.siteId
     : null;

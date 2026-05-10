@@ -24,7 +24,6 @@ export interface AdminDashboardData {
     agencyUsers: number;
     websites: number;
     websitesWithSitemaps: number;
-    websitesWithGsc: number;
     submissions: number;
     successfulSubmissions: number;
     failedSubmissions: number;
@@ -48,7 +47,7 @@ export interface AdminDashboardData {
     userEmail: string;
     submissions: number;
     successRate: number;
-    gscConnected: boolean;
+    sitemapUrl: string | null;
     lastSyncAt: string | null;
   }>;
   recentSubmissions: Array<{
@@ -64,7 +63,6 @@ export interface AdminDashboardData {
     id: string;
     url: string;
     userEmail: string;
-    gscConnected: boolean;
     sitemapUrl: string | null;
     createdAt: string | null;
     lastSyncAt: string | null;
@@ -122,7 +120,6 @@ export async function loadAdminDashboardData(): Promise<AdminDashboardData> {
     failedCount,
     pendingCount,
     websitesWithSitemaps,
-    websitesWithGsc,
     trackedUrls,
     indexedUrls,
     activeCronJobs,
@@ -141,7 +138,6 @@ export async function loadAdminDashboardData(): Promise<AdminDashboardData> {
     db.select({ total: count() }).from(submissions).where(eq(submissions.status, "failed")),
     db.select({ total: count() }).from(submissions).where(eq(submissions.status, "pending")),
     db.select({ total: count() }).from(websites).where(sql`${websites.sitemapUrl} is not null`),
-    db.select({ total: count() }).from(websites).where(eq(websites.gscConnected, true)),
     db.select({ total: count() }).from(urlInventory),
     db.select({ total: count() }).from(urlInventory).where(eq(urlInventory.isIndexed, true)),
     db.select({ total: count() }).from(cronJobs).where(eq(cronJobs.enabled, true)),
@@ -177,7 +173,6 @@ export async function loadAdminDashboardData(): Promise<AdminDashboardData> {
       id: websites.id,
       url: websites.url,
       sitemapUrl: websites.sitemapUrl,
-      gscConnected: websites.gscConnected,
       lastSyncAt: websites.lastSyncAt,
       createdAt: websites.createdAt,
       userEmail: users.email,
@@ -188,7 +183,7 @@ export async function loadAdminDashboardData(): Promise<AdminDashboardData> {
     db.select({
       id: websites.id,
       url: websites.url,
-      gscConnected: websites.gscConnected,
+      sitemapUrl: websites.sitemapUrl,
       lastSyncAt: websites.lastSyncAt,
       userEmail: users.email,
       submissions: sql<number>`count(${submissions.id})`,
@@ -234,7 +229,6 @@ export async function loadAdminDashboardData(): Promise<AdminDashboardData> {
       agencyUsers: planCounts.agency,
       websites: websiteCount[0]?.total ?? 0,
       websitesWithSitemaps: websitesWithSitemaps[0]?.total ?? 0,
-      websitesWithGsc: websitesWithGsc[0]?.total ?? 0,
       submissions: submissionCount[0]?.total ?? 0,
       successfulSubmissions: successCount[0]?.total ?? 0,
       failedSubmissions: failedCount[0]?.total ?? 0,
@@ -253,7 +247,7 @@ export async function loadAdminDashboardData(): Promise<AdminDashboardData> {
       userEmail: site.userEmail ?? "Unknown",
       submissions: Number(site.submissions ?? 0),
       successRate: Number(site.successRate ?? 0),
-      gscConnected: Boolean(site.gscConnected),
+      sitemapUrl: site.sitemapUrl,
       lastSyncAt: site.lastSyncAt ? site.lastSyncAt.toISOString() : null,
     })),
     recentSubmissions: recentSubmissions.map((submission) => ({
@@ -269,7 +263,6 @@ export async function loadAdminDashboardData(): Promise<AdminDashboardData> {
       id: site.id,
       url: site.url,
       userEmail: site.userEmail ?? "Unknown user",
-      gscConnected: Boolean(site.gscConnected),
       sitemapUrl: site.sitemapUrl,
       createdAt: site.createdAt ? site.createdAt.toISOString() : null,
       lastSyncAt: site.lastSyncAt ? site.lastSyncAt.toISOString() : null,

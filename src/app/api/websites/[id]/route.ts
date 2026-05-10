@@ -19,13 +19,14 @@ export async function PATCH(
     const body = await req.json();
     
     // Only allow updating specific fields for safety
-    const { sitemapUrl, indexNowKey, bingApiKey, gscConnected } = body;
-    
+    const { sitemapUrl, indexNowKey, bingApiKey } = body;
+
     const updateData: any = {};
     if (sitemapUrl !== undefined) updateData.sitemapUrl = sitemapUrl;
     if (indexNowKey !== undefined) updateData.indexNowKey = indexNowKey;
     if (bingApiKey !== undefined) updateData.bingApiKey = bingApiKey;
-    if (gscConnected !== undefined) updateData.gscConnected = gscConnected;
+
+    // gscConnected is deprecated - no longer supported
 
     const [updatedWebsite] = await db
       .update(websites)

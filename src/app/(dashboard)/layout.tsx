@@ -33,7 +33,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
     .select({
       id: websites.id,
       url: websites.url,
-      gscConnected: websites.gscConnected,
       sitemapUrl: websites.sitemapUrl,
     })
     .from(websites)

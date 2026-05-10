@@ -103,8 +103,7 @@ export const websites = pgTable("websites", {
   yandexToken: text("yandex_token"),
   baiduToken: text("baidu_token"),
   naverToken: text("naver_token"),
-  gscConnected: boolean("gsc_connected").default(false),
-  siteHealth: jsonb("site_health"), // Storing errors, warnings from GSC/Audit
+  siteHealth: jsonb("site_health"), // Storing errors, warnings from audits
   lastSyncAt: timestamp("last_sync_at"),
   createdAt: timestamp("created_at").defaultNow(),
 }, (table) => ({
@@ -175,21 +174,6 @@ export const cronJobs = pgTable("cron_jobs", {
 }, (table) => ({
   websiteIdIdx: index("idx_cron_jobs_website_id").on(table.websiteId),
   nextRunAtIdx: index("idx_cron_jobs_next_run_at").on(table.nextRunAt),
-}));
-
-/**
- * Google Search Console Properties: Cached list of properties available for import
- */
-export const gscProperties = pgTable("gsc_properties", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
-  siteUrl: text("site_url").notNull(),
-  permissionLevel: text("permission_level").notNull(),
-  alreadyImported: boolean("already_imported").default(false),
-  lastSyncedAt: timestamp("last_synced_at").defaultNow(),
-}, (table) => ({
-  userIdIdx: index("idx_gsc_props_user_id").on(table.userId),
-  uniqueUserSite: uniqueIndex("idx_gsc_props_user_site_unique").on(table.userId, table.siteUrl),
 }));
 
 /**

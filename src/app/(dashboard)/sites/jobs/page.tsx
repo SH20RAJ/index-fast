@@ -25,7 +25,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
   await ensureUserRecord({ id: user.id, primaryEmail: user.primaryEmail });
 
   const sites = await db
-    .select({ id: websites.id, url: websites.url, sitemapUrl: websites.sitemapUrl, gscConnected: websites.gscConnected })
+    .select({ id: websites.id, url: websites.url, sitemapUrl: websites.sitemapUrl })
     .from(websites)
     .where(eq(websites.userId, user.id))
     .orderBy(desc(websites.createdAt));

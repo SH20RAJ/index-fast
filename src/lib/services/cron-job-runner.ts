@@ -4,7 +4,17 @@ import { cronJobs, submissions, urlInventory, websites } from "@/lib/db/schema";
 import { parseSitemap } from "@/lib/utils/sitemap-parser";
 import { submitToBingBatch } from "@/lib/api/bing";
 import { submitToIndexNow } from "@/lib/api/indexnow";
-import { pingGoogleSitemap } from "@/lib/google";
+
+async function pingGoogleSitemap(sitemapUrl: string) {
+  const url = `https://www.google.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`;
+  try {
+    const response = await fetch(url);
+    return { success: response.ok, status: response.status };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { success: false, error: message };
+  }
+}
 
 const INDEXNOW_BATCH_SIZE = 1000;
 const INVENTORY_SOURCE_LIMIT = 1000;

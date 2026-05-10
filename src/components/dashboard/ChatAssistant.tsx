@@ -82,7 +82,7 @@ export default function ChatAssistant() {
                       <CardTitle className="text-sm font-bold">AI Assistant</CardTitle>
                       <Badge variant="secondary" className="text-[9px] h-4 px-1 uppercase leading-none font-black bg-primary/10 text-primary border-none">Beta</Badge>
                     </div>
-                    <p className="text-[10px] text-muted-foreground font-medium">Powered by Gemini 2.0 & GSC API</p>
+                    <p className="text-[10px] text-muted-foreground font-medium">Powered by NVIDIA AI</p>
                   </div>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="h-8 w-8 rounded-full hover:bg-muted" aria-label="Close chat">
