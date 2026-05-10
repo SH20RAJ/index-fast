@@ -59,18 +59,36 @@ export default function CronJobManager({
   const [engine, setEngine] = useState<"indexnow" | "bing" | "google">("indexnow");
   const [sourceMode, setSourceMode] = useState<"sitemap" | "inventory">("sitemap");
   const [sitemapUrlInput, setSitemapUrlInput] = useState(siteUrl.endsWith("/") ? `${siteUrl}sitemap.xml` : `${siteUrl}/sitemap.xml`);
+  const [urlListInput, setUrlListInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
   async function handleCreateCronJob() {
     setLoading(true);
     try {
+      // If source mode is sitemap, save the sitemap URL
       if (sourceMode === "sitemap" && sitemapUrlInput) {
         await fetch(`/api/websites/${siteId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sitemapUrl: sitemapUrlInput }),
         });
+      }
+
+      // If source mode is inventory, add URLs to inventory first
+      if (sourceMode === "inventory" && urlListInput.trim()) {
+        const urls = urlListInput
+          .split('\n')
+          .map(url => url.trim())
+          .filter(url => url.length > 0);
+
+        if (urls.length > 0) {
+          await fetch(`/api/websites/${siteId}/urls`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ urls }),
+          });
+        }
       }
 
       const response = await fetch(`/api/websites/${siteId}/cron-jobs`, {
@@ -82,6 +100,7 @@ export default function CronJobManager({
       if (!response.ok) throw new Error(data.error || "Failed to create job");
 
       setOpenDialog(false);
+      setUrlListInput("");
       onRefresh();
       toast.success("Schedule created");
     } catch (err: any) {
@@ -215,6 +234,20 @@ export default function CronJobManager({
                     className="rounded-xl border-border/50 bg-muted/20 h-12"
                   />
                   <p className="text-xs text-muted-foreground">We'll check this sitemap for new URLs.</p>
+                </div>
+              )}
+
+              {sourceMode === "inventory" && (
+                <div className="space-y-2 animate-in slide-in-from-top-2 duration-300">
+                  <Label className="text-xs font-semibold">URLs to Submit</Label>
+                  <textarea
+                    placeholder="https://example.com/page1&#10;https://example.com/page2&#10;https://example.com/page3"
+                    value={urlListInput}
+                    onChange={(e: any) => setUrlListInput(e.target.value)}
+                    rows={5}
+                    className="w-full rounded-xl border border-input bg-muted/20 p-4 text-sm resize-none"
+                  />
+                  <p className="text-xs text-muted-foreground">Enter one URL per line. These URLs will be submitted for indexing.</p>
                 </div>
               )}
             </div>

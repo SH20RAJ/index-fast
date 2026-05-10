@@ -123,3 +123,71 @@ export async function GET(
     sitemapPreview,
   });
 }
+
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const user = await stackServerApp.getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+
+  const [website] = await db
+    .select()
+    .from(websites)
+    .where(and(eq(websites.id, id), eq(websites.userId, user.id)));
+
+  if (!website) {
+    return NextResponse.json({ error: "Website not found" }, { status: 404 });
+  }
+
+  try {
+    const body = await request.json();
+    const urls = Array.isArray(body.urls) ? body.urls : [];
+
+    if (urls.length === 0) {
+      return NextResponse.json({ error: "No URLs provided" }, { status: 400 });
+    }
+
+    const inserted: string[] = [];
+    const skipped: string[] = [];
+
+    for (const url of urls) {
+      if (typeof url !== "string" || !url.trim()) continue;
+
+      const trimmedUrl = url.trim();
+
+      // Check if already exists
+      const [existing] = await db
+        .select({ id: urlInventory.id })
+        .from(urlInventory)
+        .where(and(eq(urlInventory.websiteId, website.id), eq(urlInventory.url, trimmedUrl)))
+        .limit(1);
+
+      if (existing) {
+        skipped.push(trimmedUrl);
+        continue;
+      }
+
+      await db.insert(urlInventory).values({
+        websiteId: website.id,
+        url: trimmedUrl,
+        lastDetectedAt: new Date(),
+      });
+      inserted.push(trimmedUrl);
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Added ${inserted.length} URL(s). Skipped ${skipped.length} duplicate(s).`,
+      inserted: inserted.length,
+      skipped: skipped.length,
+    });
+  } catch (error) {
+    console.error("Error adding URLs:", error);
+    return NextResponse.json({ error: "Failed to add URLs" }, { status: 500 });
+  }
+}
