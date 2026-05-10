@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select } from "@/components/ui/select";
 import { Loader2, Globe, AlertCircle, Calendar, Zap, RefreshCw, ArrowUpRight, Activity } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -124,22 +123,7 @@ export default function SiteJobsManagerView({ sites, initialSiteId }: SiteJobsMa
           </div>
         </div>
         
-        <div className="flex flex-col gap-3 min-w-[280px]">
-          <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60 px-1">Select Site</label>
-          <div className="relative group">
-            <div className="absolute -inset-1 rounded-2xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <Select 
-              value={siteId} 
-              onValueChange={handleSiteChange}
-              placeholder="Choose a site..."
-              options={sites.map(s => ({ 
-                label: new URL(s.url).hostname, 
-                value: s.id 
-              }))}
-            />
-          </div>
-        </div>
-      </div>
+              </div>
 
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-md animate-in fade-in duration-500">
