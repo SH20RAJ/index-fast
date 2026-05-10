@@ -26,16 +26,20 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   let id: string | number | null = null;
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ 
-        jsonrpc: "2.0",
-        error: { code: -32001, message: "Unauthorized. Missing or invalid Authorization header." },
-        id 
-      }, { status: 401 });
-    }
+    // Support both Authorization header and query param for mcp-remote
+    let apiKey = req.nextUrl.searchParams.get("key");
 
-    const apiKey = authHeader.replace("Bearer ", "");
+    if (!apiKey) {
+      const authHeader = req.headers.get("Authorization");
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return NextResponse.json({
+          jsonrpc: "2.0",
+          error: { code: -32001, message: "Unauthorized. Missing or invalid Authorization header." },
+          id
+        }, { status: 401 });
+      }
+      apiKey = authHeader.replace("Bearer ", "");
+    }
     
     // 1. Authenticate User
     const dbUser = await db.query.users.findFirst({

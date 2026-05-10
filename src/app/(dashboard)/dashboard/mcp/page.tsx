@@ -14,18 +14,20 @@ export default async function McpPage() {
   const claudeConfig = JSON.stringify({
     mcpServers: {
       indexfast: {
-        command: "curl",
+        command: "npx",
         args: [
-          "-s",
-          "-X", "POST",
-          "-H", `Authorization: Bearer ${apiKey}`,
-          "-H", "Content-Type: application/json",
-          "-d", "{\"method\":\"initialize\",\"jsonrpc\":\"2.0\",\"id\":1,\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"claude-desktop\",\"version\":\"1.0.0\"}}}",
-          "https://www.indexfast.co/api/mcp"
+          "-y",
+          "mcp-remote",
+          `https://www.indexfast.co/api/mcp?key=${apiKey}`
         ]
       }
     }
   }, null, 2);
+
+  const directCurlCommand = `curl -s -X POST https://www.indexfast.co/api/mcp \\
+  -H "Authorization: Bearer ${apiKey}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}'`;
 
   return (
     <div className="max-w-5xl space-y-8 pb-20">
