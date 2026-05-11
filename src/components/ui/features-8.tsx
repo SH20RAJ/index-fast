@@ -95,10 +95,10 @@ export function Features() {
                   </motion.div>
                   <div className="relative z-10 mt-6 space-y-2 text-center">
                     <h2 className="text-lg font-bold transition text-foreground dark:text-white">
-                      Stop manual indexing
+                      One-click IDE install
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                      Stop copying and pasting URLs into Search Console. We automate the entire process for you.
+                      Connect Cursor or VS Code instantly with our deep-link MCP installer. No more copying and pasting URLs.
                     </p>
                   </div>
                 </CardContent>

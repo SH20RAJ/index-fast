@@ -43,7 +43,8 @@ export default function Hero() {
               transition={{ duration: 0.55, delay: 0.05 }}
               className="text-balance text-4xl font-serif font-bold tracking-tight text-foreground sm:text-5xl lg:text-[4rem] lg:leading-[1.1]"
             >
-              Index your website from your <span className="text-primary italic">AI IDE</span> instantly.
+              Ship code. Prompt your IDE. <br className="hidden lg:block" />
+              <span className="text-primary italic">Get indexed instantly.</span>
             </motion.h1>
 
             <motion.p
@@ -52,7 +53,7 @@ export default function Hero() {
               transition={{ duration: 0.55, delay: 0.1 }}
               className="mx-auto mt-6 max-w-xl text-pretty text-base font-sans text-muted-foreground sm:text-lg lg:mx-0"
             >
-              Stop switching between Bing, Google, and Yandex dashboards. Prompt Cursor, Windsurf, or Claude to index your new pages instantly via our Model Context Protocol.
+              Stop opening Google Search Console. Just tell Cursor, Windsurf, or Claude to index your new pages using the IndexFast MCP server. We handle the Bing, Google, and IndexNow APIs automatically.
             </motion.p>
 
             <motion.ul

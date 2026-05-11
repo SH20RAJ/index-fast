@@ -29,7 +29,7 @@ export default function FinalCTA() {
                 Ready to <span className="italic">rank?</span>
               </h2>
               <p className="mx-auto max-w-xl text-sm leading-relaxed text-zinc-400 sm:text-base">
-                Stop wasting hours on manual work. Join 500+ teams who automated their indexing and saw results in hours, not weeks.
+                Stop wasting hours on manual work. Connect IndexFast to your AI IDE today and get your pages indexed instantly. Join 500+ developers shipping faster.
               </p>
             </div>
 
