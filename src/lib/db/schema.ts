@@ -202,6 +202,39 @@ export const chatMessages = pgTable("chat_messages", {
 }));
 
 /**
+ * Blog Posts: Dynamic content management
+ */
+export const blogPosts = pgTable("blog_posts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  primaryKeyword: text("primary_keyword"),
+  keywords: jsonb("keywords").$type<string[]>(),
+  publishedAt: timestamp("published_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  readingMinutes: integer("reading_minutes").default(5),
+  author: text("author").default("IndexFast Editorial Team"),
+  hero: text("hero"),
+  sections: jsonb("sections").$type<BlogSection[]>(),
+  faqs: jsonb("faqs").$type<BlogFaq[]>(),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => ({
+  slugIdx: uniqueIndex("idx_blog_posts_slug").on(table.slug),
+}));
+
+export interface BlogSection {
+  heading: string;
+  paragraphs: string[];
+  bullets?: string[];
+}
+
+export interface BlogFaq {
+  question: string;
+  answer: string;
+}
+
+/**
  * Exporting Types for Drizzle
  */
 export type User = typeof users.$inferSelect;
@@ -224,6 +257,6 @@ export type ChatConversation = typeof chatConversations.$inferSelect;
 export type NewChatConversation = typeof chatConversations.$inferInsert;
 export type ChatMessage = typeof chatMessages.$inferSelect;
 export type NewChatMessage = typeof chatMessages.$inferInsert;
-export type GscProperty = typeof gscProperties.$inferSelect;
-export type NewGscProperty = typeof gscProperties.$inferInsert;
+export type BlogPost = typeof blogPosts.$inferSelect;
+export type NewBlogPost = typeof blogPosts.$inferInsert;
 

@@ -1,8 +1,8 @@
-import { BLOG_POSTS } from "@/lib/blog-catalog";
+import { getAllBlogPosts } from "@/lib/blog-catalog";
 import { EXTERNAL_RESOURCE_CATEGORIES, SEO_TOOLS } from "@/lib/tools-catalog";
 import { SEO_TOOL_SECTIONS } from "@/lib/seo-tool-links";
 
-export function getPublicSitePaths(): string[] {
+export async function getPublicSitePaths(): Promise<string[]> {
   const staticPaths = [
     "/",
     "/how-it-works",
@@ -21,7 +21,8 @@ export function getPublicSitePaths(): string[] {
     "/indexnow",
   ];
 
-  const blogPaths = BLOG_POSTS.map((post) => `/blog/${post.slug}`);
+  const blogPosts = await getAllBlogPosts();
+  const blogPaths = blogPosts.map((post) => `/blog/${post.slug}`);
   const toolPaths = SEO_TOOLS.map((tool) => `/tools/${tool.slug}`);
   const resourcePaths = EXTERNAL_RESOURCE_CATEGORIES.map(
     (category) => `/tools/resources/${category.id}`

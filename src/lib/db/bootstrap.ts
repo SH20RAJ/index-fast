@@ -194,6 +194,43 @@ export async function ensureDbSchema() {
 
     await run(`CREATE UNIQUE INDEX IF NOT EXISTS "idx_gsc_props_user_site_unique" ON "gsc_properties"("user_id", "site_url");`);
 
+    await run(`CREATE TABLE IF NOT EXISTS "chat_conversations" (
+      "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      "user_id" text NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+      "website_id" uuid REFERENCES "websites"("id") ON DELETE SET NULL,
+      "title" text NOT NULL,
+      "created_at" timestamp DEFAULT now(),
+      "updated_at" timestamp DEFAULT now()
+    );`);
+
+    await run(`CREATE TABLE IF NOT EXISTS "chat_messages" (
+      "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      "conversation_id" uuid NOT NULL REFERENCES "chat_conversations"("id") ON DELETE CASCADE,
+      "role" text NOT NULL,
+      "content" text NOT NULL,
+      "tool_calls" jsonb,
+      "created_at" timestamp DEFAULT now()
+    );`);
+
+    await run(`CREATE TABLE IF NOT EXISTS "blog_posts" (
+      "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      "slug" text NOT NULL UNIQUE,
+      "title" text NOT NULL,
+      "description" text NOT NULL,
+      "primary_keyword" text,
+      "keywords" jsonb,
+      "published_at" timestamp NOT NULL DEFAULT now(),
+      "updated_at" timestamp NOT NULL DEFAULT now(),
+      "reading_minutes" integer DEFAULT 5,
+      "author" text DEFAULT 'IndexFast Editorial Team',
+      "hero" text,
+      "sections" jsonb,
+      "faqs" jsonb,
+      "created_at" timestamp DEFAULT now()
+    );`);
+
+    await run(`CREATE UNIQUE INDEX IF NOT EXISTS "idx_blog_posts_slug" ON "blog_posts"("slug");`);
+
     // --- Indexes -----------------------------------------------------------
     await run(`CREATE INDEX IF NOT EXISTS "idx_websites_user_id" ON "websites"("user_id");`);
     await run(`CREATE INDEX IF NOT EXISTS "idx_websites_created_at" ON "websites"("created_at");`);

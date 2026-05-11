@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { BLOG_POSTS } from "@/lib/blog-catalog";
+import { getAllBlogPosts } from "@/lib/blog-catalog";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
@@ -16,11 +16,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogIndexPage() {
-  // Sort posts by date (newest first)
-  const sortedPosts = [...BLOG_POSTS].sort((a, b) => 
-    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
+export default async function BlogIndexPage() {
+  const sortedPosts = await getAllBlogPosts();
 
   return (
     <main className="min-h-screen bg-background">

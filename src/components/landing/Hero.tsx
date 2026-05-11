@@ -92,7 +92,7 @@ export default function Hero() {
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
-                  <p className="text-[10px] text-muted-foreground ml-1 font-medium italic">Start with 100 URLs free today.</p>
+                  <p className="text-[10px] text-muted-foreground ml-1 font-medium italic">Start with 500 URLs free today.</p>
                 </div>
               )}
               <Button asChild variant="outline" size="lg" className="h-12 rounded-xl border-border px-8 text-base font-semibold">

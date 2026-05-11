@@ -19,7 +19,8 @@ export async function POST() {
     const parsedSite = new URL(siteUrl);
     const host = parsedSite.host;
 
-    const urls = getPublicSitePaths().map((path) => `${siteUrl}${path}`);
+    const paths = await getPublicSitePaths();
+    const urls = paths.map((path) => `${siteUrl}${path}`);
     const batches = chunk(urls, BATCH_SIZE);
 
     let successBatches = 0;
