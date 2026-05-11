@@ -38,7 +38,7 @@ export default function KeywordDensityCheckerPageContent() {
       priceCurrency: "USD",
     },
     keywords: keywordTargets.join(", "),
-    url: `https://www.indexfast.co/tools/${tool.slug}`,
+    url: `https://indexfast.co/tools/${tool.slug}`,
   };
 
   return (

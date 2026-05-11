@@ -25,7 +25,7 @@ const firaCode = Fira_Code({
   variable: "--font-mono"
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
 const siteName = "IndexFast";
 const siteDescription =
   "Automated indexing workflows for modern teams. Submit URLs faster to Bing and IndexNow, monitor sitemap changes, and improve organic discovery.";

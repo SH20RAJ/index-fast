@@ -256,6 +256,21 @@ export async function addWebsiteAction(_: ActionState, formData: FormData): Prom
     }
 
     const websiteUrl = normalizeWebsiteUrl(String(formData.get("url") ?? ""));
+
+    // Check for duplicates
+    const [existing] = await db
+      .select()
+      .from(websites)
+      .where(and(eq(websites.url, websiteUrl), eq(websites.userId, user.id)))
+      .limit(1);
+
+    if (existing) {
+      return {
+        status: "error",
+        message: "This website has already been added to your account.",
+      };
+    }
+
     const sitemapUrl = normalizeOptionalUrl(formData.get("sitemapUrl")?.toString() ?? null);
     const indexNowKey = String(formData.get("indexNowKey") ?? "").trim() || null;
     const bingApiKey = String(formData.get("bingApiKey") ?? "").trim() || null;
@@ -696,6 +711,34 @@ export async function getUserApiKey(): Promise<{ status: "success" | "error"; da
     return { status: "success", data: newKey };
   } catch (error) {
     return { status: "error", message: "Failed to retrieve API key" };
+  }
+}
+
+export async function updateWebsiteSitemapAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const websiteId = String(formData.get("websiteId") ?? "").trim();
+    const sitemapUrl = normalizeOptionalUrl(formData.get("sitemapUrl")?.toString() ?? null);
+
+    if (!websiteId) {
+      return { status: "error", message: "Missing website id." };
+    }
+
+    await db
+      .update(websites)
+      .set({ sitemapUrl, updatedAt: new Date() })
+      .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+
+    revalidatePath("/sites");
+    revalidatePath("/dashboard");
+    revalidatePath(`/sites/url`);
+
+    return { status: "success", message: "Sitemap URL updated." };
+  } catch (error) {
+    return {
+      status: "error",
+      message: error instanceof Error ? error.message : "Failed to update sitemap.",
+    };
   }
 }
 

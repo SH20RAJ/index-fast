@@ -15,7 +15,7 @@ function chunk<T>(items: T[], size: number): T[][] {
 
 export async function POST() {
   try {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
     const parsedSite = new URL(siteUrl);
     const host = parsedSite.host;
 

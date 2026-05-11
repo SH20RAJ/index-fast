@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BLOG_POSTS, BlogPost } from "@/lib/blog-catalog";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
 
 interface BlogPostLayoutProps {
   post: BlogPost;

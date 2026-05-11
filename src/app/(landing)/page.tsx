@@ -49,7 +49,7 @@ const trustedCompanies = [
   "BlogMetrics"
 ];
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
 const title = "IndexFast - Automated SEO Indexing & URL Submission";
 const description =
   "Stop waiting for Google to crawl your site. IndexFast submits your URLs to Google, Bing, and IndexNow instantly for faster ranking and better SEO.";

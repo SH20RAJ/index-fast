@@ -1,4 +1,4 @@
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
 
 export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

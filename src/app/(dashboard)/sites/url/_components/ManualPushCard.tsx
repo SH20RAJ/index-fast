@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Send, CheckCircle2 } from "lucide-react";
+import { Loader2, Send, CheckCircle2, Save, History, Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type SubmitMode = "sitemap" | "urls";
 
@@ -19,6 +21,9 @@ interface ManualPushCardProps {
   submitting: boolean;
   onSubmit: (mode: SubmitMode) => Promise<void>;
   submitResult: { totalUrls: number } | null;
+  sitemapCandidates?: string[];
+  onSaveSitemap?: (url: string) => Promise<void>;
+  savingSitemap?: boolean;
 }
 
 export default function ManualPushCard({
@@ -29,6 +34,9 @@ export default function ManualPushCard({
   submitting,
   onSubmit,
   submitResult,
+  sitemapCandidates = [],
+  onSaveSitemap,
+  savingSitemap = false,
 }: ManualPushCardProps) {
   const [mode, setMode] = useState<SubmitMode>("sitemap");
 
@@ -56,14 +64,67 @@ export default function ManualPushCard({
           </TabsList>
 
           <TabsContent value="sitemap" className="mt-0 space-y-4 focus-visible:outline-none animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <div className="space-y-1.5">
-              <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80 px-1">Primary Sitemap</Label>
-              <Input 
-                value={sitemapUrl} 
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSitemapUrlChange(e.target.value)} 
-                className="h-12 rounded-2xl bg-white dark:bg-zinc-900 border-none px-4 text-sm font-medium focus-visible:ring-1 focus-visible:ring-primary/20"
-                placeholder="https://example.com/sitemap.xml"
-              />
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between px-1">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">Primary Sitemap</Label>
+                  {onSaveSitemap && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => onSaveSitemap(sitemapUrl)}
+                      disabled={savingSitemap || !sitemapUrl}
+                      className="h-6 rounded-lg px-2 text-[9px] font-black uppercase tracking-tighter hover:bg-primary/10 hover:text-primary transition-colors gap-1"
+                    >
+                      {savingSitemap ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : <Save className="h-2.5 w-2.5" />}
+                      {savingSitemap ? "Saving..." : "Store Permanent"}
+                    </Button>
+                  )}
+                </div>
+                <Input 
+                  value={sitemapUrl} 
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSitemapUrlChange(e.target.value)} 
+                  className="h-12 rounded-2xl bg-white dark:bg-zinc-900 border-none px-4 text-sm font-medium focus-visible:ring-1 focus-visible:ring-primary/20 shadow-inner"
+                  placeholder="https://example.com/sitemap.xml"
+                />
+              </div>
+
+              {sitemapCandidates.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 px-1 flex items-center gap-1.5">
+                    <Search className="h-2.5 w-2.5" />
+                    All Discovered Sitemaps
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {sitemapCandidates.map((url) => (
+                      <TooltipProvider key={url}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => onSitemapUrlChange(url)}
+                              className={cn(
+                                "h-8 rounded-xl text-[10px] font-medium px-3 transition-all border-none shadow-sm",
+                                sitemapUrl === url 
+                                  ? "bg-primary text-white shadow-primary/20" 
+                                  : "bg-white dark:bg-zinc-900 text-muted-foreground hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                              )}
+                            >
+                              <span className="truncate max-w-[150px]">
+                                {url.split('/').pop() || url}
+                              </span>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-zinc-900 text-white text-[10px] border-none px-2 py-1">
+                            {url}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </TabsContent>
 

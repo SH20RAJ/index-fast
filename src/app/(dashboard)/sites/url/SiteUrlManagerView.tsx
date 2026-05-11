@@ -19,6 +19,9 @@ import { useSiteContext } from "@/components/dashboard/SiteContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
+import { updateWebsiteSitemapAction } from "@/app/(dashboard)/actions";
+import { toast } from "sonner";
+import { useActionState } from "react";
 
 // Sub-components
 import SummaryStats from "./_components/SummaryStats";
@@ -118,6 +121,7 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
   const [manualUrls, setManualUrls] = useState("");
   const [sitemapUrl, setSitemapUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [savingSitemap, setSavingSitemap] = useState(false);
   const [submitResult, setSubmitResult] = useState<SubmitResponse | null>(null);
 
   useEffect(() => {
@@ -154,13 +158,30 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
     fetchSiteData();
   }, [siteId]);
 
-  const handleSiteChange = (newId: string) => {
-    if (!newId) return;
-    setSiteId(newId);
-    
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("siteId", newId);
-    router.push(`?${params.toString()}`, { scroll: false });
+  const handleSaveSitemap = async (url: string) => {
+    if (!siteId) return;
+    setSavingSitemap(true);
+    try {
+      const formData = new FormData();
+      formData.append("websiteId", siteId);
+      formData.append("sitemapUrl", url);
+      const res = await updateWebsiteSitemapAction({ status: "idle", message: "" }, formData);
+      if (res.status === "success") {
+        toast.success("Sitemap stored permanently.");
+        // Refresh payload
+        const refreshed = await fetch(`/api/websites/${siteId}/urls`, { cache: "no-store" });
+        if (refreshed.ok) {
+          const nextPayload = await refreshed.json();
+          setPayload(nextPayload);
+        }
+      } else {
+        toast.error(res.message || "Failed to store sitemap.");
+      }
+    } catch (err) {
+      toast.error("Failed to store sitemap.");
+    } finally {
+      setSavingSitemap(false);
+    }
   };
 
   const handleSubmit = async (mode: SubmitMode) => {
@@ -278,18 +299,7 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
           <p className="text-sm text-muted-foreground/80 mt-1 max-w-md">Analyze discovered URLs and manage indexing signal distribution across global search networks.</p>
         </div>
         
-        <div className="flex flex-col gap-2 min-w-[240px]">
-          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-1">Selected Website</label>
-          <Select 
-            value={siteId} 
-            onValueChange={handleSiteChange}
-            placeholder="Select a property..."
-            options={sites.map(s => ({ 
-              label: new URL(s.url).hostname, 
-              value: s.id 
-            }))}
-          />
-        </div>
+      
       </div>
 
       {loading && (
@@ -344,6 +354,9 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
                 submitting={submitting}
                 onSubmit={handleSubmit}
                 submitResult={submitResult}
+                sitemapCandidates={payload.sitemaps.candidates}
+                onSaveSitemap={handleSaveSitemap}
+                savingSitemap={savingSitemap}
               />
               
               {/* URL Pulse List moved into the main area for better prominence */}

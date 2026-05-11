@@ -219,7 +219,7 @@ export default function ${componentName}PageContent() {
       priceCurrency: "USD",
     },
     keywords: keywordTargets.join(", "),
-    url: \`https://www.indexfast.co/tools/\${tool.slug}\`,
+    url: \`https://indexfast.co/tools/\${tool.slug}\`,
   };
 
   return (

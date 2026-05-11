@@ -242,7 +242,7 @@ src/
 ### Required
 ```bash
 DATABASE_URL=                    # Postgres connection string
-NEXT_PUBLIC_SITE_URL=            # Site base URL (default: https://www.indexfast.co)
+NEXT_PUBLIC_SITE_URL=            # Site base URL (default: https://indexfast.co)
 CRON_SECRET=                     # Bearer token for cron auth
 NVIDIA_API_KEY=                  # AI chatbot
 GOOGLE_CLIENT_ID=                # GSC OAuth
@@ -407,7 +407,7 @@ Located in `src/app/(dashboard)/actions.ts`:
 
 ## 🌐 URLs
 
-- **Production:** https://www.indexfast.co
+- **Production:** https://indexfast.co
 - **Repository:** /Users/shaswatraj/Desktop/indexfast
 
 ---

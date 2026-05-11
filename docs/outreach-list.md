@@ -232,4 +232,4 @@ Best,
 *Priority: Start with Tier 1 agencies (cold email) and Tier 4 communities (free posts).*
 *Budget option: Post in all Reddit/Facebook/Discord communities for $0.*
 
-*Generated for IndexFast (https://www.indexfast.co) — April 2026*
+*Generated for IndexFast (https://indexfast.co) — April 2026*

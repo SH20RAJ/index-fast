@@ -38,7 +38,7 @@ export default function LongTailKeywordGeneratorPageContent() {
       priceCurrency: "USD",
     },
     keywords: keywordTargets.join(", "),
-    url: `https://www.indexfast.co/tools/${tool.slug}`,
+    url: `https://indexfast.co/tools/${tool.slug}`,
   };
 
   return (

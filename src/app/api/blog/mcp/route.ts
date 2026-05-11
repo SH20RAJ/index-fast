@@ -3,14 +3,13 @@ import { db } from "@/lib/db";
 import { blogPosts } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { createHash } from "crypto";
 
 /**
  * Blog MCP (Model Context Protocol) Endpoint - ADMIN ONLY
  * 
  * Supports list_tools and call_tool via JSON-RPC over HTTP.
  * Authentication: Authorization: Bearer <idx_key> OR ?key=<idx_key>
- * Access restricted to admin via MD5 hash check of the API key.
+ * Access restricted to admin via BLOG_ADMIN_API_KEY environment variable.
  */
 
 export const dynamic = "force-dynamic";
@@ -78,17 +77,17 @@ export async function POST(req: NextRequest) {
       apiKey = authHeader.replace("Bearer ", "");
     }
     
-    // 1. Authenticate Admin via MD5 Hash check
-    const apiKeyHash = createHash("md5").update(apiKey || "").digest("hex");
-    const isAdmin = apiKeyHash === "9f638745f4a7f3cec539539a73153c9e";
+    // 1. Authenticate Admin via BLOG_ADMIN_API_KEY
+    const adminKey = process.env.BLOG_ADMIN_API_KEY;
+    const isAdmin = adminKey && apiKey === adminKey;
 
-    // if (!isAdmin) {
-    //   return NextResponse.json({ 
-    //     jsonrpc: "2.0",
-    //     error: { code: -32001, message: "Unauthorized. Admin access required." },
-    //     id 
-    //   }, { status: 401 });
-    // }
+    if (!isAdmin) {
+      return NextResponse.json({ 
+        jsonrpc: "2.0",
+        error: { code: -32001, message: "Unauthorized. Admin access required." },
+        id 
+      }, { status: 401 });
+    }
 
     // 2. Parse JSON-RPC Request
     const body = await req.json().catch(() => ({}));

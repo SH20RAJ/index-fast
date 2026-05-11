@@ -152,7 +152,7 @@ function getAgencyEmail(contact) {
       </p>
       
       <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 16px;">
-        We built <a href="https://www.indexfast.co?ref=outreach" style="color:#7C3AED;text-decoration:none;font-weight:600;">IndexFast</a> to help agencies <strong>get new pages crawled faster, ranked sooner, and seen in AI answers</strong>:
+        We built <a href="https://indexfast.co?ref=outreach" style="color:#7C3AED;text-decoration:none;font-weight:600;">IndexFast</a> to help agencies <strong>get new pages crawled faster, ranked sooner, and seen in AI answers</strong>:
       </p>
       
       <div style="background:#f5f3ff;border-radius:8px;padding:20px;margin:0 0 20px;border-left:4px solid #7C3AED;">
@@ -165,7 +165,7 @@ function getAgencyEmail(contact) {
         Happy to set up a <strong>free Agency trial</strong> for your team — takes 2 minutes to connect your first site.
       </p>
       
-      <a href="https://www.indexfast.co?ref=outreach-${contact.agency.toLowerCase().replace(/\s+/g, '-')}" 
+      <a href="https://indexfast.co?ref=outreach-${contact.agency.toLowerCase().replace(/\s+/g, '-')}" 
          style="display:inline-block;background:#7C3AED;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
         Try IndexFast Free →
       </a>
@@ -174,14 +174,14 @@ function getAgencyEmail(contact) {
         <p style="margin:0;color:#6b7280;font-size:13px;line-height:1.5;">
           Best,<br>
           <strong style="color:#374151;">Shaswat Raj</strong><br>
-          Founder, <a href="https://www.indexfast.co" style="color:#7C3AED;text-decoration:none;">IndexFast</a>
+          Founder, <a href="https://indexfast.co" style="color:#7C3AED;text-decoration:none;">IndexFast</a>
         </p>
       </div>
       
     </div>
     
     <p style="text-align:center;color:#9ca3af;font-size:11px;margin-top:16px;">
-      Sent with ❤️ from IndexFast · <a href="https://www.indexfast.co" style="color:#9ca3af;">indexfast.co</a>
+      Sent with ❤️ from IndexFast · <a href="https://indexfast.co" style="color:#9ca3af;">indexfast.co</a>
     </p>
   </div>
 </body>
@@ -212,7 +212,7 @@ function getInfluencerEmail(contact) {
       </p>
       
       <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 16px;">
-        I built <a href="https://www.indexfast.co?ref=influencer" style="color:#7C3AED;text-decoration:none;font-weight:600;">IndexFast</a> — a dashboard that helps you <em>get new pages crawled faster, ranked sooner, and seen in AI answers.</em>
+        I built <a href="https://indexfast.co?ref=influencer" style="color:#7C3AED;text-decoration:none;font-weight:600;">IndexFast</a> — a dashboard that helps you <em>get new pages crawled faster, ranked sooner, and seen in AI answers.</em>
       </p>
       
       <div style="background:#f5f3ff;border-radius:8px;padding:20px;margin:0 0 20px;border-left:4px solid #7C3AED;">
@@ -233,7 +233,7 @@ function getInfluencerEmail(contact) {
         Happy to share a <strong>free lifetime Pro account</strong> for you to test.
       </p>
       
-      <a href="https://www.indexfast.co?ref=partner-${contact.name.toLowerCase().replace(/\s+/g, '-')}" 
+      <a href="https://indexfast.co?ref=partner-${contact.name.toLowerCase().replace(/\s+/g, '-')}" 
          style="display:inline-block;background:#7C3AED;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:14px;">
         Check Out IndexFast →
       </a>
@@ -242,14 +242,14 @@ function getInfluencerEmail(contact) {
         <p style="margin:0;color:#6b7280;font-size:13px;line-height:1.5;">
           Cheers,<br>
           <strong style="color:#374151;">Shaswat Raj</strong><br>
-          Founder, <a href="https://www.indexfast.co" style="color:#7C3AED;text-decoration:none;">IndexFast</a>
+          Founder, <a href="https://indexfast.co" style="color:#7C3AED;text-decoration:none;">IndexFast</a>
         </p>
       </div>
       
     </div>
     
     <p style="text-align:center;color:#9ca3af;font-size:11px;margin-top:16px;">
-      Sent with ❤️ from IndexFast · <a href="https://www.indexfast.co" style="color:#9ca3af;">indexfast.co</a>
+      Sent with ❤️ from IndexFast · <a href="https://indexfast.co" style="color:#9ca3af;">indexfast.co</a>
     </p>
   </div>
 </body>

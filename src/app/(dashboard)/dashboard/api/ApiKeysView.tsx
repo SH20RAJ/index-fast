@@ -53,7 +53,7 @@ export default function ApiKeysView() {
     {
       title: "Authentication",
       description: "Use your API key as a Bearer token in the Authorization header.",
-      code: `curl -X POST https://www.indexfast.co/api/v1/submit \\
+      code: `curl -X POST https://indexfast.co/api/v1/submit \\
   -H "Authorization: Bearer ${apiKey || 'YOUR_API_KEY'}" \\
   -H "Content-Type: application/json" \\
   -d '{"url": "https://example.com"}'`,
@@ -62,7 +62,7 @@ export default function ApiKeysView() {
     {
       title: "Javascript Example",
       description: "Integrate indexing into your existing publishing workflow.",
-      code: `const response = await fetch('https://www.indexfast.co/api/v1/submit', {
+      code: `const response = await fetch('https://indexfast.co/api/v1/submit', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer ${apiKey || 'YOUR_API_KEY'}',

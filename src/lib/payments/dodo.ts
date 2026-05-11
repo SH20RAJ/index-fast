@@ -64,7 +64,7 @@ export function getDodoReturnUrl(): string {
 }
 
 export function getSiteUrl(): string {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
+  return process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
 }
 
 export function toAbsoluteUrl(pathOrUrl: string): string {

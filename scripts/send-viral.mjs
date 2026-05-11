@@ -135,7 +135,7 @@ function getHTML(c) {
 <div style="background:#fff;border-radius:12px;padding:28px;border:1px solid #e5e7eb;">
 <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 14px;">Hey ${c.name} 👋</p>
 <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 14px;">${c.hook}.</p>
-<p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 14px;">I'm Shaswat — I built <a href="https://www.indexfast.co?ref=${c.org.toLowerCase().replace(/[^a-z0-9]/g,'-')}" style="color:#7C3AED;text-decoration:none;font-weight:600;">IndexFast</a> to help developers and agencies <strong>get new pages crawled faster, ranked sooner, and seen in AI answers.</strong></p>
+<p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 14px;">I'm Shaswat — I built <a href="https://indexfast.co?ref=${c.org.toLowerCase().replace(/[^a-z0-9]/g,'-')}" style="color:#7C3AED;text-decoration:none;font-weight:600;">IndexFast</a> to help developers and agencies <strong>get new pages crawled faster, ranked sooner, and seen in AI answers.</strong></p>
 <div style="background:#f5f3ff;border-radius:8px;padding:18px;margin:0 0 18px;border-left:4px solid #7C3AED;">
 <p style="margin:0 0 6px;color:#4c1d95;font-size:14px;">⚡ <strong>Instant IndexNow submission</strong> — push URLs to Bing, Yandex, Naver in seconds</p>
 <p style="margin:0 0 6px;color:#4c1d95;font-size:14px;">📊 <strong>Multi-site dashboard</strong> — track what's indexed across all your sites</p>
@@ -143,12 +143,12 @@ function getHTML(c) {
 </div>
 <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 10px;">${cta}</p>
 <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 20px;">${closing}</p>
-<a href="https://www.indexfast.co?ref=${c.org.toLowerCase().replace(/[^a-z0-9]/g,'-')}" style="display:inline-block;background:#7C3AED;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;">See IndexFast →</a>
+<a href="https://indexfast.co?ref=${c.org.toLowerCase().replace(/[^a-z0-9]/g,'-')}" style="display:inline-block;background:#7C3AED;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;">See IndexFast →</a>
 <div style="margin-top:28px;padding-top:16px;border-top:1px solid #e5e7eb;">
-<p style="margin:0;color:#6b7280;font-size:13px;line-height:1.5;">Cheers,<br><strong style="color:#374151;">Shaswat Raj</strong><br>Founder, <a href="https://www.indexfast.co" style="color:#7C3AED;text-decoration:none;">IndexFast</a> · <a href="https://x.com/SH20RAJ" style="color:#7C3AED;text-decoration:none;">@SH20RAJ</a></p>
+<p style="margin:0;color:#6b7280;font-size:13px;line-height:1.5;">Cheers,<br><strong style="color:#374151;">Shaswat Raj</strong><br>Founder, <a href="https://indexfast.co" style="color:#7C3AED;text-decoration:none;">IndexFast</a> · <a href="https://x.com/SH20RAJ" style="color:#7C3AED;text-decoration:none;">@SH20RAJ</a></p>
 </div>
 </div>
-<p style="text-align:center;color:#9ca3af;font-size:11px;margin-top:14px;">Get new pages crawled faster ⚡ <a href="https://www.indexfast.co" style="color:#9ca3af;">indexfast.co</a></p>
+<p style="text-align:center;color:#9ca3af;font-size:11px;margin-top:14px;">Get new pages crawled faster ⚡ <a href="https://indexfast.co" style="color:#9ca3af;">indexfast.co</a></p>
 </div></body></html>`;
   return { subject, html };
 }

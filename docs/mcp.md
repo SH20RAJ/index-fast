@@ -7,16 +7,16 @@ IndexFast supports the [Model Context Protocol (MCP)](https://modelcontextprotoc
 IndexFast provides two dedicated MCP endpoints for different management tasks:
 
 ### 1. Core Indexing MCP
-- **URL:** `https://www.indexfast.co/api/mcp`
+- **URL:** `https://indexfast.co/api/mcp`
 - **Purpose:** Manage websites, submit URLs for indexing, and run SEO audits.
 - **Auth:** `?key=<YOUR_API_KEY>` or `Authorization: Bearer <YOUR_API_KEY>`
 
 ### 2. Blog Management MCP
-- **URL:** `https://www.indexfast.co/api/blog/mcp`
+- **URL:** `https://indexfast.co/api/blog/mcp`
 - **Purpose:** Full CRUD operations for your IndexFast blog.
 - **Auth:** `?key=<YOUR_API_KEY>` or `Authorization: Bearer <YOUR_API_KEY>`
 
-You can find your API key in the [Settings](https://www.indexfast.co/settings) of your dashboard.
+You can find your API key in the [Settings](https://indexfast.co/settings) of your dashboard.
 
 ## Connection Options
 
@@ -25,12 +25,12 @@ Both endpoints support the standard **SSE (Server-Sent Events)** transport, whic
 
 **Example for Cursor/Windsurf:**
 Use the SSE transport with the following URL:
-`https://www.indexfast.co/api/mcp?key=YOUR_API_KEY`
+`https://indexfast.co/api/mcp?key=YOUR_API_KEY`
 
 ### npx mcp-remote
 You can test the connectivity and tools using `mcp-remote`:
 ```bash
-npx mcp-remote https://www.indexfast.co/api/blog/mcp?key=YOUR_API_KEY
+npx mcp-remote https://indexfast.co/api/blog/mcp?key=YOUR_API_KEY
 ```
 
 ## Features & Tools
@@ -55,7 +55,7 @@ You can use [LobeHub](https://lobehub.com/) to set up advanced automation and cr
 
 ### Cursor / Windsurf / Antigravity
 Use the SSE transport with the following URL in your IDE settings:
-`https://www.indexfast.co/api/mcp?key=YOUR_API_KEY`
+`https://indexfast.co/api/mcp?key=YOUR_API_KEY`
 
 ### Claude Code
 Connect using the official MCP config to enable instant indexing from your terminal while you build.
@@ -76,10 +76,10 @@ Add the following to your `claude_desktop_config.json`:
 {
   "mcpServers": {
     "indexfast-core": {
-      "url": "https://www.indexfast.co/api/mcp?key=YOUR_API_KEY"
+      "url": "https://indexfast.co/api/mcp?key=YOUR_API_KEY"
     },
     "indexfast-blog": {
-      "url": "https://www.indexfast.co/api/blog/mcp?key=YOUR_API_KEY"
+      "url": "https://indexfast.co/api/blog/mcp?key=YOUR_API_KEY"
     }
   }
 }

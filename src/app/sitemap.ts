@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getPublicSitePaths } from "@/lib/public-site-paths";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.indexfast.co";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const paths = await getPublicSitePaths();

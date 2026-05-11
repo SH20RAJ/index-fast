@@ -39,7 +39,7 @@ export default function SitemapHealthCheckerPageContent() {
       priceCurrency: "USD",
     },
     keywords: keywordTargets.join(", "),
-    url: `https://www.indexfast.co/tools/${tool.slug}`,
+    url: `https://indexfast.co/tools/${tool.slug}`,
   };
 
   return (

@@ -11,29 +11,64 @@ export default async function McpPage() {
   const keyRes = await getUserApiKey();
   const apiKey = keyRes.data || "idx_your_api_key_here";
 
+  const mcpConfig = {
+    command: "npx",
+    args: [
+      "-y",
+      "mcp-remote",
+      `https://indexfast.co/api/mcp?key=${apiKey}`
+    ]
+  };
+
   const claudeConfig = JSON.stringify({
     mcpServers: {
-      indexfast: {
-        command: "npx",
-        args: [
-          "-y",
-          "mcp-remote",
-          `https://www.indexfast.co/api/mcp?key=${apiKey}`
-        ]
-      }
+      indexfast: mcpConfig
     }
   }, null, 2);
 
-  const directCurlCommand = `curl -s -X POST https://www.indexfast.co/api/mcp \\
+  // Cursor Deep Link: cursor://anysphere.cursor-deeplink/mcp/install?name=$NAME&config=$BASE64_CONFIG
+  const cursorConfigBase64 = Buffer.from(JSON.stringify(mcpConfig)).toString('base64');
+  const cursorInstallUrl = `cursor://anysphere.cursor-deeplink/mcp/install?name=IndexFast&config=${cursorConfigBase64}`;
+
+  // VS Code Deep Link (for MCP Client extension)
+  const vscodeInstallUrl = `vscode://mcp/install?name=IndexFast&config=${encodeURIComponent(JSON.stringify(mcpConfig))}`;
+
+  const directCurlCommand = `curl -s -X POST https://indexfast.co/api/mcp \\
   -H "Authorization: Bearer ${apiKey}" \\
   -H "Content-Type: application/json" \\
   -d '{"jsonrpc":"2.0","method":"tools/list","params":{},"id":1}'`;
 
   return (
     <div className="max-w-5xl space-y-8 pb-20">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        {/* Page header is now handled by DashboardTopBar */}
-        <div className="flex-1" />
+      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-wrap gap-2 items-center">
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 mr-2">Quick Install</span>
+          <a href={cursorInstallUrl}>
+            <Button variant="outline" size="sm" className="h-8 rounded-full text-[10px] font-bold gap-2 px-4 border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all shadow-sm group">
+              <Zap className="h-3 w-3 fill-current" />
+              Install in Cursor
+            </Button>
+          </a>
+          <a href="#setup-vscode">
+            <Button variant="outline" size="sm" className="h-8 rounded-full text-[10px] font-bold gap-2 px-4 border-border/40 hover:border-[#007ACC]/50 hover:bg-[#007ACC]/5 transition-all shadow-sm group">
+              <div className="h-2 w-2 rounded-full bg-[#007ACC] group-hover:scale-125 transition-transform" />
+              VS Code
+            </Button>
+          </a>
+          <a href="#setup-windsurf">
+            <Button variant="outline" size="sm" className="h-8 rounded-full text-[10px] font-bold gap-2 px-4 border-border/40 hover:border-purple-600/50 hover:bg-purple-600/5 transition-all shadow-sm group">
+              <div className="h-2 w-2 rounded-full bg-purple-600 group-hover:scale-125 transition-transform" />
+              Windsurf
+            </Button>
+          </a>
+          <a href="#setup-claude">
+            <Button variant="outline" size="sm" className="h-8 rounded-full text-[10px] font-bold gap-2 px-4 border-border/40 hover:border-orange-500/50 hover:bg-orange-500/5 transition-all shadow-sm group">
+              <div className="h-2 w-2 rounded-full bg-orange-500 group-hover:scale-125 transition-transform" />
+              Claude
+            </Button>
+          </a>
+        </div>
+        
         <Badge variant="secondary" className="w-fit bg-primary/10 text-primary border-none py-1 px-3">
           <Zap className="mr-1.5 h-3 w-3 fill-current" />
           Protocol v1.0
@@ -79,7 +114,7 @@ export default async function McpPage() {
           <div className="space-y-4">
             <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground px-1">Setup Instructions</h3>
             
-            <Card className="rounded-3xl border-border/60">
+            <Card id="setup-claude" className="rounded-3xl border-border/60 scroll-mt-20">
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-8 rounded-lg bg-zinc-900 flex items-center justify-center text-white dark:bg-white dark:text-zinc-950">
@@ -103,23 +138,25 @@ export default async function McpPage() {
               </CardContent>
             </Card>
 
-            <Card className="rounded-3xl border-border/60">
+            <Card id="setup-cursor" className="rounded-3xl border-border/60 scroll-mt-20">
+              <div id="setup-vscode" className="scroll-mt-20" />
+              <div id="setup-windsurf" className="scroll-mt-20" />
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                     <Bot className="h-4 w-4" />
                   </div>
-                  <CardTitle className="text-base font-bold">Cursor / Windsurf</CardTitle>
+                  <CardTitle className="text-base font-bold">Cursor / VS Code / Windsurf</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Go to <span className="font-bold text-foreground">Settings {">"} MCP</span> and add a new server:
+                  Go to <span className="font-bold text-foreground">Settings {">"} MCP</span> (or install the <span className="text-primary font-bold">MCP</span> extension in VS Code) and add a new server:
                 </p>
                 <ul className="space-y-3">
                   {[
                     "Type: POST",
-                    "URL: https://www.indexfast.co/api/mcp",
+                    "URL: https://indexfast.co/api/mcp",
                     `Header: Authorization: Bearer ${apiKey}`
                   ].map((step, i) => (
                     <li key={i} className="flex items-center gap-3 text-xs font-medium">
@@ -142,6 +179,9 @@ export default async function McpPage() {
             <div className="space-y-4">
               {[
                 { name: "submit_url", desc: "Index any page from chat." },
+                { name: "submit_sitemap", desc: "Push all URLs from a sitemap." },
+                { name: "submit_urllist", desc: "Batch submit a list of URLs." },
+                { name: "index_page", desc: "Audit + Index in one prompt." },
                 { name: "seo_audit", desc: "Run instant SEO audits." },
                 { name: "get_usage", desc: "Check indexing limits." },
                 { name: "list_websites", desc: "View all connected sites." }

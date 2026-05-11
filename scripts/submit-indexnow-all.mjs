@@ -5,10 +5,10 @@
  *
  * Usage:
  *   node scripts/submit-indexnow-all.mjs
- *   INDEXNOW_KEY=... SITE_URL=https://www.indexfast.co node scripts/submit-indexnow-all.mjs
+ *   INDEXNOW_KEY=... SITE_URL=https://indexfast.co node scripts/submit-indexnow-all.mjs
  */
 
-const DEFAULT_SITE_URL = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://www.indexfast.co";
+const DEFAULT_SITE_URL = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://indexfast.co";
 const DEFAULT_KEY = process.env.INDEXNOW_KEY || "74c28309a177441488a4ea77d823c277";
 const BATCH_SIZE = 1000;
 

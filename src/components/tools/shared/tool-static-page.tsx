@@ -88,7 +88,7 @@ export default function ToolStaticPage({ slug }: ToolStaticPageProps) {
       priceCurrency: "USD",
     },
     keywords: keywordTargets.join(", "),
-    url: `https://www.indexfast.co/tools/${tool.slug}`,
+    url: `https://indexfast.co/tools/${tool.slug}`,
   };
 
   const faqSchema = {
@@ -112,13 +112,13 @@ export default function ToolStaticPage({ slug }: ToolStaticPageProps) {
         "@type": "ListItem",
         position: 1,
         name: "SEO Tools",
-        item: "https://www.indexfast.co/tools",
+        item: "https://indexfast.co/tools",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: tool.title,
-        item: `https://www.indexfast.co/tools/${tool.slug}`,
+        item: `https://indexfast.co/tools/${tool.slug}`,
       },
     ],
   };

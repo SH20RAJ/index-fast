@@ -147,4 +147,4 @@
 
 ---
 
-*Generated for IndexFast (https://www.indexfast.co) — April 2026*
+*Generated for IndexFast (https://indexfast.co) — April 2026*

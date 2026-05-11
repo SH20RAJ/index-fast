@@ -64,28 +64,28 @@ const agents = [
     label: "Cursor",
     color: "text-sky-400",
     dot: "bg-sky-400",
-    instructions: `Settings → MCP → Add Server\n\nURL:  https://www.indexfast.co/api/mcp\nAuth: Bearer idx_YOUR_KEY`,
+    instructions: `Settings → MCP → Add Server\n\nURL:  https://indexfast.co/api/mcp\nAuth: Bearer idx_YOUR_KEY`,
   },
   {
     id: "claude",
     label: "Claude Code",
     color: "text-violet-400",
     dot: "bg-violet-400",
-    instructions: `# claude_desktop_config.json\n{\n  "mcpServers": {\n    "indexfast": {\n      "command": "curl",\n      "args": [\n        "-s",\n        "-X", "POST",\n        "-H", "Authorization: Bearer idx_YOUR_KEY",\n        "-H", "Content-Type: application/json",\n        "-d", "{\\\"method\\\":\\\"initialize\\\",\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"params\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"capabilities\\\":{},\\\"clientInfo\\\":{\\\"name\\\":\\\"claude-desktop\\\",\\\"version\\\":\\\"1.0.0\\\"}}}",\n        "https://www.indexfast.co/api/mcp"\n      ]\n    }\n  }\n}`,
+    instructions: `# claude_desktop_config.json\n{\n  "mcpServers": {\n    "indexfast": {\n      "command": "curl",\n      "args": [\n        "-s",\n        "-X", "POST",\n        "-H", "Authorization: Bearer idx_YOUR_KEY",\n        "-H", "Content-Type: application/json",\n        "-d", "{\\\"method\\\":\\\"initialize\\\",\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":1,\\\"params\\\":{\\\"protocolVersion\\\":\\\"2024-11-05\\\",\\\"capabilities\\\":{},\\\"clientInfo\\\":{\\\"name\\\":\\\"claude-desktop\\\",\\\"version\\\":\\\"1.0.0\\\"}}}",\n        "https://indexfast.co/api/mcp"\n      ]\n    }\n  }\n}`,
   },
   {
     id: "windsurf",
     label: "Windsurf",
     color: "text-teal-400",
     dot: "bg-teal-400",
-    instructions: `Settings → MCP → Add Server\n\nURL:  https://www.indexfast.co/api/mcp\nAuth: Bearer idx_YOUR_KEY`,
+    instructions: `Settings → MCP → Add Server\n\nURL:  https://indexfast.co/api/mcp\nAuth: Bearer idx_YOUR_KEY`,
   },
   {
     id: "kilo",
     label: "Kilocode",
     color: "text-orange-400",
     dot: "bg-orange-400",
-    instructions: `.kilocode/mcp.json\n\n{\n  "servers": [\n    {\n      "name": "indexfast",\n      "url": "https://www.indexfast.co/api/mcp",\n      "auth": "Bearer idx_YOUR_KEY"\n    }\n  ]\n}`,
+    instructions: `.kilocode/mcp.json\n\n{\n  "servers": [\n    {\n      "name": "indexfast",\n      "url": "https://indexfast.co/api/mcp",\n      "auth": "Bearer idx_YOUR_KEY"\n    }\n  ]\n}`,
   },
 ];
 
