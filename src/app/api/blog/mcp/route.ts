@@ -14,6 +14,69 @@ import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
+function parseMarkdownContent(markdown: string) {
+  const sections: any[] = [];
+  const faqs: any[] = [];
+  
+  if (!markdown) return { sections, faqs };
+
+  const lines = markdown.split('\n');
+  let currentSection: any = null;
+  let inFaq = false;
+  let currentFaq: any = null;
+
+  for (let line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    // Headings
+    if (trimmed.startsWith('#')) {
+      const heading = trimmed.replace(/^#+\s+/, '').trim();
+      
+      if (heading.toLowerCase().includes('faq')) {
+        inFaq = true;
+        continue;
+      }
+
+      inFaq = false;
+      currentSection = { heading, paragraphs: [], bullets: [] };
+      sections.push(currentSection);
+      continue;
+    }
+
+    // FAQ items
+    if (inFaq) {
+      if (trimmed.startsWith('###') || trimmed.match(/^\d+\./) || (trimmed.endsWith('?') && trimmed.length < 200)) {
+        if (currentFaq && currentFaq.question && currentFaq.answer) {
+          faqs.push(currentFaq);
+        }
+        currentFaq = { question: trimmed.replace(/^###\s+/, '').replace(/^\d+\.\s+/, ''), answer: '' };
+      } else if (currentFaq) {
+        currentFaq.answer = (currentFaq.answer + ' ' + trimmed).trim();
+      }
+      continue;
+    }
+
+    // Regular section content
+    if (!currentSection) {
+      currentSection = { heading: "Introduction", paragraphs: [], bullets: [] };
+      sections.push(currentSection);
+    }
+
+    if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+      currentSection.bullets.push(trimmed.replace(/^[-*]\s+/, ''));
+    } else {
+      currentSection.paragraphs.push(trimmed);
+    }
+  }
+
+  if (currentFaq && currentFaq.question && currentFaq.answer) {
+    faqs.push(currentFaq);
+  }
+
+  return { sections, faqs };
+}
+
 export async function GET(req: NextRequest) {
   const accept = req.headers.get("Accept");
   if (accept === "text/event-stream") {
@@ -140,18 +203,18 @@ export async function POST(req: NextRequest) {
             },
             {
               name: "create_or_update_blog_post",
-              description: "Create a new blog post or update an existing one by slug.",
+              description: "Create a new blog post or update an existing one by slug. ONLY send markdown for content.",
               inputSchema: {
                 type: "object",
                 properties: {
                   slug: { type: "string" },
                   title: { type: "string" },
                   description: { type: "string" },
-                  content: { type: "string", description: "Markdown content or JSON string of sections." },
+                  content: { type: "string", description: "Full blog post content in Markdown format. Headers (# or ##) will create new sections." },
                   author: { type: "string" },
                   primaryKeyword: { type: "string" }
                 },
-                required: ["slug", "title", "description"]
+                required: ["slug", "title", "description", "content"]
               }
             },
             {
@@ -203,25 +266,11 @@ export async function POST(req: NextRequest) {
 
         case "create_or_update_blog_post": {
           const { slug, title, description, content, author, primaryKeyword } = args || {};
-          if (!slug || !title) {
-            return NextResponse.json({ id, error: { message: "slug and title are required." } }, { status: 400 });
+          if (!slug || !title || !content) {
+            return NextResponse.json({ id, error: { message: "slug, title, and content are required." } }, { status: 400 });
           }
 
-          let sections = [];
-          if (typeof content === "string") {
-            try {
-              if (content.trim().startsWith("[") || content.trim().startsWith("{")) {
-                const parsed = JSON.parse(content);
-                sections = Array.isArray(parsed) ? parsed : [parsed];
-              } else {
-                sections = [{ heading: "Introduction", paragraphs: [content] }];
-              }
-            } catch {
-              sections = [{ heading: "Introduction", paragraphs: [content] }];
-            }
-          } else if (Array.isArray(content)) {
-            sections = content;
-          }
+          const { sections, faqs } = parseMarkdownContent(content);
 
           const existing = await db.query.blogPosts.findFirst({
             where: eq(blogPosts.slug, slug),
@@ -234,6 +283,7 @@ export async function POST(req: NextRequest) {
             author: author || "IndexFast Editorial Team",
             primaryKeyword: primaryKeyword || "SEO",
             sections,
+            faqs,
             hero: description, // Use description as hero if not specified
             updatedAt: new Date(),
           };
