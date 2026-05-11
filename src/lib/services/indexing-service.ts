@@ -10,6 +10,7 @@ import { submitToBaidu } from "@/lib/api/baidu";
 import { submitToNaver } from "@/lib/api/naver";
 import { pingAllUniversal } from "@/lib/api/ping-services";
 import { ensureUserRecord } from "@/lib/db/user-sync";
+import { pingGoogleSitemap } from "@/lib/api/google";
 
 export async function processWebsiteIndexing(websiteId: string) {
   const [websiteOnly] = await db.select().from(websites).where(eq(websites.id, websiteId));
@@ -102,6 +103,18 @@ export async function triggerSubmissions(website: Website, urls: string[], isPro
       websiteId: website.id,
       url: truncatedUrl,
       engine: "indexnow" as const,
+      status: res.success ? ("success" as const) : ("failed" as const),
+      errorMessage: res.error,
+    });
+  }
+
+  // Google (Sitemap Ping)
+  if (website.sitemapUrl) {
+    const res = await pingGoogleSitemap(website.sitemapUrl);
+    submissionsToLog.push({
+      websiteId: website.id,
+      url: website.sitemapUrl,
+      engine: "google" as const,
       status: res.success ? ("success" as const) : ("failed" as const),
       errorMessage: res.error,
     });

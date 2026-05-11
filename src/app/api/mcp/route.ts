@@ -6,6 +6,7 @@ import { getPlanDefinition, resolvePlanId } from "@/lib/billing/plans";
 import { triggerSubmissions, processWebsiteIndexing } from "@/lib/services/indexing-service";
 import { auditWebsite } from "@/lib/services/audit-service";
 import { revalidatePath } from "next/cache";
+import { parseSitemap } from "@/lib/utils/sitemap-parser";
 
 /**
  * MCP (Model Context Protocol) Endpoint
@@ -107,6 +108,28 @@ export async function POST(req: NextRequest) {
                   url: { type: "string", description: "The full URL to index (must belong to one of your connected sites)." }
                 },
                 required: ["url"]
+              }
+            },
+            {
+              name: "submit_sitemap",
+              description: "Submit all URLs from a sitemap for indexing. Fetches, parses, and pushes to all engines.",
+              inputSchema: {
+                type: "object",
+                properties: {
+                  sitemapUrl: { type: "string", description: "The full URL of the XML sitemap." }
+                },
+                required: ["sitemapUrl"]
+              }
+            },
+            {
+              name: "submit_urllist",
+              description: "Submit a list of URLs for indexing across all connected engines.",
+              inputSchema: {
+                type: "object",
+                properties: {
+                  urls: { type: "array", items: { type: "string" }, description: "Array of full URLs to index." }
+                },
+                required: ["urls"]
               }
             },
             {
@@ -403,6 +426,90 @@ export async function POST(req: NextRequest) {
             id,
             result: {
               content: [{ type: "text", text: JSON.stringify(results.map(r => ({ engine: r.engine, status: r.status, error: r.errorMessage })), null, 2) }]
+            }
+          });
+        }
+
+        case "submit_sitemap": {
+          const { sitemapUrl } = args || {};
+          if (!sitemapUrl || !sitemapUrl.startsWith("http")) {
+            return NextResponse.json({ id, error: { message: "Invalid sitemapUrl provided." } }, { status: 400 });
+          }
+
+          const urls = await parseSitemap(sitemapUrl);
+          if (urls.length === 0) {
+            return NextResponse.json({
+              id,
+              result: { content: [{ type: "text", text: "No URLs found in the provided sitemap." }] }
+            });
+          }
+
+          // Match website
+          const targetHost = new URL(urls[0]).hostname;
+          const allWebsites = await db.select().from(websites).where(eq(websites.userId, dbUser.id));
+          const matchedWebsite = allWebsites.find(w => {
+            try { return new URL(w.url).hostname === targetHost; } catch { return false; }
+          });
+
+          if (!matchedWebsite) {
+            return NextResponse.json({
+              id,
+              result: {
+                content: [{ type: "text", text: `Error: Website not found in your dashboard for hostname: ${targetHost}. Please add it first.` }]
+              }
+            });
+          }
+
+          const results = await triggerSubmissions(matchedWebsite, urls, dbUser.isPro ?? false);
+          return NextResponse.json({
+            jsonrpc: "2.0",
+            id,
+            result: {
+              content: [{ type: "text", text: JSON.stringify({
+                urlsFound: urls.length,
+                submissions: results.map(r => ({ engine: r.engine, status: r.status, error: r.errorMessage }))
+              }, null, 2) }]
+            }
+          });
+        }
+
+        case "submit_urllist": {
+          const { urls } = args || {};
+          if (!urls || !Array.isArray(urls) || urls.length === 0) {
+            return NextResponse.json({ id, error: { message: "urls array is required and must not be empty." } }, { status: 400 });
+          }
+
+          // Validate first URL
+          const firstUrl = urls[0];
+          if (!firstUrl.startsWith("http")) {
+            return NextResponse.json({ id, error: { message: `Invalid URL: ${firstUrl}` } }, { status: 400 });
+          }
+
+          // Match website
+          const targetHost = new URL(firstUrl).hostname;
+          const allWebsites = await db.select().from(websites).where(eq(websites.userId, dbUser.id));
+          const matchedWebsite = allWebsites.find(w => {
+            try { return new URL(w.url).hostname === targetHost; } catch { return false; }
+          });
+
+          if (!matchedWebsite) {
+            return NextResponse.json({
+              id,
+              result: {
+                content: [{ type: "text", text: `Error: Website not found in your dashboard for hostname: ${targetHost}. Please add it first.` }]
+              }
+            });
+          }
+
+          const results = await triggerSubmissions(matchedWebsite, urls, dbUser.isPro ?? false);
+          return NextResponse.json({
+            jsonrpc: "2.0",
+            id,
+            result: {
+              content: [{ type: "text", text: JSON.stringify({
+                urlsSubmitted: urls.length,
+                submissions: results.map(r => ({ engine: r.engine, status: r.status, error: r.errorMessage }))
+              }, null, 2) }]
             }
           });
         }
