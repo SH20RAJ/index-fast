@@ -73,8 +73,6 @@ export const metadata: Metadata = {
     "indexnow url submission",
     "google sitemap ping",
     "instant indexing",
-  ],
-
     "technical seo automation",
     "sitemap indexing",
     "indexing tool",
