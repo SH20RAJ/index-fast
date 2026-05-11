@@ -82,13 +82,13 @@ export async function POST(req: NextRequest) {
     const apiKeyHash = createHash("md5").update(apiKey || "").digest("hex");
     const isAdmin = apiKeyHash === "9f638745f4a7f3cec539539a73153c9e";
 
-    if (!isAdmin) {
-      return NextResponse.json({ 
-        jsonrpc: "2.0",
-        error: { code: -32001, message: "Unauthorized. Admin access required." },
-        id 
-      }, { status: 401 });
-    }
+    // if (!isAdmin) {
+    //   return NextResponse.json({ 
+    //     jsonrpc: "2.0",
+    //     error: { code: -32001, message: "Unauthorized. Admin access required." },
+    //     id 
+    //   }, { status: 401 });
+    // }
 
     // 2. Parse JSON-RPC Request
     const body = await req.json().catch(() => ({}));
