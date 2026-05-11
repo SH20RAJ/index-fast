@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { users, websites, submissions } from "@/lib/db/schema";
+import { users, websites, submissions, urlInventory, blogPosts } from "@/lib/db/schema";
 import { and, count, desc, eq, gte, sql } from "drizzle-orm";
 import { getPlanDefinition, resolvePlanId } from "@/lib/billing/plans";
-import { triggerSubmissions } from "@/lib/services/indexing-service";
+import { triggerSubmissions, processWebsiteIndexing } from "@/lib/services/indexing-service";
 import { auditWebsite } from "@/lib/services/audit-service";
+import { revalidatePath } from "next/cache";
 
 /**
  * MCP (Model Context Protocol) Endpoint
@@ -141,6 +142,51 @@ export async function POST(req: NextRequest) {
               }
             },
             {
+              name: "get_site_health",
+              description: "Get the current health and configuration status of a connected website.",
+              inputSchema: {
+                type: "object",
+                properties: {
+                  siteId: { type: "string", description: "The unique ID of the website." }
+                },
+                required: ["siteId"]
+              }
+            },
+            {
+              name: "trigger_sitemap_sync",
+              description: "Manually trigger a sitemap crawl and sync to detect new URLs and submit them.",
+              inputSchema: {
+                type: "object",
+                properties: {
+                  siteId: { type: "string", description: "The unique ID of the website." }
+                },
+                required: ["siteId"]
+              }
+            },
+            {
+              name: "list_url_inventory",
+              description: "List URLs in the inventory for a specific website, including their indexing status.",
+              inputSchema: {
+                type: "object",
+                properties: {
+                  siteId: { type: "string", description: "The unique ID of the website." },
+                  limit: { type: "number", description: "Number of URLs to return (default 50).", default: 50 }
+                },
+                required: ["siteId"]
+              }
+            },
+            {
+              name: "index_page",
+              description: "The 'One-Prompt' indexing tool. Audits a URL and submits it to all connected search engines instantly. Best for newly coded pages.",
+              inputSchema: {
+                type: "object",
+                properties: {
+                  url: { type: "string", description: "The full URL to audit and index." }
+                },
+                required: ["url"]
+              }
+            },
+            {
               name: "echo",
               description: "Echo back the input for testing connectivity.",
               inputSchema: {
@@ -187,6 +233,116 @@ export async function POST(req: NextRequest) {
             id,
             result: {
               content: [{ type: "text", text: JSON.stringify(site, null, 2) }]
+            }
+          });
+        }
+
+        case "get_site_health": {
+          const { siteId } = args || {};
+          if (!siteId) {
+            return NextResponse.json({ id, error: { message: "siteId is required." } }, { status: 400 });
+          }
+
+          const [site] = await db.select().from(websites).where(and(eq(websites.id, siteId), eq(websites.userId, dbUser.id))).limit(1);
+
+          if (!site) {
+            return NextResponse.json({ id, result: { content: [{ type: "text", text: "Error: Site not found or access denied." }] } });
+          }
+
+          return NextResponse.json({
+            jsonrpc: "2.0",
+            id,
+            result: {
+              content: [{ type: "text", text: JSON.stringify(site.siteHealth, null, 2) }]
+            }
+          });
+        }
+
+        case "trigger_sitemap_sync": {
+          const { siteId } = args || {};
+          if (!siteId) {
+            return NextResponse.json({ id, error: { message: "siteId is required." } }, { status: 400 });
+          }
+
+          // Verify ownership
+          const [site] = await db.select().from(websites).where(and(eq(websites.id, siteId), eq(websites.userId, dbUser.id))).limit(1);
+          if (!site) {
+            return NextResponse.json({ id, result: { content: [{ type: "text", text: "Error: Site not found or access denied." }] } });
+          }
+
+          const result = await processWebsiteIndexing(siteId);
+          return NextResponse.json({
+            jsonrpc: "2.0",
+            id,
+            result: {
+              content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            }
+          });
+        }
+
+        case "list_url_inventory": {
+          const { siteId, limit = 50 } = args || {};
+          if (!siteId) {
+            return NextResponse.json({ id, error: { message: "siteId is required." } }, { status: 400 });
+          }
+
+          // Verify ownership
+          const [site] = await db.select().from(websites).where(and(eq(websites.id, siteId), eq(websites.userId, dbUser.id))).limit(1);
+          if (!site) {
+            return NextResponse.json({ id, result: { content: [{ type: "text", text: "Error: Site not found or access denied." }] } });
+          }
+
+          const inventory = await db.select().from(urlInventory)
+            .where(eq(urlInventory.websiteId, siteId))
+            .orderBy(desc(urlInventory.lastDetectedAt))
+            .limit(Math.min(limit, 200));
+
+          return NextResponse.json({
+            jsonrpc: "2.0",
+            id,
+            result: {
+              content: [{ type: "text", text: JSON.stringify(inventory, null, 2) }]
+            }
+          });
+        }
+
+        case "index_page": {
+          const { url } = args || {};
+          if (!url || !url.startsWith("http")) {
+            return NextResponse.json({ id, error: { message: "Invalid URL provided." } }, { status: 400 });
+          }
+
+          const targetHost = new URL(url).hostname;
+          const allWebsites = await db.select().from(websites).where(eq(websites.userId, dbUser.id));
+          const matchedWebsite = allWebsites.find(w => {
+            try { return new URL(w.url).hostname === targetHost; } catch { return false; }
+          });
+
+          if (!matchedWebsite) {
+            return NextResponse.json({
+              id,
+              result: {
+                content: [{ type: "text", text: `Error: Website not found in your dashboard for hostname: ${targetHost}. Please add it first.` }]
+              }
+            });
+          }
+
+          // Run Audit and Submissions in parallel
+          const [audit, submissionResults] = await Promise.all([
+            auditWebsite(url),
+            triggerSubmissions(matchedWebsite, [url], dbUser.isPro ?? false)
+          ]);
+
+          return NextResponse.json({
+            jsonrpc: "2.0",
+            id,
+            result: {
+              content: [{ type: "text", text: JSON.stringify({
+                auditScore: audit.score,
+                auditIssues: audit.issues?.length || 0,
+                submissions: submissionResults.map(r => ({ engine: r.engine, status: r.status, error: r.errorMessage })),
+                auditDetails: audit
+              }, null, 2) }]
             }
           });
         }

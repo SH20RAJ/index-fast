@@ -8,15 +8,15 @@ import { Button } from "@/components/ui/button";
 import LandingProductPreview from "@/components/landing/LandingProductPreview";
 
 const checklist = [
-  "100% Safe: Uses official Google & Bing Indexing APIs",
-  "Automated discovery for new pages and updates",
-  "Beat competitors to search results within hours",
+  "Index pages from your IDE (Cursor, Windsurf, Claude Code)",
+  "No more manual Bing, Google, or Yandex Console visits",
+  "Beat competitors to search results within minutes",
 ];
 
 const stats = [
   { value: "4-24h", label: "Indexing Time" },
-  { value: "100%", label: "White-Hat Safe" },
-  { value: "10M+", label: "Pages Indexed" },
+  { value: "100%", label: "API-Official" },
+  { value: "5s", label: "IDE Response" },
 ];
 
 export default function Hero() {
@@ -31,10 +31,10 @@ export default function Hero() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-foreground"
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary"
             >
-              <Shield className="h-3 w-3 text-primary" />
-              Powered by official search engine APIs
+              <Zap className="h-3 w-3" />
+              Index while you code with IndexFast MCP
             </motion.div>
 
             <motion.h1
@@ -43,7 +43,7 @@ export default function Hero() {
               transition={{ duration: 0.55, delay: 0.05 }}
               className="text-balance text-4xl font-serif font-bold tracking-tight text-foreground sm:text-5xl lg:text-[4rem] lg:leading-[1.1]"
             >
-              Get indexed on Google in <span className="text-primary italic">24 hours</span> — not weeks.
+              Index your website from your <span className="text-primary italic">AI IDE</span> instantly.
             </motion.h1>
 
             <motion.p
@@ -52,7 +52,7 @@ export default function Hero() {
               transition={{ duration: 0.55, delay: 0.1 }}
               className="mx-auto mt-6 max-w-xl text-pretty text-base font-sans text-muted-foreground sm:text-lg lg:mx-0"
             >
-              Stop waiting for search engines to find you. Automate your indexing, monitor your rankings, and see your new pages go live instantly.
+              Stop switching between Bing, Google, and Yandex dashboards. Prompt Cursor, Windsurf, or Claude to index your new pages instantly via our Model Context Protocol.
             </motion.p>
 
             <motion.ul

@@ -34,16 +34,31 @@ npx mcp-remote https://www.indexfast.co/api/blog/mcp?key=YOUR_API_KEY
 ```
 
 ## Features & Tools
-
 ### Core Indexing Tools (`/api/mcp`)
 
-1. **`list_websites`**: Returns a list of all websites connected to your account.
-2. **`add_website`**: Add a new site (URL and optional sitemap).
-3. **`update_website`**: Update site config (API keys, sitemap, etc.).
-4. **`delete_website`**: Remove a site from your dashboard.
-5. **`submit_url`**: Trigger indexing for a specific URL.
+1. **`index_page`**: The "One-Prompt" indexing tool. Audits a URL and submits it to all connected search engines instantly. Best for newly coded pages.
+2. **`get_site_health`**: Get the current health, indexing coverage, and configuration status of a connected website.
+3. **`trigger_sitemap_sync`**: Manually trigger a sitemap crawl and sync to detect new URLs and submit them.
+4. **`list_url_inventory`**: List URLs in the inventory for a specific website, including their indexing status.
+5. **`list_websites`**: Returns a list of all websites connected to your account.
 6. **`seo_audit`**: Run an SEO audit and get fix prompts.
 7. **`get_usage`**: Check your monthly limits and usage.
+
+## Advanced Automation with LobeHub
+
+You can use [LobeHub](https://lobehub.com/) to set up advanced automation and cron jobs for your IndexFast MCP tools. 
+
+- **Cron Indexing:** Schedule regular `trigger_sitemap_sync` calls via LobeHub to ensure your site is always up to date without manual intervention.
+- **Auto-Audits:** Set up a weekly workflow to check `get_site_health` and alert you to any critical SEO regressions.
+
+## Setup in AI Clients
+
+### Cursor / Windsurf / Antigravity
+Use the SSE transport with the following URL in your IDE settings:
+`https://www.indexfast.co/api/mcp?key=YOUR_API_KEY`
+
+### Claude Code
+Connect using the official MCP config to enable instant indexing from your terminal while you build.
 
 ### Blog Management Tools (`/api/blog/mcp`)
 
