@@ -3,10 +3,10 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "IndexFast - Automated SEO Indexing",
+    name: "IndexFast - Index from AI IDE",
     short_name: "IndexFast",
     description:
-      "Automate sitemap discovery and URL submissions to IndexNow and Bing in one workflow.",
+      "Index your website from your AI IDE instantly. MCP-native automated SEO indexing workflows.",
     start_url: "/",
     scope: "/",
     display: "standalone",

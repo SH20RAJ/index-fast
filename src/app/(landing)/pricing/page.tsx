@@ -3,7 +3,7 @@ import Pricing from "@/components/landing/Pricing";
 
 export const metadata: Metadata = {
   title: "Pricing - IndexFast",
-  description: "Flexible pricing plans for automated SEO indexing and URL submission.",
+  description: "Flexible pricing plans to index your website from your AI IDE instantly. Start for free.",
   alternates: {
     canonical: "/pricing",
   },

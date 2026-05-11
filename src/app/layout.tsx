@@ -28,12 +28,12 @@ const firaCode = Fira_Code({
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
 const siteName = "IndexFast";
 const siteDescription =
-  "Automated indexing workflows for modern teams. Submit URLs faster to Bing and IndexNow, monitor sitemap changes, and improve organic discovery.";
+  "Index your website from your AI IDE instantly. Automated indexing workflows for modern teams — submit URLs to Bing, IndexNow, and Google with one click from Cursor or VS Code.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "IndexFast | Automated SEO Indexing",
+    default: "IndexFast | Index from your AI IDE",
     template: "%s | IndexFast",
   },
   description: siteDescription,
@@ -42,17 +42,19 @@ export const metadata: Metadata = {
   creator: siteName,
   publisher: siteName,
   category: "technology",
-  classification: "SEO, indexing automation, SaaS",
+  classification: "SEO, indexing automation, SaaS, MCP",
   authors: [{ name: siteName, url: siteUrl }],
   keywords: [
     "SEO indexing",
     "IndexNow",
     "Bing indexing",
+    "MCP server",
+    "Cursor indexing",
+    "VS Code SEO",
     "technical SEO",
     "sitemap indexing",
     "URL submission",
     "SEO tools",
-    "generative engine optimization",
   ],
   alternates: {
     canonical: "/",
@@ -90,7 +92,7 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName,
-    title: "IndexFast | Automated SEO Indexing",
+    title: "IndexFast | Index from your AI IDE",
     description: siteDescription,
     locale: "en_US",
     images: [
@@ -98,13 +100,13 @@ export const metadata: Metadata = {
         url: "/logo/og2.png",
         width: 1200,
         height: 630,
-        alt: "IndexFast automated SEO indexing platform preview",
+        alt: "IndexFast - Index from your AI IDE",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "IndexFast | Automated SEO Indexing",
+    title: "IndexFast | Index from your AI IDE",
     description: siteDescription,
     images: ["/og-marketing.png"],
     creator: "@indexfast",

@@ -48,11 +48,10 @@ const trustedCompanies = [
   "Storefront",
   "BlogMetrics"
 ];
-
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
-const title = "IndexFast - Automated SEO Indexing & URL Submission";
+const title = "IndexFast - Index your website from your AI IDE instantly";
 const description =
-  "Stop waiting for Google to crawl your site. IndexFast submits your URLs to Google, Bing, and IndexNow instantly for faster ranking and better SEO.";
+  "The first MCP-native indexing platform. Stop waiting for Google to crawl your site. Index your URLs to Google, Bing, and IndexNow instantly from Cursor or VS Code.";
 const keySitelinks = [
   { name: "How It Works", path: "/how-it-works" },
   { name: "Pricing", path: "/pricing" },
@@ -66,10 +65,16 @@ export const metadata: Metadata = {
   title,
   description,
   keywords: [
+    "index from ai ide",
+    "mcp indexing",
+    "cursor seo extension",
+    "vscode mcp server",
     "automated seo indexing",
     "indexnow url submission",
-    "bing url submission",
-    "google indexing speed",
+    "google sitemap ping",
+    "instant indexing",
+  ],
+
     "technical seo automation",
     "sitemap indexing",
     "indexing tool",
