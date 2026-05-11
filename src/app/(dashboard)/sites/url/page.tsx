@@ -11,8 +11,8 @@ export const metadata = {
   description: "Inspect sitemap URLs, URL inventory, and run manual submission workflows.",
 };
 
-function normalizeWebsiteOrigin(rawUrl: string) {
-  if (!rawUrl) return null;
+function normalizeWebsiteOrigin(rawUrl: any) {
+  if (!rawUrl || typeof rawUrl !== "string") return null;
 
   if (rawUrl.startsWith("sc-domain:")) {
     const domain = rawUrl.slice("sc-domain:".length).trim();
@@ -30,7 +30,7 @@ function normalizeWebsiteOrigin(rawUrl: string) {
 }
 
 interface SitesUrlPageProps {
-  searchParams?: Promise<{ siteId?: string; url?: string }>;
+  searchParams?: Promise<{ siteId?: string | string[]; url?: string | string[] }>;
 }
 
 export default async function SitesUrlPage({ searchParams }: SitesUrlPageProps) {
@@ -39,7 +39,11 @@ export default async function SitesUrlPage({ searchParams }: SitesUrlPageProps) 
     redirect("/handler/sign-in");
   }
 
-  await ensureUserRecord({ id: user.id, primaryEmail: user.primaryEmail });
+  try {
+    await ensureUserRecord({ id: user.id, primaryEmail: user.primaryEmail });
+  } catch (err) {
+    console.error("[SitesUrlPage] User sync failed:", err);
+  }
 
   const sites = await db
     .select({ id: websites.id, url: websites.url, sitemapUrl: websites.sitemapUrl })
@@ -47,14 +51,16 @@ export default async function SitesUrlPage({ searchParams }: SitesUrlPageProps) 
     .where(eq(websites.userId, user.id))
     .orderBy(desc(websites.createdAt));
 
-  const params = (await searchParams) ?? {};
+  const resolvedParams = (await searchParams) ?? {};
+  const siteIdParam = Array.isArray(resolvedParams.siteId) ? resolvedParams.siteId[0] : resolvedParams.siteId;
+  const urlParam = Array.isArray(resolvedParams.url) ? resolvedParams.url[0] : resolvedParams.url;
 
-  let selectedSiteId = params.siteId && sites.some((site) => site.id === params.siteId)
-    ? params.siteId
+  let selectedSiteId = siteIdParam && sites.some((site) => site.id === siteIdParam)
+    ? siteIdParam
     : null;
 
-  if (!selectedSiteId && params.url) {
-    const normalized = normalizeWebsiteOrigin(params.url);
+  if (!selectedSiteId && urlParam) {
+    const normalized = normalizeWebsiteOrigin(urlParam);
     if (normalized) {
       const match = sites.find(s => s.url === normalized);
       if (match) selectedSiteId = match.id;
