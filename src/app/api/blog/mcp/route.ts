@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { users, blogPosts } from "@/lib/db/schema";
+import { blogPosts } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { createHash } from "crypto";
 
 /**
- * Blog MCP (Model Context Protocol) Endpoint
+ * Blog MCP (Model Context Protocol) Endpoint - ADMIN ONLY
  * 
  * Supports list_tools and call_tool via JSON-RPC over HTTP.
- * Authentication: Authorization: Bearer <idx_key>
+ * Authentication: Authorization: Bearer <idx_key> OR ?key=<idx_key>
+ * Access restricted to admin via MD5 hash check of the API key.
  */
 
 export const dynamic = "force-dynamic";
@@ -53,7 +55,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     status: "online",
-    message: "IndexFast Blog MCP Endpoint is active. Use POST with JSON-RPC 2.0 to call tools.",
+    message: "IndexFast Blog MCP Endpoint is active (Admin Only). Use POST with JSON-RPC 2.0 to call tools.",
     docs: "https://indexfast.co/docs/mcp"
   });
 }
@@ -76,15 +78,14 @@ export async function POST(req: NextRequest) {
       apiKey = authHeader.replace("Bearer ", "");
     }
     
-    // 1. Authenticate User
-    const dbUser = await db.query.users.findFirst({
-      where: eq(users.apiKey, apiKey),
-    });
+    // 1. Authenticate Admin via MD5 Hash check
+    const apiKeyHash = createHash("md5").update(apiKey || "").digest("hex");
+    const isAdmin = apiKeyHash === "9f638745f4a7f3cec539539a73153c9e";
 
-    if (!dbUser) {
+    if (!isAdmin) {
       return NextResponse.json({ 
         jsonrpc: "2.0",
-        error: { code: -32001, message: "Unauthorized. Invalid API key." },
+        error: { code: -32001, message: "Unauthorized. Admin access required." },
         id 
       }, { status: 401 });
     }
