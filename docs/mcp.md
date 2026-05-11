@@ -1,53 +1,56 @@
 # Model Context Protocol (MCP) Support
 
-IndexFast supports the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/), allowing AI agents (like Claude Desktop, Windsurf, or Cursor) to interact with your indexing dashboard, submit URLs, and run SEO audits directly.
+IndexFast supports the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/), allowing AI agents (like Claude Desktop, Windsurf, or Cursor) to interact with your indexing dashboard and manage your blog content directly.
 
-## Getting Started
+## Endpoints
 
-The easiest way to set up MCP is to visit the **AI Agents (MCP)** section in your [dashboard](https://www.indexfast.co/dashboard/mcp). There, you will find:
-- Your personal API key.
-- Pre-configured JSON snippets for Claude Desktop.
-- Step-by-step connection guides for Cursor and Windsurf.
+IndexFast provides two dedicated MCP endpoints for different management tasks:
 
-## Endpoint
-
+### 1. Core Indexing MCP
 - **URL:** `https://www.indexfast.co/api/mcp`
-- **Method:** `POST`
-- **Auth:** `Authorization: Bearer <YOUR_API_KEY>`
+- **Purpose:** Manage websites, submit URLs for indexing, and run SEO audits.
+- **Auth:** `?key=<YOUR_API_KEY>` or `Authorization: Bearer <YOUR_API_KEY>`
 
-You can find your API key in the [API Settings](https://www.indexfast.co/dashboard/api) of your dashboard.
+### 2. Blog Management MCP
+- **URL:** `https://www.indexfast.co/api/blog/mcp`
+- **Purpose:** Full CRUD operations for your IndexFast blog.
+- **Auth:** `?key=<YOUR_API_KEY>` or `Authorization: Bearer <YOUR_API_KEY>`
+
+You can find your API key in the [Settings](https://www.indexfast.co/settings) of your dashboard.
+
+## Connection Options
+
+### SSE (Recommended)
+Both endpoints support the standard **SSE (Server-Sent Events)** transport, which is the easiest way to connect to modern AI tools like Cursor, Windsurf, or `mcp-remote`.
+
+**Example for Cursor/Windsurf:**
+Use the SSE transport with the following URL:
+`https://www.indexfast.co/api/mcp?key=YOUR_API_KEY`
+
+### npx mcp-remote
+You can test the connectivity and tools using `mcp-remote`:
+```bash
+npx mcp-remote https://www.indexfast.co/api/blog/mcp?key=YOUR_API_KEY
+```
 
 ## Features & Tools
 
-The MCP endpoint exposes several tools that AI models can use:
+### Core Indexing Tools (`/api/mcp`)
 
-### 1. `list_websites`
-Returns a list of all websites connected to your IndexFast account.
-- **Inputs:** None
+1. **`list_websites`**: Returns a list of all websites connected to your account.
+2. **`add_website`**: Add a new site (URL and optional sitemap).
+3. **`update_website`**: Update site config (API keys, sitemap, etc.).
+4. **`delete_website`**: Remove a site from your dashboard.
+5. **`submit_url`**: Trigger indexing for a specific URL.
+6. **`seo_audit`**: Run an SEO audit and get fix prompts.
+7. **`get_usage`**: Check your monthly limits and usage.
 
-### 2. `get_usage`
-Returns your current monthly indexing usage, submission limits, and current plan details.
-- **Inputs:** None
+### Blog Management Tools (`/api/blog/mcp`)
 
-### 3. `submit_url`
-Triggers an indexing request for a specific URL. 
-- **Inputs:**
-  - `url` (string): The full URL to index. Note: The URL's domain must already be connected to your account.
-
-### 4. `seo_audit`
-Runs a comprehensive SEO audit on a URL and returns a score, a list of issues, and recommended fix prompts.
-- **Inputs:**
-  - `url` (string): The full URL to audit.
-
-### 5. `list_recent_submissions`
-Shows the most recent indexing events and their current status (success/failed).
-- **Inputs:**
-  - `limit` (number, optional): Number of events to return. Max 50.
-
-### 6. `get_site_details`
-Returns the full configuration and status for a specific site (including Sitemap URL, Bing API keys, etc.).
-- **Inputs:**
-  - `siteId` (string): The unique ID of the site (can be found via `list_websites`).
+1. **`list_blog_posts`**: List all existing blog post slugs and titles.
+2. **`get_blog_post`**: Get full details, metadata, and sections of a post.
+3. **`create_or_update_blog_post`**: Create new posts or update existing ones. Supports Markdown content or JSON-structured sections.
+4. **`delete_blog_post`**: Remove a post and revalidate the site.
 
 ## Setup in AI Clients
 
@@ -57,24 +60,18 @@ Add the following to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "indexfast": {
-      "command": "curl",
-      "args": [
-        "-s",
-        "-X", "POST",
-        "-H", "Authorization: Bearer YOUR_API_KEY",
-        "-H", "Content-Type: application/json",
-        "-d", "{\"method\":\"initialize\",\"jsonrpc\":\"2.0\",\"id\":1,\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"claude-desktop\",\"version\":\"1.0.0\"}}}",
-        "https://www.indexfast.co/api/mcp"
-      ]
+    "indexfast-core": {
+      "url": "https://www.indexfast.co/api/mcp?key=YOUR_API_KEY"
+    },
+    "indexfast-blog": {
+      "url": "https://www.indexfast.co/api/blog/mcp?key=YOUR_API_KEY"
     }
   }
 }
 ```
-*Note: Using `curl` as a command is a simple way to connect. For a more robust setup, use the official MCP SDK with an SSE transport.*
 
 ## Benefits for Developers
 
 - **Auto-Indexing from IDE:** Ask your AI assistant to "Index the page I just finished" without leaving your code editor.
-- **SEO Debugging:** Get instant SEO feedback on your localhost or production URLs while you work.
-- **Dashboard at your fingertips:** Check your usage and site status via chat.
+- **Content Management via Chat:** Draft, edit, and publish blog posts using simple natural language commands.
+- **SEO Debugging:** Get instant SEO feedback on your URLs while you work.
