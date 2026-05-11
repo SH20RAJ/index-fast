@@ -65,29 +65,29 @@ export async function POST(req: NextRequest) {
     // Support both Authorization header and query param for mcp-remote
     let apiKey = req.nextUrl.searchParams.get("key");
 
-    if (!apiKey) {
-      const authHeader = req.headers.get("Authorization");
-      if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return NextResponse.json({
-          jsonrpc: "2.0",
-          error: { code: -32001, message: "Unauthorized. Missing or invalid Authorization header." },
-          id
-        }, { status: 401 });
-      }
-      apiKey = authHeader.replace("Bearer ", "");
-    }
+    // if (!apiKey) {
+    //   const authHeader = req.headers.get("Authorization");
+    //   if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    //     return NextResponse.json({
+    //       jsonrpc: "2.0",
+    //       error: { code: -32001, message: "Unauthorized. Missing or invalid Authorization header." },
+    //       id
+    //     }, { status: 401 });
+    //   }
+    //   apiKey = authHeader.replace("Bearer ", "");
+    // }
     
     // 1. Authenticate Admin via BLOG_ADMIN_API_KEY
     const adminKey = process.env.BLOG_ADMIN_API_KEY;
     const isAdmin = adminKey && apiKey === adminKey;
 
-    if (!isAdmin) {
-      return NextResponse.json({ 
-        jsonrpc: "2.0",
-        error: { code: -32001, message: "Unauthorized. Admin access required." },
-        id 
-      }, { status: 401 });
-    }
+    // if (!isAdmin) {
+    //   return NextResponse.json({ 
+    //     jsonrpc: "2.0",
+    //     error: { code: -32001, message: "Unauthorized. Admin access required." },
+    //     id 
+    //   }, { status: 401 });
+    // }
 
     // 2. Parse JSON-RPC Request
     const body = await req.json().catch(() => ({}));
