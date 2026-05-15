@@ -448,7 +448,7 @@ export async function saveCronJobAction(_: ActionState, formData: FormData): Pro
       });
     }
 
-    revalidatePath(`/sites/url`);
+    revalidatePath(`/sites/${websiteId}`);
     return { status: "success", message: "Auto-run settings saved." };
   } catch (error) {
     return { status: "error", message: "Failed to save auto-run settings." };
@@ -460,9 +460,11 @@ export async function deleteCronJobAction(_: ActionState, formData: FormData): P
     const user = await getAuthedUser();
     const jobId = String(formData.get("jobId") ?? "");
 
+    const websiteId = String(formData.get("websiteId") ?? "");
+
     await db.delete(cronJobs).where(eq(cronJobs.id, jobId));
 
-    revalidatePath(`/sites/url`);
+    revalidatePath(`/sites/${websiteId}`);
     return { status: "success", message: "Auto-run task removed." };
   } catch (error) {
     return { status: "error", message: "Failed to remove auto-run task." };
@@ -793,7 +795,7 @@ export async function updateWebsiteSitemapAction(_: ActionState, formData: FormD
 
     revalidatePath("/sites");
     revalidatePath("/dashboard");
-    revalidatePath(`/sites/url`);
+    revalidatePath(`/sites/${websiteId}`);
 
     return { status: "success", message: "Sitemap URL updated." };
   } catch (error) {

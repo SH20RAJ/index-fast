@@ -68,6 +68,7 @@ export default function AutomationManager({ websiteId, cronJobs, onRefresh }: Au
   const handleDelete = async (jobId: string) => {
     const formData = new FormData();
     formData.append("jobId", jobId);
+    formData.append("websiteId", websiteId);
     await delAction(formData);
     toast.success("Auto-run task removed.");
     await onRefresh();

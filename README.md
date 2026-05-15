@@ -1,75 +1,96 @@
-# IndexFast — Lean & Fast SEO Indexing SaaS
+# ⚡ IndexFast — Instant SEO Indexing for AI-Era Websites
 
-Automated search engine indexing for bloggers, vibe coders, and SEO enthusiasts. No AI bloat, just speed, results, and maximum AI visibility.
+IndexFast is a high-performance SEO indexing engine designed for the AI-first web. It automates the process of notifying Google, Bing, and IndexNow about your new content, ensuring your pages are indexed within minutes instead of weeks.
 
-## 🎯 Target Audience
-- **Vibe Coders:** Developers who want to launch fast and see immediate indexing results.
-- **Bloggers & Content Creators:** People who ship daily and need their new posts on Google/Bing within minutes.
-- **E-commerce Store Owners:** Need new product pages indexed instantly to start capturing seasonal or trending traffic.
-- **Programmatic SEO (pSEO) Builders:** Managing 10,000+ pages that need systematic crawling and indexing coordination.
-- **AI-Focused Brands:** Ensuring content is indexed in Bing to appear in ChatGPT, Copilot, and Perplexity answers.
+---
 
-## 🛠️ Core Features
+## 🎯 The IndexFast Mission
+In the era of AI search (ChatGPT, Perplexity, Copilot), visibility starts with indexing. IndexFast removes the friction between "Published" and "Indexed," giving your content the priority it deserves.
 
-### 1. Automated Sitemap Pinger
-- **How it works:** Add a sitemap URL once.
-- **Sync:** Runs every hour via Vercel Cron.
-- **Action:** Automatically detects new URLs and pushes them to IndexNow, Bing Batch API, and Universal Ping services.
+- **Vibe Coders:** Launch fast, index faster.
+- **Bloggers:** Your content on Bing/Google before the "New Post" notification even hits.
+- **pSEO Builders:** Manage indexing for 100k+ pages with zero manual effort.
+- **AI-Focused Brands:** Maximize discoverability in Generative Search Engines.
 
-### 2. Instant Bing & IndexNow Submission
-- **Bing API:** Uses `SubmitUrlbatch` for high-volume URL submission.
-- **IndexNow:** Real-time notification to Bing, Yandex, and other participating engines.
-- **Key Verification:** Simple automated check to ensure your `indexnow.txt` is correctly placed.
+---
 
-### 3. SEO Tools Directory (100+ Tools)
-- **Built-in Utilities:** 35+ native tools for indexability checks, sitemap audits, robots.txt testing, and more.
-- **Curated Alternatives:** 80+ curated external tools with tier badges (free/freemium/limited-free) for professional-grade SEO workflows.
-- **Categories:** Indexing/Crawl, Keyword Research, Backlink Analysis, Domain Authority, Metadata & Snippets.
+## ✨ Key Features
 
-### 4. AI & GEO (Generative Engine Optimization)
-- **AI View:** See exactly what LLMs (ChatGPT, Claude) read from your pages.
-- **Discoverability Score:** Track how likely your content is to be cited by AI assistants.
-- **AI Chatbot:** Built-in SEO assistant powered by NVIDIA's Qwen models to help you optimize content in real-time.
+### 🚀 **Automation Manager (Auto-Run)**
+Set it and forget it. IndexFast scans your sitemaps and feeds every 24 hours, automatically submitting new URLs to Bing and IndexNow.
+- **Intelligent Diffing:** Only submits truly new or updated content.
+- **Conflict Resolution:** Handles rate limits and engine-specific constraints.
 
-### 5. MCP Support (Model Context Protocol)
-- **AI-First:** Connect IndexFast to your AI agents (Claude Desktop, Cursor, Windsurf).
-- **Tooling:** Submit URLs, run SEO audits, and check usage directly from your chat interface or IDE.
+### 🛠️ **The SEO Toolbox**
+A curated directory of 120+ SEO utilities, including:
+- **Indexability Checks:** Real-time validation of robots.txt and meta tags.
+- **Sitemap Audits:** Deep scan of your sitemap structure and link health.
+- **GEO Optimizer:** Analyze how AI agents perceive and cite your content.
+
+### 🤖 **AI Agents & MCP**
+IndexFast speaks the language of AI. With built-in **Model Context Protocol (MCP)** support, you can control your indexing workflow directly from AI IDEs like **Cursor**, **Windsurf**, or **Claude Desktop**.
+- *"Rank all new URLs to search engines using IndexNow"*
+- *"Run a technical SEO audit on my latest site"*
+
+### 📱 **High-Polish Dashboard**
+A minimalist, high-contrast dashboard built with **Tailwind CSS v4** and **OKLCH** colors.
+- **Multi-Property Support:** Manage all your domains from a single interface.
+- **Real-time Logs:** Track every submission and engine response with detailed diagnostics.
+
+---
 
 ## 💻 Tech Stack
 
 - **Framework:** [Next.js 15+](https://nextjs.org/) (App Router, React 19)
-- **Authentication:** [Stack Auth](https://stack-auth.com/)
+- **Auth:** [Stack Auth](https://stack-auth.com/) (Managed User Identity)
+- **Database:** [PostgreSQL](https://neon.tech/) + [Drizzle ORM](https://orm.drizzle.team/)
 - **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
-- **Database:** [PostgreSQL](https://www.postgresql.org/) (via Drizzle ORM)
-- **Payments:** [Dodo Payments](https://dodopayments.com/)
-- **AI Backend:** [NVIDIA API](https://build.nvidia.com/) (Qwen/Qwen2.5-Coder-32B)
-- **Automation:** Vercel Cron Jobs
+- **Compute:** Vercel Cron + Serverless Functions
 
-## 🚀 Local Development
+---
 
-Install and run:
+## 🚀 Getting Started
 
+### 1. Install Dependencies
 ```bash
-pnpm install
-pnpm dev
+bun install
 ```
 
-Open `http://localhost:3000`.
-
-### Required Environment Variables
-
+### 2. Configure Environment
+Create a `.env.local` file:
 ```bash
-DATABASE_URL=
-NEXT_PUBLIC_SITE_URL=
-CRON_SECRET=
+# Database
+DATABASE_URL=postgresql://user:pass@host/db
+
+# Authentication (Stack Auth)
+NEXT_PUBLIC_STACK_PROJECT_ID=
+NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=
+STACK_SECRET_SERVER_KEY=
+
+# AI & Tools
 NVIDIA_API_KEY=
-DODO_PAYMENTS_API_KEY=
-DODO_PRODUCT_ID_PRO=
-DODO_PRODUCT_ID_AGENCY=
+CRON_SECRET=
 ```
 
-## 📜 Principles
-- Keep it simple & fast.
-- Focus on practical SEO & AI visibility.
-- Build for revenue from day one.
-- Mobile-first, accessible, and high-polish design.
+### 3. Initialize Database
+```bash
+bunx drizzle-kit push
+```
+
+### 4. Launch Development Server
+```bash
+bun dev
+```
+
+---
+
+## 📜 Architectural Principles
+
+Detailed technical documentation can be found in:
+- [**INDEXFAST.md**](./INDEXFAST.md): Database schema and directory structure.
+- [**DESIGN.md**](./DESIGN.md): UI/UX principles and OKLCH color tokens.
+- [**AGENTS.md**](./AGENTS.md): Guidelines for AI Agents working on this repo.
+
+---
+
+Built with ⚡ by **IndexFast Team**.
