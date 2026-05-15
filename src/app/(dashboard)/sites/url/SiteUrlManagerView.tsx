@@ -18,17 +18,16 @@ import PageHeader from "@/components/dashboard/PageHeader";
 import { useSiteContext } from "@/components/dashboard/SiteContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select } from "@/components/ui/select";
 import { updateWebsiteSitemapAction } from "@/app/(dashboard)/actions";
 import { toast } from "sonner";
-import { useActionState } from "react";
 
 // Sub-components
 import SummaryStats from "./_components/SummaryStats";
 import ManualPushCard from "./_components/ManualPushCard";
 import ExternalLinks from "./_components/ExternalLinks";
 import HealthStats from "./_components/HealthStats";
-import UrlPulseList from "./_components/UrlPulseList";
+import SitemapManager from "./_components/SitemapManager";
+import ConfigEditor from "./_components/ConfigEditor";
 
 type SubmitMode = "sitemap" | "urls";
 
@@ -44,7 +43,9 @@ interface SiteUrlsPayload {
     url: string;
     sitemapUrl: string | null;
     indexNowKey: string | null;
+    indexNowKeyLocation: string | null;
     bingApiKey: string | null;
+    bingApiKeyLastFour: string | null;
     lastSyncAt: string | null;
   };
   sitemaps: {
@@ -62,6 +63,13 @@ interface SiteUrlsPayload {
       lastSubmittedAt: string | null;
     }>;
   };
+  sources: Array<{
+    id: string;
+    url: string;
+    type: string;
+    enabled: boolean;
+    lastFetchedAt: string | null;
+  }>;
   recentSubmissions: Array<{
     id: string;
     engine: "indexnow" | "bing" | "google" | "pingomatic" | "pingler";
@@ -168,12 +176,8 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
       const res = await updateWebsiteSitemapAction({ status: "idle", message: "" }, formData);
       if (res.status === "success") {
         toast.success("Sitemap stored permanently.");
-        // Refresh payload
         const refreshed = await fetch(`/api/websites/${siteId}/urls`, { cache: "no-store" });
-        if (refreshed.ok) {
-          const nextPayload = await refreshed.json();
-          setPayload(nextPayload);
-        }
+        if (refreshed.ok) setPayload(await refreshed.json());
       } else {
         toast.error(res.message || "Failed to store sitemap.");
       }
@@ -186,7 +190,6 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
 
   const handleSubmit = async (mode: SubmitMode) => {
     if (!siteId) return;
-
     setSubmitting(true);
     setSubmitResult(null);
 
@@ -202,19 +205,11 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Submission failed.");
-      }
+      if (!response.ok) throw new Error(data.error || "Submission failed.");
 
       setSubmitResult(data as SubmitResponse);
-
-      // Refresh payload to show updated inventory/stats
       const refreshed = await fetch(`/api/websites/${siteId}/urls`, { cache: "no-store" });
-      if (refreshed.ok) {
-        const nextPayload = await refreshed.json();
-        setPayload(nextPayload);
-      }
+      if (refreshed.ok) setPayload(await refreshed.json());
     } catch (err) {
       setError(err instanceof Error ? err.message : "Submission failed.");
     } finally {
@@ -222,63 +217,18 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
     }
   };
 
-  const handleExport = (format: "csv" | "json") => {
-    if (!payload) return;
-
-    const allUrls = [
-      ...(payload.inventory.urls || []),
-      ...(payload.sitemapPreview.urls || []).map(url => ({ url, isIndexed: null, lastDetectedAt: null }))
-    ];
-
-    let content: string;
-    let filename: string;
-
-    if (format === "csv") {
-      const headers = ["URL", "Status", "Last Detected"];
-      const rows = allUrls.map((u) => {
-        const url = typeof u === "string" ? u : u.url;
-        const status = typeof u === "object" && u.isIndexed !== null ? (u.isIndexed ? "Indexed" : "Not Indexed") : "Unknown";
-        const lastDetected = typeof u === "object" && u.lastDetectedAt ? new Date(u.lastDetectedAt).toLocaleString() : "N/A";
-        return [`"${url.replace(/"/g, '""')}"`, status, `"${lastDetected}"`];
-      });
-      content = [headers, ...rows].map((row) => row.join(",")).join("\n");
-      filename = `urls-${new Date().toISOString().split("T")[0]}.csv`;
-    } else {
-      content = JSON.stringify(allUrls, null, 2);
-      filename = `urls-${new Date().toISOString().split("T")[0]}.json`;
-    }
-
-    const blob = new Blob([content], { type: format === "csv" ? "text/csv" : "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
   if (sites.length === 0) {
     return (
       <div className="space-y-6 pb-16">
-        <PageHeader 
-          title="Site URLs" 
-          description="Inspect sitemaps, URL inventory, and push manual submissions." 
-        />
+        <PageHeader title="Site URLs" description="Inspect sitemap URLs, URL inventory, and run manual submission workflows." />
         <Card className="border-dashed border-2 bg-muted/20">
           <CardContent className="flex flex-col items-center justify-center py-16 text-center space-y-4">
             <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
               <Globe className="h-8 w-8 text-muted-foreground/40" />
             </div>
-            <div className="space-y-1">
-              <h3 className="text-xl font-black tracking-tighter">No websites found</h3>
-              <p className="text-sm font-medium text-muted-foreground max-w-xs mx-auto">
-                Add a website first to inspect URLs and submit to IndexNow/Bing.
-              </p>
-            </div>
-            <Button asChild className="font-black rounded-xl shadow-lg shadow-primary/10">
-              <Link href="/sites">Go to Websites</Link>
+            <h3 className="text-xl font-black tracking-tighter">No websites found</h3>
+            <Button asChild className="font-black rounded-xl shadow-lg">
+              <Link href="/sites/new">Add Website</Link>
             </Button>
           </CardContent>
         </Card>
@@ -288,54 +238,33 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
 
   return (
     <div className="space-y-12 pb-20 max-w-6xl mx-auto">
-      {/* Header & Site Selector */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/40 pb-8">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Live Property View</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">Property Analysis</span>
           </div>
-          <h1 className="text-4xl font-serif font-bold tracking-tight text-foreground">Site Intelligence</h1>
-          <p className="text-sm text-muted-foreground/80 mt-1 max-w-md">Analyze discovered URLs and manage indexing signal distribution across global search networks.</p>
+          <h1 className="text-4xl font-serif font-bold tracking-tight text-foreground">Site Management</h1>
+          <p className="text-sm text-muted-foreground/80 mt-1 max-w-md">Manage sitemaps, configure indexing protocols, and broadcast signals to search engines.</p>
         </div>
-        
-      
       </div>
 
       {loading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-md animate-in fade-in duration-500">
-          <div className="relative group">
-            {/* Soft glow background */}
-            <div className="absolute -inset-4 rounded-[3rem] bg-primary/20 blur-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-1000 animate-pulse" />
-            
-            <div className="relative bg-white/80 dark:bg-zinc-900/80 p-10 rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white dark:border-white/5 flex flex-col items-center gap-6 min-w-[280px]">
-              <div className="relative flex items-center justify-center">
-                <div className="absolute h-16 w-16 rounded-full border-2 border-primary/5 animate-spin-slow" />
-                <div className="absolute h-12 w-12 rounded-full border-2 border-t-primary/40 border-r-transparent border-b-transparent border-l-transparent animate-spin-reverse" />
-                <Loader2 className="h-10 w-10 animate-spin text-primary stroke-[1.5px]" />
-              </div>
-              <div className="space-y-1.5 text-center">
-                <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-zinc-900 dark:text-zinc-100">Synchronizing</p>
-                <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 italic">Fetching latest GSC data...</p>
-              </div>
-            </div>
-          </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/40 backdrop-blur-md">
+          <Loader2 className="h-10 w-10 animate-spin text-primary" />
         </div>
       )}
 
       {error && (
-        <div className="p-6 rounded-[2rem] bg-red-500/5 border border-red-500/10 flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
-          <AlertCircle className="h-5 w-5 text-red-500" />
-          <div>
-            <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest">Protocol Error</p>
-            <p className="text-xs text-red-600/80 font-medium">{error}</p>
-          </div>
-        </div>
+        <Alert variant="destructive" className="rounded-[2rem]">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
       {payload && (
-        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-          {/* Top Row: Summary Stats */}
+        <div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <SummaryStats 
             inventoryTotal={payload.inventory.total}
             sitemapCount={payload.sitemapPreview.count}
@@ -343,7 +272,26 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
             hasBingApiKey={!!payload.website.bingApiKey}
           />
 
-          {/* Main Workspace: Manual Actions & Secondary Data */}
+          <SitemapManager 
+            websiteId={siteId}
+            sources={payload.sources}
+            onRefresh={async () => {
+              const res = await fetch(`/api/websites/${siteId}/urls`, { cache: "no-store" });
+              if (res.ok) setPayload(await res.json());
+            }}
+          />
+
+          <ConfigEditor 
+            websiteId={siteId}
+            indexNowKey={payload.website.indexNowKey}
+            indexNowKeyLocation={payload.website.indexNowKeyLocation}
+            bingApiKeyLastFour={payload.website.bingApiKeyLastFour}
+            onRefresh={async () => {
+              const res = await fetch(`/api/websites/${siteId}/urls`, { cache: "no-store" });
+              if (res.ok) setPayload(await res.json());
+            }}
+          />
+
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
             <div className="space-y-8">
               <ManualPushCard 
@@ -358,17 +306,9 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
                 onSaveSitemap={handleSaveSitemap}
                 savingSitemap={savingSitemap}
               />
-              
-              {/* URL Pulse List moved into the main area for better prominence */}
-              <UrlPulseList 
-                inventoryUrls={payload.inventory.urls}
-                sitemapUrls={payload.sitemapPreview.urls}
-                onExport={handleExport}
-              />
             </div>
 
             <div className="space-y-8">
-              {/* Sidebar Content */}
               <div className="p-8 rounded-[2.5rem] bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow-xl shadow-zinc-900/10">
                 <div className="flex items-center gap-2 mb-6">
                   <div className="h-1.5 w-1.5 rounded-full bg-primary" />
@@ -384,9 +324,6 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
                     <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Last Intelligence Sync</p>
                     <p className="text-sm font-medium">{payload.website.lastSyncAt ? new Date(payload.website.lastSyncAt).toLocaleString() : 'Pending first sync'}</p>
                   </div>
-                  <Button asChild variant="outline" className="w-full h-12 rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 text-white dark:border-zinc-950/10 dark:bg-zinc-950/5 dark:hover:bg-zinc-950/10 dark:text-zinc-950 font-bold uppercase tracking-widest text-[10px] mt-4">
-                    <Link href={`/sites/jobs?siteId=${siteId}`}>Configure Automation</Link>
-                  </Button>
                 </div>
               </div>
 

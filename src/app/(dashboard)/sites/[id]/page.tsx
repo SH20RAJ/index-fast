@@ -7,8 +7,8 @@ import { ensureUserRecord } from "@/lib/db/user-sync";
 import SiteUrlManagerView from "../url/SiteUrlManagerView";
 
 export const metadata = {
-  title: "Site URLs",
-  description: "Inspect sitemap URLs, URL inventory, and run manual submission workflows.",
+  title: "Site Management",
+  description: "Manage sitemaps and indexing connectivity.",
 };
 
 interface SitePageProps {
@@ -42,7 +42,7 @@ export default async function SitePage({ params }: SitePageProps) {
   }
 
   if (sites.length === 0) {
-    redirect("/dashboard");
+    redirect("/my-sites");
   }
 
   return <SiteUrlManagerView sites={sites} initialSiteId={id} />;

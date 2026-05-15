@@ -51,7 +51,7 @@ const navSections: NavSection[] = [
     items: [
       {
         label: "My Sites",
-        href: "/dashboard",
+        href: "/my-sites",
         icon: Globe,
       },
       {

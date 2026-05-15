@@ -309,6 +309,22 @@ export async function addWebsiteSourceAction(_: ActionState, formData: FormData)
   }
 }
 
+export async function deleteWebsiteSourceAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const sourceId = String(formData.get("sourceId") ?? "");
+
+    if (!sourceId) return { status: "error", message: "Missing source id." };
+
+    await db.delete(websiteSources).where(and(eq(websiteSources.id, sourceId), eq(websiteSources.userId, user.id)));
+
+    revalidatePath("/dashboard");
+    return { status: "success", message: "Source removed." };
+  } catch (error) {
+    return { status: "error", message: "Failed to delete source." };
+  }
+}
+
 export async function updateIndexNowSettingsAction(_: ActionState, formData: FormData): Promise<ActionState> {
   try {
     const user = await getAuthedUser();

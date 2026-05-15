@@ -2,7 +2,7 @@ import { and, desc, eq, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { stackServerApp } from "@/stack";
 import { db } from "@/lib/db";
-import { submissions, urlInventory, websites } from "@/lib/db/schema";
+import { submissions, urlInventory, websites, websiteSources } from "@/lib/db/schema";
 import { parseSitemap } from "@/lib/utils/sitemap-parser";
 
 function extractDiscoveredSitemaps(siteHealth: unknown): string[] {
@@ -38,7 +38,7 @@ export async function GET(
     return NextResponse.json({ error: "Website not found" }, { status: 404 });
   }
 
-  const [inventoryRows, latestSubmissions, statsRows] = await Promise.all([
+  const [inventoryRows, latestSubmissions, statsRows, sourcesRows] = await Promise.all([
     db
       .select({
         id: urlInventory.id,
@@ -73,6 +73,10 @@ export async function GET(
       .from(submissions)
       .where(eq(submissions.websiteId, website.id))
       .groupBy(submissions.engine),
+    db
+      .select()
+      .from(websiteSources)
+      .where(eq(websiteSources.websiteId, website.id)),
   ]);
 
   const discoveredSitemaps = extractDiscoveredSitemaps(website.siteHealth);
@@ -121,6 +125,7 @@ export async function GET(
       failed: Number(row.failed || 0),
     })),
     sitemapPreview,
+    sources: sourcesRows,
   });
 }
 
