@@ -26,8 +26,9 @@ import SummaryStats from "./_components/SummaryStats";
 import ManualPushCard from "./_components/ManualPushCard";
 import ExternalLinks from "./_components/ExternalLinks";
 import HealthStats from "./_components/HealthStats";
-import SitemapManager from "./_components/SitemapManager";
 import ConfigEditor from "./_components/ConfigEditor";
+import AutomationManager from "./_components/AutomationManager";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type SubmitMode = "sitemap" | "urls";
 
@@ -82,6 +83,14 @@ interface SiteUrlsPayload {
     total: number;
     success: number;
     failed: number;
+  }>;
+  cronJobs: Array<{
+    id: string;
+    engine: "indexnow" | "bing" | "google";
+    frequency: string;
+    sourceMode: string;
+    enabled: boolean;
+    nextRunAt: string | null;
   }>;
   sitemapPreview: {
     count: number;
@@ -272,65 +281,94 @@ export default function SiteUrlManagerView({ sites, initialSiteId }: SiteUrlMana
             hasBingApiKey={!!payload.website.bingApiKey}
           />
 
-          <SitemapManager 
-            websiteId={siteId}
-            sources={payload.sources}
-            onRefresh={async () => {
-              const res = await fetch(`/api/websites/${siteId}/urls`, { cache: "no-store" });
-              if (res.ok) setPayload(await res.json());
-            }}
-          />
-
-          <ConfigEditor 
-            websiteId={siteId}
-            indexNowKey={payload.website.indexNowKey}
-            indexNowKeyLocation={payload.website.indexNowKeyLocation}
-            bingApiKeyLastFour={payload.website.bingApiKeyLastFour}
-            onRefresh={async () => {
-              const res = await fetch(`/api/websites/${siteId}/urls`, { cache: "no-store" });
-              if (res.ok) setPayload(await res.json());
-            }}
-          />
-
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
-            <div className="space-y-8">
-              <ManualPushCard 
-                sitemapUrl={sitemapUrl}
-                onSitemapUrlChange={setSitemapUrl}
-                manualUrls={manualUrls}
-                onManualUrlsChange={setManualUrls}
-                submitting={submitting}
-                onSubmit={handleSubmit}
-                submitResult={submitResult}
-                sitemapCandidates={payload.sitemaps.candidates}
-                onSaveSitemap={handleSaveSitemap}
-                savingSitemap={savingSitemap}
-              />
+          <Tabs defaultValue="manual" className="space-y-12">
+            <div className="flex items-center justify-between border-b border-border/40 pb-4">
+              <TabsList className="h-14 p-1 rounded-2xl bg-muted/40 backdrop-blur-sm border border-border/20">
+                <TabsTrigger value="manual" className="rounded-xl px-8 font-black tracking-tight data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all">
+                  Manual Push
+                </TabsTrigger>
+                <TabsTrigger value="auto" className="rounded-xl px-8 font-black tracking-tight data-[state=active]:bg-background data-[state=active]:shadow-lg transition-all flex gap-2">
+                  Auto-Run
+                  <Badge variant="secondary" className="h-5 rounded-full px-1.5 bg-primary/10 text-primary border-none text-[9px] font-black">
+                    AI
+                  </Badge>
+                </TabsTrigger>
+              </TabsList>
             </div>
 
-            <div className="space-y-8">
-              <div className="p-8 rounded-[2.5rem] bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow-xl shadow-zinc-900/10">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">Property Meta</span>
+            <TabsContent value="manual" className="space-y-16 focus-visible:outline-none focus-visible:ring-0">
+              <SitemapManager 
+                websiteId={siteId}
+                sources={payload.sources}
+                onRefresh={async () => {
+                  const res = await fetch(`/api/websites/${siteId}/urls`, { cache: "no-store" });
+                  if (res.ok) setPayload(await res.json());
+                }}
+              />
+
+              <ConfigEditor 
+                websiteId={siteId}
+                indexNowKey={payload.website.indexNowKey}
+                indexNowKeyLocation={payload.website.indexNowKeyLocation}
+                bingApiKeyLastFour={payload.website.bingApiKeyLastFour}
+                onRefresh={async () => {
+                  const res = await fetch(`/api/websites/${siteId}/urls`, { cache: "no-store" });
+                  if (res.ok) setPayload(await res.json());
+                }}
+              />
+
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
+                <div className="space-y-8">
+                  <ManualPushCard 
+                    sitemapUrl={sitemapUrl}
+                    onSitemapUrlChange={setSitemapUrl}
+                    manualUrls={manualUrls}
+                    onManualUrlsChange={setManualUrls}
+                    submitting={submitting}
+                    onSubmit={handleSubmit}
+                    submitResult={submitResult}
+                    sitemapCandidates={payload.sitemaps.candidates}
+                    onSaveSitemap={handleSaveSitemap}
+                    savingSitemap={savingSitemap}
+                  />
                 </div>
-                <h3 className="text-xl font-serif font-bold tracking-tight mb-4">Quick Insights</h3>
-                <div className="space-y-6">
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Primary Origin</p>
-                    <p className="text-sm font-medium truncate">{payload.website.url}</p>
+
+                <div className="space-y-8">
+                  <div className="p-8 rounded-[2.5rem] bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 shadow-xl shadow-zinc-900/10">
+                    <div className="flex items-center gap-2 mb-6">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      <span className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">Property Meta</span>
+                    </div>
+                    <h3 className="text-xl font-serif font-bold tracking-tight mb-4">Quick Insights</h3>
+                    <div className="space-y-6">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Primary Origin</p>
+                        <p className="text-sm font-medium truncate">{payload.website.url}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Last Intelligence Sync</p>
+                        <p className="text-sm font-medium">{payload.website.lastSyncAt ? new Date(payload.website.lastSyncAt).toLocaleString() : 'Pending first sync'}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-40">Last Intelligence Sync</p>
-                    <p className="text-sm font-medium">{payload.website.lastSyncAt ? new Date(payload.website.lastSyncAt).toLocaleString() : 'Pending first sync'}</p>
-                  </div>
+
+                  <HealthStats stats={payload.stats} />
+                  <ExternalLinks websiteUrl={payload.website.url} />
                 </div>
               </div>
+            </TabsContent>
 
-              <HealthStats stats={payload.stats} />
-              <ExternalLinks websiteUrl={payload.website.url} />
-            </div>
-          </div>
+            <TabsContent value="auto" className="space-y-12 focus-visible:outline-none focus-visible:ring-0">
+              <AutomationManager 
+                websiteId={siteId}
+                cronJobs={payload.cronJobs}
+                onRefresh={async () => {
+                  const res = await fetch(`/api/websites/${siteId}/urls`, { cache: "no-store" });
+                  if (res.ok) setPayload(await res.json());
+                }}
+              />
+            </TabsContent>
+          </Tabs>
         </div>
       )}
     </div>

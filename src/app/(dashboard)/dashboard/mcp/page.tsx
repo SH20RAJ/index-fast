@@ -204,14 +204,25 @@ export default async function McpPage() {
 
           <Card className="rounded-3xl border-primary/10 bg-primary/5 p-6 relative overflow-hidden group">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(244,63,94,0.1),transparent_70%)]" />
-            <div className="relative space-y-3">
+            <div className="relative space-y-4">
               <h4 className="text-sm font-bold flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
-                Magic moment
+                Magic moments
               </h4>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
-                "Index this page for me" — Say this to your agent after configuring IndexFast MCP, and watch your content go live instantly.
-              </p>
+              <div className="space-y-3">
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/5">
+                  <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest">Single Page</p>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                    "Index this page for me" — Say this to your agent and watch your content go live instantly.
+                  </p>
+                </div>
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/5">
+                  <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest">Full Site</p>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                    "Rank all new URLs to search engines" — The ultimate command to sync your entire inventory.
+                  </p>
+                </div>
+              </div>
             </div>
           </Card>
         </div>

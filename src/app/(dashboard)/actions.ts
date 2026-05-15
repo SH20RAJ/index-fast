@@ -4,7 +4,7 @@ import { and, count, desc, eq, gte, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
-import { submissions, users, websites, websiteSources } from "@/lib/db/schema";
+import { submissions, users, websites, websiteSources, cronJobs } from "@/lib/db/schema";
 
 import { ensureUserRecord } from "@/lib/db/user-sync";
 import { PLAN_DEFINITIONS, PlanDefinition, PlanId, getPlanDefinition, resolvePlanId } from "@/lib/billing/plans";
@@ -413,6 +413,59 @@ export async function updateAutomationSettingsAction(_: ActionState, formData: F
     return { status: "success", message: "Automation settings updated." };
   } catch (error) {
     return { status: "error", message: "Failed to update settings." };
+  }
+}
+
+export async function saveCronJobAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const websiteId = String(formData.get("websiteId") ?? "");
+    const engine = String(formData.get("engine") ?? "indexnow") as any;
+    const frequency = String(formData.get("frequency") ?? "daily");
+    const sourceMode = String(formData.get("sourceMode") ?? "inventory");
+    const enabled = formData.get("enabled") === "true";
+
+    // Check if a cron job already exists for this engine
+    const existing = await db.query.cronJobs.findFirst({
+      where: and(eq(cronJobs.websiteId, websiteId), eq(cronJobs.engine, engine))
+    });
+
+    if (existing) {
+      await db.update(cronJobs).set({
+        frequency,
+        sourceMode,
+        enabled,
+        updatedAt: new Date(),
+      }).where(eq(cronJobs.id, existing.id));
+    } else {
+      await db.insert(cronJobs).values({
+        websiteId,
+        engine,
+        frequency,
+        sourceMode,
+        enabled,
+        nextRunAt: new Date(),
+      });
+    }
+
+    revalidatePath(`/sites/url`);
+    return { status: "success", message: "Auto-run settings saved." };
+  } catch (error) {
+    return { status: "error", message: "Failed to save auto-run settings." };
+  }
+}
+
+export async function deleteCronJobAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const jobId = String(formData.get("jobId") ?? "");
+
+    await db.delete(cronJobs).where(eq(cronJobs.id, jobId));
+
+    revalidatePath(`/sites/url`);
+    return { status: "success", message: "Auto-run task removed." };
+  } catch (error) {
+    return { status: "error", message: "Failed to remove auto-run task." };
   }
 }
 

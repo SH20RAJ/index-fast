@@ -156,6 +156,20 @@ export default function IndexNowKeyPage() {
                 </p>
               </div>
             </section>
+
+            {/* Video Tutorial */}
+            <div className="my-12 p-1 rounded-[2.5rem] bg-gradient-to-br from-primary/20 to-transparent">
+              <div className="overflow-hidden rounded-[2.4rem] bg-zinc-950 aspect-video shadow-2xl">
+                <iframe 
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/P8BvSg1H-M4" 
+                  title="How to set up IndexNow Key"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowFullScreen
+                ></iframe>
+              </div>
+              <p className="text-[10px] text-center font-bold uppercase tracking-widest text-muted-foreground mt-4">Visual Guide: Setting up IndexNow Key</p>
+            </div>
           </div>
 
           {/* Security Deep Dive */}
