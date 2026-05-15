@@ -127,7 +127,7 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
 
               <div className="flex items-center gap-2 sm:ml-auto">
                 <Button asChild variant="ghost" size="sm" className="h-9 rounded-lg text-xs font-bold gap-1.5 px-3">
-                  <Link href={`/sites/url?siteId=${site.id}`}>
+                  <Link href={`/sites/${site.id}`}>
                     Manage <ArrowUpRight className="h-3 w-3" />
                   </Link>
                 </Button>

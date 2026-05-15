@@ -87,7 +87,7 @@ function SiteCard({ site }: { site: DashboardSiteSummary }) {
           </div>
           <div className="flex gap-2">
             <Button variant="ghost" size="sm" className="h-8 px-2 text-xs" asChild>
-              <Link href={`/dashboard/sites/edit/${site.id}`}>
+              <Link href={`/sites/${site.id}`}>
                 <Edit2 className="mr-1.5 h-3 w-3" />
                 Edit
               </Link>

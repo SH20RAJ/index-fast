@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useSiteContext } from "@/components/dashboard/SiteContext";
-import WebsiteSwitcher from "@/components/dashboard/WebsiteSwitcher";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import { useStackApp, useUser } from "@stackframe/stack";
@@ -111,16 +110,7 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   const { websites, selectedSite, setSelectedSite } = useSiteContext();
 
   const getHref = (href: string) => {
-    if (!selectedSite || 
-        href.startsWith('http') || 
-        href.startsWith('/toolbox') || 
-        href.startsWith('/blogs') || 
-        href.startsWith('/settings') || 
-        href.startsWith('/tools')) {
-      return href;
-    }
-    const separator = href.includes("?") ? "&" : "?";
-    return `${href}${separator}url=${encodeURIComponent(selectedSite.url)}`;
+    return href;
   };
 
   const displayName = user?.displayName?.trim() || "User";
@@ -178,12 +168,6 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
           </div>
         </div>
 
-        {/* Global Site Selector */}
-        {websites.length > 0 && (
-          <div className="mt-6">
-            <WebsiteSwitcher />
-          </div>
-        )}
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto px-4 py-2">
@@ -195,11 +179,12 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
               </p>
               <div className="space-y-0.5">
                 {section.items.map((item) => {
-                  const hasChildren = Boolean(item.children?.length);
+                  const isMySites = item.label === "My Sites";
+                  const hasChildren = Boolean(item.children?.length) || (isMySites && websites.length > 0);
                   const active = item.href
                     ? isActive(item.href) || Boolean(item.children?.some((child) => isChildActive(child.href)))
                     : false;
-                  const submenuOpen = openSubmenu === item.label;
+                  const submenuOpen = openSubmenu === item.label || (isMySites && websites.length > 0);
 
                   return (
                     <div key={item.label}>
@@ -228,9 +213,28 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                             )} />
                           </Button>
                           
-                          {submenuOpen && item.children && (
+                          {submenuOpen && (
                             <div className="mt-0.5 ml-4 space-y-0.5 border-l border-zinc-200 dark:border-zinc-800 pl-4 py-1 animate-in slide-in-from-left-2 duration-300">
-                              {item.children.map((child) => {
+                              {isMySites && websites.map((site) => {
+                                const siteHref = `/sites/${site.id}`;
+                                const childActive = isChildActive(siteHref);
+                                return (
+                                  <Link
+                                    key={site.id}
+                                    href={siteHref}
+                                    onClick={handleNavClick}
+                                    className={cn(
+                                      "block rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200 truncate",
+                                      childActive
+                                        ? "text-primary"
+                                        : "text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                                    )}
+                                  >
+                                    {site.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                                  </Link>
+                                );
+                              })}
+                              {!isMySites && item.children && item.children.map((child) => {
                                 const childActive = isChildActive(child.href);
                                 return (
                                   <Link
