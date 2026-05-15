@@ -4,7 +4,7 @@ import { stackServerApp } from "@/stack";
 import { db } from "@/lib/db";
 import { websites } from "@/lib/db/schema";
 import { ensureUserRecord } from "@/lib/db/user-sync";
-import SiteUrlManagerView from "../url/SiteUrlManagerView";
+import SiteUrlManagerView from "./SiteUrlManagerView";
 
 export const metadata = {
   title: "Site Management",
