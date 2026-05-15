@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { 
   Key, 
-  Bing, // Note: I should use a generic icon if Bing icon isn't available
+  Search,
   Settings2,
   Save,
   Loader2,
