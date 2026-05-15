@@ -51,84 +51,24 @@ const navSections: NavSection[] = [
     label: "Main",
     items: [
       {
-        label: "Home",
+        label: "My Sites",
         href: "/dashboard",
-        icon: LayoutDashboard,
-      },
-      // {
-      //   label: "Stats",
-      //   href: "/dashboard/insights",
-      //   icon: LineChart,
-      // },
-    ],
-  },
-  {
-    label: "Sites",
-    items: [
-      {
-        label: "Websites",
-        href: "/sites",
         icon: Globe,
       },
-      {
-        label: "Pages",
-        href: "/sites/url",
-        icon: LayoutDashboard,
-      },
-      {
-        label: "Automation",
-        href: "/sites/jobs",
-        icon: RefreshCw,
-      },
-    ],
-  },
-  {
-    label: "Reports",
-    items: [
-      {
-        label: "Recent Activity",
-        href: "/submissions",
-        icon: Activity,
-      },
-      {
-        label: "Sitemaps",
-        href: "/dashboard/sitemaps",
-        icon: Box,
-      },
-    ]
-  },
-  {
-    label: "AI",
-    items: [
-      // {
-      //   label: "AI Assistant",
-      //   href: "/dashboard/chat",
-      //   icon: Bot,
-      // },
       {
         label: "AI Agents (MCP)",
         href: "/dashboard/mcp",
         icon: Bot,
       },
-    ],
-  },
-  
-  {
-    label: "Tools",
-    items: [
       {
         label: "Toolbox",
         href: "/toolbox",
         icon: Wrench,
       },
-      {
-        label: "Free Tools",
-        href: "/tools",
-        icon: Settings,
-      },
     ],
   },
 ];
+
 
 function SidebarItem({ 
   item, 

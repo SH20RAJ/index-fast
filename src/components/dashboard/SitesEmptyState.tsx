@@ -1,7 +1,8 @@
 "use client";
 
 import { Globe } from "lucide-react";
-import AddSiteFlow from "@/components/dashboard/AddSiteFlow";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function SitesEmptyState() {
   return (
@@ -16,8 +17,9 @@ export default function SitesEmptyState() {
           Connect your Google Search Console or add a website manually to get started.
         </p>
       </div>
-
-      <AddSiteFlow />
+      <Button asChild className="h-11 px-8 rounded-full font-bold">
+        <Link href="/sites/new">Add website</Link>
+      </Button>
     </div>
   );
 }

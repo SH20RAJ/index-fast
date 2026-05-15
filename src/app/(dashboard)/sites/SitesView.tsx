@@ -16,12 +16,12 @@ import {
   ChevronRight,
   MoreVertical,
   Activity,
-  ArrowUpRight
+  ArrowUpRight,
+  Plus
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import PageHeader from "@/components/dashboard/PageHeader";
-import AddSiteFlow from "@/components/dashboard/AddSiteFlow";
 import {
   deleteWebsiteAction,
   runWebsiteSyncAction,
@@ -78,7 +78,12 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
           <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
              {initialSites.length} / {websiteLimit} Used
           </div>
-          <AddSiteFlow />
+          <Button asChild className="rounded-full font-bold h-10 px-6 gap-2">
+            <Link href="/sites/new">
+              <Plus className="h-4 w-4" />
+              Add Website
+            </Link>
+          </Button>
         </div>
       </div>
 

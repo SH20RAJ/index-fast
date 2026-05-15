@@ -4,8 +4,9 @@ import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardTopBar from "@/components/dashboard/DashboardTopBar";
 import { SiteProvider, type WebsiteBasic } from "@/components/dashboard/SiteContext";
 import { LogProvider } from "@/components/dashboard/LogContext";
-import AddSiteFlow from "@/components/dashboard/AddSiteFlow";
 import ChatAssistant from "@/components/dashboard/ChatAssistant";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
 export default function DashboardShell({
   children,
@@ -39,7 +40,13 @@ export default function DashboardShell({
           {/* Floating Actions */}
           <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-4">
             <ChatAssistant />
-            <AddSiteFlow floating />
+            <Link
+              href="/sites/new"
+              className="group flex h-14 w-14 items-center justify-center rounded-full bg-zinc-950 shadow-2xl shadow-black/40 ring-1 ring-white/10 transition-all duration-300 hover:scale-110 hover:shadow-primary/30 dark:bg-white"
+              title="Add Website"
+            >
+              <Plus className="h-6 w-6 text-white dark:text-zinc-950 transition-transform duration-300 group-hover:rotate-90" />
+            </Link>
           </div>
         </div>
       </LogProvider>

@@ -96,7 +96,7 @@ export default function WebsiteSwitcher() {
           <CommandSeparator className="bg-border/50" />
           
           <div className="p-1.5">
-            <Link href="/sites" onClick={() => setOpen(false)}>
+            <Link href="/sites/new" onClick={() => setOpen(false)}>
               <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-primary/5 text-primary transition-colors cursor-pointer group">
                 <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                   <PlusCircle className="h-4 w-4" />

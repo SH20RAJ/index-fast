@@ -4,7 +4,8 @@ import { and, count, desc, eq, gte, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
-import { submissions, users, websites } from "@/lib/db/schema";
+import { submissions, users, websites, websiteSources } from "@/lib/db/schema";
+
 import { ensureUserRecord } from "@/lib/db/user-sync";
 import { PLAN_DEFINITIONS, PlanDefinition, PlanId, getPlanDefinition, resolvePlanId } from "@/lib/billing/plans";
 import { stackServerApp } from "@/stack";
@@ -30,9 +31,15 @@ export interface DashboardSubmission {
 
 export interface DashboardSiteSummary {
   id: string;
+  name: string;
+  domain: string;
   url: string;
+  sitemapUrl: string | null;
   lastSyncAt: Date | null;
-  submissions: number;
+  indexNowVerified: boolean;
+  bingApiKeyLastFour: string | null;
+  autoIndexingEnabled: boolean;
+  sourceCount: number;
 }
 
 export interface DashboardData {
@@ -41,10 +48,7 @@ export interface DashboardData {
   planId: PlanId;
   plan: PlanDefinition;
   websitesCount: number;
-  submissionsThisMonth: number;
-  successfulThisMonth: number;
-  recentSubmissions: DashboardSubmission[];
-  topSites: DashboardSiteSummary[];
+  sites: DashboardSiteSummary[];
   usage: {
     websitesUsed: number;
     websitesLimit: number;
@@ -52,6 +56,7 @@ export interface DashboardData {
     submissionsLimit: number;
   };
 }
+
 
 export async function getAuthedUser() {
   console.log("[Dashboard] Calling Stack getUser()...");
@@ -242,164 +247,175 @@ export async function openBillingPortalAction() {
   redirect(portal.link);
 }
 
-export async function addWebsiteAction(_: ActionState, formData: FormData): Promise<ActionState> {
+export async function createWebsiteAction(_: ActionState, formData: FormData): Promise<ActionState> {
   try {
     const user = await getAuthedUser();
+    const name = String(formData.get("name") ?? "").trim();
+    const websiteUrl = normalizeWebsiteUrl(String(formData.get("url") ?? ""));
+    const sitemapUrl = normalizeOptionalUrl(formData.get("sitemapUrl")?.toString() ?? null);
+
+    if (!name) return { status: "error", message: "Website name is required." };
+
     const { plan } = await getSubscriptionSnapshot(user.id);
     const total = await getWebsiteUsageCount(user.id);
 
     if (total >= plan.websiteLimit) {
       return {
         status: "error",
-        message: `Your ${plan.name} plan allows up to ${plan.websiteLimit} websites. Upgrade to add more.`,
+        message: `Your ${plan.name} plan allows up to ${plan.websiteLimit} websites.`,
       };
     }
 
-    const websiteUrl = normalizeWebsiteUrl(String(formData.get("url") ?? ""));
+    const domain = new URL(websiteUrl).hostname;
 
-    // Check for duplicates
-    const [existing] = await db
-      .select()
-      .from(websites)
-      .where(and(eq(websites.url, websiteUrl), eq(websites.userId, user.id)))
-      .limit(1);
-
-    if (existing) {
-      return {
-        status: "error",
-        message: "This website has already been added to your account.",
-      };
-    }
-
-    const sitemapUrl = normalizeOptionalUrl(formData.get("sitemapUrl")?.toString() ?? null);
-    const indexNowKey = String(formData.get("indexNowKey") ?? "").trim() || null;
-    const bingApiKey = String(formData.get("bingApiKey") ?? "").trim() || null;
-    const indexNowKeyLocationUrl = normalizeOptionalAbsoluteUrl(
-      formData.get("indexNowKeyLocationUrl")?.toString() ?? null,
-      "IndexNow key location URL"
-    );
-    const yandexToken = String(formData.get("yandexToken") ?? "").trim() || null;
-    const baiduToken = String(formData.get("baiduToken") ?? "").trim() || null;
-    const naverToken = String(formData.get("naverToken") ?? "").trim() || null;
-
-    const siteHealth = indexNowKeyLocationUrl
-      ? {
-          indexing: {
-            indexNow: {
-              keyLocationUrl: indexNowKeyLocationUrl,
-            },
-          },
-        }
-      : null;
-
-    await db.insert(websites).values({
+    const [newSite] = await db.insert(websites).values({
       userId: user.id,
+      name,
+      domain,
       url: websiteUrl,
       sitemapUrl,
-      indexNowKey,
-      bingApiKey,
-      yandexToken,
-      baiduToken,
-      naverToken,
-      siteHealth,
-    });
+      indexNowVerified: false,
+      autoIndexingEnabled: false,
+    }).returning();
 
-    revalidatePath("/sites");
     revalidatePath("/dashboard");
-    return { status: "success", message: "Website added successfully." };
+    return { status: "success", message: "Website created.", data: newSite.id };
   } catch (error) {
-    return {
-      status: "error",
-      message: error instanceof Error ? error.message : "Failed to add website.",
-    };
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to create website." };
   }
 }
 
-export async function updateWebsiteIndexingKeysAction(_: ActionState, formData: FormData): Promise<ActionState> {
+export async function addWebsiteSourceAction(_: ActionState, formData: FormData): Promise<ActionState> {
   try {
     const user = await getAuthedUser();
-    const websiteId = String(formData.get("websiteId") ?? "").trim();
+    const websiteId = String(formData.get("websiteId") ?? "");
+    const url = String(formData.get("url") ?? "").trim();
+    const type = String(formData.get("type") ?? "sitemap") as any;
 
-    if (!websiteId) {
-      return { status: "error", message: "Missing website id." };
-    }
+    if (!websiteId || !url) return { status: "error", message: "Missing required fields." };
 
-    const [website] = await db
-      .select()
-      .from(websites)
-      .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+    await db.insert(websiteSources).values({
+      websiteId,
+      userId: user.id,
+      url,
+      type,
+      enabled: true,
+    });
 
-    const indexNowKey = String(formData.get("indexNowKey") ?? "").trim() || null;
-    const bingApiKey = String(formData.get("bingApiKey") ?? "").trim() || null;
-    const yandexToken = String(formData.get("yandexToken") ?? "").trim() || null;
-    const baiduToken = String(formData.get("baiduToken") ?? "").trim() || null;
-    const naverToken = String(formData.get("naverToken") ?? "").trim() || null;
-
-    const indexNowKeyLocationUrl = normalizeOptionalAbsoluteUrl(
-      formData.get("indexNowKeyLocationUrl")?.toString() ?? null,
-      "IndexNow key location URL"
-    );
-
-    const currentSiteHealth = ((website.siteHealth as Record<string, unknown> | null) ?? {}) as Record<string, unknown>;
-    const nextSiteHealth: Record<string, unknown> = { ...currentSiteHealth };
-    const indexing =
-      typeof nextSiteHealth.indexing === "object" && nextSiteHealth.indexing !== null
-        ? { ...(nextSiteHealth.indexing as Record<string, unknown>) }
-        : {};
-    const indexNow =
-      typeof indexing.indexNow === "object" && indexing.indexNow !== null
-        ? { ...(indexing.indexNow as Record<string, unknown>) }
-        : {};
-
-    if (indexNowKeyLocationUrl) {
-      indexNow.keyLocationUrl = indexNowKeyLocationUrl;
-    } else {
-      delete indexNow.keyLocationUrl;
-    }
-
-    if (Object.keys(indexNow).length > 0) {
-      indexing.indexNow = indexNow;
-    } else {
-      delete indexing.indexNow;
-    }
-
-    if (Object.keys(indexing).length > 0) {
-      nextSiteHealth.indexing = indexing;
-    } else {
-      delete nextSiteHealth.indexing;
-    }
-
-    await db
-      .update(websites)
-      .set({
-        indexNowKey,
-        bingApiKey,
-        yandexToken,
-        baiduToken,
-        naverToken,
-        siteHealth: Object.keys(nextSiteHealth).length > 0 ? nextSiteHealth : null,
-      })
-      .where(eq(websites.id, websiteId));
-
-    revalidatePath("/sites");
     revalidatePath("/dashboard");
-
-    return { status: "success", message: "Indexing credentials updated." };
+    return { status: "success", message: "Source added." };
   } catch (error) {
-    return {
-      status: "error",
-      message: error instanceof Error ? error.message : "Failed to update indexing credentials.",
-    };
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to add source." };
   }
 }
 
-export async function importGscSitesAction(_: ActionState, _formData: FormData): Promise<ActionState> {
-  return {
-    status: "error",
-    message: "GSC Import is deprecated. Focus on SEO features first.",
-  };
+export async function updateIndexNowSettingsAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const websiteId = String(formData.get("websiteId") ?? "");
+    const indexNowKey = String(formData.get("indexNowKey") ?? "").trim();
+    const indexNowKeyLocation = String(formData.get("indexNowKeyLocation") ?? "").trim();
+
+    await db.update(websites).set({
+      indexNowKey,
+      indexNowKeyLocation,
+      updatedAt: new Date(),
+    }).where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+
+    return { status: "success", message: "IndexNow settings saved." };
+  } catch (error) {
+    return { status: "error", message: error instanceof Error ? error.message : "Failed to save settings." };
+  }
 }
 
+export async function verifyIndexNowKeyAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const websiteId = String(formData.get("websiteId") ?? "");
+
+    const [website] = await db.select().from(websites).where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+    if (!website || !website.indexNowKey || !website.indexNowKeyLocation) {
+      return { status: "error", message: "IndexNow not configured." };
+    }
+
+    try {
+      const resp = await fetch(website.indexNowKeyLocation);
+      const body = await resp.text();
+      if (body.includes(website.indexNowKey)) {
+        await db.update(websites).set({ indexNowVerified: true }).where(eq(websites.id, websiteId));
+        return { status: "success", message: "Key verified successfully!" };
+      }
+      return { status: "error", message: "Key not found at the specified URL." };
+    } catch (e) {
+      return { status: "error", message: "Could not fetch the key file. Check the URL." };
+    }
+  } catch (error) {
+    return { status: "error", message: "Verification failed." };
+  }
+}
+
+export async function updateBingApiKeyAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const websiteId = String(formData.get("websiteId") ?? "");
+    const bingApiKey = String(formData.get("bingApiKey") ?? "").trim();
+
+    if (!bingApiKey) {
+      await db.update(websites).set({
+        bingApiKey: null,
+        bingApiKeyLastFour: null,
+      }).where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+      return { status: "success", message: "Bing API key removed." };
+    }
+
+    const lastFour = bingApiKey.slice(-4);
+    await db.update(websites).set({
+      bingApiKey, // Simple storage for now as requested
+      bingApiKeyLastFour: lastFour,
+    }).where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+
+    return { status: "success", message: "Bing API key saved." };
+  } catch (error) {
+    return { status: "error", message: "Failed to save Bing API key." };
+  }
+}
+
+export async function updateAutomationSettingsAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const websiteId = String(formData.get("websiteId") ?? "");
+    const autoIndexingEnabled = formData.get("autoIndexingEnabled") === "on";
+    const pingsEnabled = formData.get("pingsEnabled") === "on";
+
+    await db.update(websites).set({
+      autoIndexingEnabled,
+      pingsEnabled,
+      updatedAt: new Date(),
+    }).where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+
+    revalidatePath("/dashboard");
+    return { status: "success", message: "Automation settings updated." };
+  } catch (error) {
+    return { status: "error", message: "Failed to update settings." };
+  }
+}
+
+export async function runFirstSyncAction(_: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const user = await getAuthedUser();
+    const websiteId = String(formData.get("websiteId") ?? "");
+
+    // Using existing processWebsiteIndexing service
+    const result = await processWebsiteIndexing(websiteId);
+    
+    await db.update(websites).set({ lastSyncAt: new Date() }).where(eq(websites.id, websiteId));
+
+    revalidatePath("/dashboard");
+    return { status: "success", message: "First sync completed successfully!" };
+  } catch (error) {
+    return { status: "error", message: "First sync failed." };
+  }
+}
 export async function runWebsiteSyncAction(_: ActionState, formData: FormData): Promise<ActionState> {
   try {
     const user = await getAuthedUser();
@@ -429,8 +445,6 @@ export async function runWebsiteSyncAction(_: ActionState, formData: FormData): 
     }
 
     const result = await processWebsiteIndexing(websiteId);
-    revalidatePath("/sites");
-    revalidatePath("/submissions");
     revalidatePath("/dashboard");
 
     if ("newUrlsCount" in result) {
@@ -459,9 +473,7 @@ export async function deleteWebsiteAction(_: ActionState, formData: FormData): P
       .delete(websites)
       .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
 
-    revalidatePath("/sites");
     revalidatePath("/dashboard");
-    revalidatePath("/submissions");
     return { status: "success", message: "Website removed." };
   } catch (error) {
     return {
@@ -482,45 +494,32 @@ export async function loadDashboardData(): Promise<DashboardData> {
     const planId = resolvePlanId(userRow?.subscriptionStatus ?? null, userRow?.isPro ?? false);
     const plan = getPlanDefinition(planId);
 
-    console.log("[Dashboard] Fetching counts and submissions...");
-    const [websiteResult, submissionsResult, successfulResult, recentSubmissions, topSitesRaw] = await Promise.all([
-      db.select({ count: count() }).from(websites).where(eq(websites.userId, user.id)),
+    console.log("[Dashboard] Fetching websites and usage...");
+    const [websitesRaw, submissionsResult] = await Promise.all([
+      db.select({
+        id: websites.id,
+        name: websites.name,
+        domain: websites.domain,
+        url: websites.url,
+        sitemapUrl: websites.sitemapUrl,
+        lastSyncAt: websites.lastSyncAt,
+        indexNowVerified: websites.indexNowVerified,
+        bingApiKeyLastFour: websites.bingApiKeyLastFour,
+        autoIndexingEnabled: websites.autoIndexingEnabled,
+        sourceCount: sql<number>`(SELECT count(*) FROM ${websiteSources} WHERE ${websiteSources.websiteId} = ${websites.id})`,
+      }).from(websites).where(eq(websites.userId, user.id)),
       db.select({ count: count() }).from(submissions)
         .innerJoin(websites, eq(submissions.websiteId, websites.id))
         .where(and(eq(websites.userId, user.id), gte(submissions.createdAt, monthStart))),
-      db.select({ count: count() }).from(submissions)
-        .innerJoin(websites, eq(submissions.websiteId, websites.id))
-        .where(and(eq(websites.userId, user.id), gte(submissions.createdAt, monthStart), eq(submissions.status, "success"))),
-      db.select({
-        id: submissions.id,
-        websiteId: websites.id,
-        websiteUrl: websites.url,
-        url: submissions.url,
-        engine: submissions.engine,
-        status: submissions.status,
-        createdAt: submissions.createdAt,
-      }).from(submissions)
-        .innerJoin(websites, eq(submissions.websiteId, websites.id))
-        .where(eq(websites.userId, user.id))
-        .orderBy(desc(submissions.createdAt))
-        .limit(8),
-      db.select({
-        id: websites.id,
-        url: websites.url,
-        lastSyncAt: websites.lastSyncAt,
-        submissions: sql<number>`count(${submissions.id})`,
-      }).from(websites)
-        .leftJoin(submissions, eq(submissions.websiteId, websites.id))
-        .where(eq(websites.userId, user.id))
-        .groupBy(websites.id)
-        .orderBy(desc(sql<number>`count(${submissions.id})`))
-        .limit(5)
     ]);
 
-    const websitesCount = websiteResult[0]?.count ?? 0;
+    const websitesCount = websitesRaw.length;
     const submissionsThisMonth = submissionsResult[0]?.count ?? 0;
-    const successfulThisMonth = successfulResult[0]?.count ?? 0;
-    const topSites = topSitesRaw.map((site) => ({ ...site, submissions: Number(site.submissions || 0) }));
+    
+    const sites: DashboardSiteSummary[] = websitesRaw.map(site => ({
+      ...site,
+      sourceCount: Number(site.sourceCount || 0)
+    }));
 
     return {
       userId: user.id,
@@ -528,10 +527,7 @@ export async function loadDashboardData(): Promise<DashboardData> {
       planId,
       plan,
       websitesCount,
-      submissionsThisMonth,
-      successfulThisMonth,
-      recentSubmissions,
-      topSites,
+      sites,
       usage: {
         websitesUsed: websitesCount,
         websitesLimit: plan.websiteLimit,
@@ -541,7 +537,6 @@ export async function loadDashboardData(): Promise<DashboardData> {
     };
   } catch (error) {
     console.error("[Dashboard] Critical data load failure:", error);
-    // Return a safe fallback state instead of 500-ing
     const fallbackPlan = getPlanDefinition("free");
     return {
       userId: user.id,
@@ -549,10 +544,7 @@ export async function loadDashboardData(): Promise<DashboardData> {
       planId: "free",
       plan: fallbackPlan,
       websitesCount: 0,
-      submissionsThisMonth: 0,
-      successfulThisMonth: 0,
-      recentSubmissions: [],
-      topSites: [],
+      sites: [],
       usage: {
         websitesUsed: 0,
         websitesLimit: fallbackPlan.websiteLimit,
@@ -562,6 +554,7 @@ export async function loadDashboardData(): Promise<DashboardData> {
     };
   }
 }
+
 
 export async function refreshGscMetadataAction(_: ActionState, _formData: FormData): Promise<ActionState> {
   return {

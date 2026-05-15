@@ -96,20 +96,44 @@ export const userSubscriptions = pgTable("user_subscriptions", {
 export const websites = pgTable("websites", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: text("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
-  url: text("url").notNull(),
-  sitemapUrl: text("sitemap_url"),
+  name: text("name").notNull(),
+  domain: text("domain").notNull(),
+  url: text("url").notNull(), // This is the website URL
+  sitemapUrl: text("sitemap_url"), // Primary sitemap URL
   indexNowKey: text("indexnow_key"),
-  bingApiKey: text("bing_api_key"),
-  yandexToken: text("yandex_token"),
-  baiduToken: text("baidu_token"),
-  naverToken: text("naver_token"),
-  siteHealth: jsonb("site_health"), // Storing errors, warnings from audits
+  indexNowKeyLocation: text("indexnow_key_location"),
+  indexNowVerified: boolean("indexnow_verified").default(false),
+  bingApiKey: text("bing_api_key"), // Original field, will keep for compatibility or use for encrypted value
+  bingApiKeyLastFour: text("bing_api_key_last_four"),
+  autoIndexingEnabled: boolean("auto_indexing_enabled").default(false),
+  pingsEnabled: boolean("pings_enabled").default(true),
   lastSyncAt: timestamp("last_sync_at"),
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 }, (table) => ({
   userIdIdx: index("idx_websites_user_id").on(table.userId),
   createdAtIdx: index("idx_websites_created_at").on(table.createdAt),
 }));
+
+/**
+ * Website Sources: Sitemap or Feed URLs linked to a website
+ */
+export const websiteSources = pgTable("website_sources", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  websiteId: uuid("website_id").references(() => websites.id, { onDelete: "cascade" }).notNull(),
+  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  url: text("url").notNull(),
+  type: text("type").notNull(), // 'sitemap', 'sitemap_index', 'rss', 'atom', 'other'
+  enabled: boolean("enabled").default(true).notNull(),
+  lastFetchedAt: timestamp("last_fetched_at"),
+  lastStatus: text("last_status"),
+  lastError: text("last_error"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => ({
+  websiteIdIdx: index("idx_website_sources_website_id").on(table.websiteId),
+}));
+
 
 /**
  * URL Inventory: Tracking individual URLs and their AI metrics
@@ -259,4 +283,7 @@ export type ChatMessage = typeof chatMessages.$inferSelect;
 export type NewChatMessage = typeof chatMessages.$inferInsert;
 export type BlogPost = typeof blogPosts.$inferSelect;
 export type NewBlogPost = typeof blogPosts.$inferInsert;
+export type WebsiteSource = typeof websiteSources.$inferSelect;
+export type NewWebsiteSource = typeof websiteSources.$inferInsert;
+
 
