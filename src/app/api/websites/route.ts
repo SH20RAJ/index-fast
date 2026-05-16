@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { websites } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { stackServerApp } from "@/stack";
 import { ensureUserRecord } from "@/lib/db/user-sync";
@@ -39,11 +39,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
 
+    // Normalize URL to origin to prevent duplicates like http vs https
+    let normalizedUrl: string;
+    try {
+      const parsed = new URL(url);
+      normalizedUrl = parsed.origin;
+    } catch {
+      return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
+    }
+
+    // Check for duplicate URL for this user
+    const existing = await db.query.websites.findFirst({
+      where: and(eq(websites.userId, user.id), eq(websites.url, normalizedUrl)),
+    });
+    if (existing) {
+      return NextResponse.json({ error: "You have already added this website." }, { status: 409 });
+    }
+
     const [newWebsite] = await db
       .insert(websites)
       .values({
         userId: user.id,
-        url,
+        url: normalizedUrl,
         sitemapUrl,
         indexNowKey,
         bingApiKey,

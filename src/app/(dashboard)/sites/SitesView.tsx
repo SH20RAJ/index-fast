@@ -1,32 +1,27 @@
 "use client";
 
-import { useState, useMemo, useActionState } from "react";
+import { useState, useMemo, useTransition } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { 
-  Globe, 
-  RefreshCw, 
-  Trash2, 
-  BarChart3, 
+import {
+  Globe,
+  RefreshCw,
+  Trash2,
+  BarChart3,
   Search,
-  ExternalLink,
-  ChevronRight,
-  MoreVertical,
-  Activity,
   ArrowUpRight,
-  Plus
+  Plus,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import PageHeader from "@/components/dashboard/PageHeader";
 import {
   deleteWebsiteAction,
   runWebsiteSyncAction,
 } from "@/app/(dashboard)/actions";
-import { defaultActionState, type ActionState } from "@/app/(dashboard)/action-state";
 
 interface WebsiteRecord {
   id: string;
@@ -34,10 +29,6 @@ interface WebsiteRecord {
   sitemapUrl: string | null;
   indexNowKey: string | null;
   bingApiKey: string | null;
-  yandexToken: string | null;
-  baiduToken: string | null;
-  naverToken: string | null;
-  siteHealth: unknown;
   lastSyncAt: Date | null;
 }
 
@@ -49,15 +40,9 @@ interface SitesViewProps {
 
 export default function SitesView({ initialSites, planName, websiteLimit }: SitesViewProps) {
   const [siteSearchQuery, setSiteSearchQuery] = useState("");
-
-  const [syncState, syncAction, syncPending] = useActionState<ActionState, FormData>(
-    runWebsiteSyncAction,
-    defaultActionState
-  );
-  const [deleteState, deleteAction, deletePending] = useActionState<ActionState, FormData>(
-    deleteWebsiteAction,
-    defaultActionState
-  );
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [syncingId, setSyncingId] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const filteredSites = useMemo(() => {
     const query = siteSearchQuery.trim().toLowerCase();
@@ -66,6 +51,43 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
       site.url.toLowerCase().includes(query)
     );
   }, [initialSites, siteSearchQuery]);
+
+  const handleDelete = (siteId: string, siteUrl: string) => {
+    const confirmed = window.confirm(
+      `Delete ${siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}? This cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setDeletingId(siteId);
+    const formData = new FormData();
+    formData.append("websiteId", siteId);
+
+    startTransition(async () => {
+      const result = await deleteWebsiteAction({ status: "idle", message: "" }, formData);
+      if (result.status === "success") {
+        toast.success("Website deleted.");
+      } else {
+        toast.error(result.message || "Failed to delete website.");
+      }
+      setDeletingId(null);
+    });
+  };
+
+  const handleSync = (siteId: string) => {
+    setSyncingId(siteId);
+    const formData = new FormData();
+    formData.append("websiteId", siteId);
+
+    startTransition(async () => {
+      const result = await runWebsiteSyncAction({ status: "idle", message: "" }, formData);
+      if (result.status === "success") {
+        toast.success(result.message || "Sync complete.");
+      } else {
+        toast.error(result.message || "Sync failed.");
+      }
+      setSyncingId(null);
+    });
+  };
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -105,9 +127,12 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
           </div>
         ) : (
           filteredSites.map((site) => (
-            <div 
-              key={site.id} 
-              className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-card border border-border/50 rounded-2xl hover:border-primary/20 hover:shadow-sm transition-all gap-4"
+            <div
+              key={site.id}
+              className={cn(
+                "group flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-card border border-border/50 rounded-2xl hover:border-primary/20 hover:shadow-sm transition-all gap-4",
+                deletingId === site.id && "opacity-50 pointer-events-none"
+              )}
             >
               <div className="flex items-center gap-4 min-w-0">
                 <div className="h-10 w-10 rounded-xl bg-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
@@ -118,7 +143,6 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                   <div className="flex items-center gap-3 mt-0.5">
                     <p className="text-[10px] text-muted-foreground truncate max-w-[150px]">{site.url}</p>
                     <div className="flex items-center gap-1 text-[10px] text-muted-foreground/60">
-                      <Activity className="h-3 w-3" />
                       <span>{site.lastSyncAt ? new Date(site.lastSyncAt).toLocaleDateString() : 'Never synced'}</span>
                     </div>
                   </div>
@@ -131,37 +155,43 @@ export default function SitesView({ initialSites, planName, websiteLimit }: Site
                     Manage <ArrowUpRight className="h-3 w-3" />
                   </Link>
                 </Button>
-                
+
                 <div className="flex items-center border-l border-border/50 pl-2 gap-1">
-                  <form action={syncAction}>
-                    <input type="hidden" name="websiteId" value={site.id} />
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/5"
-                      title="Sync Site"
-                    >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/5"
+                    title="Sync Site"
+                    disabled={syncingId === site.id}
+                    onClick={() => handleSync(site.id)}
+                  >
+                    {syncingId === site.id ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
                       <RefreshCw className="h-3.5 w-3.5" />
-                    </Button>
-                  </form>
-                  
+                    )}
+                  </Button>
+
                   <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/5" title="SEO Audit">
                     <Link href={`/sites/${site.id}/audit`}>
                       <BarChart3 className="h-3.5 w-3.5" />
                     </Link>
                   </Button>
 
-                  <form action={deleteAction}>
-                    <input type="hidden" name="websiteId" value={site.id} />
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50"
-                      title="Delete Site"
-                    >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-50"
+                    title="Delete Site"
+                    disabled={deletingId === site.id}
+                    onClick={() => handleDelete(site.id, site.url)}
+                  >
+                    {deletingId === site.id ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
                       <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
-                  </form>
+                    )}
+                  </Button>
                 </div>
               </div>
             </div>

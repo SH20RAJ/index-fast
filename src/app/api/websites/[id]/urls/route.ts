@@ -109,7 +109,10 @@ export async function GET(
       url: website.url,
       sitemapUrl: website.sitemapUrl,
       indexNowKey: website.indexNowKey,
+      indexNowKeyLocation: website.indexNowKeyLocation,
+      indexNowVerified: website.indexNowVerified,
       bingApiKey: website.bingApiKey,
+      bingApiKeyLastFour: website.bingApiKeyLastFour,
       lastSyncAt: website.lastSyncAt,
     },
     sitemaps: {

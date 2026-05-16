@@ -85,10 +85,10 @@ export const metadata: Metadata = {
     url: "/",
     images: [
       {
-        url: "/opengraph-image.png",
+        url: "/logo/og2.png",
         width: 1200,
         height: 630,
-        alt: "IndexFast landing page preview",
+        alt: "IndexFast - Index from your AI IDE",
       },
     ],
   },
@@ -96,7 +96,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["/twitter-image.png"],
+    images: ["/logo/og2.png"],
   },
   alternates: {
     canonical: "/",
@@ -121,7 +121,7 @@ const landingJsonLd = {
       },
       primaryImageOfPage: {
         "@type": "ImageObject",
-        url: `${siteUrl}/opengraph-image.png`,
+        url: `${siteUrl}/logo/og2.png`,
       },
     },
     {
@@ -144,8 +144,15 @@ const landingJsonLd = {
       applicationCategory: "BusinessApplication",
       offers: {
         "@type": "Offer",
-        price: "0",
+        price: 0,
         priceCurrency: "USD",
+      },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "5",
+        reviewCount: "3",
+        bestRating: "5",
+        worstRating: "5",
       },
       url: `${siteUrl}/`,
       description,

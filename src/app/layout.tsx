@@ -110,7 +110,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "IndexFast | Index from your AI IDE",
     description: siteDescription,
-    images: ["/og-marketing.png"],
+    images: ["/logo/og2.png"],
     creator: "@indexfast",
     site: "@indexfast",
   },
@@ -154,7 +154,16 @@ const websiteJsonLd = {
       "@id": `${siteUrl}/#organization`,
       name: siteName,
       url: siteUrl,
-      logo: `${siteUrl}/icon.png`,
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/icon.png`,
+        width: 512,
+        height: 512,
+      },
+      sameAs: [
+        "https://twitter.com/indexfast",
+        "https://github.com/indexfast",
+      ],
     },
     {
       "@type": "WebSite",
@@ -167,21 +176,39 @@ const websiteJsonLd = {
       },
       potentialAction: {
         "@type": "SearchAction",
-        target: `${siteUrl}/blog?query={search_term_string}`,
+        target: `${siteUrl}/blog?q={search_term_string}`,
         "query-input": "required name=search_term_string",
       },
     },
     {
       "@type": "SiteNavigationElement",
-      name: ["How It Works", "Docs", "Pricing", "Blog", "Tools", "Contact"],
-      url: [
-        `${siteUrl}/how-it-works`,
-        `${siteUrl}/docs`,
-        `${siteUrl}/pricing`,
-        `${siteUrl}/blog`,
-        `${siteUrl}/tools`,
-        `${siteUrl}/contact`,
-      ],
+      name: "How It Works",
+      url: `${siteUrl}/how-it-works`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      name: "Docs",
+      url: `${siteUrl}/docs`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      name: "Pricing",
+      url: `${siteUrl}/pricing`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      name: "Blog",
+      url: `${siteUrl}/blog`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      name: "Tools",
+      url: `${siteUrl}/tools`,
+    },
+    {
+      "@type": "SiteNavigationElement",
+      name: "Contact",
+      url: `${siteUrl}/contact`,
     },
   ],
 };

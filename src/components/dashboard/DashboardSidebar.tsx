@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useSiteContext } from "@/components/dashboard/SiteContext";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, type ComponentType } from "react";
 import { useStackApp, useUser } from "@stackframe/stack";
@@ -22,6 +21,7 @@ import {
   LineChart,
   RefreshCw,
   Bot,
+  Send,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -50,9 +50,14 @@ const navSections: NavSection[] = [
     label: "Main",
     items: [
       {
-        label: "My Sites",
-        href: "/my-sites",
+        label: "Sites",
+        href: "/sites",
         icon: Globe,
+      },
+      {
+        label: "Push Indexing",
+        href: "/dashboard/push",
+        icon: Send,
       },
       {
         label: "AI Agents (MCP)",
@@ -106,8 +111,6 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   const stack = useStackApp();
   const { mode, toggleColorMode } = useColorMode();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-  
-  const { websites, selectedSite, setSelectedSite } = useSiteContext();
 
   const getHref = (href: string) => {
     return href;
@@ -127,16 +130,15 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
   );
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
-  const isChildActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   useEffect(() => {
     const section = navSections.find((group) =>
-      group.items.some((item) => item.children?.some((child) => isChildActive(child.href)))
+      group.items.some((item) => item.children?.some((child) => isActive(child.href)))
     );
 
     if (section) {
       const activeItem = section.items.find((item) =>
-        item.children?.some((child) => isChildActive(child.href))
+        item.children?.some((child) => isActive(child.href))
       );
       if (activeItem) {
         setOpenSubmenu(activeItem.label);
@@ -154,12 +156,12 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
         <div className="flex items-center gap-3">
           <Link href={getHref("/dashboard")} className="relative group cursor-pointer" onClick={handleNavClick}>
             <div className="absolute -inset-2 rounded-xl bg-primary/15 blur-xl opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
-            <Image 
-              src="/logo.png" 
-              alt="IndexFast" 
-              width={36} 
-              height={36} 
-              className="relative h-9 w-9 rounded-xl object-cover ring-1 ring-border/50 shadow-sm" 
+            <Image
+              src="/logo.png"
+              alt="IndexFast"
+              width={36}
+              height={36}
+              className="relative h-9 w-9 rounded-xl object-cover ring-1 ring-border/50 shadow-sm"
             />
           </Link>
           <div className="flex min-w-0 flex-1 flex-col">
@@ -179,19 +181,18 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
               </p>
               <div className="space-y-0.5">
                 {section.items.map((item) => {
-                  const isMySites = item.label === "My Sites";
-                  const hasChildren = Boolean(item.children?.length) || (isMySites && websites.length > 0);
+                  const hasChildren = Boolean(item.children?.length);
                   const active = item.href
-                    ? isActive(item.href) || Boolean(item.children?.some((child) => isChildActive(child.href)))
+                    ? isActive(item.href) || Boolean(item.children?.some((child) => isActive(child.href)))
                     : false;
-                  const submenuOpen = openSubmenu === item.label || (isMySites && websites.length > 0);
+                  const submenuOpen = openSubmenu === item.label;
 
                   return (
                     <div key={item.label}>
                       {!hasChildren ? (
-                        <SidebarItem 
-                          item={item} 
-                          active={active} 
+                        <SidebarItem
+                          item={item}
+                          active={active}
                           onClick={handleNavClick}
                           href={getHref(item.href)}
                         />
@@ -212,30 +213,11 @@ function SidebarContent({ closeSheet }: { closeSheet?: () => void }) {
                               submenuOpen && "rotate-180"
                             )} />
                           </Button>
-                          
-                          {submenuOpen && (
+
+                          {submenuOpen && item.children && (
                             <div className="mt-0.5 ml-4 space-y-0.5 border-l border-zinc-200 dark:border-zinc-800 pl-4 py-1 animate-in slide-in-from-left-2 duration-300">
-                              {isMySites && websites.map((site) => {
-                                const siteHref = `/sites/${site.id}`;
-                                const childActive = isChildActive(siteHref);
-                                return (
-                                  <Link
-                                    key={site.id}
-                                    href={siteHref}
-                                    onClick={handleNavClick}
-                                    className={cn(
-                                      "block rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-200 truncate",
-                                      childActive
-                                        ? "text-primary"
-                                        : "text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
-                                    )}
-                                  >
-                                    {site.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-                                  </Link>
-                                );
-                              })}
-                              {!isMySites && item.children && item.children.map((child) => {
-                                const childActive = isChildActive(child.href);
+                              {item.children.map((child) => {
+                                const childActive = isActive(child.href);
                                 return (
                                   <Link
                                     key={child.href}

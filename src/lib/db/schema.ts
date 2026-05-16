@@ -113,6 +113,7 @@ export const websites = pgTable("websites", {
 }, (table) => ({
   userIdIdx: index("idx_websites_user_id").on(table.userId),
   createdAtIdx: index("idx_websites_created_at").on(table.createdAt),
+  userIdUrlUnique: uniqueIndex("idx_websites_user_url_unique").on(table.userId, table.url),
 }));
 
 /**

@@ -27,7 +27,14 @@ async function SitesDataLoader() {
 
   const planId = resolvePlanId((userRow ?? synced).subscriptionStatus, (userRow ?? synced).isPro);
   const sites = await db
-    .select()
+    .select({
+      id: websites.id,
+      url: websites.url,
+      sitemapUrl: websites.sitemapUrl,
+      indexNowKey: websites.indexNowKey,
+      bingApiKey: websites.bingApiKey,
+      lastSyncAt: websites.lastSyncAt,
+    })
     .from(websites)
     .where(eq(websites.userId, user.id))
     .orderBy(desc(websites.createdAt));

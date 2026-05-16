@@ -266,6 +266,14 @@ export async function createWebsiteAction(_: ActionState, formData: FormData): P
       };
     }
 
+    // Prevent duplicate URLs for the same user
+    const existingSite = await db.query.websites.findFirst({
+      where: and(eq(websites.userId, user.id), eq(websites.url, websiteUrl)),
+    });
+    if (existingSite) {
+      return { status: "error", message: "You have already added this website." };
+    }
+
     const domain = new URL(websiteUrl).hostname;
 
     const [newSite] = await db.insert(websites).values({
@@ -517,6 +525,7 @@ export async function runWebsiteSyncAction(_: ActionState, formData: FormData): 
 
     const result = await processWebsiteIndexing(websiteId);
     revalidatePath("/dashboard");
+    revalidatePath("/sites");
 
     if ("newUrlsCount" in result) {
       return { status: "success", message: `Sync complete: ${result.newUrlsCount} new URL(s) processed.` };
@@ -545,6 +554,7 @@ export async function deleteWebsiteAction(_: ActionState, formData: FormData): P
       .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
 
     revalidatePath("/dashboard");
+    revalidatePath("/sites");
     return { status: "success", message: "Website removed." };
   } catch (error) {
     return {

@@ -12,11 +12,7 @@ export async function getPublicSitePaths(): Promise<string[]> {
     "/status",
     "/terms",
     "/pricing",
-    "/sign-in",
-    "/sign-up",
-    "/chat",
     "/blog",
-    "/blogs",
     "/tools",
     "/indexnow",
   ];

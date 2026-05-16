@@ -39,11 +39,7 @@ export default function PrivacyView() {
     },
   ];
 
-  const lastUpdated = new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(new Date());
+  const lastUpdated = "16 May 2026";
 
   return (
     <Container className="mx-auto w-full max-w-4xl px-4 pb-20 pt-36 sm:px-6 sm:pt-40 lg:px-8 lg:pt-44" sx={{ flex: 1 }}>
