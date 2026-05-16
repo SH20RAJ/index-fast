@@ -17,6 +17,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/dashboard/PageHeader";
 import { useSiteContext } from "@/components/dashboard/SiteContext";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { updateWebsiteSitemapAction } from "@/app/(dashboard)/actions";
 import { toast } from "sonner";
@@ -28,6 +29,8 @@ import ExternalLinks from "./_components/ExternalLinks";
 import HealthStats from "./_components/HealthStats";
 import ConfigEditor from "./_components/ConfigEditor";
 import AutomationManager from "./_components/AutomationManager";
+import SitemapManager from "./_components/SitemapManager";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type SubmitMode = "sitemap" | "urls";
