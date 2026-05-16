@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import { StackProvider, StackTheme } from "@stackframe/stack";
 import { stackClientApp } from "@/stack/client";
 import ThemeRegistry from "@/components/ThemeRegistry";
@@ -10,19 +9,22 @@ import { Playfair_Display, Source_Sans_3, Fira_Code } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/next"
 
-const playfair = Playfair_Display({ 
-  subsets: ["latin"], 
-  variable: "--font-serif" 
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  display: "swap",
 });
 
-const sourceSans = Source_Sans_3({ 
-  subsets: ["latin"], 
-  variable: "--font-sans" 
+const sourceSans = Source_Sans_3({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
 });
 
 const firaCode = Fira_Code({
   subsets: ["latin"],
-  variable: "--font-mono"
+  variable: "--font-mono",
+  display: "swap",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
@@ -246,10 +248,8 @@ export default function RootLayout({
             </ThemeRegistry>
           </StackTheme>
         </StackProvider>
-        <Script
-          id="website-jsonld"
+        <script
           type="application/ld+json"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <Analytics />

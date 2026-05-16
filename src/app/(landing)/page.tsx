@@ -179,6 +179,7 @@ const landingJsonLd = {
 export default function LandingPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(landingJsonLd) }} />
       <Hero />
       <PainSection />
       <SupportedEngines />
@@ -197,7 +198,6 @@ export default function LandingPage() {
       <FAQ />
       <FinalCTA />
       <ChatBot />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(landingJsonLd) }} />
     </>
   );
 }

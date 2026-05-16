@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 import { LANDING_FAQS } from "@/lib/landing-faq";
 import { cn } from "@/lib/utils";
@@ -32,14 +31,15 @@ export default function FAQ() {
                 key={index}
                 className={cn(
                   "group overflow-hidden rounded-2xl border transition-all duration-300",
-                  isOpen 
-                    ? "border-primary/20 bg-primary/[0.02] shadow-sm" 
+                  isOpen
+                    ? "border-primary/20 bg-primary/[0.02] shadow-sm"
                     : "border-border/50 bg-card/50 hover:border-border hover:bg-card"
                 )}
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   className="flex w-full items-center justify-between p-5 text-left transition-colors"
+                  aria-expanded={isOpen}
                 >
                   <span className={cn(
                     "text-sm font-semibold tracking-tight sm:text-base transition-colors",
@@ -49,8 +49,8 @@ export default function FAQ() {
                   </span>
                   <div className={cn(
                     "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all duration-300",
-                    isOpen 
-                      ? "rotate-90 border-primary bg-primary text-white" 
+                    isOpen
+                      ? "rotate-90 border-primary bg-primary text-white"
                       : "border-border text-muted-foreground group-hover:border-foreground group-hover:text-foreground"
                   )}>
                     {isOpen ? (
@@ -60,22 +60,22 @@ export default function FAQ() {
                     )}
                   </div>
                 </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
-                    >
-                      <div className="px-5 pb-5">
-                        <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-                          {faq.answer}
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Always render answer in DOM for crawlers; use CSS to hide/show */}
+                <div
+                  className="transition-all duration-300 ease-[cubic-bezier(0.04,0.62,0.23,0.98)]"
+                  style={{
+                    maxHeight: isOpen ? "500px" : "0px",
+                    opacity: isOpen ? 1 : 0,
+                    overflow: "hidden",
+                  }}
+                  aria-hidden={!isOpen}
+                >
+                  <div className="px-5 pb-5">
+                    <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
               </div>
             );
           })}
