@@ -13,7 +13,8 @@ import {
   ShieldAlert,
   Target,
   Clock,
-  ArrowRight
+  ArrowRight,
+  Lock
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
