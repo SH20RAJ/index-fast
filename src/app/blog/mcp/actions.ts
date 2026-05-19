@@ -6,15 +6,25 @@ import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function getBlogPosts() {
-  return await db.query.blogPosts.findMany({
-    orderBy: [desc(blogPosts.publishedAt)],
-  });
+  try {
+    return await db.query.blogPosts.findMany({
+      orderBy: [desc(blogPosts.publishedAt)],
+    });
+  } catch (error) {
+    console.error("[getBlogPosts] Failed to fetch blog posts from database:", error);
+    return [];
+  }
 }
 
 export async function getBlogPostBySlug(slug: string) {
-  return await db.query.blogPosts.findFirst({
-    where: eq(blogPosts.slug, slug),
-  });
+  try {
+    return await db.query.blogPosts.findFirst({
+      where: eq(blogPosts.slug, slug),
+    });
+  } catch (error) {
+    console.error(`[getBlogPostBySlug] Failed to fetch blog post by slug ${slug} from database:`, error);
+    return undefined;
+  }
 }
 
 export async function upsertBlogPost(data: NewBlogPost) {

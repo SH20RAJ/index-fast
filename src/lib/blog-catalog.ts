@@ -70,52 +70,77 @@ export async function getPaginatedBlogPosts(options: BlogFilterOptions = {}) {
       break;
   }
 
-  // Execute queries
-  const [posts, totalResult] = await Promise.all([
-    db.query.blogPosts.findMany({
-      where: whereClause,
-      orderBy: [orderBy],
-      limit,
-      offset,
-    }),
-    db.select({ value: count() }).from(blogPosts).where(whereClause)
-  ]);
+  try {
+    // Execute queries
+    const [posts, totalResult] = await Promise.all([
+      db.query.blogPosts.findMany({
+        where: whereClause,
+        orderBy: [orderBy],
+        limit,
+        offset,
+      }),
+      db.select({ value: count() }).from(blogPosts).where(whereClause)
+    ]);
 
-  return {
-    posts: posts.map(mapDbPostToBlogPost),
-    total: totalResult[0].value,
-    totalPages: Math.ceil(totalResult[0].value / limit),
-    currentPage: page
-  };
+    return {
+      posts: posts.map(mapDbPostToBlogPost),
+      total: totalResult[0].value,
+      totalPages: Math.ceil(totalResult[0].value / limit),
+      currentPage: page
+    };
+  } catch (error) {
+    console.error("[getPaginatedBlogPosts] Failed to fetch blog posts from database:", error);
+    return {
+      posts: [],
+      total: 0,
+      totalPages: 0,
+      currentPage: page
+    };
+  }
 }
 
 export async function getAllBlogPosts(): Promise<BlogPost[]> {
-  const posts = await db.query.blogPosts.findMany({
-    orderBy: [desc(blogPosts.publishedAt)],
-  });
+  try {
+    const posts = await db.query.blogPosts.findMany({
+      orderBy: [desc(blogPosts.publishedAt)],
+    });
 
-  return posts.map(mapDbPostToBlogPost);
+    return posts.map(mapDbPostToBlogPost);
+  } catch (error) {
+    console.error("[getAllBlogPosts] Failed to fetch all blog posts from database:", error);
+    return [];
+  }
 }
 
 export async function getUniqueKeywords(): Promise<string[]> {
-  const results = await db
-    .select({ keyword: blogPosts.primaryKeyword })
-    .from(blogPosts)
-    .groupBy(blogPosts.primaryKeyword);
-  
-  return results
-    .map(r => r.keyword)
-    .filter((k): k is string => !!k && k.trim() !== "");
+  try {
+    const results = await db
+      .select({ keyword: blogPosts.primaryKeyword })
+      .from(blogPosts)
+      .groupBy(blogPosts.primaryKeyword);
+    
+    return results
+      .map(r => r.keyword)
+      .filter((k): k is string => !!k && k.trim() !== "");
+  } catch (error) {
+    console.error("[getUniqueKeywords] Failed to fetch unique keywords from database:", error);
+    return [];
+  }
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
-  const post = await db.query.blogPosts.findFirst({
-    where: eq(blogPosts.slug, slug),
-  });
+  try {
+    const post = await db.query.blogPosts.findFirst({
+      where: eq(blogPosts.slug, slug),
+    });
 
-  if (!post) return undefined;
+    if (!post) return undefined;
 
-  return mapDbPostToBlogPost(post);
+    return mapDbPostToBlogPost(post);
+  } catch (error) {
+    console.error(`[getBlogPostBySlug] Failed to fetch blog post by slug ${slug} from database:`, error);
+    return undefined;
+  }
 }
 
 function mapDbPostToBlogPost(post: DbBlogPost): BlogPost {
