@@ -11,6 +11,7 @@ import { submitToNaver } from "@/lib/api/naver";
 import { pingAllUniversal } from "@/lib/api/ping-services";
 import { ensureUserRecord } from "@/lib/db/user-sync";
 import { pingGoogleSitemap } from "@/lib/api/google";
+import { submitBatchToGoogleIndexing } from "@/lib/api/google-indexing";
 
 export async function processWebsiteIndexing(websiteId: string) {
   const [websiteOnly] = await db.select().from(websites).where(eq(websites.id, websiteId));
@@ -117,6 +118,20 @@ export async function triggerSubmissions(website: Website, urls: string[], isPro
       engine: "google" as const,
       status: res.success ? ("success" as const) : ("failed" as const),
       errorMessage: res.error,
+    });
+  }
+
+  // Google Indexing API (service account)
+  if (website.gscServiceAccountKey) {
+    const resList = await submitBatchToGoogleIndexing(urls, website.gscServiceAccountKey);
+    const successCount = resList.filter((r) => r.success).length;
+    const failedCount = resList.length - successCount;
+    submissionsToLog.push({
+      websiteId: website.id,
+      url: `${successCount}/${resList.length} URL(s)`,
+      engine: "google" as const,
+      status: failedCount === 0 ? ("success" as const) : ("failed" as const),
+      errorMessage: failedCount > 0 ? `${failedCount} URL(s) failed` : undefined,
     });
   }
 

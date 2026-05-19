@@ -111,6 +111,7 @@ export const websites = pgTable("websites", {
   yandexToken: text("yandex_token"),
   baiduToken: text("baidu_token"),
   naverToken: text("naver_token"),
+  gscServiceAccountKey: text("gsc_service_account_key"), // Google Indexing API service account JSON key
   lastSyncAt: timestamp("last_sync_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

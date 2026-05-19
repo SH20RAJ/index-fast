@@ -7,6 +7,7 @@ import { parseSitemap } from "@/lib/utils/sitemap-parser";
 import { submitToIndexNow } from "@/lib/api/indexnow";
 import { submitToBingBatch } from "@/lib/api/bing";
 import { pingGoogleSitemap } from "@/lib/api/google";
+import { submitBatchToGoogleIndexing } from "@/lib/api/google-indexing";
 import { pingService } from "@/lib/api/ping-services";
 
 const INDEXNOW_BATCH_SIZE = 1000;
@@ -252,6 +253,31 @@ export async function POST(
       } else {
         appendLog(`Google: Skipped. No sitemap URL configured for this website.`);
       }
+    }
+
+    // Google Indexing API (service account)
+    if (website.gscServiceAccountKey && selectedEngines.google) {
+      appendLog(`Google Indexing API: Submitting ${urls.length} URL(s) via service account...`);
+      const gscResults = await submitBatchToGoogleIndexing(urls, website.gscServiceAccountKey);
+      const gscSuccess = gscResults.filter((r) => r.success).length;
+      const gscFailed = gscResults.length - gscSuccess;
+      if (gscFailed === 0) {
+        appendLog(`Google Indexing API: All ${gscSuccess} URL(s) submitted successfully.`);
+      } else {
+        appendLog(`Google Indexing API: ${gscSuccess} succeeded, ${gscFailed} failed.`);
+        gscResults.filter((r) => !r.success).forEach((r) => {
+          appendLog(`  - Failed: ${r.error}`);
+        });
+      }
+      submissionLogs.push({
+        websiteId: website.id,
+        url: `Google Indexing API (${gscSuccess}/${gscResults.length} succeeded)`,
+        engine: "google",
+        status: gscFailed === 0 ? "success" : "failed",
+        errorMessage: gscFailed > 0 ? `${gscFailed} URL(s) failed` : undefined,
+      });
+    } else if (!website.gscServiceAccountKey && selectedEngines.google) {
+      appendLog("Google Indexing API: Skipped. No service account key configured.");
     }
 
     // Ping Services (Ping-o-Matic / Pingler)
