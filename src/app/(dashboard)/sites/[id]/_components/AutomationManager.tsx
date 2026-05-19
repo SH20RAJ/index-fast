@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
+import type { ActionState } from "@/app/(dashboard)/action-state";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +34,7 @@ interface CronJob {
   sourceMode: string;
   enabled: boolean;
   nextRunAt: string | null;
+  urls?: string | null;
 }
 
 interface AutomationManagerProps {
@@ -46,9 +48,30 @@ export default function AutomationManager({ websiteId, cronJobs, onRefresh }: Au
   const [engine, setEngine] = useState<"indexnow" | "bing" | "google">("indexnow");
   const [frequency, setFrequency] = useState("daily");
   const [sourceMode, setSourceMode] = useState("inventory");
+  const [urls, setUrls] = useState("");
 
-  const [saveState, saveAction, isSaving] = useActionState(saveCronJobAction, { status: "idle", message: "" });
-  const [delState, delAction, isDeleting] = useActionState(deleteCronJobAction, { status: "idle", message: "" });
+  const [saveState, saveAction, isSaving] = useActionState(saveCronJobAction, { status: "idle", message: "" } as ActionState);
+  const [delState, delAction, isDeleting] = useActionState(deleteCronJobAction, { status: "idle", message: "" } as ActionState);
+
+  useEffect(() => {
+    if (saveState.status === "success") {
+      toast.success(saveState.message);
+      setIsAdding(false);
+      setUrls("");
+      onRefresh();
+    } else if (saveState.status === "error") {
+      toast.error(saveState.message);
+    }
+  }, [saveState, onRefresh]);
+
+  useEffect(() => {
+    if (delState.status === "success") {
+      toast.success(delState.message);
+      onRefresh();
+    } else if (delState.status === "error") {
+      toast.error(delState.message);
+    }
+  }, [delState, onRefresh]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,12 +80,10 @@ export default function AutomationManager({ websiteId, cronJobs, onRefresh }: Au
     formData.append("engine", engine);
     formData.append("frequency", frequency);
     formData.append("sourceMode", sourceMode);
+    formData.append("urls", urls);
     formData.append("enabled", "true");
     
     await saveAction(formData);
-    toast.success("Auto-run setup saved!");
-    setIsAdding(false);
-    await onRefresh();
   };
 
   const handleDelete = async (jobId: string) => {
@@ -70,8 +91,6 @@ export default function AutomationManager({ websiteId, cronJobs, onRefresh }: Au
     formData.append("jobId", jobId);
     formData.append("websiteId", websiteId);
     await delAction(formData);
-    toast.success("Auto-run task removed.");
-    await onRefresh();
   };
 
   const getEngineName = (engine: string) => {
@@ -82,7 +101,10 @@ export default function AutomationManager({ websiteId, cronJobs, onRefresh }: Au
   };
 
   const getSourceLabel = (mode: string) => {
-    return mode === "inventory" ? "Only New Pages" : "Check All Pages";
+    if (mode === "inventory") return "Auto-detect New Pages";
+    if (mode === "sitemap") return "Sitemap Pages";
+    if (mode === "urls") return "Defined URLs List";
+    return mode;
   };
 
   return (
@@ -143,12 +165,27 @@ export default function AutomationManager({ websiteId, cronJobs, onRefresh }: Au
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-border/50">
-                      <SelectItem value="inventory">Only New Pages</SelectItem>
-                      <SelectItem value="sitemap">Check All Pages</SelectItem>
+                      <SelectItem value="inventory">Auto-detect New URLs (Pro Only)</SelectItem>
+                      <SelectItem value="sitemap">Check Sitemap Pages</SelectItem>
+                      <SelectItem value="urls">Defined URLs List</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
+
+              {sourceMode === "urls" && (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">
+                    Defined URLs (one per line)
+                  </label>
+                  <textarea
+                    value={urls}
+                    onChange={(e) => setUrls(e.target.value)}
+                    placeholder="https://example.com/page-1&#10;https://example.com/page-2"
+                    className="w-full min-h-[120px] rounded-xl border border-border/50 bg-background p-3 text-sm focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:outline-none"
+                  />
+                </div>
+              )}
 
               <div className="flex items-center gap-3 pt-2">
                 <Button type="submit" disabled={isSaving} className="rounded-xl font-bold px-8">

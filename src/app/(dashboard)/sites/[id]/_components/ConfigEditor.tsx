@@ -109,7 +109,7 @@ export default function ConfigEditor({
               <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80 px-1">API Key</Label>
               <Input 
                 value={inKey}
-                onChange={(e) => setInKey(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInKey(e.target.value)}
                 placeholder="Paste your IndexNow key..."
                 className="h-11 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-none shadow-inner"
               />
@@ -118,7 +118,7 @@ export default function ConfigEditor({
               <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80 px-1">Key Location URL</Label>
               <Input 
                 value={inLocation}
-                onChange={(e) => setInLocation(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInLocation(e.target.value)}
                 placeholder="https://example.com/your-key.txt"
                 className="h-11 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-none shadow-inner"
               />
@@ -151,7 +151,7 @@ export default function ConfigEditor({
               <Input 
                 type="password"
                 value={bingKey}
-                onChange={(e) => setBingKey(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBingKey(e.target.value)}
                 placeholder="Paste new Bing API key..."
                 className="h-11 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-none shadow-inner"
               />

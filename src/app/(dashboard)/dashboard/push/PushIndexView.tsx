@@ -22,22 +22,34 @@ interface PushResult {
   stats?: {
     indexNow?: { enabled: boolean; submittedUrls: number; successBatches: number; failedBatches: number };
     bing?: { enabled: boolean; submittedUrls: number; successBatches: number; failedBatches: number };
+    google?: { enabled: boolean; success: boolean; error?: string };
+    pingomatic?: { enabled: boolean; successCount: number; failedCount: number };
+    moreEngines?: { enabled: boolean; successCount: number; failedCount: number };
   };
 }
 
 export default function PushIndexView({ sites }: { sites: Site[] }) {
   const [selectedSiteId, setSelectedSiteId] = useState(sites[0]?.id || "");
   const [urls, setUrls] = useState("");
-  const [engines, setEngines] = useState<{ indexNow: boolean; bing: boolean }>({
+  const [engines, setEngines] = useState<{
+    indexNow: boolean;
+    bing: boolean;
+    google: boolean;
+    pingomatic: boolean;
+    moreEngines: boolean;
+  }>({
     indexNow: true,
     bing: true,
+    google: true,
+    pingomatic: true,
+    moreEngines: true,
   });
   const [pushing, setPushing] = useState(false);
   const [result, setResult] = useState<PushResult | null>(null);
 
   const selectedSite = sites.find((s) => s.id === selectedSiteId);
 
-  const toggleEngine = (engine: "indexNow" | "bing") => {
+  const toggleEngine = (engine: "indexNow" | "bing" | "google" | "pingomatic" | "moreEngines") => {
     setEngines((prev) => ({ ...prev, [engine]: !prev[engine] }));
   };
 
@@ -46,7 +58,7 @@ export default function PushIndexView({ sites }: { sites: Site[] }) {
       toast.error("Select a website first.");
       return;
     }
-    if (!engines.indexNow && !engines.bing) {
+    if (!engines.indexNow && !engines.bing && !engines.google && !engines.pingomatic && !engines.moreEngines) {
       toast.error("Select at least one engine.");
       return;
     }
@@ -71,6 +83,7 @@ export default function PushIndexView({ sites }: { sites: Site[] }) {
         body: JSON.stringify({
           mode: "urls",
           urls: urlList.join("\n"),
+          engines: engines,
         }),
       });
 
@@ -159,13 +172,38 @@ export default function PushIndexView({ sites }: { sites: Site[] }) {
         <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
           Select Engines
         </Label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button
+            onClick={() => toggleEngine("google")}
+            disabled={!selectedSite?.sitemapUrl}
+            className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-left ${
+              engines.google
+                ? "border-primary bg-primary/5 shadow-sm"
+                : "border-border/50 bg-card hover:border-primary/30"
+            } ${!selectedSite?.sitemapUrl ? "opacity-40 cursor-not-allowed" : ""}`}
+          >
+            <div
+              className={`h-8 w-8 rounded-lg flex items-center justify-center ${
+                engines.google ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+              }`}
+            >
+              <Globe className="h-4 w-4" />
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-bold">Google</p>
+              <p className="text-[10px] text-muted-foreground">Sitemap Ping API</p>
+            </div>
+            {!selectedSite?.sitemapUrl && (
+              <span className="text-[9px] text-muted-foreground ml-auto font-medium">No sitemap</span>
+            )}
+          </button>
+
           <button
             onClick={() => toggleEngine("indexNow")}
             disabled={!selectedSite?.indexNowKey}
-            className={`flex items-center gap-3 p-4 rounded-2xl border transition-all ${
+            className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-left ${
               engines.indexNow
-                ? "border-emerald-500 bg-emerald-500/5"
+                ? "border-emerald-500 bg-emerald-500/5 shadow-sm"
                 : "border-border/50 bg-card hover:border-emerald-500/30"
             } ${!selectedSite?.indexNowKey ? "opacity-40 cursor-not-allowed" : ""}`}
           >
@@ -181,16 +219,16 @@ export default function PushIndexView({ sites }: { sites: Site[] }) {
               <p className="text-[10px] text-muted-foreground">Instant signal</p>
             </div>
             {!selectedSite?.indexNowKey && (
-              <span className="text-[9px] text-muted-foreground ml-auto">No key</span>
+              <span className="text-[9px] text-muted-foreground ml-auto font-medium">No key</span>
             )}
           </button>
 
           <button
             onClick={() => toggleEngine("bing")}
             disabled={!selectedSite?.bingApiKey}
-            className={`flex items-center gap-3 p-4 rounded-2xl border transition-all ${
+            className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-left ${
               engines.bing
-                ? "border-blue-500 bg-blue-500/5"
+                ? "border-blue-500 bg-blue-500/5 shadow-sm"
                 : "border-border/50 bg-card hover:border-blue-500/30"
             } ${!selectedSite?.bingApiKey ? "opacity-40 cursor-not-allowed" : ""}`}
           >
@@ -206,8 +244,50 @@ export default function PushIndexView({ sites }: { sites: Site[] }) {
               <p className="text-[10px] text-muted-foreground">Webmaster API</p>
             </div>
             {!selectedSite?.bingApiKey && (
-              <span className="text-[9px] text-muted-foreground ml-auto">No key</span>
+              <span className="text-[9px] text-muted-foreground ml-auto font-medium">No key</span>
             )}
+          </button>
+
+          <button
+            onClick={() => toggleEngine("pingomatic")}
+            className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-left ${
+              engines.pingomatic
+                ? "border-amber-500 bg-amber-500/5 shadow-sm"
+                : "border-border/50 bg-card hover:border-amber-500/30"
+            }`}
+          >
+            <div
+              className={`h-8 w-8 rounded-lg flex items-center justify-center ${
+                engines.pingomatic ? "bg-amber-500/10 text-amber-600" : "bg-muted text-muted-foreground"
+              }`}
+            >
+              <Zap className="h-4 w-4 text-amber-500" />
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-bold">Ping-o-Matic & Pingler</p>
+              <p className="text-[10px] text-muted-foreground">Universal update services</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => toggleEngine("moreEngines")}
+            className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-left sm:col-span-2 ${
+              engines.moreEngines
+                ? "border-purple-500 bg-purple-500/5 shadow-sm"
+                : "border-border/50 bg-card hover:border-purple-500/30"
+            }`}
+          >
+            <div
+              className={`h-8 w-8 rounded-lg flex items-center justify-center ${
+                engines.moreEngines ? "bg-purple-500/10 text-purple-600" : "bg-muted text-muted-foreground"
+              }`}
+            >
+              <Globe className="h-4 w-4 text-purple-500" />
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-bold">120+ More Engines</p>
+              <p className="text-[10px] text-muted-foreground">Broadcast XML-RPC ping network (Baidu, Naver, Seznam, etc.)</p>
+            </div>
           </button>
         </div>
       </div>
@@ -232,7 +312,7 @@ export default function PushIndexView({ sites }: { sites: Site[] }) {
       <div className="flex items-center gap-4">
         <Button
           onClick={handlePush}
-          disabled={pushing || (!engines.indexNow && !engines.bing)}
+          disabled={pushing || (!engines.indexNow && !engines.bing && !engines.google && !engines.pingomatic && !engines.moreEngines)}
           className="h-12 px-10 rounded-full bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 hover:opacity-90 font-bold uppercase tracking-widest text-[10px] shadow-lg"
         >
           {pushing ? (
@@ -268,6 +348,22 @@ export default function PushIndexView({ sites }: { sites: Site[] }) {
               <p className="text-xs text-emerald-700/80">
                 Bing: {result.stats.bing.submittedUrls} URL(s) submitted
                 {result.stats.bing.failedBatches > 0 && ` (${result.stats.bing.failedBatches} batch failed)`}
+              </p>
+            )}
+            {result.stats?.google?.enabled && (
+              <p className="text-xs text-emerald-700/80">
+                Google: {result.stats.google.success ? "Sitemap ping submitted successfully" : `Failed: ${result.stats.google.error || "Unknown error"}`}
+              </p>
+            )}
+            {result.stats?.pingomatic?.enabled && (
+              <p className="text-xs text-emerald-700/80">
+                Ping Services: Successfully pinged {result.stats.pingomatic.successCount} update service(s)
+                {result.stats.pingomatic.failedCount > 0 && ` (${result.stats.pingomatic.failedCount} failed)`}
+              </p>
+            )}
+            {result.stats?.moreEngines?.enabled && (
+              <p className="text-xs text-emerald-700/80">
+                120+ Engines: Broadcast update signal {result.stats.moreEngines.successCount > 0 ? "sent successfully" : "failed"}
               </p>
             )}
           </CardContent>

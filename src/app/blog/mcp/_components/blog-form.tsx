@@ -128,8 +128,8 @@ export function BlogForm({ initialData }: BlogFormProps) {
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              value={formData.title ?? ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
               required
             />
           </div>
@@ -137,8 +137,8 @@ export function BlogForm({ initialData }: BlogFormProps) {
             <Label htmlFor="slug">Slug (URL path)</Label>
             <Input
               id="slug"
-              value={formData.slug}
-              onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+              value={formData.slug ?? ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, slug: e.target.value })}
               required
             />
           </div>
@@ -146,8 +146,8 @@ export function BlogForm({ initialData }: BlogFormProps) {
             <Label htmlFor="description">Meta Description</Label>
             <Textarea
               id="description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              value={formData.description ?? ""}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, description: e.target.value })}
               required
             />
           </div>
@@ -156,8 +156,8 @@ export function BlogForm({ initialData }: BlogFormProps) {
               <Label htmlFor="author">Author</Label>
               <Input
                 id="author"
-                value={formData.author}
-                onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                value={formData.author ?? ""}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, author: e.target.value })}
               />
             </div>
             <div className="grid gap-2">
@@ -165,8 +165,8 @@ export function BlogForm({ initialData }: BlogFormProps) {
               <Input
                 id="readingMinutes"
                 type="number"
-                value={formData.readingMinutes}
-                onChange={(e) => setFormData({ ...formData, readingMinutes: parseInt(e.target.value) })}
+                value={formData.readingMinutes ?? 0}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, readingMinutes: parseInt(e.target.value) || 0 })}
               />
             </div>
           </div>
@@ -182,24 +182,24 @@ export function BlogForm({ initialData }: BlogFormProps) {
             <Label htmlFor="primaryKeyword">Primary Keyword</Label>
             <Input
               id="primaryKeyword"
-              value={formData.primaryKeyword}
-              onChange={(e) => setFormData({ ...formData, primaryKeyword: e.target.value })}
+              value={formData.primaryKeyword ?? ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, primaryKeyword: e.target.value })}
             />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="keywords">Keywords (comma separated)</Label>
             <Input
               id="keywords"
-              value={formData.keywords?.join(", ")}
-              onChange={(e) => setFormData({ ...formData, keywords: e.target.value.split(",").map(s => s.trim()) })}
+              value={formData.keywords?.join(", ") ?? ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, keywords: e.target.value.split(",").map((s: string) => s.trim()) })}
             />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="hero">Hero / Introduction Text</Label>
             <Textarea
               id="hero"
-              value={formData.hero}
-              onChange={(e) => setFormData({ ...formData, hero: e.target.value })}
+              value={formData.hero ?? ""}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({ ...formData, hero: e.target.value })}
               className="h-32"
             />
           </div>
@@ -228,15 +228,15 @@ export function BlogForm({ initialData }: BlogFormProps) {
               <div className="grid gap-2">
                 <Label>Section Heading</Label>
                 <Input
-                  value={section.heading}
-                  onChange={(e) => updateSection(idx, "heading", e.target.value)}
+                  value={section.heading ?? ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateSection(idx, "heading", e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
                 <Label>Paragraphs (One per line)</Label>
                 <Textarea
                   value={section.paragraphs.join("\n")}
-                  onChange={(e) => updateSection(idx, "paragraphs", e.target.value.split("\n"))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSection(idx, "paragraphs", e.target.value.split("\n"))}
                   className="h-32"
                 />
               </div>
@@ -244,7 +244,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                 <Label>Bullets (One per line, optional)</Label>
                 <Textarea
                   value={section.bullets?.join("\n") || ""}
-                  onChange={(e) => updateSection(idx, "bullets", e.target.value.split("\n").filter(Boolean))}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateSection(idx, "bullets", e.target.value.split("\n").filter(Boolean))}
                 />
               </div>
             </div>
@@ -274,15 +274,15 @@ export function BlogForm({ initialData }: BlogFormProps) {
               <div className="grid gap-2">
                 <Label>Question</Label>
                 <Input
-                  value={faq.question}
-                  onChange={(e) => updateFaq(idx, "question", e.target.value)}
+                  value={faq.question ?? ""}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateFaq(idx, "question", e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
                 <Label>Answer</Label>
                 <Textarea
-                  value={faq.answer}
-                  onChange={(e) => updateFaq(idx, "answer", e.target.value)}
+                  value={faq.answer ?? ""}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateFaq(idx, "answer", e.target.value)}
                 />
               </div>
             </div>

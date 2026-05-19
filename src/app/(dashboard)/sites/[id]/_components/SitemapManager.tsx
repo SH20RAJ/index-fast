@@ -96,7 +96,7 @@ export default function SitemapManager({ websiteId, sources, onRefresh }: Sitema
           <Input 
             placeholder="Add new sitemap URL..." 
             value={newSitemapUrl}
-            onChange={(e) => setNewSitemapUrl(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSitemapUrl(e.target.value)}
             className="h-12 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border-none shadow-inner text-sm"
           />
           <Button 

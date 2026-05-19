@@ -61,8 +61,8 @@ export default function SitemapsView() {
         const initial = res.data.discoveredSitemaps.map((url: string) => ({
           url,
           isIndex: false,
-          urls: [],
-          subSitemaps: [],
+          urls: [] as string[],
+          subSitemaps: [] as string[],
           isExpanded: false
         }));
         
@@ -70,8 +70,8 @@ export default function SitemapsView() {
           initial.unshift({
             url: res.data.sitemapUrl,
             isIndex: false,
-            urls: [],
-            subSitemaps: [],
+            urls: [] as string[],
+            subSitemaps: [] as string[],
             isExpanded: false
           });
         }

@@ -32,7 +32,7 @@ export function BlogSearch() {
       </div>
       <Input
         defaultValue={searchParams.get("q")?.toString()}
-        onChange={(e) => handleSearch(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value)}
         placeholder="Search guides, tips, and tutorials..."
         className="pl-10 h-12 rounded-full border-border/60 bg-background/50 backdrop-blur-sm focus-visible:ring-primary/20"
       />

@@ -41,9 +41,11 @@ export async function POST(request: Request) {
 
     // Normalize URL to origin to prevent duplicates like http vs https
     let normalizedUrl: string;
+    let domain: string;
     try {
       const parsed = new URL(url);
       normalizedUrl = parsed.origin;
+      domain = parsed.hostname;
     } catch {
       return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
     }
@@ -60,6 +62,8 @@ export async function POST(request: Request) {
       .insert(websites)
       .values({
         userId: user.id,
+        name: domain,
+        domain: domain,
         url: normalizedUrl,
         sitemapUrl,
         indexNowKey,

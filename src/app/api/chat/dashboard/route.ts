@@ -1,10 +1,9 @@
-import { streamText, ToolSet } from "ai";
+import { streamText } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { stackServerApp } from "@/stack";
 import { aiAssistantTools } from "@/lib/services/ai-assistant";
 import { z } from "zod";
 import { NextResponse } from "next/server";
-
-const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -46,15 +45,18 @@ When a user asks about "my sites" or "websites", always start by listing them if
     })),
   ];
 
+  const nvidia = createOpenAI({
+    apiKey: apiKey,
+    baseURL: "https://integrate.api.nvidia.com/v1",
+  });
+
   const result = streamText({
-    model: {
-      provider: "nvidia",
-      id: process.env.NVIDIA_MODEL || "qwen/qwen3-coder-480b-a35b-instruct",
-    },
+    model: nvidia(process.env.NVIDIA_MODEL || "qwen/qwen3-coder-480b-a35b-instruct") as any,
     messages: fullMessages as any,
     tools: {
       list_websites: {
         description: "List all websites connected by the current user.",
+        inputSchema: z.object({}),
         execute: async () => {
           const res = await aiAssistantTools.list_websites(user.id);
           return JSON.stringify(res);
@@ -105,6 +107,7 @@ When a user asks about "my sites" or "websites", always start by listing them if
       },
       get_stats: {
         description: "Get recent indexing activity and dashboard reports.",
+        inputSchema: z.object({}),
         execute: async () => {
           const res = await aiAssistantTools.get_dashboard_stats(user.id);
           return JSON.stringify(res);
@@ -121,8 +124,7 @@ When a user asks about "my sites" or "websites", always start by listing them if
           return JSON.stringify(res);
         },
       },
-    } as ToolSet,
-    maxTokens: 1024,
+    },
     temperature: 0.7,
   });
 

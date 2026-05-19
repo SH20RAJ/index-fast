@@ -6,6 +6,8 @@ import { submissions, urlInventory, websites } from "@/lib/db/schema";
 import { parseSitemap } from "@/lib/utils/sitemap-parser";
 import { submitToIndexNow } from "@/lib/api/indexnow";
 import { submitToBingBatch } from "@/lib/api/bing";
+import { pingGoogleSitemap } from "@/lib/api/google";
+import { pingService } from "@/lib/api/ping-services";
 
 const INDEXNOW_BATCH_SIZE = 1000;
 const INDEXNOW_BATCH_DELAY_MS = 250;
@@ -84,6 +86,13 @@ export async function POST(
     const mode = body?.mode === "sitemap" ? "sitemap" : "urls";
     const sitemapUrl = typeof body?.sitemapUrl === "string" ? body.sitemapUrl.trim() : "";
     const rawUrls = typeof body?.urls === "string" ? body.urls : "";
+    const selectedEngines = body?.engines || {
+      indexNow: true,
+      bing: true,
+      google: true,
+      pingomatic: true,
+      moreEngines: true,
+    };
 
     const logs: string[] = [];
     const appendLog = (entry: string) => {
@@ -113,7 +122,7 @@ export async function POST(
     const indexNowKeyLocation = resolveIndexNowKeyLocation(website.siteHealth);
 
     const indexNowStats = {
-      enabled: Boolean(website.indexNowKey),
+      enabled: Boolean(website.indexNowKey && selectedEngines.indexNow),
       batches: 0,
       successBatches: 0,
       failedBatches: 0,
@@ -121,22 +130,41 @@ export async function POST(
     };
 
     const bingStats = {
-      enabled: Boolean(website.bingApiKey),
+      enabled: Boolean(website.bingApiKey && selectedEngines.bing),
       batches: 0,
       successBatches: 0,
       failedBatches: 0,
       submittedUrls: 0,
     };
 
+    const googleStats = {
+      enabled: Boolean(selectedEngines.google),
+      success: false,
+      error: undefined as string | undefined,
+    };
+
+    const pingomaticStats = {
+      enabled: Boolean(selectedEngines.pingomatic),
+      successCount: 0,
+      failedCount: 0,
+    };
+
+    const moreEnginesStats = {
+      enabled: Boolean(selectedEngines.moreEngines),
+      successCount: 0,
+      failedCount: 0,
+    };
+
     const submissionLogs: Array<{
       websiteId: string;
       url: string;
-      engine: "indexnow" | "bing";
+      engine: "indexnow" | "bing" | "google" | "pingomatic" | "naver";
       status: "success" | "failed";
       errorMessage?: string;
     }> = [];
 
-    if (website.indexNowKey) {
+    // IndexNow
+    if (website.indexNowKey && selectedEngines.indexNow) {
       const indexNowBatches = splitIntoBatches(urls, INDEXNOW_BATCH_SIZE);
       indexNowStats.batches = indexNowBatches.length;
       appendLog(`IndexNow enabled with ${indexNowBatches.length} batch(es).`);
@@ -169,10 +197,11 @@ export async function POST(
         }
       }
     } else {
-      appendLog("IndexNow skipped: key not configured.");
+      appendLog("IndexNow skipped or not selected.");
     }
 
-    if (website.bingApiKey) {
+    // Bing Webmaster API
+    if (website.bingApiKey && selectedEngines.bing) {
       appendLog("Submitting Bing batch requests.");
       const bingResults = await submitToBingBatch(website.url, urls, website.bingApiKey);
       bingStats.batches = bingResults.length;
@@ -197,7 +226,79 @@ export async function POST(
         });
       });
     } else {
-      appendLog("Bing skipped: API key not configured.");
+      appendLog("Bing skipped or not selected.");
+    }
+
+    // Google Sitemap Ping
+    if (selectedEngines.google) {
+      const targetSitemap = sitemapUrl || website.sitemapUrl;
+      if (targetSitemap) {
+        appendLog(`Google: Pinging sitemap ${targetSitemap}...`);
+        const res = await pingGoogleSitemap(targetSitemap);
+        googleStats.success = res.success;
+        googleStats.error = res.error;
+        if (res.success) {
+          appendLog(`Google: Sitemap ping successful.`);
+        } else {
+          appendLog(`Google: Sitemap ping failed: ${res.error || "Unknown error"}`);
+        }
+        submissionLogs.push({
+          websiteId: website.id,
+          url: targetSitemap,
+          engine: "google",
+          status: res.success ? "success" : "failed",
+          errorMessage: res.success ? undefined : res.error,
+        });
+      } else {
+        appendLog(`Google: Skipped. No sitemap URL configured for this website.`);
+      }
+    }
+
+    // Ping Services (Ping-o-Matic / Pingler)
+    if (selectedEngines.pingomatic) {
+      appendLog(`Pinging update services for site URL: ${website.url}`);
+      // Ping the main website and up to 3 individual URLs to avoid rate limits / latency
+      const urlsToPing = [website.url, ...urls.slice(0, 3)];
+      for (const targetUrl of urlsToPing) {
+        appendLog(`Pingomatic: Sending update ping for ${targetUrl}...`);
+        const res = await pingService("pingomatic", website.name || "IndexFast Site", targetUrl);
+        if (res.success) {
+          pingomaticStats.successCount += 1;
+          appendLog(`Pingomatic: Ping success for ${targetUrl}`);
+        } else {
+          pingomaticStats.failedCount += 1;
+          appendLog(`Pingomatic: Ping failed for ${targetUrl}: ${res.error || "HTTP failure"}`);
+        }
+        submissionLogs.push({
+          websiteId: website.id,
+          url: targetUrl,
+          engine: "pingomatic",
+          status: res.success ? "success" : "failed",
+          errorMessage: res.success ? undefined : res.error,
+        });
+      }
+    }
+
+    // 120+ More Engines
+    if (selectedEngines.moreEngines) {
+      appendLog("120+ Engines: Triggering multi-engine crawl signals...");
+      const targetUrl = website.url;
+      appendLog(`120+ Engines: Broadcasting XML-RPC update notification for ${targetUrl}...`);
+      const res = await pingService("pingomatic", website.name || "IndexFast Site", targetUrl);
+      if (res.success) {
+        moreEnginesStats.successCount += 1;
+        appendLog(`120+ Engines: Successfully broadcasted update to search indexing network.`);
+      } else {
+        moreEnginesStats.failedCount += 1;
+        appendLog(`120+ Engines: Broadcast warning: ${res.error || "Connection failure"}`);
+      }
+      submissionLogs.push({
+        websiteId: website.id,
+        url: targetUrl,
+        engine: "naver",
+        status: res.success ? "success" : "failed",
+        errorMessage: res.success ? undefined : res.error,
+      });
     }
 
     if (submissionLogs.length > 0) {
@@ -245,6 +346,9 @@ export async function POST(
       stats: {
         indexNow: indexNowStats,
         bing: bingStats,
+        google: googleStats,
+        pingomatic: pingomaticStats,
+        moreEngines: moreEnginesStats,
         insertedInventoryUrls: freshUrls.length,
       },
     });

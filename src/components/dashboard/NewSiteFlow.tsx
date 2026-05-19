@@ -211,7 +211,7 @@ export default function NewSiteFlow() {
                 id="name" 
                 placeholder="My Blog" 
                 value={name} 
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                 className="h-12 rounded-xl"
               />
             </div>
@@ -221,7 +221,7 @@ export default function NewSiteFlow() {
                 id="url" 
                 placeholder="https://example.com" 
                 value={url} 
-                onChange={(e) => setUrl(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
                 className="h-12 rounded-xl"
               />
             </div>
@@ -231,7 +231,7 @@ export default function NewSiteFlow() {
                 id="sitemap" 
                 placeholder="https://example.com/sitemap.xml" 
                 value={sitemapUrl} 
-                onChange={(e) => setSitemapUrl(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSitemapUrl(e.target.value)}
                 className="h-12 rounded-xl"
               />
             </div>
@@ -260,7 +260,7 @@ export default function NewSiteFlow() {
                   <Input 
                     placeholder="https://example.com/feed.xml" 
                     value={newSourceUrl} 
-                    onChange={(e) => setNewSourceUrl(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSourceUrl(e.target.value)}
                     className="h-12 rounded-xl"
                   />
                 </div>
@@ -311,7 +311,7 @@ export default function NewSiteFlow() {
                   id="inkey" 
                   placeholder="abc123xyz" 
                   value={indexNowKey} 
-                  onChange={(e) => setIndexNowKey(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIndexNowKey(e.target.value)}
                   className="h-12 rounded-xl"
                 />
               </div>
@@ -321,7 +321,7 @@ export default function NewSiteFlow() {
                   id="inkeyloc" 
                   placeholder="https://example.com/abc123xyz.txt" 
                   value={indexNowKeyLocation} 
-                  onChange={(e) => setIndexNowKeyLocation(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIndexNowKeyLocation(e.target.value)}
                   className="h-12 rounded-xl"
                 />
               </div>
@@ -368,7 +368,7 @@ export default function NewSiteFlow() {
                   type="password"
                   placeholder="••••••••••••••••" 
                   value={bingApiKey} 
-                  onChange={(e) => setBingApiKey(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBingApiKey(e.target.value)}
                   className="h-12 rounded-xl"
                 />
               </div>

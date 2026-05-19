@@ -22,6 +22,7 @@ import {
   RefreshCw,
   Bot,
   Send,
+  Clock,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -58,6 +59,11 @@ const navSections: NavSection[] = [
         label: "Push Indexing",
         href: "/dashboard/push",
         icon: Send,
+      },
+      {
+        label: "Scheduler (Cron)",
+        href: "/dashboard/cron",
+        icon: Clock,
       },
       {
         label: "AI Agents (MCP)",

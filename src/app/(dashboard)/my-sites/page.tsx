@@ -42,6 +42,8 @@ export default async function MySitesPage() {
       
       return {
         ...site,
+        indexNowVerified: site.indexNowVerified ?? false,
+        autoIndexingEnabled: site.autoIndexingEnabled ?? false,
         sourceCount: sources.length,
       };
     })

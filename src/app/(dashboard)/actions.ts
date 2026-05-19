@@ -431,7 +431,19 @@ export async function saveCronJobAction(_: ActionState, formData: FormData): Pro
     const engine = String(formData.get("engine") ?? "indexnow") as any;
     const frequency = String(formData.get("frequency") ?? "daily");
     const sourceMode = String(formData.get("sourceMode") ?? "inventory");
-    const enabled = formData.get("enabled") === "true";
+    const urlsVal = String(formData.get("urls") ?? "");
+    const enabled = formData.get("enabled") !== "false"; // Default to true
+
+    // Check if the user is a Pro user
+    const [dbUser] = await db
+      .select({ isPro: users.isPro })
+      .from(users)
+      .where(eq(users.id, user.id));
+    const isPro = dbUser?.isPro ?? false;
+
+    if (sourceMode === "inventory" && !isPro) {
+      return { status: "error", message: "Auto-detecting new URLs is only available for Pro users." };
+    }
 
     // Check if a cron job already exists for this engine
     const existing = await db.query.cronJobs.findFirst({
@@ -442,6 +454,7 @@ export async function saveCronJobAction(_: ActionState, formData: FormData): Pro
       await db.update(cronJobs).set({
         frequency,
         sourceMode,
+        urls: urlsVal,
         enabled,
         updatedAt: new Date(),
       }).where(eq(cronJobs.id, existing.id));
@@ -451,15 +464,18 @@ export async function saveCronJobAction(_: ActionState, formData: FormData): Pro
         engine,
         frequency,
         sourceMode,
+        urls: urlsVal,
         enabled,
         nextRunAt: new Date(),
       });
     }
 
     revalidatePath(`/sites/${websiteId}`);
-    return { status: "success", message: "Auto-run settings saved." };
+    revalidatePath("/dashboard/cron");
+    return { status: "success", message: "Scheduler task saved successfully." };
   } catch (error) {
-    return { status: "error", message: "Failed to save auto-run settings." };
+    console.error("Error in saveCronJobAction:", error);
+    return { status: "error", message: "Failed to save scheduler settings." };
   }
 }
 
@@ -599,6 +615,8 @@ export async function loadDashboardData(): Promise<DashboardData> {
     
     const sites: DashboardSiteSummary[] = websitesRaw.map(site => ({
       ...site,
+      indexNowVerified: site.indexNowVerified ?? false,
+      autoIndexingEnabled: site.autoIndexingEnabled ?? false,
       sourceCount: Number(site.sourceCount || 0)
     }));
 
@@ -672,7 +690,7 @@ export async function getSitemapStatsAction(websiteId: string) {
       status: "success",
       data: {
         sitemapUrl: website.sitemapUrl,
-        discoveredSitemaps: [],
+        discoveredSitemaps: [] as string[],
         totalFetched: discovered || 0,
       }
     };

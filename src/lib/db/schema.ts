@@ -107,6 +107,10 @@ export const websites = pgTable("websites", {
   bingApiKeyLastFour: text("bing_api_key_last_four"),
   autoIndexingEnabled: boolean("auto_indexing_enabled").default(false),
   pingsEnabled: boolean("pings_enabled").default(true),
+  siteHealth: jsonb("site_health"),
+  yandexToken: text("yandex_token"),
+  baiduToken: text("baidu_token"),
+  naverToken: text("naver_token"),
   lastSyncAt: timestamp("last_sync_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -191,7 +195,8 @@ export const cronJobs = pgTable("cron_jobs", {
   enabled: boolean("enabled").default(true).notNull(),
   frequency: text("frequency").notNull(), // 'hourly', 'daily', 'weekly', 'monthly'
   engine: submissionEngineEnum("engine").notNull(), // 'indexnow', 'bing', 'google'
-  sourceMode: text("source_mode").notNull(), // 'sitemap' or 'inventory'
+  sourceMode: text("source_mode").notNull(), // 'sitemap', 'inventory' (autodetect), or 'urls'
+  urls: text("urls"), // Defined URLs to submit if sourceMode is 'urls'
   lastRunAt: timestamp("last_run_at"),
   nextRunAt: timestamp("next_run_at"),
   createdAt: timestamp("created_at").defaultNow(),

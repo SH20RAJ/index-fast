@@ -5,12 +5,13 @@ import { parseSitemap } from "@/lib/utils/sitemap-parser";
 import { submitToBingBatch } from "@/lib/api/bing";
 import { submitToIndexNow } from "@/lib/api/indexnow";
 import { pingGoogleSitemap } from "@/lib/api/google";
+import { pingService } from "@/lib/api/ping-services";
 
 const INDEXNOW_BATCH_SIZE = 1000;
 const INVENTORY_SOURCE_LIMIT = 1000;
 const CLAIM_HOLD_MS = 5 * 60 * 1000;
 
-type SupportedEngine = "indexnow" | "bing" | "google";
+type SupportedEngine = "indexnow" | "bing" | "google" | "pingomatic" | "pingler" | "yandex" | "baidu" | "naver";
 
 function splitIntoBatches<T>(items: T[], batchSize: number): T[][] {
   const batches: T[][] = [];
@@ -61,7 +62,22 @@ function calculateNextRunFromFrequency(frequency: string, from = new Date()): Da
   }
 }
 
-async function getUrlsForSource(websiteId: string, sourceMode: string, sitemapUrl: string | null) {
+async function getUrlsForSource(
+  websiteId: string,
+  sourceMode: string,
+  sitemapUrl: string | null,
+  customUrls: string | null
+) {
+  if (sourceMode === "urls") {
+    if (!customUrls) return [];
+    return normalizeHttpUrls(
+      customUrls
+        .split(/\r?\n|,/)
+        .map((entry) => entry.trim())
+        .filter(Boolean)
+    );
+  }
+
   if (sourceMode === "inventory") {
     const rows = await db
       .select({ url: urlInventory.url })
@@ -92,6 +108,7 @@ export async function processDueCronJobs(maxJobs = 20) {
       enabled: cronJobs.enabled,
       frequency: cronJobs.frequency,
       sourceMode: cronJobs.sourceMode,
+      urls: cronJobs.urls,
       engine: cronJobs.engine,
       nextRunAt: cronJobs.nextRunAt,
       websiteUrl: websites.url,
@@ -137,7 +154,7 @@ export async function processDueCronJobs(maxJobs = 20) {
       }
 
       try {
-        const urls = await getUrlsForSource(row.websiteId, row.sourceMode, row.sitemapUrl);
+        const urls = await getUrlsForSource(row.websiteId, row.sourceMode, row.sitemapUrl, row.urls);
 
         if (urls.length === 0) {
           throw new Error("No eligible URLs found for this cron source.");
@@ -199,6 +216,17 @@ export async function processDueCronJobs(maxJobs = 20) {
             engine,
             status: res.success ? "success" : "failed",
             errorMessage: res.success ? undefined : res.error,
+          });
+        } else if (engine === "pingomatic") {
+          const urlsToPing = [row.websiteUrl, ...urls.slice(0, 3)];
+          for (const targetUrl of urlsToPing) {
+            await pingService("pingomatic", "IndexFast Automated Site", targetUrl);
+          }
+          submissionRows.push({
+            websiteId: row.websiteId,
+            url: `Cron Ping-o-matic broadcast for ${urlsToPing.length} URLs`,
+            engine,
+            status: "success" as const,
           });
         } else {
           throw new Error(`Engine ${engine} is not supported for automated cron jobs yet.`);
