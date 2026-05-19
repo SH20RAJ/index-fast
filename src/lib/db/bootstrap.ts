@@ -120,6 +120,15 @@ export async function ensureDbSchema() {
     await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "yandex_token" text;`);
     await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "baidu_token" text;`);
     await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "naver_token" text;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "gsc_service_account_key" text;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "name" text;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "domain" text;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "indexnow_key_location" text;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "indexnow_verified" boolean DEFAULT false;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "bing_api_key_last_four" text;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "auto_indexing_enabled" boolean DEFAULT false;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "pings_enabled" boolean DEFAULT true;`);
+    await run(`ALTER TABLE "websites" ADD COLUMN IF NOT EXISTS "updated_at" timestamp DEFAULT now();`);
 
     await run(`CREATE TABLE IF NOT EXISTS "user_subscriptions" (
       "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -177,11 +186,15 @@ export async function ensureDbSchema() {
       "frequency" text NOT NULL,
       "engine" submission_engine NOT NULL,
       "source_mode" text NOT NULL,
+      "urls" text,
       "last_run_at" timestamp,
       "next_run_at" timestamp,
       "created_at" timestamp DEFAULT now(),
       "updated_at" timestamp DEFAULT now()
     );`);
+
+    // Evolve cron_jobs: add urls column if missing.
+    await run(`ALTER TABLE "cron_jobs" ADD COLUMN IF NOT EXISTS "urls" text;`);
 
     await run(`CREATE TABLE IF NOT EXISTS "gsc_properties" (
       "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -234,6 +247,7 @@ export async function ensureDbSchema() {
     // --- Indexes -----------------------------------------------------------
     await run(`CREATE INDEX IF NOT EXISTS "idx_websites_user_id" ON "websites"("user_id");`);
     await run(`CREATE INDEX IF NOT EXISTS "idx_websites_created_at" ON "websites"("created_at");`);
+    await run(`CREATE UNIQUE INDEX IF NOT EXISTS "idx_websites_user_url_unique" ON "websites"("user_id", "url");`);
     await run(`CREATE INDEX IF NOT EXISTS "idx_url_inventory_website_id" ON "url_inventory"("website_id");`);
     await run(`CREATE INDEX IF NOT EXISTS "idx_submissions_website_id" ON "submissions"("website_id");`);
     await run(`CREATE INDEX IF NOT EXISTS "idx_submissions_created_at" ON "submissions"("created_at");`);
