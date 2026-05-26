@@ -28,6 +28,7 @@ const keySitelinks = [
   { name: "Docs", path: "/docs" },
   { name: "Blog", path: "/blog" },
   { name: "Tools", path: "/tools" },
+  { name: "Toolbox", path: "/tool-box" },
   { name: "Contact", path: "/contact" },
 ];
 

@@ -6,6 +6,7 @@ const footerLinks = {
     { name: "How It Works", href: "/how-it-works" },
     { name: "Pricing", href: "/pricing" },
     { name: "Tools", href: "/tools" },
+    { name: "Toolbox", href: "/tool-box" },
     { name: "IndexNow", href: "/indexnow" },
   ],
   resources: [
