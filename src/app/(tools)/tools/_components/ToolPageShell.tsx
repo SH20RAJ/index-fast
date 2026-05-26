@@ -50,7 +50,7 @@ export default function ToolPageShell({
             { label: "Ideal For", val: "Growth Operators", desc: "Rapid checks before publishing or scaling." },
             { label: "Next Step", val: "Save + Automate", desc: "Move from one-off checks to recurring logs." },
           ].map((stat) => (
-            <Card key={stat.label} size="sm">
+            <Card key={stat.label}>
               <CardHeader>
                 <CardDescription>{stat.label}</CardDescription>
                 <CardTitle>{stat.val}</CardTitle>

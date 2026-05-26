@@ -25,7 +25,7 @@ function parseMarkdownContent(markdown: string) {
   let inFaq = false;
   let currentFaq: any = null;
 
-  for (let line of lines) {
+  for (const line of lines) {
     const trimmed = line.trim();
     if (!trimmed) continue;
 
@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
   let id: string | number | null = null;
   try {
     // Support both Authorization header and query param for mcp-remote
-    let apiKey = req.nextUrl.searchParams.get("key");
+    const apiKey = req.nextUrl.searchParams.get("key");
 
     // if (!apiKey) {
     //   const authHeader = req.headers.get("Authorization");

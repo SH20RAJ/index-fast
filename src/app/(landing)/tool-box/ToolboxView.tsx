@@ -533,7 +533,7 @@ export default function ToolboxView() {
   }, []);
 
   return (
-    <div className="space-y-12 pb-16 pt-4 max-w-6xl">
+    <div className="space-y-12 pb-16 pt-4 max-w-6xl mx-auto px-6">
       <PageHeader
         title="Toolbox"
         description="The ultimate stack for search visibility and growth."

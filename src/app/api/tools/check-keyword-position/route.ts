@@ -3,7 +3,7 @@ import * as cheerio from "cheerio";
 
 export async function POST(req: NextRequest) {
   try {
-    let { url, keyword } = await req.json();
+    const { url, keyword } = await req.json();
     if (!url || !keyword) {
       return NextResponse.json({ error: "URL and Keyword are required" }, { status: 400 });
     }

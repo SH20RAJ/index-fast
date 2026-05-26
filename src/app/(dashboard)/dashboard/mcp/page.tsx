@@ -213,13 +213,13 @@ export default async function McpPage() {
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/5">
                   <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest">Single Page</p>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    "Index this page for me" — Say this to your agent and watch your content go live instantly.
+                    &quot;Index this page for me&quot; — Say this to your agent and watch your content go live instantly.
                   </p>
                 </div>
                 <div className="p-3 rounded-2xl bg-white/5 border border-white/5">
                   <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-widest">Full Site</p>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    "Rank all new URLs to search engines" — The ultimate command to sync your entire inventory.
+                    &quot;Rank all new URLs to search engines&quot; — The ultimate command to sync your entire inventory.
                   </p>
                 </div>
               </div>
