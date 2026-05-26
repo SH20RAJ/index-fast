@@ -75,7 +75,7 @@ export default function DashboardTopBar() {
     <>
       <header
         className={cn(
-          "sticky top-0 z-30 -mx-6 mb-6 flex h-12 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-sm",
+          "sticky top-0 z-30 -mx-6 mb-6 flex h-12 items-center justify-between border-b border-border bg-background px-4",
           "md:-mx-10 md:mb-8 md:px-0",
         )}
       >

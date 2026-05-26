@@ -26,10 +26,10 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
           <Card
             key={plan.id}
             className={cn(
-              "relative overflow-hidden transition-all duration-300 border-border/40 bg-card/30 backdrop-blur-sm",
-              isCurrent 
-                ? "ring-2 ring-primary border-primary/20 bg-primary/5 shadow-xl shadow-primary/5" 
-                : "hover:border-primary/20 hover:bg-card/50"
+              "relative overflow-hidden border-border bg-card",
+              isCurrent
+                ? "ring-1 ring-primary border-primary/20 bg-primary/5"
+                : "hover:border-border"
             )}
           >
             <CardContent className="p-5">
@@ -38,15 +38,15 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
                   <div className="flex items-center gap-3">
                     <div className={cn(
                       "flex h-10 w-10 items-center justify-center rounded-xl",
-                      isCurrent ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "bg-muted text-muted-foreground"
+                      isCurrent ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                     )}>
                       {plan.id === "free" ? <Activity className="h-5 w-5" /> : plan.id === "pro" ? <Zap className="h-5 w-5 fill-current" /> : <ShieldCheck className="h-5 w-5" />}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-base font-black tracking-tighter leading-none">{plan.name}</h4>
+                        <h4 className="text-base font-semibold tracking-tighter leading-none">{plan.name}</h4>
                         {isCurrent && (
-                          <Badge variant="secondary" className="h-5 px-1.5 text-[9px] font-black uppercase tracking-widest bg-primary text-primary-foreground border-none">
+                          <Badge variant="secondary" className="h-5 px-1.5 text-[9px] font-semibold uppercase tracking-widest bg-primary text-primary-foreground border-none">
                             Current
                           </Badge>
                         )}
@@ -57,7 +57,7 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-x-6 gap-y-2 text-[11px] font-black uppercase tracking-wider text-muted-foreground/60">
+                  <div className="flex flex-wrap gap-x-6 gap-y-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60">
                     <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3 text-pink-500" /> {plan.websiteLimit} sites</span>
                     <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3 text-pink-500" /> {plan.submissionLimitMonthly.toLocaleString()} submissions</span>
                     <span className="flex items-center gap-1.5">
@@ -67,7 +67,7 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
                   </div>
 
                   {plan.trialDays && (
-                    <div className="flex items-center gap-2 text-[10px] font-black text-pink-600 dark:text-pink-400 bg-pink-500/10 px-2.5 py-1 rounded-full w-fit">
+                    <div className="flex items-center gap-2 text-[10px] font-semibold text-pink-600 dark:text-pink-400 bg-pink-500/10 px-2.5 py-1 rounded-full w-fit">
                       <Sparkles className="h-3 w-3" />
                       {plan.trialDays} DAY FREE TRIAL
                     </div>
@@ -76,7 +76,7 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
 
                 <div className="flex flex-col items-center md:items-end gap-3 min-w-[140px]">
                   <div className="text-center md:text-right">
-                    <span className="text-2xl font-black tracking-tighter leading-none">
+                    <span className="text-2xl font-semibold tracking-tighter leading-none">
                       {plan.priceMonthly === 0 ? "Free" : `$${plan.priceMonthly}`}
                     </span>
                     {plan.priceMonthly > 0 && <span className="text-[10px] font-bold text-muted-foreground ml-1">/mo</span>}
@@ -89,7 +89,7 @@ export default function PlanSelectorForm({ currentPlanId }: PlanSelectorFormProp
                       variant={isCurrent ? "outline" : "default"}
                       disabled={pending || isCurrent}
                       className={cn(
-                        "w-full h-10 font-bold uppercase tracking-tighter text-[11px] rounded-xl transition-all active:scale-95 shadow-sm",
+                        "w-full h-10 font-medium text-[11px] rounded-md transition-colors active:scale-[0.98]",
                         isCurrent && "border-primary/20 text-primary opacity-100 hover:bg-transparent"
                       )}
                     >

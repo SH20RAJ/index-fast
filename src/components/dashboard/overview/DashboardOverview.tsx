@@ -34,7 +34,7 @@ function formatDate(date: Date | string | null | undefined) {
 
 function SiteCard({ site }: { site: DashboardSiteSummary }) {
   return (
-    <Card className="overflow-hidden border-border/60 bg-card transition-all hover:border-primary/30 hover:shadow-sm">
+    <Card className="overflow-hidden border-border bg-card">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-primary/10 p-2 text-primary">
@@ -92,7 +92,7 @@ function SiteCard({ site }: { site: DashboardSiteSummary }) {
                 Edit
               </Link>
             </Button>
-            <Button size="sm" className="h-8 px-3 text-xs font-bold shadow-sm">
+            <Button size="sm" className="h-8 px-3 text-xs font-medium">
               <RefreshCw className="mr-1.5 h-3 w-3" />
               Sync now
             </Button>
@@ -114,7 +114,7 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
           <p className="text-sm text-muted-foreground">Manage your website indexing and automation.</p>
         </div>
         {!needsSetup && (
-          <Button asChild className="rounded-xl font-bold shadow-lg shadow-primary/20">
+          <Button asChild className="rounded-lg font-medium">
             <Link href="/dashboard/sites/new">
               <Plus className="mr-2 h-4 w-4" />
               Add site
@@ -125,7 +125,7 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
 
       {needsSetup ? (
         <div className="flex flex-col items-center justify-center py-12">
-          <Card className="w-full max-w-xl overflow-hidden rounded-3xl border-2 border-primary/20 bg-card shadow-2xl shadow-primary/5">
+          <Card className="w-full max-w-xl overflow-hidden rounded-lg border border-border bg-card">
             <div className="bg-primary/5 px-8 py-10 text-center">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                 <Zap className="h-8 w-8" />
@@ -137,7 +137,7 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
               </p>
             </div>
             <CardContent className="flex justify-center p-8">
-              <Button asChild size="lg" className="h-12 rounded-2xl px-8 text-base font-bold shadow-xl shadow-primary/25 transition-transform hover:scale-105 active:scale-95">
+              <Button asChild size="lg" className="h-11 rounded-lg px-8 text-base font-medium">
                 <Link href="/sites/new">
                   <Plus className="mr-2 h-5 w-5" />
                   Add site
@@ -157,9 +157,9 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
       {!needsSetup && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Link href="/dashboard/mcp" className="group">
-            <Card className="h-full border-border/60 bg-muted/10 transition-colors hover:bg-muted/30">
+            <Card className="h-full border-border bg-muted/10 hover:bg-muted/20">
               <CardContent className="flex items-center gap-4 p-5">
-                <div className="rounded-xl bg-primary/10 p-2 text-primary transition-colors group-hover:bg-primary/20">
+                <div className="rounded-lg bg-primary/10 p-2 text-primary">
                   <Zap className="h-5 w-5" />
                 </div>
                 <div>
@@ -171,9 +171,9 @@ export default function DashboardOverview({ data }: DashboardOverviewProps) {
             </Card>
           </Link>
           <Link href="/toolbox" className="group">
-            <Card className="h-full border-border/60 bg-muted/10 transition-colors hover:bg-muted/30">
+            <Card className="h-full border-border bg-muted/10 hover:bg-muted/20">
               <CardContent className="flex items-center gap-4 p-5">
-                <div className="rounded-xl bg-orange-500/10 p-2 text-orange-500 transition-colors group-hover:bg-orange-500/20">
+                <div className="rounded-lg bg-orange-500/10 p-2 text-orange-500">
                   <Plus className="h-5 w-5" />
                 </div>
                 <div>

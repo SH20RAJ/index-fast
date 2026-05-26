@@ -43,7 +43,7 @@ export default function DashboardShell({
             <ChatAssistant />
             <Link
               href="/sites/new"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background transition-colors hover:opacity-90"
               title="Add Website"
             >
               <Plus className="h-5 w-5" />

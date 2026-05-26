@@ -19,7 +19,7 @@ export default function AccountEmailForm({ initialEmail }: AccountEmailFormProps
   return (
     <form action={formAction} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">
+        <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground ml-1">
           Account Email
         </Label>
         <Input
@@ -37,7 +37,7 @@ export default function AccountEmailForm({ initialEmail }: AccountEmailFormProps
       <Button
         type="submit"
         disabled={pending}
-        className="gap-2 font-black shadow-lg shadow-primary/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
+        className="gap-2 font-medium transition-colors hover:opacity-90"
       >
         {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
         {pending ? "Saving..." : "Save Email"}
