@@ -56,6 +56,20 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       authors: [post.author],
+      images: [
+        {
+          url: post.hero || "/logo/og2.png",
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [post.hero || "/logo/og2.png"],
     },
   };
 }
@@ -76,15 +90,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
+    image: post.hero || `${siteUrl}/logo/og2.png`,
     datePublished: post.publishedAt,
     dateModified: post.updatedAt,
     author: {
-      "@type": "Organization",
+      "@type": "Person",
       name: post.author,
     },
     publisher: {
       "@type": "Organization",
       name: "IndexFast",
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/icon.png`,
+      },
     },
     mainEntityOfPage: `${siteUrl}/blog/${post.slug}`,
     keywords: post.keywords.join(", "),

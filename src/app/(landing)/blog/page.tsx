@@ -10,12 +10,34 @@ import { BlogPagination } from "./_components/blog-pagination";
 import { BlogSort } from "./_components/blog-sort";
 import { Suspense } from "react";
 
+const title = "Blog - Indexing & SEO Guides";
+const description = "Practical guides to help you get indexed faster and grow your website traffic. Learn about Google Indexing API, IndexNow, and technical SEO automation.";
+
 export const metadata: Metadata = {
-  title: "Blog - Indexing & SEO Guides",
-  description:
-    "Practical guides to help you get indexed faster and grow your website traffic.",
+  title,
+  description,
   alternates: {
     canonical: "/blog",
+  },
+  openGraph: {
+    title,
+    description,
+    type: "website",
+    url: "/blog",
+    images: [
+      {
+        url: "/logo/og2.png",
+        width: 1200,
+        height: 630,
+        alt: "IndexFast Blog - SEO & Indexing Guides",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/logo/og2.png"],
   },
 };
 
@@ -42,8 +64,41 @@ export default async function BlogIndexPage(props: {
   const featuredPost = isDefaultView ? posts[0] : null;
   const displayPosts = featuredPost ? posts.slice(1) : posts;
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
+
+  const blogJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "IndexFast Blog",
+    description,
+    url: `${siteUrl}/blog`,
+    publisher: {
+      "@type": "Organization",
+      name: "IndexFast",
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/icon.png`,
+      },
+    },
+    blogPost: posts.map((post) => ({
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.description,
+      url: `${siteUrl}/blog/${post.slug}`,
+      datePublished: post.publishedAt,
+      author: {
+        "@type": "Person",
+        name: post.author,
+      },
+    })),
+  };
+
   return (
     <main className="min-h-screen bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+      />
       {/* Header & Search */}
       <div className="border-b border-border/40 bg-zinc-50/50 dark:bg-zinc-950/50">
         <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20 text-center">

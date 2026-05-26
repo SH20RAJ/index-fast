@@ -14,6 +14,7 @@ export async function getPublicSitePaths(): Promise<string[]> {
     "/pricing",
     "/blog",
     "/tools",
+    "/tool-box",
     "/indexnow",
   ];
 
