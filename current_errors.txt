@@ -1,5 +1,0 @@
-src/app/(landing)/docs/page.tsx(104,10): error TS2304: Cannot find name 'Button'.
-src/app/(landing)/docs/page.tsx(106,11): error TS2304: Cannot find name 'Button'.
-src/app/(tools)/tools/_components/ToolPageShell.tsx(53,36): error TS2322: Type '{ children: Element[]; key: string; size: string; }' is not assignable to type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement>'.
-  Property 'size' does not exist on type 'IntrinsicAttributes & HTMLAttributes<HTMLDivElement>'.
-src/components/ui/combobox.tsx(255,43): error TS2820: Type '"icon-xs"' is not assignable to type '"default" | "sm" | "lg" | "icon" | "icon-sm" | null | undefined'. Did you mean '"icon-sm"'?
