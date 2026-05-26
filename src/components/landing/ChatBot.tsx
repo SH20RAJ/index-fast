@@ -3,8 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle, Send, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { AIAssistantCard } from "@/components/ui/ai-assistant-card";
 
 interface Message {
   id: string;
@@ -108,118 +106,130 @@ export default function ChatBot() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
   const hasMessages = messages.length > 0;
 
   return (
     <>
-      {/* Floating trigger button */}
+      {/* Floating trigger */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full bg-gradient-to-br from-pink-600 to-pink-700 text-white shadow-lg shadow-pink-600/30 hover:shadow-pink-600/50 transition-all duration-300 hover:scale-110 flex items-center justify-center group"
+          className="fixed bottom-6 right-6 z-40 flex h-10 w-10 items-center justify-center rounded-lg bg-foreground text-background transition-colors hover:bg-foreground/90"
           aria-label="Open chat"
         >
-          <MessageCircle className="h-6 w-6" />
-          <span className="absolute bottom-full right-0 mb-3 px-3 py-1 text-xs font-semibold bg-gray-900 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-            Chat with us
-          </span>
+          <MessageCircle className="h-4 w-4" />
         </button>
       )}
 
       {/* Chat window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-1.5rem)]">
-          <Card className="flex flex-col border-border/70 bg-card/95 backdrop-blur-xl shadow-2xl overflow-hidden">
-            {/* Welcome / empty state → use AIAssistantCard */}
+        <div className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-1.5rem)] flex flex-col rounded-xl border border-border bg-background shadow-lg overflow-hidden" style={{ height: "520px" }}>
+          {/* Header */}
+          <div className="flex items-center justify-between border-b px-4 py-3">
+            <h3 className="text-sm font-semibold text-foreground">IndexFast Assistant</h3>
+            <button
+              onClick={() => { setIsOpen(false); setMessages([]); }}
+              className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted"
+              aria-label="Close chat"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto">
             {!hasMessages ? (
-              <AIAssistantCard
-                userName="there"
-                onClose={() => setIsOpen(false)}
-                onSend={(text) => handleSend(text)}
-              />
+              <div className="flex flex-col items-center justify-center h-full px-6 text-center">
+                <h3 className="text-sm font-semibold text-foreground mb-1">How can I help?</h3>
+                <p className="text-xs text-muted-foreground mb-5 max-w-[220px]">
+                  Ask about indexing, sitemaps, or SEO strategy.
+                </p>
+                <div className="grid grid-cols-1 gap-1.5 w-full">
+                  <QuickPrompt
+                    label="Submit URLs for indexing"
+                    onClick={() => handleSend("How do I submit my URLs for indexing?")}
+                  />
+                  <QuickPrompt
+                    label="Analyze my SEO health"
+                    onClick={() => handleSend("Analyze the SEO health of my site.")}
+                  />
+                  <QuickPrompt
+                    label="Check indexing status"
+                    onClick={() => handleSend("Why aren't my pages indexed yet?")}
+                  />
+                </div>
+              </div>
             ) : (
-              <>
-                {/* Conversation header */}
-                <div className="flex items-center justify-between border-b border-border/70 p-4 bg-gradient-to-r from-pink-600/10 to-pink-500/10">
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-pink-500 animate-pulse" />
-                    <div>
-                      <h3 className="font-semibold text-sm">IndexFast Assistant</h3>
-                      <p className="text-xs text-muted-foreground">Always here to help</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => { setIsOpen(false); setMessages([]); }}
-                    className="p-1 hover:bg-muted rounded-md transition-colors"
-                    aria-label="Close chat"
+              <div className="px-4 py-5 space-y-4">
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={message.role === "user" ? "flex justify-end" : "flex justify-start"}
                   >
-                    <X className="h-4 w-4 text-muted-foreground" />
-                  </button>
-                </div>
-
-                {/* Messages */}
-                <div className="h-[420px] overflow-y-auto space-y-4 p-4">
-                  {messages.map((message) => (
                     <div
-                      key={message.id}
-                      className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                      className={
+                        message.role === "user"
+                          ? "bg-primary text-primary-foreground rounded-2xl rounded-br-md px-3.5 py-2 text-sm leading-relaxed max-w-[85%]"
+                          : "text-foreground text-sm leading-relaxed max-w-[85%]"
+                      }
                     >
-                      <div
-                        className={`max-w-xs px-4 py-2 rounded-lg text-sm leading-relaxed ${
-                          message.role === "user"
-                            ? "bg-pink-600 text-white rounded-br-none"
-                            : "bg-muted text-foreground rounded-bl-none border border-border/50"
-                        }`}
-                      >
-                        {message.content}
-                      </div>
+                      {message.content}
                     </div>
-                  ))}
-                  {isLoading && (
-                    <div className="flex justify-start">
-                      <div className="bg-muted text-foreground px-4 py-2 rounded-lg border border-border/50 rounded-bl-none">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      </div>
-                    </div>
-                  )}
-                  <div ref={messagesEndRef} />
-                </div>
-
-                {/* Input */}
-                <div className="border-t border-border/70 p-4 bg-gradient-to-t from-muted/30 to-transparent">
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                          e.preventDefault();
-                          handleSend();
-                        }
-                      }}
-                      placeholder="Ask anything..."
-                      className="flex-1 px-3 py-2 bg-background border border-border/50 rounded-lg text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all"
-                      disabled={isLoading}
-                    />
-                    <Button
-                      onClick={() => handleSend()}
-                      disabled={isLoading || !input.trim()}
-                      size="sm"
-                      className="bg-pink-600 hover:bg-pink-700 text-white"
-                    >
-                      <Send className="h-4 w-4" />
-                    </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2 text-center">
-                    Powered by AI · Press Enter to send
-                  </p>
-                </div>
-              </>
+                ))}
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
             )}
-          </Card>
+          </div>
+
+          {/* Input */}
+          <div className="border-t px-4 py-3">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask anything..."
+                className="flex-1 h-9 rounded-lg bg-muted border-0 px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                disabled={isLoading}
+              />
+              <Button
+                onClick={() => handleSend()}
+                disabled={isLoading || !input.trim()}
+                size="icon"
+                variant="ghost"
+                className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground"
+              >
+                <Send className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </>
+  );
+}
+
+function QuickPrompt({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="rounded-lg border border-border px-3 py-2 text-xs text-foreground text-left transition-colors hover:bg-muted"
+    >
+      {label}
+    </button>
   );
 }

@@ -205,6 +205,21 @@ export async function ensureDbSchema() {
       "last_synced_at" timestamp DEFAULT now()
     );`);
 
+    await run(`CREATE TABLE IF NOT EXISTS "website_sources" (
+      "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      "website_id" uuid NOT NULL REFERENCES "websites"("id") ON DELETE CASCADE,
+      "user_id" text NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+      "url" text NOT NULL,
+      "type" text NOT NULL,
+      "enabled" boolean DEFAULT true NOT NULL,
+      "last_fetched_at" timestamp,
+      "last_status" text,
+      "last_error" text,
+      "created_at" timestamp DEFAULT now(),
+      "updated_at" timestamp DEFAULT now()
+    );`);
+
+    await run(`CREATE INDEX IF NOT EXISTS "idx_website_sources_website_id" ON "website_sources"("website_id");`);
     await run(`CREATE UNIQUE INDEX IF NOT EXISTS "idx_gsc_props_user_site_unique" ON "gsc_properties"("user_id", "site_url");`);
 
     await run(`CREATE TABLE IF NOT EXISTS "chat_conversations" (

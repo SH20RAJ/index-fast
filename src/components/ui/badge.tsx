@@ -1,39 +1,36 @@
-"use client";
-
 import * as React from "react";
-import { Badge as RizzBadge, type BadgeProps as RizzBadgeProps } from "rizzui/badge";
 import { cn } from "@/lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
 
-const variantMap = {
-  default: "solid",
-  secondary: "flat",
-  destructive: "solid",
-  outline: "outline",
-} as const;
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
+  {
+    variants: {
+      variant: {
+        default:
+          "bg-foreground/10 text-foreground",
+        secondary:
+          "bg-muted text-muted-foreground",
+        destructive:
+          "bg-destructive/10 text-destructive",
+        outline:
+          "border border-border text-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
 
-const colorMap = {
-  default: "primary",
-  secondary: "secondary",
-  destructive: "danger",
-  outline: "primary",
-} as const;
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLSpanElement>,
+    VariantProps<typeof badgeVariants> {}
 
-export interface BadgeProps extends Omit<RizzBadgeProps, "variant"> {
-  variant?: keyof typeof variantMap;
-}
-
-function Badge({ className, variant = "default", color, ...props }: BadgeProps) {
-  const rizzVariant = variantMap[variant] || "solid";
-  const rizzColor = color || colorMap[variant] || "primary";
-
+function Badge({ className, variant, ...props }: BadgeProps) {
   return (
-    <RizzBadge
-      variant={rizzVariant}
-      color={rizzColor}
-      className={cn(className)}
-      {...props}
-    />
+    <span className={cn(badgeVariants({ variant }), className)} {...props} />
   );
 }
 
-export { Badge };
+export { Badge, badgeVariants };

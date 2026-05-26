@@ -1,56 +1,58 @@
-"use client";
-
-import { motion, type Variants } from "framer-motion";
-import { LogoCloud } from "@/components/ui/logo-cloud-2";
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } 
-  },
-};
+const engines = [
+  { name: "Google", share: "89.85%" },
+  { name: "Bing", share: "5.13%" },
+  { name: "Yahoo", share: "1.48%" },
+  { name: "Yandex", share: "1.30%" },
+  { name: "DuckDuckGo", share: "0.75%" },
+  { name: "Baidu", share: "0.53%" },
+  { name: "Ask", share: "0.51%" },
+  { name: "Ecosia", share: "0.45%" },
+  { name: "Naver", share: "0.15%" },
+];
 
 export default function SupportedEngines() {
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 lg:px-8">
-      <motion.div 
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        className="space-y-4 pb-12 text-center"
-      >
-        <motion.p 
-          variants={fadeUp}
-          className="text-xs font-bold uppercase tracking-[0.22em] text-primary"
-        >
+      <div className="space-y-3 pb-12">
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           Global Reach
-        </motion.p>
-        <motion.h2 
-          variants={fadeUp}
-          className="text-3xl font-serif font-bold tracking-tight sm:text-5xl"
-        >
-          Get indexed on Google, Bing,<br />
-          and <span className="text-primary italic">120+ more</span>
-        </motion.h2>
-        <motion.p 
-          variants={fadeUp}
-          className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg"
-        >
-          We submit your pages directly to every major search engine and the Internet Archive, 
-          ensuring your content is discovered and preserved instantly.
-        </motion.p>
-      </motion.div>
+        </p>
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          Get indexed on every major search engine
+        </h2>
+        <p className="max-w-2xl text-base text-muted-foreground">
+          We submit your pages directly to Google, Bing, and seven other search
+          engines, plus the Internet Archive for preservation.
+        </p>
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-      >
-        <LogoCloud />
-      </motion.div>
+      <div className="divide-y divide-border rounded-lg border border-border">
+        {engines.map((engine) => (
+          <div
+            key={engine.name}
+            className="flex items-center justify-between px-5 py-3.5"
+          >
+            <span className="text-sm font-medium text-foreground">
+              {engine.name}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {engine.share} market share
+            </span>
+          </div>
+        ))}
+        <div className="flex items-center justify-between px-5 py-3.5">
+          <span className="text-sm font-medium text-foreground">
+            Internet Archive
+          </span>
+          <span className="text-xs text-muted-foreground">
+            Archival preservation
+          </span>
+        </div>
+      </div>
+
+      <p className="mt-4 text-xs text-muted-foreground">
+        Market share data from Statcounter, March 2026.
+      </p>
     </section>
   );
 }

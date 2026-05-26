@@ -1,17 +1,22 @@
 "use client";
 
 import * as React from "react";
-import { Input as RizzInput, type InputProps as RizzInputProps } from "rizzui/input";
 import { cn } from "@/lib/utils";
 
-const Input = React.forwardRef<HTMLInputElement, any>(
-  ({ className, ...props }, ref) => {
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, ...props }, ref) => {
     return (
-      <RizzInput
+      <input
+        type={type}
         ref={ref}
-        className={cn(className)}
-        inputClassName="h-9 px-3 py-1 text-sm shadow-sm"
-        {...(props as any)}
+        className={cn(
+          "flex h-9 w-full rounded-[6px] border border-border bg-transparent px-3 py-1 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        )}
+        {...props}
       />
     );
   }

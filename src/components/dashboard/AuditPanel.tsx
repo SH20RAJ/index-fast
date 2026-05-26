@@ -1,29 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { 
-  AlertCircle, 
-  AlertTriangle, 
-  Info, 
-  CheckCircle2, 
-  RefreshCcw, 
-  Copy,
-  Check,
-  ShieldCheck,
-  Sparkles
-} from "lucide-react";
+import { Copy, Check, RefreshCcw, AlertCircle, AlertTriangle, Info, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -55,6 +34,18 @@ function normalizeAuditResult(input: unknown) {
   };
 }
 
+function scoreColor(s: number) {
+  if (s >= 80) return "text-primary";
+  if (s >= 50) return "text-accent";
+  return "text-destructive";
+}
+
+function issueIcon(type: AuditIssue["type"]) {
+  if (type === "error") return <AlertCircle className="h-4 w-4 text-destructive" />;
+  if (type === "warning") return <AlertTriangle className="h-4 w-4 text-accent" />;
+  return <Info className="h-4 w-4 text-muted-foreground" />;
+}
+
 export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(() => normalizeAuditResult(initialResult));
@@ -66,10 +57,10 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
       const res = await fetch(`/api/websites/${websiteId}/audit`, { method: "POST" });
       const data = await res.json();
       setResult(normalizeAuditResult(data));
-      toast.success("Audit completed successfully");
+      toast.success("Audit completed");
     } catch (error) {
       console.error("Audit failed:", error);
-      toast.error("Failed to run SEO audit");
+      toast.error("Failed to run audit");
     } finally {
       setLoading(false);
     }
@@ -78,151 +69,103 @@ export default function AuditPanel({ websiteId, initialResult }: AuditPanelProps
   const copyPrompt = (prompt: string, index: number) => {
     navigator.clipboard.writeText(prompt);
     setCopiedIndex(index);
-    toast.success("Prompt copied to clipboard");
+    toast.success("Copied to clipboard");
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
   if (!result && !loading) {
     return (
-      <Card className="border-dashed border-2 border-border/40 bg-card/20 py-12">
-        <CardContent className="flex flex-col items-center justify-center text-center space-y-4">
-          <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
-            <Sparkles className="h-8 w-8 text-primary" />
-          </div>
-          <div className="space-y-1">
-            <h3 className="text-xl font-bold tracking-tight">SEO Audit</h3>
-            <p className="text-sm text-muted-foreground max-w-[280px]">
-              Find SEO issues and get AI prompts to fix them instantly.
-            </p>
-          </div>
-          <Button onClick={runAudit} className="gap-2 font-bold shadow-lg shadow-primary/10">
-            <RefreshCcw className="h-4 w-4" /> Start Audit
-          </Button>
-        </CardContent>
-      </Card>
+      <div className="rounded-md border border-border bg-card p-6 flex flex-col items-center gap-3 text-center">
+        <h3 className="text-sm font-medium">SEO Audit</h3>
+        <p className="text-xs text-muted-foreground max-w-[260px]">
+          Find SEO issues and get AI prompts to fix them.
+        </p>
+        <Button onClick={runAudit} size="sm" variant="outline">
+          Start Audit
+        </Button>
+      </div>
     );
   }
 
   const score = result?.score ?? 0;
   const issues = result?.issues ?? [];
 
-  const getScoreColor = (s: number) => {
-    if (s >= 80) return "text-pink-500 border-pink-500/20";
-    if (s >= 50) return "text-amber-500 border-amber-500/20";
-    return "text-red-500 border-red-500/20";
-  };
-
   return (
-    <div className="space-y-6">
-      {/* Score Header */}
-      <Card className="border-border/40 bg-card/50 backdrop-blur-sm shadow-sm overflow-hidden group">
-        <CardContent className="p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <div className={cn(
-              "relative h-20 w-20 rounded-full border-[6px] flex items-center justify-center transition-all duration-700 group-hover:scale-110",
-              getScoreColor(score)
-            )}>
-              <span className="text-2xl font-bold">{score}</span>
-              <div className="absolute inset-0 rounded-full bg-current opacity-5 animate-pulse" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold tracking-tight">SEO Score</h3>
-              <p className="text-xs text-muted-foreground font-medium opacity-70">
-                Calculated from your page data
-              </p>
-            </div>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={runAudit}
-            disabled={loading}
-            className="gap-2 font-bold border-border/40 bg-background/50 hover:bg-primary/5 hover:text-primary transition-all"
-          >
-            <RefreshCcw className={cn("h-4 w-4 transition-transform duration-700", loading && "animate-spin")} />
-            {loading ? "Analyzing..." : "Re-audit"}
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* Issues List */}
-      <div className="space-y-4">
-        {issues.length === 0 ? (
-          <Card className="border-pink-500/10 bg-pink-500/5 py-12">
-            <CardContent className="flex flex-col items-center justify-center text-center space-y-3">
-              <div className="h-12 w-12 rounded-full bg-pink-500/10 flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-pink-500" />
-              </div>
-              <div className="space-y-1">
-                <h4 className="font-bold tracking-tight">No issues found</h4>
-                <p className="text-xs text-pink-600/70 font-medium">Your site looks good.</p>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          issues.map((issue, idx) => (
-            <Card key={idx} className="border-border/40 bg-card/40 hover:bg-card/60 transition-all group overflow-hidden">
-              <CardContent className="p-5">
-                <div className="flex gap-4">
-                  <div className={cn(
-                    "h-10 w-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm",
-                    issue.type === "error" ? "bg-red-500/10 text-red-500" : 
-                    issue.type === "warning" ? "bg-amber-500/10 text-amber-500" : 
-                    "bg-pink-500/10 text-pink-500"
-                  )}>
-                    {issue.type === "error" ? <AlertCircle className="h-5 w-5" /> : 
-                     issue.type === "warning" ? <AlertTriangle className="h-5 w-5" /> : 
-                     <Info className="h-5 w-5" />}
-                  </div>
-                  
-                  <div className="flex-grow space-y-3">
-                    <div className="flex items-center justify-between gap-4">
-                      <h4 className="text-base font-bold tracking-tight leading-tight">{issue.title}</h4>
-                      <Badge variant="outline" className={cn(
-                        "font-bold text-[10px] uppercase border-none px-2 py-0.5",
-                        issue.type === "error" ? "bg-red-500/10 text-red-600" : 
-                        issue.type === "warning" ? "bg-amber-500/10 text-amber-600" : 
-                        "bg-pink-500/10 text-pink-600"
-                      )}>
-                        {issue.type}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed font-medium">
-                      {issue.description}
-                    </p>
-                    
-                    <div className="p-4 rounded-2xl bg-muted/30 border border-border/10 space-y-2 relative group/prompt">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-                          <CheckCircle2 className="h-3 w-3" /> Fix with AI
-                        </span>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                onClick={() => copyPrompt(issue.cursorPrompt, idx)}
-                                className="p-1.5 rounded-lg bg-background border border-border/20 text-muted-foreground hover:text-primary hover:border-primary/20 transition-all"
-                              >
-                                {copiedIndex === idx ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="text-xs font-bold">Copy Prompt</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                      <p className="text-sm italic text-muted-foreground/80 leading-relaxed pr-8">
-                        &quot;{issue.cursorPrompt}&quot;
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
+    <div className="space-y-3">
+      {/* Score */}
+      <div className="rounded-md border border-border bg-card px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className={cn("text-lg font-semibold tabular-nums", scoreColor(score))}>
+            {score}
+          </span>
+          <span className="text-xs text-muted-foreground">SEO Score</span>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={runAudit}
+          disabled={loading}
+          className="text-xs text-muted-foreground"
+        >
+          {loading ? "Analyzing..." : "Re-audit"}
+        </Button>
       </div>
+
+      {/* Issues */}
+      {issues.length === 0 ? (
+        <div className="rounded-md border border-border bg-card px-4 py-3 flex items-center gap-2">
+          <CheckCircle2 className="h-3.5 w-3.5 text-muted-foreground" />
+          <span className="text-xs text-muted-foreground">No issues found.</span>
+        </div>
+      ) : (
+        <div className="rounded-md border border-border bg-card divide-y divide-border">
+          {issues.map((issue, idx) => (
+            <div key={idx} className="px-4 py-3 space-y-2">
+              <div className="flex items-start gap-2.5">
+                <span className="mt-0.5 shrink-0">{issueIcon(issue.type)}</span>
+                <div className="flex-1 min-w-0 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-medium text-foreground">{issue.title}</h4>
+                    <span className={cn(
+                      "text-[10px] font-medium uppercase tracking-wide",
+                      issue.type === "error" ? "text-destructive" :
+                      issue.type === "warning" ? "text-accent" :
+                      "text-muted-foreground"
+                    )}>
+                      {issue.type}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {issue.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* AI Fix Prompt */}
+              <div className="ml-6 rounded-md bg-background px-3 py-2 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                    Fix with AI
+                  </span>
+                  <button
+                    onClick={() => copyPrompt(issue.cursorPrompt, idx)}
+                    className="p-0.5 text-muted-foreground hover:text-foreground"
+                  >
+                    {copiedIndex === idx ? (
+                      <Check className="h-3 w-3" />
+                    ) : (
+                      <Copy className="h-3 w-3" />
+                    )}
+                  </button>
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-relaxed font-mono">
+                  {issue.cursorPrompt}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

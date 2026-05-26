@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 export interface WebsiteBasic {
   id: string;
@@ -31,39 +37,30 @@ export function SiteProvider({
 
   // Restore selected site from localStorage, fallback to first site
   useEffect(() => {
-    if (websites.length > 0) {
-      let found: WebsiteBasic | undefined;
-
-      const savedSiteId = localStorage.getItem("indexfast_selected_site_id");
-      if (savedSiteId) {
-        found = websites.find((w) => w.id === savedSiteId);
-      }
-
-      if (!found) {
-        found = websites[0];
-      }
-
-      if (found && found.id !== selectedSite?.id) {
-        setSelectedSite(found);
-      }
-
+    if (websites.length === 0) {
+      setSelectedSite(null);
       setLoading(false);
-    } else {
-      if (selectedSite !== null) {
-        setSelectedSite(null);
-      }
-      setLoading(false);
+      return;
     }
+
+    const savedId = localStorage.getItem("indexfast_selected_site_id");
+    const match = savedId ? websites.find((w) => w.id === savedId) : undefined;
+    const target = match ?? websites[0];
+
+    if (target.id !== selectedSite?.id) {
+      setSelectedSite(target);
+    }
+    setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [websites]);
 
   // Persist selected site to localStorage
   useEffect(() => {
-    if (!selectedSite) {
+    if (selectedSite) {
+      localStorage.setItem("indexfast_selected_site_id", selectedSite.id);
+    } else {
       localStorage.removeItem("indexfast_selected_site_id");
-      return;
     }
-    localStorage.setItem("indexfast_selected_site_id", selectedSite.id);
   }, [selectedSite]);
 
   return (

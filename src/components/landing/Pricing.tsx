@@ -1,29 +1,19 @@
-"use client";
-
-import { useState } from "react";
-import { Check, Info, HelpCircle, Calculator, TrendingUp, Sparkles, ShieldCheck } from "lucide-react";
-import { useStackApp, useUser } from "@stackframe/stack";
-
+import { Check } from "lucide-react";
 import { PLAN_DEFINITIONS } from "@/lib/billing/plans";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { CheckoutButton } from "@/components/landing/CheckoutButton";
 
 const plans = Object.values(PLAN_DEFINITIONS);
 const countFormatter = new Intl.NumberFormat("en-US");
 
 const FAQS = [
-  { q: "Can I cancel anytime?", a: "Yes, you can cancel your subscription at any time from your billing dashboard with one click." },
-  { q: "Is it safe for my site?", a: "100%. We use official Google & Bing Indexing APIs. No black-hat tactics involved." },
-  { q: "Does it work with WordPress?", a: "Yes, it works with any platform (WordPress, Shopify, custom builds) that has a sitemap." },
-  { q: "How fast will I see results?", a: "URLs are typically crawled within 4-24 hours after submission." }
+  { q: "Can I cancel anytime?", a: "Yes, cancel from your billing dashboard with one click. No questions asked." },
+  { q: "Is it safe for my site?", a: "We use official Google and Bing Indexing APIs only. No black-hat tactics." },
+  { q: "Does it work with WordPress?", a: "Yes. It works with any platform that has a sitemap — WordPress, Shopify, custom builds, and more." },
+  { q: "How fast will I see results?", a: "URLs are typically crawled within 4 to 24 hours after submission." },
 ];
 
-function getPlanFeatureLines(plan: (typeof plans)[number]) {
-  const limitLines = [
+function getPlanFeatures(plan: (typeof plans)[number]) {
+  const limits = [
     `${countFormatter.format(plan.submissionLimitMonthly)} submissions / month`,
     `${countFormatter.format(plan.submissionLimitDaily)} submissions / day`,
     plan.cronLimit === 1 ? "1 automatic job" : `${countFormatter.format(plan.cronLimit)} automatic jobs`,
@@ -32,208 +22,106 @@ function getPlanFeatureLines(plan: (typeof plans)[number]) {
       ? "Many websites supported"
       : `Up to ${countFormatter.format(plan.websiteLimit)} websites`,
   ];
-
-  const extraLines = plan.features.filter((feature) => !/(unlimited urls?|urls submissions?|cron job)/i.test(feature));
-  return [...limitLines, ...extraLines];
+  const extras = plan.features.filter(
+    (f) => !/(unlimited urls?|urls submissions?|cron job)/i.test(f),
+  );
+  return [...limits, ...extras];
 }
 
 export default function Pricing() {
-  const stack = useStackApp();
-  const user = useUser();
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-  const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const [avgVisitorValue, setAvgVisitorValue] = useState(1);
-
-  async function startCheckout(planName: string) {
-    if (planName === "Free") {
-      if (user) {
-        window.location.href = "/dashboard";
-      } else {
-        stack.redirectToSignUp();
-      }
-      return;
-    }
-
-    if (!user) {
-      stack.redirectToSignUp();
-      return;
-    }
-
-    const plan = planName === "Agency" ? "agency" : "pro";
-    setLoadingPlan(planName);
-    setCheckoutError(null);
-
-    try {
-      const res = await fetch("/api/billing/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
-      });
-
-      const data = (await res.json()) as { checkoutUrl?: string; error?: string };
-      if (!res.ok || !data.checkoutUrl) {
-        throw new Error(data.error || "Unable to start checkout.");
-      }
-
-      window.location.href = data.checkoutUrl;
-    } catch (error) {
-      setCheckoutError(error instanceof Error ? error.message : "Unable to start checkout.");
-    } finally {
-      setLoadingPlan(null);
-    }
-  }
-
   return (
-    <section id="pricing" className="bg-background py-20">
-      <div className="mx-auto w-full max-w-6xl px-6">
-        <div className="mb-16 space-y-4 text-center">
-          <Badge variant="outline" className="rounded-full px-4 py-1 text-[10px] font-bold uppercase tracking-widest text-primary border-primary/20 bg-primary/5">
+    <section id="pricing" className="bg-background py-24">
+      <div className="mx-auto w-full max-w-4xl px-6">
+
+        {/* Header */}
+        <div className="mb-16 text-center">
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground">
             Pricing
-          </Badge>
-          <h2 className="text-4xl font-bold tracking-tight sm:text-6xl text-foreground">
-            Simple, <span className="text-muted-foreground">honest pricing.</span>
           </h2>
-          <p className="mx-auto max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Choose the plan that fits your growth. All plans include 100% white-hat safety via official search engine APIs.
+          <p className="mt-2 text-sm text-muted-foreground">
+            Simple plans for every stage. All plans use official search engine APIs.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3">
-          {plans.map((p) => (
-            <Card key={p.name} className={cn(
-              "relative overflow-hidden rounded-[2.5rem] transition-all duration-300 flex flex-col h-full",
-              p.popular 
-                ? "border-primary/30 bg-card shadow-2xl shadow-primary/5 scale-[1.02] z-10" 
-                : "border-border/50 bg-card/50 hover:border-border"
-            )}>
-              {p.popular && (
-                <div className="absolute top-0 right-0">
-                   <div className="bg-primary text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-bl-2xl">
-                     Most Popular
-                   </div>
-                </div>
-              )}
-              
-              <CardHeader className="p-8 pb-4">
-                <div className="space-y-1">
-                  <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase">{p.name}</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold tracking-tight">${p.priceMonthly}</span>
-                    <span className="text-sm text-muted-foreground font-medium">/mo</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed min-h-[40px]">{p.tagline}</p>
-                </div>
-              </CardHeader>
+        {/* Plans */}
+        <div className="grid gap-4 md:grid-cols-3">
+          {plans.map((plan) => {
+            const features = getPlanFeatures(plan);
+            const isRecommended = !!plan.popular;
 
-              <CardContent className="flex flex-col flex-1 p-8 pt-0 gap-8">
-                <div className="space-y-3.5 flex-1">
-                  {getPlanFeatureLines(p).map((f, idx) => (
-                    <div key={idx} className="flex items-start gap-3">
-                      <div className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <Check className="h-2.5 w-2.5" strokeWidth={4} />
-                      </div>
-                      <span className="text-sm font-medium text-foreground/80">{f}</span>
-                    </div>
+            return (
+              <div
+                key={plan.name}
+                className={[
+                  "flex flex-col rounded-md border p-5",
+                  isRecommended
+                    ? "border-foreground/30"
+                    : "border-border",
+                ].join(" ")}
+              >
+                <p className="text-sm font-medium text-muted-foreground">
+                  {plan.name}
+                </p>
+
+                <div className="mt-1 flex items-baseline gap-1">
+                  <span className="text-2xl font-semibold tracking-tight text-foreground">
+                    {plan.priceMonthly === 0 ? "Free" : `$${plan.priceMonthly}`}
+                  </span>
+                  {plan.priceMonthly > 0 && (
+                    <span className="text-xs text-muted-foreground">/month</span>
+                  )}
+                </div>
+
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {plan.tagline}
+                </p>
+
+                <ul className="mt-6 flex-1 space-y-2">
+                  {features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-foreground">
+                      <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" strokeWidth={2} />
+                      {feature}
+                    </li>
                   ))}
-                </div>
+                </ul>
 
-                <div className="space-y-3">
-                  <Button
-                    className={cn(
-                      "w-full h-12 rounded-2xl font-bold transition-all active:scale-95",
-                      p.popular ? "bg-primary hover:bg-primary/90 text-white" : "bg-muted/50 hover:bg-muted text-foreground border-none"
-                    )}
-                    onClick={() => void startCheckout(p.name)}
-                    disabled={loadingPlan === p.name}
-                  >
-                    {loadingPlan === p.name ? (
-                      <div className="flex items-center gap-2">
-                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                        Processing
-                      </div>
-                    ) : p.ctaLabel}
-                  </Button>
-                  {p.trialDays && (
-                    <p className="text-center text-[10px] font-bold text-primary uppercase tracking-wider">
-                      Includes {p.trialDays}-day free trial
+                <div className="mt-6">
+                  <CheckoutButton
+                    planName={plan.name}
+                    ctaLabel={plan.ctaLabel}
+                    isRecommended={isRecommended}
+                  />
+                  {plan.trialDays && (
+                    <p className="mt-1.5 text-center text-xs text-muted-foreground">
+                      {plan.trialDays}-day free trial
                     </p>
                   )}
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
-        {/* ROI Calculator */}
-        <div className="mt-24 max-w-4xl mx-auto">
-          <Card className="rounded-[2.5rem] border-primary/10 bg-primary/[0.02] overflow-hidden">
-             <div className="grid md:grid-cols-[1fr_auto] gap-8 p-8 sm:p-12 items-center">
-                <div className="space-y-6">
-                   <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
-                     <Calculator className="h-3 w-3" />
-                     ROI Calculator
-                   </div>
-                   <div className="space-y-3">
-                      <h3 className="text-2xl font-bold">How much is faster indexing worth?</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        If 10% of your new pages bring in just 50 visitors each per month, and each visitor is worth $0.10:
-                      </p>
-                   </div>
-                   <div className="p-6 rounded-2xl bg-background/50 border border-primary/5 space-y-4">
-                      <p className="text-sm font-bold flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4 text-green-500" />
-                        With Pro ($49/mo), indexing 1,000 URLs could pay for itself in <span className="text-primary underline decoration-2 underline-offset-4">under 48 hours</span>.
-                      </p>
-                   </div>
-                </div>
-                <div className="bg-primary text-white p-8 rounded-[2rem] text-center space-y-2">
-                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-80">Estimated ROI</p>
-                   <p className="text-5xl font-bold">12x</p>
-                   <p className="text-[10px] font-medium opacity-60">minimum per cycle</p>
-                </div>
-             </div>
-          </Card>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="mt-32 max-w-3xl mx-auto space-y-12">
-           <div className="text-center space-y-2">
-              <h3 className="text-2xl font-bold tracking-tight">Pricing FAQ</h3>
-              <p className="text-sm text-muted-foreground">Everything you need to know about our plans.</p>
-           </div>
-           <div className="grid gap-6">
-              {FAQS.map((faq, i) => (
-                <div key={i} className="p-6 rounded-2xl bg-muted/20 border border-border/50 space-y-2">
-                   <h4 className="text-sm font-bold flex items-center gap-2">
-                     <HelpCircle className="h-3.5 w-3.5 text-primary" />
-                     {faq.q}
-                   </h4>
-                   <p className="text-sm text-muted-foreground leading-relaxed pl-5.5">
-                     {faq.a}
-                   </p>
-                </div>
-              ))}
-           </div>
-        </div>
-
-        {/* Safety Signal */}
-        <div className="mt-20 flex flex-col items-center gap-4 text-center">
-           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground/60">
-              <ShieldCheck className="h-4 w-4" />
-              Secure Checkout via Dodo Payments
-           </div>
-           <div className="flex gap-4 opacity-40 grayscale filter">
-              {/* Add payment logos here if available in assets */}
-           </div>
-        </div>
-
-        {checkoutError ? (
-          <div className="mx-auto mt-8 max-w-2xl">
-            <Alert variant="destructive" className="rounded-2xl">
-              <AlertDescription>{checkoutError}</AlertDescription>
-            </Alert>
+        {/* FAQ */}
+        <div className="mt-20 max-w-xl mx-auto">
+          <h3 className="text-base font-medium text-foreground mb-6 text-center">
+            FAQ
+          </h3>
+          <div className="space-y-5">
+            {FAQS.map((faq, i) => (
+              <div key={i}>
+                <p className="text-sm font-medium text-foreground">{faq.q}</p>
+                <p className="mt-0.5 text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+              </div>
+            ))}
           </div>
-        ) : null}
+        </div>
+
+        {/* Trust footer */}
+        <p className="mt-12 text-center text-xs text-muted-foreground">
+          Secure checkout via Dodo Payments
+        </p>
+
       </div>
     </section>
   );

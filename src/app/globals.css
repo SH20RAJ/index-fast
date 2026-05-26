@@ -4,71 +4,70 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Ember Studio - Light Mode */
-  --background: oklch(0.98 0.005 60); /* #FAFAF9 */
-  --foreground: oklch(0.2 0.01 60);    /* #1C1917 */
-  
-  --card: oklch(0.96 0.005 60);       /* #F5F5F4 */
-  --card-foreground: oklch(0.2 0.01 60);
-  
-  --popover: oklch(0.96 0.005 60);
-  --popover-foreground: oklch(0.2 0.01 60);
-  
-  --primary: oklch(0.55 0.22 35);     /* #C2410C - Terracotta */
-  --primary-foreground: oklch(0.98 0.005 60);
-  
-  --secondary: oklch(0.85 0.01 60);   /* #D6D3D1 - Border/Stone */
-  --secondary-foreground: oklch(0.45 0.01 60); /* #57534E */
-  
-  --muted: oklch(0.96 0.005 60);
-  --muted-foreground: oklch(0.55 0.02 50); /* #78716C */
-  
-  --accent: oklch(0.75 0.18 70);      /* #F59E0B - Amber */
-  --accent-foreground: oklch(0.2 0.01 60);
-  
-  --destructive: oklch(0.55 0.2 25);   /* #DC2626 */
-  --destructive-foreground: oklch(0.98 0.005 60);
-  
-  --border: oklch(0.85 0.01 60);      /* #D6D3D1 */
-  --input: oklch(0.96 0.005 60);
-  --ring: oklch(0.55 0.22 35);
-  
-  --radius: 0.75rem; /* 12px for cards */
-  
-  --font-serif: var(--font-serif);
+  /* Notion-inspired neutral palette */
+  --background: oklch(0.985 0 0);         /* #FAFAFA */
+  --foreground: oklch(0.16 0 0);          /* #191919 */
+
+  --card: oklch(1 0 0);                   /* #FFFFFF */
+  --card-foreground: oklch(0.16 0 0);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0 0);
+
+  --primary: oklch(0.55 0.12 250);        /* #2383E2 - Notion blue */
+  --primary-foreground: oklch(0.99 0 0);
+
+  --secondary: oklch(0.95 0 0);           /* #F2F2F2 */
+  --secondary-foreground: oklch(0.35 0 0);
+
+  --muted: oklch(0.96 0 0);              /* #F5F5F5 */
+  --muted-foreground: oklch(0.50 0 0);    /* #7A7A7A */
+
+  --accent: oklch(0.55 0.12 250);         /* Same as primary */
+  --accent-foreground: oklch(0.99 0 0);
+
+  --destructive: oklch(0.55 0.22 25);     /* #DC2626 */
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.91 0 0);             /* #E8E8E8 */
+  --input: oklch(0.96 0 0);
+  --ring: oklch(0.55 0.12 250);
+
+  --radius: 0.5rem; /* 8px */
+
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 }
 
 .dark {
-  /* Ember Studio - Dark Mode - Intentional warm dark */
-  --background: oklch(0.2 0.01 60);    /* #1C1917 */
-  --foreground: oklch(0.98 0.005 60);  /* #FAFAF9 */
-  
-  --card: oklch(0.25 0.01 60);        /* Slightly raised dark */
-  --card-foreground: oklch(0.98 0.005 60);
-  
-  --popover: oklch(0.25 0.01 60);
-  --popover-foreground: oklch(0.98 0.005 60);
-  
-  --primary: oklch(0.65 0.2 40);      /* Brighter terracotta for dark mode */
-  --primary-foreground: oklch(0.15 0.01 60);
-  
-  --secondary: oklch(0.35 0.01 60);   /* Warm dark stone */
-  --secondary-foreground: oklch(0.85 0.01 60);
-  
-  --muted: oklch(0.3 0.01 60);
-  --muted-foreground: oklch(0.7 0.01 60);
-  
-  --accent: oklch(0.75 0.18 70);      /* Amber remains same */
-  --accent-foreground: oklch(0.2 0.01 60);
-  
-  --destructive: oklch(0.6 0.2 25);
-  --destructive-foreground: oklch(0.98 0.005 60);
-  
-  --border: oklch(0.35 0.01 60);
-  --input: oklch(0.25 0.01 60);
-  --ring: oklch(0.65 0.2 40);
+  /* Dark mode - clean dark */
+  --background: oklch(0.17 0 0);          /* #1E1E1E */
+  --foreground: oklch(0.95 0 0);          /* #F0F0F0 */
+
+  --card: oklch(0.22 0 0);               /* #2A2A2A */
+  --card-foreground: oklch(0.95 0 0);
+
+  --popover: oklch(0.22 0 0);
+  --popover-foreground: oklch(0.95 0 0);
+
+  --primary: oklch(0.62 0.14 250);        /* Brighter blue for dark */
+  --primary-foreground: oklch(0.17 0 0);
+
+  --secondary: oklch(0.28 0 0);           /* #3A3A3A */
+  --secondary-foreground: oklch(0.85 0 0);
+
+  --muted: oklch(0.25 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+
+  --accent: oklch(0.62 0.14 250);
+  --accent-foreground: oklch(0.17 0 0);
+
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(0.17 0 0);
+
+  --border: oklch(0.32 0 0);             /* #444444 */
+  --input: oklch(0.25 0 0);
+  --ring: oklch(0.62 0.14 250);
 }
 
 @theme inline {
@@ -94,50 +93,18 @@
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
 
-  --radius-sm: calc(var(--radius) - 8px); /* 4px */
-  --radius-md: calc(var(--radius) - 4px); /* 8px */
-  --radius-lg: var(--radius);              /* 12px */
-  --radius-xl: calc(var(--radius) + 4px); /* 16px */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
   --radius-full: 9999px;
 
-  --shadow-sm: 0 1px 2px rgba(28,25,23,0.05);
-  --shadow: 0 4px 16px rgba(28,25,23,0.06);
-  --shadow-md: 0 8px 24px rgba(28,25,23,0.08);
-  --shadow-lg: 0 12px 32px rgba(28,25,23,0.1);
-  --shadow-xl: 0 24px 48px rgba(28,25,23,0.12);
-  
-  --animate-orbit: orbit calc(var(--duration)*1s) linear infinite;
-  --animate-spin-slow: spin 3s linear infinite;
-  --animate-spin-reverse: spin-reverse 1s linear infinite;
-  --animate-fade-in-up-1: fade-in-up 0.5s ease-out forwards;
-  --animate-fade-in-up-2: fade-in-up 0.55s ease-out 0.05s forwards;
-  --animate-fade-in-up-3: fade-in-up 0.55s ease-out 0.10s forwards;
-  --animate-fade-in-up-4: fade-in-up 0.55s ease-out 0.14s forwards;
-  --animate-fade-in-up-5: fade-in-up 0.55s ease-out 0.32s forwards;
-  --animate-fade-in-delay: fade-in 0.6s ease-out 0.28s forwards;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
 
-  @keyframes orbit {
-    0% { transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg)); }
-    100% { transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg)); }
-  }
-
-  @keyframes spin-reverse {
-    from { transform: rotate(360deg); }
-    to { transform: rotate(0deg); }
-  }
-
-  @keyframes fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+  --animate-fade-in: fade-in 200ms ease-out forwards;
 
   @keyframes fade-in {
     from {
@@ -158,33 +125,33 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif font-bold tracking-tight text-foreground;
-    letter-spacing: -0.02em;
+    @apply font-sans font-semibold tracking-tight text-foreground;
+    letter-spacing: -0.01em;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary text-primary-foreground font-semibold px-4 py-2 rounded-md hover:opacity-90 hover:shadow-lg transition-all duration-150 active:scale-95;
+    @apply bg-primary text-primary-foreground font-medium px-4 py-2 rounded-md hover:opacity-90 transition-opacity duration-150;
   }
   .btn-secondary {
-    @apply bg-transparent border border-border text-foreground font-semibold px-4 py-2 rounded-md hover:bg-secondary/10 transition-all duration-150;
+    @apply bg-transparent border border-border text-foreground font-medium px-4 py-2 rounded-md hover:bg-secondary transition-colors duration-150;
   }
   .card-premium {
-    @apply bg-card border border-border rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300;
+    @apply bg-card border border-border rounded-lg transition-colors duration-150 hover:border-primary/30;
   }
   .input-ember {
-    @apply bg-card border border-border rounded-md px-4 py-2 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all;
+    @apply bg-card border border-border rounded-md px-3 py-2 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-150;
   }
 }
 
 @layer utilities {
-  .text-display { @apply text-6xl font-serif font-bold; }
-  .text-headline { @apply text-5xl font-serif font-bold; }
-  .text-section { @apply text-2xl font-serif font-bold; }
+  .text-display { @apply text-5xl font-sans font-bold; }
+  .text-headline { @apply text-4xl font-sans font-bold; }
+  .text-section { @apply text-2xl font-sans font-semibold; }
   .text-subhead { @apply text-xl font-sans font-semibold; }
   .text-body { @apply text-base font-sans; }
   .text-small { @apply text-sm font-sans; }
-  .text-caption { @apply text-xs font-sans; }
-  .text-overline { @apply text-[11px] font-sans font-bold uppercase tracking-wide; }
+  .text-caption { @apply text-xs font-sans text-muted-foreground; }
+  .text-overline { @apply text-[11px] font-sans font-semibold uppercase tracking-wider text-muted-foreground; }
 }

@@ -1,5 +1,9 @@
 import { Metadata } from "next";
 import { LANDING_FAQS } from "@/lib/landing-faq";
+import {
+  LANDING_TESTIMONIALS,
+  TRUSTED_COMPANIES,
+} from "@/lib/landing-testimonials";
 import Hero from "@/components/landing/Hero";
 import PainSection from "@/components/landing/PainSection";
 import DifferentiationSection from "@/components/landing/DifferentiationSection";
@@ -12,46 +16,12 @@ import SupportedEngines from "@/components/landing/SupportedEngines";
 import Pricing from "@/components/landing/Pricing";
 import { AnimatedTestimonials } from "@/components/blocks/animated-testimonials";
 
-const testimonials = [
-  {
-    id: 1,
-    name: "Alex",
-    role: "SEO Engineer",
-    company: "TrafficScale",
-    content: "We pushed 1.2M programmatic pages. Google indexed them in under 24 hours. The difference from manual GSC is staggering.",
-    rating: 5,
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d"
-  },
-  {
-    id: 2,
-    name: "Sarah Jones",
-    role: "Content Director",
-    company: "DailyNews",
-    content: "For a publisher, indexing time is everything. Our top stories now hit the news feed in minutes, not days.",
-    rating: 5,
-    avatar: "https://i.pravatar.cc/150?u=a04258a2462d826712d"
-  },
-  {
-    id: 3,
-    name: "Mike Chen",
-    role: "Founder",
-    company: "Storefront",
-    content: "When product inventory drops, we need Google sensing it instantly. IndexFast solved our 'not indexed' errors on day one.",
-    rating: 5,
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d"
-  }
-];
-
-const trustedCompanies = [
-  "TrafficScale",
-  "DailyNews",
-  "Storefront",
-  "BlogMetrics"
-];
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
+
 const title = "IndexFast - Index your website from your AI IDE instantly";
 const description =
   "The first MCP-native indexing platform. Stop waiting for Google to crawl your site. Index your URLs to Google, Bing, and IndexNow instantly from Cursor or VS Code.";
+
 const keySitelinks = [
   { name: "How It Works", path: "/how-it-works" },
   { name: "Pricing", path: "/pricing" },
@@ -112,13 +82,9 @@ const landingJsonLd = {
       url: `${siteUrl}/`,
       name: title,
       description,
-      isPartOf: {
-        "@id": `${siteUrl}/#website`,
-      },
+      isPartOf: { "@id": `${siteUrl}/#website` },
       inLanguage: "en-US",
-      breadcrumb: {
-        "@id": `${siteUrl}/#breadcrumb`,
-      },
+      breadcrumb: { "@id": `${siteUrl}/#breadcrumb` },
       primaryImageOfPage: {
         "@type": "ImageObject",
         url: `${siteUrl}/logo/og2.png`,
@@ -186,22 +152,35 @@ const landingJsonLd = {
 export default function LandingPage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(landingJsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(landingJsonLd) }}
+      />
+
+      {/* Above the fold: Hero + Engine logos */}
       <Hero />
-      <PainSection />
       <SupportedEngines />
-      <Features />
+
+      {/* Problem & solution flow */}
+      <PainSection />
+      <DifferentiationSection />
+
+      {/* How it works & feature details */}
       <HowItWorks />
+      <Features />
+
+      {/* Social proof */}
       <AnimatedTestimonials
         title="Trusted by Modern Publishers & pSEO"
         subtitle="See how teams are dropping their indexing times from days to minutes with IndexFast."
         badgeText="Real Case Studies"
-        testimonials={testimonials}
-        trustedCompanies={trustedCompanies}
+        testimonials={[...LANDING_TESTIMONIALS]}
+        trustedCompanies={[...TRUSTED_COMPANIES]}
         trustedCompaniesTitle="Used by high-velocity content teams"
       />
+
+      {/* Pricing & closing */}
       <Pricing />
-      <DifferentiationSection />
       <FAQ />
       <FinalCTA />
       <ChatBot />

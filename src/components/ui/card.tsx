@@ -1,17 +1,11 @@
-"use client";
-
 import * as React from "react";
-import { Box } from "rizzui/box";
 import { cn } from "@/lib/utils";
 
-function Card({
-  className,
-  ...props
-}: React.ComponentProps<typeof Box>) {
+function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <Box
+    <div
       className={cn(
-        "rounded-xl border border-muted bg-card shadow-sm transition-all",
+        "rounded-lg border border-border bg-card text-card-foreground",
         className
       )}
       {...props}
@@ -19,44 +13,43 @@ function Card({
   );
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<typeof Box>) {
+function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <Box
-      className={cn("flex flex-col space-y-1.5 p-6", className)}
+    <div
+      className={cn("flex flex-col gap-1.5 p-5 pb-3", className)}
       {...props}
     />
   );
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<typeof Box>) {
+function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <Box
-      as="h3"
-      className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+    <h3
+      className={cn("text-base font-semibold leading-tight tracking-tight", className)}
       {...props}
     />
   );
 }
 
-function CardDescription({ className, ...props }: React.ComponentProps<typeof Box>) {
+function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <Box
+    <p
       className={cn("text-sm text-muted-foreground", className)}
       {...props}
     />
   );
 }
 
-function CardContent({ className, ...props }: React.ComponentProps<typeof Box>) {
+function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <Box className={cn("p-6 pt-0", className)} {...props} />
+    <div className={cn("px-5 pb-5", className)} {...props} />
   );
 }
 
-function CardFooter({ className, ...props }: React.ComponentProps<typeof Box>) {
+function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <Box
-      className={cn("flex items-center p-6 pt-0", className)}
+    <div
+      className={cn("flex items-center px-5 pb-5", className)}
       {...props}
     />
   );

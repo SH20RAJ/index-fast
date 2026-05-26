@@ -1,13 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Archive, ArrowRight, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Archive, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
-import DashboardPanel from "./DashboardPanel";
 
 interface ArchiveSubmissionResponse {
   success: boolean;
@@ -58,107 +54,88 @@ export default function ArchiveSubmissionPanel({ websiteId, websiteUrl }: Archiv
     }
   }
 
-  if (!websiteId) {
-    return null;
-  }
+  if (!websiteId) return null;
 
   return (
-    <DashboardPanel title="Archive" className="lg:flex-1">
-      <div className="space-y-4">
-        <Card className="border-border/40 bg-background/60">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Archive className="h-4 w-4 text-primary" />
-              Internet Archive
-            </CardTitle>
-            <CardDescription className="text-xs">
-              Save your site to the Wayback Machine for free.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="rounded-lg border border-border/40 bg-background/40 p-3">
-              <p className="text-xs text-muted-foreground font-medium mb-1">Website</p>
-              <code className="text-xs font-mono break-all text-foreground">{websiteUrl || "Your website"}</code>
-            </div>
-
-            <div className="space-y-3 pb-2 border-b border-border/30">
-              <label className="flex items-start gap-2 cursor-pointer">
-                <Checkbox
-                  checked={includeSubpaths}
-                  onCheckedChange={(checked) => setIncludeSubpaths(checked as boolean)}
-                  className="mt-0.5"
-                />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Archive main pages</p>
-                  <p className="text-xs text-muted-foreground">Saves /blog, /pricing, and /contact</p>
-                </div>
-              </label>
-            </div>
-
-            <Button
-              onClick={handleSubmitToArchive}
-              disabled={loading}
-              className="w-full gap-2 rounded-lg"
-              variant="outline"
-              size="sm"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Archive className="h-3.5 w-3.5" />
-                  Start Archiving
-                </>
-              )}
-            </Button>
-
-            {/* Results */}
-            {result ? (
-              result.success ? (
-                <Alert className="border-green-200 bg-green-50">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  <AlertDescription className="text-green-900">
-                    {result.message}
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    {result.error || result.message || "Archive submission failed"}
-                  </AlertDescription>
-                </Alert>
-              )
-            ) : null}
-
-            {/* Stats */}
-            {result ? (
-              <div className="grid grid-cols-2 gap-2 pt-2">
-                <div className="rounded-lg border border-border/30 bg-background/40 p-2">
-                  <p className="text-xs text-muted-foreground">Attempted</p>
-                  <p className="text-lg font-bold">{result.attempted}</p>
-                </div>
-                <div className="rounded-lg border border-border/30 bg-background/40 p-2">
-                  <p className="text-xs text-muted-foreground">Success</p>
-                  <p className="text-lg font-bold text-green-600">{result.succeeded}</p>
-                </div>
-              </div>
-            ) : null}
-
-            {/* Benefits */}
-            <div className="rounded-lg border border-border/30 bg-muted/20 p-3">
-              <ul className="text-xs text-muted-foreground space-y-1">
-                <li>✓ Permanent site backup</li>
-                <li>✓ Better SEO credibility</li>
-                <li>✓ Historical record</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="rounded-lg border border-border bg-card p-5 space-y-4">
+      <div className="flex items-center gap-2">
+        <Archive className="h-4 w-4 text-muted-foreground" />
+        <h3 className="text-sm font-medium">Archive to Wayback Machine</h3>
       </div>
-    </DashboardPanel>
+
+      <p className="text-xs text-muted-foreground">
+        Save your site to the Internet Archive for a permanent backup.
+      </p>
+
+      {/* Website URL */}
+      <div className="rounded-md bg-muted/50 px-3 py-2">
+        <code className="text-xs font-mono break-all text-foreground">
+          {websiteUrl || "Your website"}
+        </code>
+      </div>
+
+      {/* Option */}
+      <label className="flex items-center gap-2 cursor-pointer">
+        <Checkbox
+          checked={includeSubpaths}
+          onCheckedChange={(checked) => setIncludeSubpaths(checked as boolean)}
+        />
+        <span className="text-sm text-muted-foreground">
+          Include /blog, /pricing, /contact
+        </span>
+      </label>
+
+      {/* Action */}
+      <Button
+        onClick={handleSubmitToArchive}
+        disabled={loading}
+        variant="outline"
+        size="sm"
+        className="w-full"
+      >
+        {loading ? (
+          <>
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            Saving...
+          </>
+        ) : (
+          <>
+            <Archive className="h-3.5 w-3.5" />
+            Start Archiving
+          </>
+        )}
+      </Button>
+
+      {/* Result */}
+      {result && (
+        <div className="space-y-3">
+          {result.success ? (
+            <div className="flex items-start gap-2 text-sm">
+              <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+              <span className="text-muted-foreground">{result.message}</span>
+            </div>
+          ) : (
+            <div className="flex items-start gap-2 text-sm">
+              <AlertCircle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
+              <span className="text-muted-foreground">
+                {result.error || result.message || "Archive submission failed"}
+              </span>
+            </div>
+          )}
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="rounded-md bg-muted/50 px-3 py-2">
+              <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Attempted</p>
+              <p className="text-sm font-medium tabular-nums">{result.attempted}</p>
+            </div>
+            <div className="rounded-md bg-muted/50 px-3 py-2">
+              <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Succeeded</p>
+              <p className="text-sm font-medium tabular-nums">{result.succeeded}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

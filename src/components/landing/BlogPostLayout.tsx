@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { BLOG_POSTS, BlogPost } from "@/lib/blog-catalog";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://indexfast.co";
@@ -49,89 +45,173 @@ export function BlogPostLayout({ post }: BlogPostLayoutProps) {
 
   return (
     <>
-      <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 lg:py-14">
-        <div className="space-y-4">
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary" className="text-[11px] uppercase">{post.primaryKeyword}</Badge>
-            <Badge variant="outline" className="text-[11px]">{post.readingMinutes} min read</Badge>
-          </div>
+      <article className="mx-auto w-full max-w-[680px] px-6 pb-24 pt-16 sm:px-8">
+        {/* Breadcrumb */}
+        <nav className="mb-10">
+          <Link
+            href="/blog"
+            className="text-sm text-muted-foreground/70 transition-colors hover:text-foreground"
+          >
+            Blog
+          </Link>
+          <span className="mx-2 text-muted-foreground/40">/</span>
+          <span className="text-sm text-muted-foreground/70">{post.primaryKeyword}</span>
+        </nav>
 
-          <h1 className="text-4xl font-black tracking-tight sm:text-5xl">{post.title}</h1>
-          <p className="text-sm text-muted-foreground">By {post.author} • {post.publishedAt}</p>
-          <Separator />
-          <p className="text-xl leading-relaxed">{post.hero}</p>
+        {/* Title */}
+        <h1 className="mb-4 text-4xl font-semibold leading-[1.15] tracking-tight text-foreground sm:text-[42px]">
+          {post.title}
+        </h1>
 
+        {/* Metadata */}
+        <div className="mb-3 flex items-center gap-3 text-sm text-muted-foreground/60">
+          <span>{post.author}</span>
+          <span className="text-muted-foreground/30">-</span>
+          <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+          <span className="text-muted-foreground/30">-</span>
+          <span>{post.readingMinutes} min read</span>
+        </div>
+
+        {/* Divider */}
+        <div className="mb-10 h-px bg-border/60" />
+
+        {/* Hero / Intro */}
+        <p className="mb-12 text-lg leading-[1.8] text-foreground/80">
+          {post.hero}
+        </p>
+
+        {/* Sections */}
+        <div className="space-y-12">
           {post.sections.map((section) => (
-            <section key={section.heading} className="space-y-3 pt-4">
-              <h2 className="text-2xl font-bold tracking-tight">{section.heading}</h2>
-              {section.paragraphs.map((paragraph, index) => (
-                <p key={`${section.heading}-${index}`} className="text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  {paragraph}
-                </p>
-              ))}
-              {section.bullets ? (
-                <ul className="list-disc space-y-2 pl-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <section key={section.heading}>
+              <h2 className="mb-4 text-2xl font-semibold leading-snug tracking-tight text-foreground">
+                {section.heading}
+              </h2>
+              <div className="space-y-4">
+                {section.paragraphs.map((paragraph, index) => (
+                  <p
+                    key={`${section.heading}-${index}`}
+                    className="text-base leading-[1.8] text-foreground/75"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              {section.bullets && section.bullets.length > 0 ? (
+                <ul className="mt-4 space-y-2.5 pl-5 text-base leading-[1.8] text-foreground/75">
                   {section.bullets.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
+                    <li key={bullet} className="list-disc marker:text-foreground/25">
+                      {bullet}
+                    </li>
                   ))}
                 </ul>
               ) : null}
             </section>
           ))}
+        </div>
 
-          <section className="space-y-4 pt-6">
-            <h2 className="text-2xl font-bold tracking-tight">Frequently asked questions</h2>
-            <div className="divide-y divide-border rounded-xl border border-border/70 bg-card/70">
-              {post.faqs.map((faq) => (
-                <div key={faq.question} className="space-y-2 p-4">
-                  <h3 className="font-semibold">{faq.question}</h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">{faq.answer}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <Card className="my-6 border-border/70 bg-card/70">
-            <CardContent className="space-y-3 p-5">
-              <h3 className="text-xl font-bold tracking-tight">Want this as a repeatable workflow?</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                Use IndexFast to run these indexing patterns automatically: monitor sitemaps, submit new URLs, and track discovery progress from one dashboard.
-              </p>
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <Button asChild>
-                  <Link href="/sign-up">Get Started Free</Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link href="/">See platform overview</Link>
-                </Button>
+        {/* FAQ */}
+        <section className="mt-16">
+          <h2 className="mb-6 text-2xl font-semibold leading-snug tracking-tight text-foreground">
+            Frequently asked questions
+          </h2>
+          <div className="space-y-0 divide-y divide-border/50">
+            {post.faqs.map((faq) => (
+              <div key={faq.question} className="py-5 first:pt-0 last:pb-0">
+                <h3 className="mb-2 text-base font-medium text-foreground">
+                  {faq.question}
+                </h3>
+                <p className="text-sm leading-[1.75] text-foreground/60">
+                  {faq.answer}
+                </p>
               </div>
-            </CardContent>
-          </Card>
+            ))}
+          </div>
+        </section>
 
-          <section className="space-y-3 pt-2">
-            <h2 className="text-xl font-bold tracking-tight">Related guides</h2>
-            <div className="grid gap-3 sm:grid-cols-3">
+        {/* CTA */}
+        <section className="mt-16 rounded-lg border border-border/50 bg-muted/30 px-6 py-8">
+          <h3 className="mb-2 text-lg font-medium text-foreground">
+            Want this as a repeatable workflow?
+          </h3>
+          <p className="mb-5 text-sm leading-relaxed text-foreground/60">
+            Use IndexFast to run these indexing patterns automatically: monitor sitemaps,
+            submit new URLs, and track discovery progress from one dashboard.
+          </p>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/sign-up"
+              className="inline-flex h-9 items-center rounded-md bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-90"
+            >
+              Get started free
+            </Link>
+            <Link
+              href="/"
+              className="inline-flex h-9 items-center rounded-md border border-border/60 px-4 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted/50"
+            >
+              Learn more
+            </Link>
+          </div>
+        </section>
+
+        {/* Related Posts */}
+        {relatedPosts.length > 0 && (
+          <section className="mt-16">
+            <h2 className="mb-5 text-sm font-medium uppercase tracking-wider text-foreground/40">
+              Related guides
+            </h2>
+            <div className="space-y-1 divide-y divide-border/40">
               {relatedPosts.map((related) => (
-                <Link key={related.slug} href={`/blog/${related.slug}`}>
-                  <Card className="h-full border-border/70 bg-card/70 transition-colors hover:border-primary/40">
-                    <CardContent className="p-4">
-                      <p className="text-sm font-semibold leading-snug">{related.title}</p>
-                    </CardContent>
-                  </Card>
+                <Link
+                  key={related.slug}
+                  href={`/blog/${related.slug}`}
+                  className="group flex items-baseline justify-between gap-6 py-3.5 transition-colors"
+                >
+                  <span className="text-base text-foreground/70 group-hover:text-foreground">
+                    {related.title}
+                  </span>
+                  <span className="shrink-0 text-xs text-foreground/30 group-hover:text-foreground/50">
+                    {related.readingMinutes} min
+                  </span>
                 </Link>
               ))}
             </div>
           </section>
+        )}
 
-          <div className="pt-4">
-            <Button variant="ghost" asChild>
-              <Link href="/blog">Back to all posts</Link>
-            </Button>
-          </div>
+        {/* Back link */}
+        <div className="mt-12">
+          <Link
+            href="/blog"
+            className="text-sm text-muted-foreground/50 transition-colors hover:text-foreground/70"
+          >
+            Back to all posts
+          </Link>
         </div>
-      </main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      </article>
+
+      {/* JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
     </>
   );
+}
+
+function formatDate(dateString: string): string {
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  } catch {
+    return dateString;
+  }
 }

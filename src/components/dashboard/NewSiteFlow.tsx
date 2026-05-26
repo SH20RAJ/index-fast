@@ -5,35 +5,46 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { 
-  Globe, 
-  Layers, 
-  Key, 
-  Settings2, 
-  CheckCircle2, 
-  Loader2, 
-  Plus, 
-  Trash2, 
-  Search, 
-  ArrowRight,
-  ArrowLeft
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import {
+  Globe,
+  Layers,
+  Key,
+  Search,
+  Settings2,
+  Check,
+  Loader2,
+  Plus,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { 
-  createWebsiteAction, 
-  addWebsiteSourceAction, 
-  updateIndexNowSettingsAction, 
-  verifyIndexNowKeyAction, 
-  updateBingApiKeyAction, 
-  updateAutomationSettingsAction, 
-  runFirstSyncAction 
+import {
+  createWebsiteAction,
+  addWebsiteSourceAction,
+  updateIndexNowSettingsAction,
+  verifyIndexNowKeyAction,
+  updateBingApiKeyAction,
+  updateAutomationSettingsAction,
+  runFirstSyncAction,
 } from "@/app/(dashboard)/actions";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+const STEPS = [
+  { label: "Website" },
+  { label: "Sources" },
+  { label: "IndexNow" },
+  { label: "Bing API" },
+  { label: "Automation" },
+  { label: "Done" },
+];
 
 export default function NewSiteFlow() {
   const router = useRouter();
@@ -41,25 +52,25 @@ export default function NewSiteFlow() {
   const [loading, setLoading] = useState(false);
   const [websiteId, setWebsiteId] = useState<string | null>(null);
 
-  // Step 1 State
+  // Step 1
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [sitemapUrl, setSitemapUrl] = useState("");
 
-  // Step 2 State
+  // Step 2
   const [sources, setSources] = useState<{ url: string; type: string }[]>([]);
   const [newSourceUrl, setNewSourceUrl] = useState("");
-  const [newSourceType, setNewSourceType] = useState("sitemap");
+  const [newSourceType] = useState("sitemap");
 
-  // Step 3 State
+  // Step 3
   const [indexNowKey, setIndexNowKey] = useState("");
   const [indexNowKeyLocation, setIndexNowKeyLocation] = useState("");
   const [isVerified, setIsVerified] = useState(false);
 
-  // Step 4 State
+  // Step 4
   const [bingApiKey, setBingApiKey] = useState("");
 
-  // Step 5 State
+  // Step 5
   const [autoIndexing, setAutoIndexing] = useState(true);
   const [pingsEnabled, setPingsEnabled] = useState(true);
 
@@ -77,7 +88,10 @@ export default function NewSiteFlow() {
     formData.append("url", url);
     formData.append("sitemapUrl", sitemapUrl);
 
-    const res = await createWebsiteAction({ status: "idle", message: "" }, formData);
+    const res = await createWebsiteAction(
+      { status: "idle", message: "" },
+      formData
+    );
     if (res.status === "success" && res.data) {
       setWebsiteId(res.data as string);
       handleNext();
@@ -87,15 +101,8 @@ export default function NewSiteFlow() {
     setLoading(false);
   };
 
-  const step2Submit = async () => {
-    if (sources.length === 0) {
-      handleNext();
-      return;
-    }
-    setLoading(true);
-    // Sources are added one by one, but let's make sure they are saved
+  const step2Submit = () => {
     handleNext();
-    setLoading(false);
   };
 
   const addSource = async () => {
@@ -106,7 +113,10 @@ export default function NewSiteFlow() {
     formData.append("url", newSourceUrl);
     formData.append("type", newSourceType);
 
-    const res = await addWebsiteSourceAction({ status: "idle", message: "" }, formData);
+    const res = await addWebsiteSourceAction(
+      { status: "idle", message: "" },
+      formData
+    );
     if (res.status === "success") {
       setSources([...sources, { url: newSourceUrl, type: newSourceType }]);
       setNewSourceUrl("");
@@ -116,20 +126,30 @@ export default function NewSiteFlow() {
     setLoading(false);
   };
 
+  const removeSource = (index: number) => {
+    setSources(sources.filter((_, i) => i !== index));
+  };
+
   const verifyKey = async () => {
     if (!websiteId || !indexNowKey || !indexNowKeyLocation) return;
     setLoading(true);
-    
+
     const settingsFormData = new FormData();
     settingsFormData.append("websiteId", websiteId);
     settingsFormData.append("indexNowKey", indexNowKey);
     settingsFormData.append("indexNowKeyLocation", indexNowKeyLocation);
-    await updateIndexNowSettingsAction({ status: "idle", message: "" }, settingsFormData);
+    await updateIndexNowSettingsAction(
+      { status: "idle", message: "" },
+      settingsFormData
+    );
 
     const verifyFormData = new FormData();
     verifyFormData.append("websiteId", websiteId);
-    const res = await verifyIndexNowKeyAction({ status: "idle", message: "" }, verifyFormData);
-    
+    const res = await verifyIndexNowKeyAction(
+      { status: "idle", message: "" },
+      verifyFormData
+    );
+
     if (res.status === "success") {
       setIsVerified(true);
       toast.success(res.message);
@@ -157,8 +177,11 @@ export default function NewSiteFlow() {
     formData.append("websiteId", websiteId);
     if (autoIndexing) formData.append("autoIndexingEnabled", "on");
     if (pingsEnabled) formData.append("pingsEnabled", "on");
-    
-    await updateAutomationSettingsAction({ status: "idle", message: "" }, formData);
+
+    await updateAutomationSettingsAction(
+      { status: "idle", message: "" },
+      formData
+    );
     handleNext();
     setLoading(false);
   };
@@ -168,7 +191,10 @@ export default function NewSiteFlow() {
     setLoading(true);
     const formData = new FormData();
     formData.append("websiteId", websiteId);
-    const res = await runFirstSyncAction({ status: "idle", message: "" }, formData);
+    const res = await runFirstSyncAction(
+      { status: "idle", message: "" },
+      formData
+    );
     if (res.status === "success") {
       toast.success(res.message);
       router.push("/dashboard");
@@ -179,112 +205,188 @@ export default function NewSiteFlow() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-10 px-4">
-      {/* Progress Bar */}
-      <div className="mb-8 flex justify-between gap-2">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div 
-            key={i} 
-            className={cn(
-              "h-1.5 flex-1 rounded-full transition-all duration-500",
-              step >= i ? "bg-primary" : "bg-muted"
-            )} 
-          />
-        ))}
-      </div>
+    <div className="max-w-xl mx-auto py-8 px-4">
+      {/* Step indicator */}
+      <nav className="mb-8" aria-label="Setup progress">
+        <ol className="flex items-center gap-1">
+          {STEPS.map((s, i) => {
+            const num = i + 1;
+            const isActive = step === num;
+            const isComplete = step > num;
+            return (
+              <li key={num} className="flex items-center flex-1">
+                <div className="flex items-center gap-2 w-full">
+                  <span
+                    className={cn(
+                      "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-medium",
+                      isComplete
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : isActive
+                          ? "border-primary text-primary"
+                          : "border-border text-muted-foreground"
+                    )}
+                  >
+                    {isComplete ? (
+                      <Check className="h-3 w-3" />
+                    ) : (
+                      num
+                    )}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-xs font-medium hidden sm:block",
+                      isActive
+                        ? "text-foreground"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {s.label}
+                  </span>
+                  {num < STEPS.length && (
+                    <div
+                      className={cn(
+                        "h-px flex-1",
+                        isComplete ? "bg-primary" : "bg-border"
+                      )}
+                    />
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
 
+      {/* Step 1: Website details */}
       {step === 1 && (
-        <Card className="rounded-[32px] border-border/50 bg-card shadow-2xl">
-          <CardHeader className="space-y-1 p-8 pb-4 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-              <Globe className="h-6 w-6" />
+        <Card className="border-border">
+          <CardHeader>
+            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+              <Globe className="h-4 w-4" />
+              <span className="text-xs font-medium uppercase tracking-wide">
+                Step 1
+              </span>
             </div>
-            <CardTitle className="text-2xl font-bold">Add your website</CardTitle>
+            <CardTitle className="text-lg">Add your website</CardTitle>
             <CardDescription>
-              IndexFast needs your website and sitemap so it can find URLs to submit.
+              Enter your website URL and sitemap so IndexFast can discover pages.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 p-8 pt-4">
-            <div className="space-y-2">
+          <CardContent className="space-y-4">
+            <div className="space-y-1.5">
               <Label htmlFor="name">Website name</Label>
-              <Input 
-                id="name" 
-                placeholder="My Blog" 
-                value={name} 
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-                className="h-12 rounded-xl"
+              <Input
+                id="name"
+                placeholder="My Blog"
+                value={name}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setName(e.target.value)
+                }
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <Label htmlFor="url">Website URL</Label>
-              <Input 
-                id="url" 
-                placeholder="https://example.com" 
-                value={url} 
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
-                className="h-12 rounded-xl"
+              <Input
+                id="url"
+                placeholder="https://example.com"
+                value={url}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setUrl(e.target.value)
+                }
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="sitemap">Primary sitemap URL</Label>
-              <Input 
-                id="sitemap" 
-                placeholder="https://example.com/sitemap.xml" 
-                value={sitemapUrl} 
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSitemapUrl(e.target.value)}
-                className="h-12 rounded-xl"
+            <div className="space-y-1.5">
+              <Label htmlFor="sitemap">Sitemap URL</Label>
+              <Input
+                id="sitemap"
+                placeholder="https://example.com/sitemap.xml"
+                value={sitemapUrl}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSitemapUrl(e.target.value)
+                }
               />
             </div>
-            <Button onClick={step1Submit} disabled={loading} className="w-full h-12 rounded-xl font-bold">
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Continue"}
+            <Button
+              onClick={step1Submit}
+              disabled={loading}
+              className="w-full mt-2"
+            >
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                "Continue"
+              )}
             </Button>
           </CardContent>
         </Card>
       )}
 
+      {/* Step 2: Sources */}
       {step === 2 && (
-        <Card className="rounded-[32px] border-border/50 bg-card shadow-2xl">
-          <CardHeader className="space-y-1 p-8 pb-4 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-              <Layers className="h-6 w-6" />
+        <Card className="border-border">
+          <CardHeader>
+            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+              <Layers className="h-4 w-4" />
+              <span className="text-xs font-medium uppercase tracking-wide">
+                Step 2
+              </span>
             </div>
-            <CardTitle className="text-2xl font-bold">Add sitemap or feed sources</CardTitle>
+            <CardTitle className="text-lg">Add sources</CardTitle>
             <CardDescription>
-              IndexFast will check these sources and find new URLs automatically.
+              Add sitemaps or feeds. IndexFast will check these for new URLs.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 p-8 pt-4">
-            <div className="space-y-4">
-              <div className="flex gap-2">
-                <div className="flex-1 space-y-2">
-                  <Input 
-                    placeholder="https://example.com/feed.xml" 
-                    value={newSourceUrl} 
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSourceUrl(e.target.value)}
-                    className="h-12 rounded-xl"
-                  />
-                </div>
-                <Button onClick={addSource} disabled={loading || !newSourceUrl} className="h-12 rounded-xl font-bold px-4">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="space-y-2">
-                {sources.map((s, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
-                    <span className="text-sm font-medium truncate flex-1 mr-2">{s.url}</span>
-                    <Badge variant="outline" className="mr-2 uppercase text-[10px]">{s.type}</Badge>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
+          <CardContent className="space-y-4">
+            <div className="flex gap-2">
+              <Input
+                placeholder="https://example.com/feed.xml"
+                value={newSourceUrl}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setNewSourceUrl(e.target.value)
+                }
+                className="flex-1"
+              />
+              <Button
+                onClick={addSource}
+                disabled={loading || !newSourceUrl}
+                size="icon"
+                variant="outline"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
             </div>
-            <div className="flex gap-3">
-              <Button onClick={handleBack} variant="outline" className="flex-1 h-12 rounded-xl font-bold">
+            {sources.length > 0 && (
+              <ul className="space-y-2">
+                {sources.map((s, i) => (
+                  <li
+                    key={i}
+                    className="flex items-center justify-between gap-2 px-3 py-2 rounded-md border border-border bg-background"
+                  >
+                    <span className="text-sm truncate flex-1">{s.url}</span>
+                    <span className="text-xs text-muted-foreground uppercase shrink-0">
+                      {s.type}
+                    </span>
+                    <button
+                      onClick={() => removeSource(i)}
+                      className="text-muted-foreground hover:text-destructive shrink-0"
+                      aria-label="Remove source"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {sources.length === 0 && (
+              <p className="text-xs text-muted-foreground">
+                No sources added. You can skip this step and add them later.
+              </p>
+            )}
+            <div className="flex gap-2 pt-2">
+              <Button onClick={handleBack} variant="outline" className="flex-1">
                 Back
               </Button>
-              <Button onClick={step2Submit} className="flex-[2] h-12 rounded-xl font-bold">
+              <Button onClick={step2Submit} className="flex-1">
                 Continue
               </Button>
             </div>
@@ -292,186 +394,249 @@ export default function NewSiteFlow() {
         </Card>
       )}
 
+      {/* Step 3: IndexNow */}
       {step === 3 && (
-        <Card className="rounded-[32px] border-border/50 bg-card shadow-2xl">
-          <CardHeader className="space-y-1 p-8 pb-4 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-              <Key className="h-6 w-6" />
+        <Card className="border-border">
+          <CardHeader>
+            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+              <Key className="h-4 w-4" />
+              <span className="text-xs font-medium uppercase tracking-wide">
+                Step 3
+              </span>
             </div>
-            <CardTitle className="text-2xl font-bold">Set up IndexNow</CardTitle>
+            <CardTitle className="text-lg">Set up IndexNow</CardTitle>
             <CardDescription>
-              IndexNow proves that you own this website and allows IndexFast to submit URLs to search engines.
+              Prove ownership and allow IndexFast to submit URLs to search engines.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 p-8 pt-4">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="inkey">IndexNow key</Label>
-                <Input 
-                  id="inkey" 
-                  placeholder="abc123xyz" 
-                  value={indexNowKey} 
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIndexNowKey(e.target.value)}
-                  className="h-12 rounded-xl"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="inkeyloc">IndexNow key TXT URL</Label>
-                <Input 
-                  id="inkeyloc" 
-                  placeholder="https://example.com/abc123xyz.txt" 
-                  value={indexNowKeyLocation} 
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIndexNowKeyLocation(e.target.value)}
-                  className="h-12 rounded-xl"
-                />
-              </div>
-              <p className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-lg border border-border/50">
-                Create a text file with your IndexNow key and upload it to your website root. 
-                <Link href="/docs/indexnow-key" target="_blank" className="text-primary hover:underline ml-1">
-                  How to create an IndexNow key
-                </Link>
-              </p>
+          <CardContent className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="inkey">IndexNow key</Label>
+              <Input
+                id="inkey"
+                placeholder="abc123xyz"
+                value={indexNowKey}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setIndexNowKey(e.target.value)
+                }
+              />
             </div>
-            <div className="flex gap-3">
-              <Button onClick={handleBack} variant="outline" className="flex-1 h-12 rounded-xl font-bold">
-                Back
-              </Button>
-              <Button 
-                onClick={isVerified ? handleNext : verifyKey} 
-                disabled={loading || !indexNowKey || !indexNowKeyLocation}
-                className={cn("flex-[2] h-12 rounded-xl font-bold", isVerified && "bg-green-600 hover:bg-green-700")}
+            <div className="space-y-1.5">
+              <Label htmlFor="inkeyloc">Key TXT URL</Label>
+              <Input
+                id="inkeyloc"
+                placeholder="https://example.com/abc123xyz.txt"
+                value={indexNowKeyLocation}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setIndexNowKeyLocation(e.target.value)
+                }
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Upload a text file with your key to your site root.{" "}
+              <Link
+                href="/docs/indexnow-key"
+                className="text-primary underline underline-offset-2"
               >
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : isVerified ? "Continue" : "Verify key"}
+                How to create a key
+              </Link>
+            </p>
+            <div className="flex gap-2 pt-2">
+              <Button onClick={handleBack} variant="outline" className="flex-1">
+                Back
+              </Button>
+              <Button
+                onClick={isVerified ? handleNext : verifyKey}
+                disabled={loading || !indexNowKey || !indexNowKeyLocation}
+                className="flex-1"
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : isVerified ? (
+                  "Continue"
+                ) : (
+                  "Verify key"
+                )}
               </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
+      {/* Step 4: Bing API */}
       {step === 4 && (
-        <Card className="rounded-[32px] border-border/50 bg-card shadow-2xl">
-          <CardHeader className="space-y-1 p-8 pb-4 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-              <Search className="h-6 w-6" />
+        <Card className="border-border">
+          <CardHeader>
+            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+              <Search className="h-4 w-4" />
+              <span className="text-xs font-medium uppercase tracking-wide">
+                Step 4
+              </span>
             </div>
-            <CardTitle className="text-2xl font-bold">Add Bing API key</CardTitle>
+            <CardTitle className="text-lg">Bing API key</CardTitle>
             <CardDescription>
-              Optional. Add your Bing Webmaster API key to submit URLs directly to Bing every day.
+              Optional. Submit URLs directly to Bing each day.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 p-8 pt-4">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="bing">Bing Webmaster API key</Label>
-                <Input 
-                  id="bing" 
-                  type="password"
-                  placeholder="••••••••••••••••" 
-                  value={bingApiKey} 
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBingApiKey(e.target.value)}
-                  className="h-12 rounded-xl"
+          <CardContent className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="bing">Bing Webmaster API key</Label>
+              <Input
+                id="bing"
+                type="password"
+                placeholder="Enter your API key"
+                value={bingApiKey}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setBingApiKey(e.target.value)
+                }
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              You can skip this and still use IndexNow.{" "}
+              <Link
+                href="/docs/bing-api-key"
+                className="text-primary underline underline-offset-2"
+              >
+                How to get a key
+              </Link>
+            </p>
+            <div className="flex gap-2 pt-2">
+              <Button onClick={handleBack} variant="outline" className="flex-1">
+                Back
+              </Button>
+              <Button
+                onClick={step4Submit}
+                disabled={loading}
+                className="flex-1"
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Save and continue"
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Step 5: Automation */}
+      {step === 5 && (
+        <Card className="border-border">
+          <CardHeader>
+            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+              <Settings2 className="h-4 w-4" />
+              <span className="text-xs font-medium uppercase tracking-wide">
+                Step 5
+              </span>
+            </div>
+            <CardTitle className="text-lg">Automation</CardTitle>
+            <CardDescription>
+              IndexFast will scan your sources and submit new URLs automatically.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm">Auto-submit new URLs daily</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Scan sources once every 24 hours.
+                  </p>
+                </div>
+                <Switch
+                  checked={autoIndexing}
+                  onCheckedChange={setAutoIndexing}
                 />
               </div>
-              <p className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-lg border border-border/50">
-                You can skip this and still use IndexNow. 
-                <Link href="/docs/bing-api-key" target="_blank" className="text-primary hover:underline ml-1">
-                  How to get Bing Webmaster API key
-                </Link>
-              </p>
+              <div className="h-px bg-border" />
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm">Send search engine pings</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Notify search engines about sitemap updates.
+                  </p>
+                </div>
+                <Switch
+                  checked={pingsEnabled}
+                  onCheckedChange={setPingsEnabled}
+                />
+              </div>
             </div>
-            <div className="flex gap-3">
-              <Button onClick={handleBack} variant="outline" className="flex-1 h-12 rounded-xl font-bold">
+            <div className="flex gap-2 pt-2">
+              <Button onClick={handleBack} variant="outline" className="flex-1">
                 Back
               </Button>
-              <Button onClick={step4Submit} disabled={loading} className="flex-[2] h-12 rounded-xl font-bold">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save and continue"}
+              <Button
+                onClick={step5Submit}
+                disabled={loading}
+                className="flex-1"
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Finish setup"
+                )}
               </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {step === 5 && (
-        <Card className="rounded-[32px] border-border/50 bg-card shadow-2xl">
-          <CardHeader className="space-y-1 p-8 pb-4 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-              <Settings2 className="h-6 w-6" />
-            </div>
-            <CardTitle className="text-2xl font-bold">Enable automation</CardTitle>
-            <CardDescription>
-              IndexFast will check your sitemap or feed and submit new URLs automatically.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6 p-8 pt-4">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-border/50">
-                <div className="space-y-0.5">
-                  <Label className="text-sm font-bold">Auto-submit new URLs daily</Label>
-                  <p className="text-xs text-muted-foreground">IndexFast will scan your sources once every 24 hours.</p>
-                </div>
-                <Switch checked={autoIndexing} onCheckedChange={setAutoIndexing} />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-border/50">
-                <div className="space-y-0.5">
-                  <Label className="text-sm font-bold">Send search engine pings</Label>
-                  <p className="text-xs text-muted-foreground">Notify search engines about sitemap updates.</p>
-                </div>
-                <Switch checked={pingsEnabled} onCheckedChange={setPingsEnabled} />
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <Button onClick={handleBack} variant="outline" className="flex-1 h-12 rounded-xl font-bold">
-                Back
-              </Button>
-              <Button onClick={step5Submit} disabled={loading} className="flex-[2] h-12 rounded-xl font-bold">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Finish setup"}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
+      {/* Step 6: Done */}
       {step === 6 && (
-        <Card className="rounded-[32px] border-border/50 bg-card shadow-2xl">
-          <CardHeader className="space-y-1 p-8 pb-4 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10 text-green-500">
-              <CheckCircle2 className="h-10 w-10" />
+        <Card className="border-border">
+          <CardHeader>
+            <div className="flex items-center gap-2 text-primary mb-1">
+              <Check className="h-4 w-4" />
+              <span className="text-xs font-medium uppercase tracking-wide">
+                Complete
+              </span>
             </div>
-            <CardTitle className="text-3xl font-bold">Website added</CardTitle>
+            <CardTitle className="text-lg">Website added</CardTitle>
             <CardDescription>
-              Your website is now configured and ready for auto indexing.
+              Your website is configured and ready for auto indexing.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 p-8 pt-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-4 rounded-2xl bg-muted/30 border border-border/50">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Website</p>
-                <p className="text-sm font-bold truncate">{name}</p>
+          <CardContent className="space-y-4">
+            <dl className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <dt className="text-xs text-muted-foreground">Website</dt>
+                <dd className="font-medium truncate">{name}</dd>
               </div>
-              <div className="p-4 rounded-2xl bg-muted/30 border border-border/50">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Sources</p>
-                <p className="text-sm font-bold">{sources.length}</p>
+              <div>
+                <dt className="text-xs text-muted-foreground">Sources</dt>
+                <dd className="font-medium">{sources.length}</dd>
               </div>
-              <div className="p-4 rounded-2xl bg-muted/30 border border-border/50">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">IndexNow</p>
-                <p className="text-sm font-bold text-green-600">Verified</p>
+              <div>
+                <dt className="text-xs text-muted-foreground">IndexNow</dt>
+                <dd className="font-medium text-primary">Verified</dd>
               </div>
-              <div className="p-4 rounded-2xl bg-muted/30 border border-border/50">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Bing API</p>
-                <p className="text-sm font-bold">{bingApiKey ? "Connected" : "Skipped"}</p>
+              <div>
+                <dt className="text-xs text-muted-foreground">Bing API</dt>
+                <dd className="font-medium">
+                  {bingApiKey ? "Connected" : "Skipped"}
+                </dd>
               </div>
-            </div>
-            
-            <div className="space-y-3 pt-4">
-              <Button onClick={runFirstSync} disabled={loading} className="w-full h-12 rounded-xl font-bold bg-primary shadow-lg shadow-primary/20">
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Run first sync now"}
+            </dl>
+            <div className="space-y-2 pt-2">
+              <Button
+                onClick={runFirstSync}
+                disabled={loading}
+                className="w-full"
+              >
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Run first sync"
+                )}
               </Button>
-              <div className="grid grid-cols-2 gap-3">
-                <Button asChild variant="outline" className="h-12 rounded-xl font-bold">
-                  <Link href="/toolbox">Open toolbox</Link>
+              <div className="flex gap-2">
+                <Button asChild variant="outline" className="flex-1">
+                  <Link href="/toolbox">Toolbox</Link>
                 </Button>
-                <Button asChild variant="ghost" className="h-12 rounded-xl font-bold">
-                  <Link href="/dashboard">Go to dashboard</Link>
+                <Button asChild variant="ghost" className="flex-1">
+                  <Link href="/dashboard">Dashboard</Link>
                 </Button>
               </div>
             </div>
@@ -481,4 +646,3 @@ export default function NewSiteFlow() {
     </div>
   );
 }
-

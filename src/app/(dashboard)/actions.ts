@@ -1,5 +1,6 @@
 "use server";
 
+import crypto from "crypto";
 import { and, count, desc, eq, gte, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -226,6 +227,8 @@ export async function updateSubscriptionPlanAction(_: ActionState, formData: For
 
   if (checkoutUrl) {
     redirect(checkoutUrl);
+    // redirect() throws, so this return is unreachable — but satisfies TypeScript
+    return { status: "success" as const, message: "Redirecting..." };
   }
 
   return { status: "error", message: "Could not start checkout." };
@@ -483,10 +486,13 @@ export async function deleteCronJobAction(_: ActionState, formData: FormData): P
   try {
     const user = await getAuthedUser();
     const jobId = String(formData.get("jobId") ?? "");
-
     const websiteId = String(formData.get("websiteId") ?? "");
 
-    await db.delete(cronJobs).where(eq(cronJobs.id, jobId));
+    // Verify website ownership before deleting cron job
+    const [website] = await db.select().from(websites).where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+    if (!website) return { status: "error", message: "Website not found." };
+
+    await db.delete(cronJobs).where(and(eq(cronJobs.id, jobId), eq(cronJobs.websiteId, websiteId)));
 
     revalidatePath(`/sites/${websiteId}`);
     return { status: "success", message: "Auto-run task removed." };
@@ -499,6 +505,10 @@ export async function runFirstSyncAction(_: ActionState, formData: FormData): Pr
   try {
     const user = await getAuthedUser();
     const websiteId = String(formData.get("websiteId") ?? "");
+
+    // Verify website ownership before syncing
+    const [website] = await db.select().from(websites).where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+    if (!website) return { status: "error", message: "Website not found." };
 
     // Using existing processWebsiteIndexing service
     const result = await processWebsiteIndexing(websiteId);
@@ -710,6 +720,7 @@ export async function getSiteInsightsAction(_websiteId: string) {
 }
 export async function fetchSitemapDetailsAction(url: string) {
   try {
+    const user = await getAuthedUser();
     const details = await crawlSitemap(url);
     return { status: "success", data: details };
   } catch (error) {
@@ -720,10 +731,11 @@ export async function fetchSitemapDetailsAction(url: string) {
 export async function bulkPingAction(websiteId: string, urls: string[]) {
   try {
     const user = await getAuthedUser();
-    const [website] = await db.select().from(websites).where(eq(websites.id, websiteId));
-    
+    const [website] = await db.select().from(websites)
+      .where(and(eq(websites.id, websiteId), eq(websites.userId, user.id)));
+
     if (!website) return { status: "error", message: "Website not found." };
-    
+
     // 1. Unified Submissions (Bing/IndexNow/Universal)
     // We pass isPro = true for manual bulk pings to give users the full power
     const results = await triggerSubmissions(website, urls, true);
@@ -763,7 +775,7 @@ export async function getReaderContent(url: string): Promise<{ status: "success"
   try {
     const response = await fetch(`https://r.jina.ai/${url}`, {
       headers: {
-        "Authorization": "Bearer jina_7b8e95c236c54cbc90939f5e161ea353CTnN_BZr3bVYU3dx294P2A7HRsiQ",
+        "Authorization": `Bearer ${process.env.JINA_API_KEY ?? ""}`,
         "Accept": "application/json"
       }
     });
@@ -797,7 +809,7 @@ export async function getUserApiKey(): Promise<{ status: "success" | "error"; da
     }
 
     // Generate first key if not exists
-    const newKey = `idx_${Math.random().toString(36).substring(2)}${Math.random().toString(36).substring(2)}`;
+    const newKey = `idx_${crypto.randomBytes(24).toString("hex")}`;
     await db.update(users).set({ apiKey: newKey }).where(eq(users.id, user.id));
     
     return { status: "success", data: newKey };
@@ -839,7 +851,7 @@ export async function rotateApiKeyAction(): Promise<{ status: "success" | "error
   if (!user) return { status: "error", message: "Unauthorized" };
 
   try {
-    const newKey = `idx_${Math.random().toString(36).substring(2)}${Math.random().toString(36).substring(2)}`;
+    const newKey = `idx_${crypto.randomBytes(24).toString("hex")}`;
     await db.update(users).set({ apiKey: newKey }).where(eq(users.id, user.id));
     
     revalidatePath("/dashboard/api");

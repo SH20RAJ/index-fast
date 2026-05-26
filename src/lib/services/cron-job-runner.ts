@@ -219,14 +219,16 @@ export async function processDueCronJobs(maxJobs = 20) {
           });
         } else if (engine === "pingomatic") {
           const urlsToPing = [row.websiteUrl, ...urls.slice(0, 3)];
+          let pingOk = true;
           for (const targetUrl of urlsToPing) {
-            await pingService("pingomatic", "IndexFast Automated Site", targetUrl);
+            const pingResult = await pingService("pingomatic", "IndexFast Automated Site", targetUrl);
+            if (!pingResult?.success) pingOk = false;
           }
           submissionRows.push({
             websiteId: row.websiteId,
             url: `Cron Ping-o-matic broadcast for ${urlsToPing.length} URLs`,
             engine,
-            status: "success" as const,
+            status: pingOk ? ("success" as const) : ("failed" as const),
           });
         } else {
           throw new Error(`Engine ${engine} is not supported for automated cron jobs yet.`);

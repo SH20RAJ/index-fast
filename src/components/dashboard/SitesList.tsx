@@ -10,11 +10,9 @@ interface SitesListProps {
 
 export default function SitesList({ sites, onSync }: SitesListProps) {
   return (
-    <div className="space-y-4">
+    <div className="divide-y divide-border rounded-lg border border-border bg-card">
       {sites.map((site) => (
-        <div key={site.id}>
-          <SiteCard site={site} onSync={onSync} />
-        </div>
+        <SiteCard key={site.id} site={site} onSync={onSync} />
       ))}
     </div>
   );

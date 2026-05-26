@@ -18,36 +18,38 @@ export default function DashboardShell({
   return (
     <SiteProvider initialWebsites={initialWebsites}>
       <LogProvider>
-        <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-foreground">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_0%_0%,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_60%)] opacity-90 dark:opacity-100" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_45%_at_100%_100%,color-mix(in_oklab,var(--primary)_10%,transparent),transparent_55%)] opacity-80" />
+        <div className="flex min-h-screen bg-background text-foreground">
 
+          {/* Sidebar */}
           <DashboardSidebar />
 
-          <div className="relative flex min-h-screen flex-col md:pl-72 focus-within:z-10">
-            {/* Mobile top spacing */}
-            <div className="h-16 md:h-0" />
+          {/* Main content area */}
+          <div className="flex flex-1 flex-col md:pl-60">
 
-            {/* Main content */}
-            <main className="flex-1 overflow-x-hidden px-4 pb-10 md:px-8 md:pb-12">
-              <div className="mx-auto w-full max-w-7xl">
+            {/* Mobile top spacing for the mobile header */}
+            <div className="h-14 md:h-0" />
+
+            {/* Page content */}
+            <main className="flex-1 overflow-x-hidden">
+              <div className="mx-auto w-full max-w-6xl px-6 py-8 md:px-10 md:py-10">
                 <DashboardTopBar />
                 {children}
               </div>
             </main>
           </div>
 
-          {/* Floating Actions */}
-          <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-4">
+          {/* Floating actions */}
+          <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
             <ChatAssistant />
             <Link
               href="/sites/new"
-              className="group flex h-14 w-14 items-center justify-center rounded-full bg-zinc-950 shadow-2xl shadow-black/40 ring-1 ring-white/10 transition-all duration-300 hover:scale-110 hover:shadow-primary/30 dark:bg-white"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-all hover:scale-105 hover:shadow-xl"
               title="Add Website"
             >
-              <Plus className="h-6 w-6 text-white dark:text-zinc-950 transition-transform duration-300 group-hover:rotate-90" />
+              <Plus className="h-5 w-5" />
             </Link>
           </div>
+
         </div>
       </LogProvider>
     </SiteProvider>
